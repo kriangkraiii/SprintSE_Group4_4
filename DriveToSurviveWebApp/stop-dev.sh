@@ -19,3 +19,5 @@ kill_port 3000 "Client (Nuxt)"
 kill_port 3001 "Server (Express)"
 
 echo "✅ All services stopped."
+
+# ./stop-dev.sh
