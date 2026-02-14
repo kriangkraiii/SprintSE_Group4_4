@@ -1,3 +1,9 @@
+import { resolve } from "path";
+import dotenv from "dotenv";
+
+// Load .env from parent directory
+dotenv.config({ path: resolve(__dirname || process.cwd(), "../.env") });
+
 import tailwindcssVite from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
