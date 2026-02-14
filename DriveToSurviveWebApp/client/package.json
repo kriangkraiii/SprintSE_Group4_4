@@ -1,0 +1,41 @@
+{
+  "name": "drive-to-survive-client",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint --ext .ts,.js,.vue .",
+    "lint:fix": "eslint --ext .ts,.js,.vue . --fix"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.0.1",
+    "@googlemaps/js-api-loader": "^2.0.0",
+    "@tailwindcss/vite": "^4.1.8",
+    "axios": "^1.13.5",
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0",
+    "leaflet": "^1.9.4",
+    "nuxt": "^3.17.4",
+    "swiper": "^11.2.8",
+    "tailwindcss": "^4.1.8",
+    "vue": "^3.5.15",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@nuxtjs/i18n": "^10.2.3",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-nuxt": "^4.0.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "^3.8.1",
+    "sass-embedded": "^1.89.2",
+    "typescript": "~5.8.0"
+  }
+}

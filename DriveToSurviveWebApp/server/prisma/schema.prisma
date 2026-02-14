@@ -1,0 +1,269 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum Role {
+  PASSENGER
+  DRIVER
+  ADMIN
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RouteStatus {
+  AVAILABLE
+  FULL
+  COMPLETED
+  CANCELLED
+  IN_TRANSIT
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+}
+
+enum CancelReason {
+  CHANGE_OF_PLAN
+  FOUND_ALTERNATIVE
+  DRIVER_DELAY
+  PRICE_ISSUE
+  WRONG_LOCATION
+  DUPLICATE_OR_WRONG_DATE
+  SAFETY_CONCERN
+  WEATHER_OR_FORCE_MAJEURE
+  COMMUNICATION_ISSUE
+}
+
+enum LicenseType {
+  PRIVATE_CAR_TEMPORARY
+  PRIVATE_CAR
+  PUBLIC_CAR
+  LIFETIME
+}
+
+enum NotificationType {
+  SYSTEM
+  VERIFICATION
+  BOOKING
+  ROUTE
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id                      String    @id @default(cuid())
+  username                String    @unique
+  email                   String    @unique
+  password                String
+  firstName               String?
+  lastName                String?
+  gender                  String?
+  phoneNumber             String?
+  profilePicture          String?
+  nationalIdNumber        String?   @unique
+  nationalIdPhotoUrl      String?   @unique @db.VarChar(500)
+  nationalIdBackPhotoUrl  String?   @db.VarChar(500)
+  nationalIdBackNumber    String?
+  nationalIdExpiryDate    DateTime?
+  nationalIdOcrData       Json?
+  selfiePhotoUrl          String?   @db.VarChar(500)
+  role                    Role      @default(PASSENGER)
+  isVerified              Boolean   @default(false)
+  verifiedByOcr           Boolean   @default(false)
+  isActive                Boolean   @default(true)
+  otpCode                 String?
+  otpExpiry               DateTime?
+  lastLogin               DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  deletedAt               DateTime? // PDPA ม.33 — Soft Delete
+  passengerSuspendedUntil DateTime?
+  driverSuspendedUntil    DateTime?
+
+  driverVerification DriverVerification?
+  vehicles           Vehicle[]
+  notification       Notification[]
+  createdRoutes      Route[]   @relation("DriverRoutes")
+  bookings           Booking[] @relation("PassengerBookings")
+
+  @@index([role])
+  @@index([isActive])
+  @@index([isVerified])
+  @@index([createdAt])
+  @@index([deletedAt])
+}
+
+model DriverVerification {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber      String             @unique
+  firstNameOnLicense String
+  lastNameOnLicense  String
+  licenseIssueDate   DateTime
+  licenseExpiryDate  DateTime
+  licensePhotoUrl    String             @db.VarChar(500)
+  selfiePhotoUrl     String             @db.VarChar(500)
+  typeOnLicense      LicenseType
+  ocrData            Json?
+  verifiedByOcr      Boolean            @default(false)
+  status             VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([licenseIssueDate])
+  @@index([licenseExpiryDate])
+}
+
+model Notification {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            NotificationType @default(SYSTEM)
+  title           String
+  body            String           @db.Text
+  link            String?
+  metadata        Json?
+
+  readAt          DateTime?
+  createdAt       DateTime         @default(now())
+  adminReviewedAt DateTime?
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+  @@index([adminReviewedAt])
+}
+
+model Vehicle {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicleModel String
+  licensePlate String   @unique
+  vehicleType  String
+  color        String
+  seatCapacity Int
+  photos       Json?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  amenities VehicleAmenity[]
+  routes    Route[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([vehicleType])
+  @@index([seatCapacity])
+}
+
+// แทน String[] ที่ MySQL ไม่รองรับ
+model VehicleAmenity {
+  id        Int     @id @default(autoincrement())
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  name      String
+
+  @@index([vehicleId])
+}
+
+model Route {
+  id             String      @id @default(cuid())
+  driverId       String
+  driver         User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
+  vehicleId      String
+  vehicle        Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  startLocation  Json
+  endLocation    Json
+  departureTime  DateTime
+  availableSeats Int
+  pricePerSeat   Float
+  conditions     String?     @db.Text
+  status         RouteStatus @default(AVAILABLE)
+  cancelledAt    DateTime?
+  cancelledBy    String?
+  routePolyline  String?     @db.MediumText
+  distanceMeters Int?
+  durationSeconds Int?
+  routeSummary   String?     @db.Text
+  distance       String?
+  duration       String?
+  waypoints      Json?
+  landmarks      Json?
+  steps          Json?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  bookings Booking[]
+
+  @@index([driverId])
+  @@index([vehicleId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([departureTime])
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  routeId         String
+  route           Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  passengerId     String
+  passenger       User          @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
+  numberOfSeats   Int
+  status          BookingStatus @default(PENDING)
+  cancelledAt     DateTime?
+  cancelledBy     String?
+  cancelReason    CancelReason?
+  pickupLocation  Json
+  dropoffLocation Json
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Legal Compliance Models ─────────────────────────────
+
+// พ.ร.บ.คอมพิวเตอร์ พ.ศ. 2560 มาตรา 26
+// เก็บข้อมูลจราจรคอมพิวเตอร์ไม่น้อยกว่า 90 วัน
+// Immutable — ห้ามแก้ไข/ลบ
+model SystemLog {
+  id        Int      @id @default(autoincrement())
+  userId    String?
+  ipAddress String   @db.VarChar(45) // รองรับ IPv6
+  action    String   @db.VarChar(10) // HTTP Method
+  resource  String   @db.Text        // Request URL
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@index([ipAddress])
+}
+
+// PDPA พ.ศ. 2562 มาตรา 22
+// เก็บเฉพาะ SHA-256 Hash ของเลขบัตรประชาชน
+// ไม่เก็บข้อมูลดิบเพื่อลด Privacy Risk
+model Blacklist {
+  id               Int      @id @default(autoincrement())
+  nationalIdHash   String   @unique @db.VarChar(64) // SHA-256 = 64 hex chars
+  reason           String?  @db.Text
+  createdByAdminId String
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+}
