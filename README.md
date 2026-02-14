@@ -62,6 +62,7 @@ DriveToSurviveWebApp/
 ## Setup
 
 ```bash
+#แก้ไขไฟล์ .env.example เปลี่ยนเป็น .env และนำ apikeyหรือkeysต่างๆใส่
 # ติดตั้ง dependencies ทั้งหมด
 npm run install:all
 
@@ -82,6 +83,7 @@ npm run dev:server    # Express → http://localhost:3001
 
 # หรือใช้ shell script
 ./start-dev.sh
+./stop-dev.sh
 ```
 
 ## Ports

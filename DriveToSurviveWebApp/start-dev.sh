@@ -39,3 +39,5 @@ echo "Press Ctrl+C to stop all services"
 
 # Wait for all background processes
 wait
+
+# ./start-dev.sh
