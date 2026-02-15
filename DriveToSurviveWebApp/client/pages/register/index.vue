@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen">
     <!-- Left panel -->
-    <div class="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-primary via-slate-900 to-primary items-center justify-center p-12">
+    <div class="hidden lg:flex lg:w-5/12 bg-primary items-center justify-center p-12">
       <div class="max-w-sm text-center">
         <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-2xl bg-cta/20">
           <svg class="w-8 h-8 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1e3a8a;
+  --color-primary: #1E4D40;
   --color-secondary: #334155;
-  --color-cta: #0369A1;
-  --color-cta-hover: #075985;
-  --color-cta-light: #E0F2FE;
-  --color-surface: #F8FAFC;
+  --color-cta: #EAB308;
+  --color-cta-hover: #CA8A04;
+  --color-cta-light: #FEF9C3;
+  --color-surface: #F9FAFB;
 
   --font-heading: 'Lexend', sans-serif;
   --font-body: 'Source Sans 3', sans-serif;
@@ -38,16 +38,17 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 0.625rem 1.5rem;
-  font-weight: 500;
-  color: #fff;
-  background-color: #0369A1;
+  font-weight: 600;
+  color: #1E4D40;
+  /* Dark Green text on Gold button */
+  background-color: #EAB308;
   border-radius: 0.5rem;
   transition: background-color 200ms, box-shadow 200ms;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background-color: #075985;
+  background-color: #CA8A04;
 }
 
 .btn-primary:focus-visible {
@@ -66,17 +67,17 @@ h6 {
   justify-content: center;
   padding: 0.625rem 1.5rem;
   font-weight: 500;
-  color: #0369A1;
+  color: #1E4D40;
   background-color: #fff;
-  border: 1px solid #BAE6FD;
+  border: 1px solid #EAB308;
   border-radius: 0.5rem;
   transition: background-color 200ms, border-color 200ms;
   cursor: pointer;
 }
 
 .btn-outline:hover {
-  background-color: #E0F2FE;
-  border-color: #0369A1;
+  background-color: #FEF9C3;
+  border-color: #CA8A04;
 }
 
 .btn-ghost {

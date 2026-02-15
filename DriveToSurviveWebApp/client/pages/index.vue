@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-primary via-slate-900 to-primary">
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 32px 32px;"></div>
+    <section class="relative overflow-hidden bg-primary">
+      <div class="absolute inset-0 opacity-5">
+        <div class="hidden"></div>
       </div>
       <div class="relative px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-28">
         <div class="grid items-center gap-12 lg:grid-cols-2">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-cta/10 text-sky-300">
+            <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 text-sm font-medium rounded-full bg-cta/10 text-cta-light border border-cta/20">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
@@ -16,22 +16,22 @@
             </div>
             <h1 class="mb-6 text-4xl font-bold leading-tight text-white font-heading lg:text-5xl xl:text-6xl">
               {{ $t('home.hero_title') }}<br />
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">{{ $t('home.hero_subtitle') }}</span>
+              <span class="text-cta">{{ $t('home.hero_subtitle') }}</span>
             </h1>
             <p class="max-w-lg mb-8 text-lg leading-relaxed text-slate-300">
               {{ $t('home.hero_description') }}
             </p>
             <div class="flex flex-wrap gap-4">
-              <NuxtLink :to="localePath('/findTrip')" class="inline-flex items-center gap-2 px-6 py-3 font-medium text-white transition-all duration-200 rounded-lg shadow-lg bg-cta hover:bg-cta-hover hover:shadow-xl">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <NuxtLink :to="localePath('/findTrip')" class="inline-flex items-center gap-2 px-6 py-3 font-bold text-primary transition-all duration-200 rounded-lg shadow-lg bg-cta hover:bg-cta-hover hover:shadow-xl hover:-translate-y-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 {{ $t('home.find_trip') }}
               </NuxtLink>
-              <NuxtLink :to="localePath('/register')" class="inline-flex items-center gap-2 px-6 py-3 font-medium transition-all duration-200 border rounded-lg text-slate-200 border-slate-500 hover:bg-white/10">
+              <NuxtLink :to="localePath('/register')" class="inline-flex items-center gap-2 px-6 py-3 font-medium transition-all duration-200 border rounded-lg text-slate-200 border-white/20 hover:bg-white/10">
                 {{ $t('home.get_started') }}
               </NuxtLink>
-              <NuxtLink :to="localePath('/about')" class="inline-flex items-center gap-2 px-6 py-3 font-medium transition-all duration-200 rounded-lg text-sky-300 hover:text-sky-200 hover:bg-white/5">
+              <NuxtLink :to="localePath('/about')" class="inline-flex items-center gap-2 px-6 py-3 font-medium transition-all duration-200 rounded-lg text-cta-light hover:text-cta hover:bg-white/5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -40,20 +40,20 @@
             </div>
             <!-- Trust badges -->
             <div class="flex flex-wrap items-center gap-6 mt-10">
-              <div class="flex items-center gap-2 text-sm text-slate-400">
-                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <div class="flex items-center gap-2 text-sm text-slate-300">
+                <svg class="w-5 h-5 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ $t('home.trust_ekyc') }}
               </div>
-              <div class="flex items-center gap-2 text-sm text-slate-400">
-                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <div class="flex items-center gap-2 text-sm text-slate-300">
+                <svg class="w-5 h-5 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ $t('home.trust_gps') }}
               </div>
-              <div class="flex items-center gap-2 text-sm text-slate-400">
-                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <div class="flex items-center gap-2 text-sm text-slate-300">
+                <svg class="w-5 h-5 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {{ $t('home.trust_pdpa') }}
@@ -62,7 +62,7 @@
           </div>
           <div class="hidden lg:block">
             <div class="relative">
-              <div class="absolute -inset-4 bg-gradient-to-r from-sky-500/20 to-cyan-500/20 rounded-2xl blur-xl"></div>
+              <div class="hidden"></div>
               <div class="relative p-6 border rounded-2xl bg-white/5 backdrop-blur border-white/10">
                 <div class="grid gap-4">
                   <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
@@ -114,8 +114,8 @@
         <div class="grid gap-8 md:grid-cols-3">
           <div>
             <div class="flex items-center gap-2 mb-4">
-              <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-cta/20">
-                <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-cta">
+                <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
