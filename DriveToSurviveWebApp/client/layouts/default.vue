@@ -1,30 +1,30 @@
 <template>
     <div class="min-h-screen bg-surface">
         <!-- Navbar -->
-        <header class="sticky top-0 z-50 border-b border-slate-700/50 bg-primary/95 backdrop-blur-md">
+        <header class="sticky top-0 z-50 border-b border-white/10 bg-primary/95 backdrop-blur-md shadow-sm">
             <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <!-- Brand -->
                     <NuxtLink to="/" class="flex items-center gap-2">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-cta">
-                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-cta text-primary font-bold">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
                         </div>
-                        <span class="text-xl font-bold text-white font-heading">Drive To Survive</span>
+                        <span class="text-xl font-bold text-white font-heading tracking-tight">Drive To Survive</span>
                     </NuxtLink>
 
                     <!-- Desktop Nav -->
                     <nav class="items-center hidden gap-1 md:flex">
                         <NuxtLink to="/findTrip"
                             class="px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/findTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'">
+                            :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-slate-300 hover:text-white'">
                             ค้นหาเส้นทาง
                         </NuxtLink>
 
                         <NuxtLink v-if="user" to="/createTrip"
                             class="px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/createTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'">
+                            :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-slate-300 hover:text-white'">
                             สร้างเส้นทาง
                         </NuxtLink>
 
@@ -32,7 +32,7 @@
                         <div v-if="user" class="relative dropdown-trigger">
                             <button
                                 class="flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                                :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'">
+                                :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-slate-300 hover:text-white'">
                                 การเดินทางทั้งหมด
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -53,7 +53,7 @@
                         <!-- Auth buttons -->
                         <div v-if="!token" class="flex items-center gap-2 ml-2">
                             <NuxtLink to="/login" class="text-sm text-slate-300 hover:text-white btn-ghost hover:bg-white/10">เข้าสู่ระบบ</NuxtLink>
-                            <NuxtLink to="/register" class="bg-white text-primary hover:bg-slate-100 btn-primary text-sm font-semibold">สมัครสมาชิก</NuxtLink>
+                            <NuxtLink to="/register" class="text-primary hover:bg-cta-hover btn-primary text-sm font-semibold shadow-lg shadow-cta/20">สมัครสมาชิก</NuxtLink>
                         </div>
 
                         <!-- Bell -->

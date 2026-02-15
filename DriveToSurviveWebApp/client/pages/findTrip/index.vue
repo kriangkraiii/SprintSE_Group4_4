@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <!-- Hero header -->
-        <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white">
+        <div class="bg-primary text-white">
             <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">ค้นหาเส้นทาง</h1>
                 <p class="mt-1 text-emerald-100 text-sm">หาเส้นทางร่วมเดินทาง ประหยัด ปลอดภัย</p>

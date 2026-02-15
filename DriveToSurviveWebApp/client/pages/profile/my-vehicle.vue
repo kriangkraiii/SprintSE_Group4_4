@@ -135,7 +135,7 @@ onMounted(() => {
 <style scoped>
 /* Copied from the HTML file */
 .license-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background-color: #F8FAFC;
     border: 3px solid #1e40af;
     border-radius: 12px;
     position: relative;
@@ -144,7 +144,7 @@ onMounted(() => {
 }
 
 .selfie-frame {
-    background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+    background-color: #F9FAFB;
     border: 3px solid #f59e0b;
     border-radius: 20px;
     position: relative;
@@ -153,7 +153,7 @@ onMounted(() => {
 }
 
 .person-silhouette {
-    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    background-color: #64748B;
     border-radius: 50%;
     position: relative;
 }
@@ -169,7 +169,7 @@ onMounted(() => {
 }
 
 .step-indicator {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background-color: #1E4D40;
     color: white;
     width: 28px;
     height: 28px;

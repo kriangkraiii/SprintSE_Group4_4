@@ -10,14 +10,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1e3a8a',
+        primary: '#1E4D40', // Dark Green
         secondary: '#334155',
         cta: {
-          DEFAULT: '#0369A1',
-          hover: '#075985',
-          light: '#E0F2FE',
+          DEFAULT: '#EAB308', // Gold
+          hover: '#CA8A04',
+          light: '#FEF9C3', // Light Gold/Yellow
         },
-        surface: '#F8FAFC',
+        surface: '#F9FAFB',
       },
       fontFamily: {
         heading: ['Lexend', 'sans-serif'],

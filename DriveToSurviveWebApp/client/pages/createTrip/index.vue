@@ -55,7 +55,7 @@
 
         <!-- Hero header -->
         <template v-else>
-        <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white">
+        <div class="bg-primary text-white">
             <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
                 <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">สร้างเส้นทางใหม่</h1>
                 <p class="mt-1 text-emerald-100 text-sm">แชร์การเดินทางของคุณ ให้คนอื่นร่วมทาง</p>
