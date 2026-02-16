@@ -20,8 +20,8 @@ export default {
         surface: '#F9FAFB',
       },
       fontFamily: {
-        heading: ['Lexend', 'sans-serif'],
-        body: ['Source Sans 3', 'sans-serif'],
+        heading: ['Kanit', 'sans-serif'],
+        body: ['Kanit', 'sans-serif'],
       },
       borderRadius: {
         card: '0.75rem',
