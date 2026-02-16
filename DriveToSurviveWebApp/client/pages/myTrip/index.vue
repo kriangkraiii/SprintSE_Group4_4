@@ -716,7 +716,6 @@ function formatDuration(input) {
 // --- Lifecycle and Watchers ---
 useHead({
     title: 'การเดินทางของฉัน - Drive To Survive',
-    link: [{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap' }],
     script:
         process.client && !window.google?.maps
             ? [

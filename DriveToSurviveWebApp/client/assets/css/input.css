@@ -8,8 +8,8 @@
   --color-cta-light: #FEF9C3;
   --color-surface: #F9FAFB;
 
-  --font-heading: 'Lexend', sans-serif;
-  --font-body: 'Source Sans 3', sans-serif;
+  --font-heading: 'Kanit', sans-serif;
+  --font-body: 'Kanit', sans-serif;
 
   --radius-card: 0.75rem;
 }
@@ -18,7 +18,7 @@
 
 /* Base */
 body {
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #020617;
   background-color: #F8FAFC;
 }
@@ -29,7 +29,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* ── Buttons ── */
@@ -190,7 +190,7 @@ h6 {
 
 /* ── Section ── */
 .section-heading {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Kanit', sans-serif;
   font-weight: 700;
   color: #0F172A;
 }
