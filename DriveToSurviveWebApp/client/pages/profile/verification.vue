@@ -1,8 +1,8 @@
 <template>
     <div class="bg-gray-50">
-        <div class="flex items-center justify-center min-h-screen py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
             <div
-                class="flex w-full max-w-6xl mx-4 overflow-hidden bg-white border border-gray-300 rounded-lg shadow-lg">
+                class="flex w-full overflow-hidden bg-white border border-gray-300 rounded-lg shadow-lg">
 
                 <ProfileSidebar />
 
@@ -20,7 +20,7 @@
                                     <!-- OCR Badge -->
                                     <span v-if="meBasic.verifiedByOcr"
                                         class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200">
-                                        🤖 OCR
+                                        OCR
                                     </span>
                                     <!-- VERIFIED -->
                                     <span v-if="meBasic.isVerified || meBasic.verifiedByOcr"
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="mt-4 text-xs text-gray-400">ยืนยันอัตโนมัติ — ไม่ต้องรอแอดมินอนุมัติ</p>
+                            <p class="mt-4 text-xs text-gray-400">ยืนยันด้วยระบบการยืนยันอัตโนมัติ</p>
                         </div>
                     </div>
 

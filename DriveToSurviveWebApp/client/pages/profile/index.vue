@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="flex items-center justify-center min-h-screen py-8">
-            <div class="flex w-full max-w-6xl mx-4 overflow-hidden border card border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
+            <div class="flex w-full overflow-hidden border card border-slate-200">
 
                 <ProfileSidebar />
 
