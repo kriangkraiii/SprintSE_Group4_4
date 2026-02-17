@@ -4,7 +4,7 @@
         <div class="relative h-[280px] w-full">
             <img src="/images/bgmyroute.png" alt="My Route Background" class="object-cover w-full h-full" />
             <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-bold text-white drop-shadow-md">การเดินทางของฉัน</h2>
+                <h2 class="text-4xl font-bold text-white drop-shadow-md -ml-4">การเดินทางของฉัน</h2>
                 <p class="mt-2 text-white/90 drop-shadow-sm">บริหารจัดการและติดตามทุกการเดินทางของคุณ</p>
             </div>
         </div>
