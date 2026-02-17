@@ -160,7 +160,7 @@
                                 <NuxtLink to="/profile" class="block px-4 py-2 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary">
                                     บัญชีของฉัน
                                 </NuxtLink>
-                                <NuxtLink to="/profile/driver-verification" class="block px-4 py-2 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary">
+                                <NuxtLink v-if="!isDriverVerified" to="/profile/driver-verification" class="block px-4 py-2 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary">
                                     ยืนยันใบขับขี่
                                 </NuxtLink>
                                 <NuxtLink to="/profile/my-vehicle" class="block px-4 py-2 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary">
@@ -263,7 +263,7 @@
                                 <span class="text-sm font-medium text-white">{{ user?.firstName }}</span>
                             </div>
                             <NuxtLink to="/profile" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">บัญชีของฉัน</NuxtLink>
-                            <NuxtLink to="/profile/driver-verification" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">ยื่นยันใบขับขี่</NuxtLink>
+                            <NuxtLink v-if="!isDriverVerified" to="/profile/driver-verification" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">ยืนยันใบขับขี่</NuxtLink>
                             <NuxtLink to="/profile/my-vehicle" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">ข้อมูลรถยนต์</NuxtLink>
                             <NuxtLink v-if="user?.role === 'ADMIN'" to="/admin/users" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">Dashboard</NuxtLink>
                             <button @click="logout" class="block w-full px-3 py-2 ml-4 text-sm text-left text-red-400 rounded-lg cursor-pointer hover:bg-red-400/10">ออกจากระบบ</button>
@@ -283,8 +283,10 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
+import { useDriverStatus } from '~/composables/useDriverStatus'
 
 const { token, user, logout } = useAuth()
+const { isDriverVerified, fetchDriverStatus } = useDriverStatus()
 
 const isMobileMenuOpen = ref(false)
 const isMobileTripMenuOpen = ref(false)
@@ -419,7 +421,10 @@ onMounted(() => {
     window.addEventListener('resize', handleResize)
     document.addEventListener('click', onClickOutside)
     document.addEventListener('keydown', onKey)
-    if (token.value) fetchUserNotifications()
+    if (token.value) {
+        fetchUserNotifications()
+        fetchDriverStatus()
+    }
 })
 
 onUnmounted(() => {
