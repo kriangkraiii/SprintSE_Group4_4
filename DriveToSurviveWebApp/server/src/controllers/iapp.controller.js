@@ -1,0 +1,103 @@
+const asyncHandler = require('express-async-handler');
+const iappService = require('../services/iapp.service');
+const ApiError = require('../utils/ApiError');
+
+/**
+ * POST /api/ocr/id-card/front
+ * Upload รูปบัตรประชาชนด้านหน้า → OCR → ส่งข้อมูลกลับ
+ * ใช้ตอนลงทะเบียน (ไม่ต้อง login)
+ */
+const ocrIdCardFront = asyncHandler(async (req, res) => {
+    if (!req.file) {
+        throw new ApiError(400, 'Image file is required. Use field name "image".');
+    }
+
+    const result = await iappService.processIdCardFrontOcr(req.file.buffer, req.file.originalname, req.file.mimetype);
+
+    res.status(200).json({
+        success: true,
+        message: 'ID Card Front OCR completed',
+        data: result.data,
+    });
+});
+
+/**
+ * POST /api/ocr/id-card/back
+ * Upload รูปบัตรประชาชนด้านหลัง → OCR → ส่งข้อมูลกลับ
+ * ใช้ตอนลงทะเบียน (ไม่ต้อง login)
+ */
+const ocrIdCardBack = asyncHandler(async (req, res) => {
+    if (!req.file) {
+        throw new ApiError(400, 'Image file is required. Use field name "image".');
+    }
+
+    const result = await iappService.processIdCardBackOcr(req.file.buffer, req.file.originalname, req.file.mimetype);
+
+    res.status(200).json({
+        success: true,
+        message: 'ID Card Back OCR completed',
+        data: result.data,
+    });
+});
+
+/**
+ * POST /api/ocr/driver-license
+ * Upload รูปใบขับขี่ → OCR → ส่งข้อมูลกลับ
+ */
+const ocrDriverLicense = asyncHandler(async (req, res) => {
+    if (!req.file) {
+        throw new ApiError(400, 'Image file is required. Use field name "image".');
+    }
+
+    const result = await iappService.processDriverLicenseOcr(req.file.buffer, req.file.originalname, req.file.mimetype);
+
+    res.status(200).json({
+        success: true,
+        message: 'Driver License OCR completed',
+        data: result.data,
+    });
+});
+
+/**
+ * POST /api/ocr/vehicle-registration
+ * Upload รูปทะเบียนรถ → OCR → ส่งข้อมูลกลับ
+ */
+const ocrVehicleRegistration = asyncHandler(async (req, res) => {
+    if (!req.file) {
+        throw new ApiError(400, 'Image file is required. Use field name "image".');
+    }
+
+    const result = await iappService.processVehicleRegistrationOcr(req.file.buffer);
+
+    res.status(200).json({
+        success: true,
+        message: 'Vehicle Registration OCR completed',
+        data: result,
+    });
+});
+
+/**
+ * POST /api/ocr/face-id-verification
+ * Upload รูปบัตรประชาชน + รูปเซลฟี่ → ยืนยันตัวตนว่าเป็นบุคคลเดียวกัน
+ */
+const faceIdVerification = asyncHandler(async (req, res) => {
+    if (!req.files || !req.files.idCardImage || !req.files.selfieImage) {
+        throw new ApiError(400, 'ID card image (idCardImage) and selfie image (selfieImage) are required.');
+    }
+
+    const idCardFile = req.files.idCardImage[0];
+    const selfieFile = req.files.selfieImage[0];
+
+    const result = await iappService.processFaceIdVerification(
+        idCardFile.buffer, idCardFile.originalname, idCardFile.mimetype,
+        selfieFile.buffer, selfieFile.originalname, selfieFile.mimetype
+    );
+
+    res.status(200).json({
+        success: true,
+        message: 'Face and ID Card Verification completed',
+        data: result.data,
+    });
+});
+
+module.exports = { ocrIdCardFront, ocrIdCardBack, ocrDriverLicense, ocrVehicleRegistration, faceIdVerification };

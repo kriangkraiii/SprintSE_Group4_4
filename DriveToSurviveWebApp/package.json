@@ -1,0 +1,19 @@
+{
+  "name": "drive-to-survive",
+  "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n client,server -c cyan,green \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev -- --port 3002",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build",
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "lint": "cd client && npm run lint",
+    "postinstall": "cd client && npm run postinstall"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

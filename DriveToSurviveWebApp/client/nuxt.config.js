@@ -1,0 +1,78 @@
+import tailwindcssVite from "@tailwindcss/vite";
+
+export default defineNuxtConfig({
+  compatibilityDate: "2025-05-15",
+  devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      apiBase: "/api",
+      googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+    },
+  },
+  devServer: {
+    port: 3000,
+  },
+
+  // ── Proxy /api → Express server (port 3001) ──
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:3001/api',
+        changeOrigin: true,
+      },
+      '/documentation': {
+        target: 'http://localhost:3001/documentation',
+        changeOrigin: true,
+      },
+      '/metrics': {
+        target: 'http://localhost:3001/metrics',
+        changeOrigin: true,
+      },
+    },
+  },
+
+  plugins: ["~/plugins/api.client.js"],
+  app: {
+    head: {
+      title: "Ride — เดินทางร่วมกันอย่างปลอดภัย",
+      meta: [
+        { name: "description", content: "Ride — แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย ยืนยันตัวตน OTP ติดตามเรียลไทม์ ปุ่ม SOS พร้อมระบบรีวิว" }
+      ],
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap'
+        }
+      ]
+    },
+  },
+  vite: {
+    plugins: [tailwindcssVite()],
+  },
+  css: [
+    '~/assets/css/input.css',
+  ],
+  modules: [
+    '@nuxtjs/i18n',
+  ],
+  i18n: {
+    locales: [
+      { code: 'th', iso: 'th-TH', file: 'th.json', name: 'Thai' },
+      { code: 'en', iso: 'en-US', file: 'en.json', name: 'English' }
+    ],
+    lazy: true,
+    langDir: 'locales',
+    defaultLocale: 'th',
+    strategy: 'prefix_and_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+    }
+  },
+  build: {
+    transpile: []
+  },
+});
