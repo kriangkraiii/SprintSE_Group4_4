@@ -1,19 +1,20 @@
 <template>
     <div class="min-h-screen bg-gray-50">
-        <!-- Hero header -->
-        <div class="bg-primary text-white">
-            <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">ค้นหาเส้นทาง</h1>
-                <p class="mt-1 text-emerald-100 text-sm">หาเส้นทางร่วมเดินทาง ประหยัด ปลอดภัย</p>
+        <!-- Graphical Header -->
+        <div class="relative h-[280px] w-full">
+            <img src="/images/bgfindtrip.png" alt="Find Trip Background" class="object-cover w-full h-full" />
+            <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h1 class="text-4xl font-bold text-white drop-shadow-md">ค้นหาเส้นทาง</h1>
+                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">ระบุจุดเริ่มต้น ปลายทาง และรายละเอียดการเดินทางของคุณ เพื่อจับคู่กับผู้ขับขี่ที่ไปในเส้นทางเดียวกัน</p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <!-- Search bar (Grab-style) -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+            <!-- Search bar (Floating) -->
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 mb-8">
                 <form @submit.prevent="handleSearch"
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-                    <div>
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+                    <div class="lg:col-span-3">
                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดเริ่มต้น</label>
                         <div class="relative">
                             <input ref="originInputEl" v-model="searchForm.origin" type="text"
@@ -28,7 +29,7 @@
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div class="lg:col-span-3">
                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดปลายทาง</label>
                         <div class="relative">
                             <input ref="destinationInputEl" v-model="searchForm.destination" type="text"
@@ -43,12 +44,12 @@
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div class="lg:col-span-2">
                         <label class="block text-xs font-medium text-gray-500 mb-1">วันที่</label>
                         <input v-model="searchForm.date" type="date"
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50" />
                     </div>
-                    <div>
+                    <div class="lg:col-span-1">
                         <label class="block text-xs font-medium text-gray-500 mb-1">ที่นั่ง</label>
                         <select v-model="searchForm.seats"
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50">
@@ -56,13 +57,13 @@
                             <option v-for="s in 5" :key="s" :value="s">{{ s }} ที่นั่ง</option>
                         </select>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 lg:col-span-3">
                         <button type="submit"
-                            class="flex-1 py-2.5 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                            class="flex-1 py-4 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-500/20 cursor-pointer">
                             ค้นหา
                         </button>
                         <button type="button" @click="resetSearch"
-                            class="px-4 py-2.5 text-sm font-medium text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition cursor-pointer">
+                            class="flex-1 py-4 text-sm font-semibold text-white bg-[#137FEC] rounded-xl hover:bg-blue-600 transition shadow-lg shadow-blue-500/20 cursor-pointer">
                             รีเซ็ต
                         </button>
                     </div>
@@ -434,7 +435,7 @@
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
                 @click.self="closePlacePicker">
                 <div class="bg-white rounded-2xl w-[95%] max-w-lg max-h-[90vh] overflow-hidden shadow-2xl">
-                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                    <div class="flex items-center justify-between px-7 py-5 border-b border-gray-100">
                         <h3 class="text-base font-semibold text-gray-800">
                             เลือก{{ pickingField === 'origin' ? 'จุดเริ่มต้น' : 'จุดปลายทาง' }}
                         </h3>
