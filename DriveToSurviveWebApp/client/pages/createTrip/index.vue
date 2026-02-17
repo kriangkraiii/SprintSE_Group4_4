@@ -1,51 +1,96 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <!-- Guard: ยังไม่ผ่านเงื่อนไข -->
-        <div v-if="!canCreateRoute" class="flex items-center justify-center min-h-screen py-12">
-            <div class="max-w-lg w-full mx-4 bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <div v-if="!canCreateRoute" class="flex items-center justify-center min-h-screen py-12 bg-gray-50/50">
+            <div class="max-w-xl w-full mx-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6 animate-pulse">
+                    <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
-                <h2 class="text-xl font-bold text-gray-800 mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
-                <p class="text-gray-500 mb-6">คุณต้องดำเนินการตามขั้นตอนด้านล่างให้ครบก่อนจึงจะสร้างเส้นทางได้</p>
-                <div class="space-y-3 text-left">
+                <h2 class="text-4xl font-bold text-[#B50000] mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
+                <p class="text-gray-500 mb-8 max-w-sm mx-auto">คุณจำเป็นต้องดำเนินการตามขั้นตอนด้านล่างให้ครบถ้วน <br> จึงจะสามารถสร้างเส้นทางได้</p>
+                
+                <div class="space-y-4 text-left">
                     <!-- ขั้นตอน 1: บัตร ปชช. -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.idCard ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.idCard" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">1️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.idCard ? 'text-green-700' : 'text-gray-700'">ยืนยันบัตรประชาชน</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="guardStatus.idCard 
+                            ? 'bg-green-50 border-green-200 shadow-sm' 
+                            : 'bg-blue-50 border-blue-200 shadow-sm'">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="guardStatus.idCard ? 'text-green-800' : 'text-blue-900'">
+                                ยืนยันบัตรประชาชน
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.idCard" to="/profile/verification"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        <div v-if="guardStatus.idCard" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+                        <NuxtLink v-else to="/profile"
+                            class="px-4 py-2 text-sm font-medium text-white bg-[#1B4D89] rounded-lg hover:bg-[#164070] shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
+
                     <!-- ขั้นตอน 2: ใบขับขี่ -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.driver ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.driver" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">2️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.driver ? 'text-green-700' : 'text-gray-700'">ยืนยันใบขับขี่</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="guardStatus.driver 
+                            ? 'bg-green-50 border-green-200 shadow-sm' 
+                            : 'bg-blue-50 border-blue-200 shadow-sm'">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="guardStatus.driver ? 'text-green-800' : 'text-blue-900'">
+                                ยืนยันใบขับขี่
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.driver" to="/driverVerify"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        <div v-if="guardStatus.driver" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+                        <NuxtLink v-else to="/driverVerify"
+                            class="px-4 py-2 text-sm font-medium text-white bg-[#1B4D89] rounded-lg hover:bg-[#164070] shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
+
                     <!-- ขั้นตอน 3: รถยนต์ -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.vehicle ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.vehicle" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">3️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.vehicle ? 'text-green-700' : 'text-gray-700'">เพิ่มข้อมูลรถยนต์</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="[
+                            guardStatus.vehicle ? 'bg-green-50 border-green-200 shadow-sm' : '',
+                            !guardStatus.vehicle && (guardStatus.idCard && guardStatus.driver) ? 'bg-blue-50 border-blue-200 shadow-sm' : '',
+                            !guardStatus.vehicle && (!guardStatus.idCard || !guardStatus.driver) ? 'bg-gray-100 border-gray-200 opacity-75' : ''
+                        ]">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="[
+                                    guardStatus.vehicle ? 'text-green-800' : '',
+                                    !guardStatus.vehicle && (guardStatus.idCard && guardStatus.driver) ? 'text-blue-900' : '',
+                                    !guardStatus.vehicle && (!guardStatus.idCard || !guardStatus.driver) ? 'text-gray-500' : ''
+                                ]">
+                                เพิ่มข้อมูลรถยนต์
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.vehicle" to="/profile/my-vehicle"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                            :class="{ 'opacity-50 pointer-events-none': !guardStatus.idCard || !guardStatus.driver }">
+                        
+                        <div v-if="guardStatus.vehicle" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+
+                        <button v-else-if="!guardStatus.idCard || !guardStatus.driver" disabled
+                            class="px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-lg cursor-not-allowed">
+                            ดำเนินการ
+                        </button>
+
+                        <NuxtLink v-else to="/profile/my-vehicle"
+                            class="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700 shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
