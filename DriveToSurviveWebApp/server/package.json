@@ -13,7 +13,7 @@
     "test:watch": "jest --watch --verbose"
   },
   "dependencies": {
-    "@prisma/client": "^7.4.0",
+    "@prisma/client": "^6.19.0",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "jest": "^30.2.0",
-    "prisma": "^7.4.0"
+    "prisma": "^6.19.0"
   }
 }
