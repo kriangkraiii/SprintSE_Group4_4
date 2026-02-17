@@ -53,10 +53,10 @@ const searchLogs = async (opts = {}) => {
     return {
         data,
         pagination: {
-            page,
-            limit,
+            page: _page,
+            limit: _limit,
             total,
-            totalPages: Math.ceil(total / limit),
+            totalPages: Math.ceil(total / _limit),
         },
     };
 };

@@ -1,0 +1,1177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.1.1 (Python 3.9.6 on darwin)" generated="2026-02-17T01:23:21.849993" rpa="false" schemaversion="5">
+<suite id="s1" name="US3 Blacklist" source="/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/US3_Blacklist">
+<suite id="s1-s1" name="Blacklist Tests" source="/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/US3_Blacklist/blacklist_tests.robot">
+<kw name="Open Browser And Login As Admin" type="SETUP">
+<kw name="Open Browser To Login Page" owner="common">
+<kw name="New Browser" owner="Browser">
+<msg time="2026-02-17T01:23:22.069443" level="INFO">{"browser": "chromium", "headless": false, "chromiumSandbox": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "tracesDir": "/Users/conan/Downloads/\u0e0b\u0e2d\u0e1f\u0e40\u0e2d\u0e47\u0e19/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/browser/traces/b7bb40a1-1ecb-4bb5-8704-3f10efd7b369"}</msg>
+<msg time="2026-02-17T01:23:22.166038" level="INFO">Starting Browser process /Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js using port 50995</msg>
+<msg time="2026-02-17T01:23:22.166207" level="INFO">Node startup parameters: ['node', '/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js', '50995']</msg>
+<msg time="2026-02-17T01:23:25.109039" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":false,"chromiumSandbox":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"tracesDir":"/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/browser/traces/b7bb40a1-1ecb-4bb5-8704-3f10efd7b369"}</msg>
+<arg>chromium</arg>
+<arg>headless=false</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<status status="PASS" start="2026-02-17T01:23:22.068849" elapsed="3.041170"/>
+</kw>
+<kw name="New Context" owner="Browser">
+<msg time="2026-02-17T01:23:25.111827" level="INFO">{
+  "acceptDownloads": true,
+  "bypassCSP": false,
+  "forcedColors": "none",
+  "ignoreHTTPSErrors": false,
+  "javaScriptEnabled": true,
+  "offline": false,
+  "reducedMotion": "no-preference",
+  "serviceWorkers": "allow",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  }
+}</msg>
+<msg time="2026-02-17T01:23:25.133383" level="INFO">Successfully created context. </msg>
+<msg time="2026-02-17T01:23:25.133464" level="INFO">{'acceptDownloads': True, 'bypassCSP': False, 'forcedColors': 'none', 'ignoreHTTPSErrors': False, 'javaScriptEnabled': True, 'offline': False, 'reducedMotion': 'no-preference', 'serviceWorkers': 'allow', 'viewport': {'width': 1280, 'height': 800}}</msg>
+<arg>viewport={'width': 1280, 'height': 800}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new BrowserContext with specified options.</doc>
+<status status="PASS" start="2026-02-17T01:23:25.110718" elapsed="0.023075"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-17T01:23:26.695470" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/login</msg>
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-17T01:23:25.133992" elapsed="1.564885"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:26.744715" level="INFO">Waited for Element with selector id=identifier at state visible</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:26.699937" elapsed="0.045271"/>
+</kw>
+<status status="PASS" start="2026-02-17T01:23:22.068284" elapsed="4.677784"/>
+</kw>
+<kw name="Login As Admin" owner="common">
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:23:26.751212" level="INFO">Fills the text 'admin@example.com' in the given field.</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:26.749150" elapsed="0.054995"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:23:26.805039" level="INFO">Fills the text 'adminpassword' in the given field.</msg>
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:26.804445" elapsed="0.010955"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:23:26.816359" level="INFO">Clicks the element 'css=#loginForm button[type="submit"]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:26.815784" elapsed="0.039718"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.162791" level="INFO">Waited for Element with selector css=#loginForm button[type="submit"] at state detached</msg>
+<arg>${BTN_LOGIN}</arg>
+<arg>detached</arg>
+<arg>timeout=30s</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:26.855763" elapsed="0.307219"/>
+</kw>
+<doc>เข้าสู่ระบบด้วยบัญชี Admin</doc>
+<status status="PASS" start="2026-02-17T01:23:26.748537" elapsed="0.414614"/>
+</kw>
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-17T01:23:27.789013" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.163619" elapsed="0.625693"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.801110" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.789628" elapsed="0.011619"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-17T01:23:27.163326" elapsed="0.638071"/>
+</kw>
+<status status="PASS" start="2026-02-17T01:23:22.068047" elapsed="5.733403"/>
+</kw>
+<test id="s1-s1-t1" name="TC-BL-001 เปิดหน้า Blacklist สำเร็จ" line="23">
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-17T01:23:27.821195" level="INFO">Text: 'Blacklist Management'</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>==</arg>
+<arg>Blacklist Management</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.807389" elapsed="0.013904"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.826007" level="INFO">Waited for Element with selector text=PDPA ม.22 — SHA-256 Hash Only at state visible</msg>
+<arg>${PDPA_BADGE_BLACKLIST}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.821505" elapsed="0.004679"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.830902" level="INFO">Waited for Element with selector css=button:has(i.fa-plus) at state visible</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.826599" elapsed="0.004382"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.833501" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.831147" elapsed="0.002426"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Admin Dashboard
+2. คลิกเมนู "Blacklist" ที่แถบด้านข้าง
+ผลลัพธ์: แสดงหน้า Blacklist พร้อมตารางรายชื่อที่ถูก blacklist</doc>
+<tag>smoke</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-17T01:23:27.801644" elapsed="0.032087"/>
+</test>
+<test id="s1-s1-t2" name="TC-BL-002 เพิ่มเลขบัตรประชาชนเข้า Blacklist" line="38">
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:23:27.841008" level="INFO">Clicks the element 'css=button:has(i.fa-plus)'.</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.840733" elapsed="0.047997"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:27.896346" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state visible</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.888973" elapsed="0.007489"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:23:27.897088" level="INFO">Fills the text '1234567890123' in the given field.</msg>
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>${TEST_NATIONAL_ID}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.896726" elapsed="0.005251"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:23:27.902764" level="INFO">Fills the text 'ฉ้อโกง' in the given field.</msg>
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ฉ้อโกง</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.902331" elapsed="0.006336"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:23:27.909621" level="INFO">Clicks the element 'css=.fixed button:has-text("เพิ่ม Blacklist")'.</msg>
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:27.909169" elapsed="0.038258"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:43.104014" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/fail-screenshot-1.png" target="_blank"&gt;&lt;img src="browser/screenshot/fail-screenshot-1.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-17T01:23:43.104491" level="INFO">See also file:///Users/conan/Downloads/%E0%B8%8B%E0%B8%AD%E0%B8%9F%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%99/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/playwright-log.txt for additional details.</msg>
+<msg time="2026-02-17T01:23:43.106846" level="FAIL">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('h2:has-text("เพิ่ม Blacklist")') to be detached
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="FAIL" start="2026-02-17T01:23:27.948020" elapsed="15.172346">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('h2:has-text("เพิ่ม Blacklist")') to be detached
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold tex...
+    [ Message content over the limit has been removed. ]
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;</status>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<status status="NOT RUN" start="2026-02-17T01:23:43.120919" elapsed="0.000077"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<var>${rows}</var>
+<arg>${BL_TABLE_ROWS}</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:43.121185" elapsed="0.000024"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<var>${row_count}</var>
+<arg>${rows}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:43.121329" elapsed="0.000020"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${row_count} &gt; 0</arg>
+<arg>msg=ไม่พบรายการ Blacklist หลังเพิ่ม</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:43.121489" elapsed="0.000019"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "เพิ่ม Blacklist"
+3. กรอกเลขบัตรประชาชน = "1234567890123"
+4. กรอกเหตุผล = "ฉ้อโกง"
+5. กดปุ่ม "ยืนยัน"
+ผลลัพธ์: เพิ่มสำเร็จ แสดงรายการใหม่ในตาราง (PDPA ม.22 — เก็บเป็น SHA-256 hash)</doc>
+<tag>crud</tag>
+<tag>pdpa</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:23:27.836729" elapsed="15.284978">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('h2:has-text("เพิ่ม Blacklist")') to be detached
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold tex...
+    [ Message content over the limit has been removed. ]
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;
+  -   locator resolved to visible &lt;h2 class="mb-1 text-lg font-semibold text-primary"&gt;เพิ่ม Blacklist&lt;/h2&gt;</status>
+</test>
+<test id="s1-s1-t3" name="TC-BL-003 เพิ่มเลขบัตรเดียวกันซ้ำ" line="65">
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:23:43.132840" level="INFO">Clicks the element 'css=button:has(i.fa-plus)'.</msg>
+<msg time="2026-02-17T01:23:53.208568" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/fail-screenshot-2.png" target="_blank"&gt;&lt;img src="browser/screenshot/fail-screenshot-2.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-17T01:23:53.208855" level="INFO">See also file:///Users/conan/Downloads/%E0%B8%8B%E0%B8%AD%E0%B8%9F%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%99/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/playwright-log.txt for additional details.</msg>
+<msg time="2026-02-17T01:23:53.209608" level="FAIL">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('button:has(i.fa-plus)')
+  -   locator resolved to &lt;button class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-sm cursor-pointer hover:bg-red-700 transition-colors"&gt;…&lt;/button&gt;
+  - attempting click action
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #1
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #2
+  -   waiting 20ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #3
+  -   waiting 100ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #4
+  -   waiting 100ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #5
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #6
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #7
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #8
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #9
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #10
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #11
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex item</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="FAIL" start="2026-02-17T01:23:43.131931" elapsed="10.080508">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('button:has(i.fa-plus)')
+  -   locator resolved to &lt;button class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-sm cursor-pointer hover:bg-red-700 transition-colors"&gt;…&lt;/button&gt;
+  - attempting click action
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #1
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+    [ Message content over the limit has been removed. ]
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #10
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #11
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex item</status>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.212949" elapsed="0.000063"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>${TEST_NATIONAL_ID}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213151" elapsed="0.000022"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ทดสอบซ้ำ</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213274" elapsed="0.000020"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213388" elapsed="0.000027"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>css=.fixed .text-red-600</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213500" elapsed="0.000019"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>css=.fixed button:has-text("ยกเลิก")</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213602" elapsed="0.000021"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:23:53.213725" elapsed="0.000017"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "เพิ่ม Blacklist"
+3. กรอกเลขบัตร = "1234567890123" (เพิ่มไปแล้ว)
+4. กดปุ่ม "ยืนยัน"
+ผลลัพธ์: แสดงข้อความ "เลขบัตรนี้อยู่ใน Blacklist แล้ว"</doc>
+<tag>negative</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:23:43.127290" elapsed="10.086619">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('button:has(i.fa-plus)')
+  -   locator resolved to &lt;button class="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-red-600 rounded-lg shadow-sm cursor-pointer hover:bg-red-700 transition-colors"&gt;…&lt;/button&gt;
+  - attempting click action
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #1
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+    [ Message content over the limit has been removed. ]
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #10
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"&gt;…&lt;/div&gt; intercepts pointer events
+  - retrying click action, attempt #11
+  -   waiting 500ms
+  -   waiting for element to be visible, enabled and stable
+  -   element is visible, enabled and stable
+  -   scrolling into view if needed
+  -   done scrolling
+  -   &lt;div class="fixed inset-0 z-50 flex item</status>
+</test>
+<test id="s1-s1-t4" name="TC-BL-004 ลบรายชื่อออกจาก Blacklist" line="84">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-17T01:23:53.466841" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-17T01:23:53.226117" elapsed="0.240934"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:53.495381" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:53.467377" elapsed="0.028199"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-17T01:23:53.225903" elapsed="0.269782"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:53.507210" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:53.496336" elapsed="0.011013"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:23:53.515595" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:23:53.507693" elapsed="0.008268"/>
+</kw>
+<status status="PASS" start="2026-02-17T01:23:53.496009" elapsed="0.020363"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<msg time="2026-02-17T01:24:03.541219" level="INFO">Found  Locators successfully.</msg>
+<msg time="2026-02-17T01:24:03.546699" level="INFO">${rows_before} = []</msg>
+<var>${rows_before}</var>
+<arg>${BL_TABLE_ROWS}</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:23:53.516910" elapsed="10.029860"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-17T01:24:03.548665" level="INFO">Length is 0.</msg>
+<msg time="2026-02-17T01:24:03.548741" level="INFO">${count_before} = 0</msg>
+<var>${count_before}</var>
+<arg>${rows_before}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-17T01:24:03.548199" elapsed="0.000562"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:24:03.549743" level="INFO">Clicks the element 'css=table tbody tr:first-child button:has-text("ลบ")'.</msg>
+<msg time="2026-02-17T01:24:13.658302" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/fail-screenshot-3.png" target="_blank"&gt;&lt;img src="browser/screenshot/fail-screenshot-3.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-17T01:24:13.658792" level="INFO">See also file:///Users/conan/Downloads/%E0%B8%8B%E0%B8%AD%E0%B8%9F%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%99/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/playwright-log.txt for additional details.</msg>
+<msg time="2026-02-17T01:24:13.659213" level="FAIL">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('table tbody tr:first-child button:has-text("ลบ")')
+</msg>
+<arg>css=table tbody tr:first-child button:has-text("ลบ")</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="FAIL" start="2026-02-17T01:24:03.548980" elapsed="10.110945">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('table tbody tr:first-child button:has-text("ลบ")')
+</status>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>text=ต้องการลบรายการ</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:13.667273" elapsed="0.000188"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>500ms</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:13.668055" elapsed="0.000070"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>css=.fixed button.bg-red-600</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:13.668267" elapsed="0.000046"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:13.669038" elapsed="0.000032"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<status status="NOT RUN" start="2026-02-17T01:24:13.669295" elapsed="0.000030"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "ลบ" ที่รายการที่ต้องการ
+3. กดปุ่ม "ยืนยันการลบ"
+ผลลัพธ์: ลบสำเร็จ รายการหายจากตาราง</doc>
+<tag>crud</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:23:53.222420" elapsed="20.447333">TimeoutError: locator.click: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('table tbody tr:first-child button:has-text("ลบ")')
+</status>
+</test>
+<test id="s1-s1-t5" name="TC-BL-008 กรอง Blacklist ตามช่วงวันที่" line="106">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-17T01:24:14.314551" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-17T01:24:13.681959" elapsed="0.637843"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:24:14.356516" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T01:24:14.322518" elapsed="0.034457"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-17T01:24:13.681668" elapsed="0.675640"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:24:14.359889" level="INFO">Fills the text '2026-01-01T00:00' in the given field.</msg>
+<arg>${BL_FILTER_DATE_FROM}</arg>
+<arg>2026-01-01T00:00</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:14.358104" elapsed="0.029595"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:24:14.389330" level="INFO">Fills the text '2026-12-31T23:59' in the given field.</msg>
+<arg>${BL_FILTER_DATE_TO}</arg>
+<arg>2026-12-31T23:59</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:14.388186" elapsed="0.015498"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:24:14.404444" level="INFO">Clicks the element 'css=button:has-text("ค้นหา")'.</msg>
+<arg>${BL_BTN_SEARCH}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:14.404044" elapsed="0.088918"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:24:29.611236" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="browser/screenshot/fail-screenshot-4.png" target="_blank"&gt;&lt;img src="browser/screenshot/fail-screenshot-4.png" width="800px"/&gt;&lt;/a&gt;</msg>
+<msg time="2026-02-17T01:24:29.613781" level="INFO">See also file:///Users/conan/Downloads/%E0%B8%8B%E0%B8%AD%E0%B8%9F%E0%B9%80%E0%B8%AD%E0%B9%87%E0%B8%99/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/results/playwright-log.txt for additional details.</msg>
+<msg time="2026-02-17T01:24:29.614236" level="FAIL">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('svg.animate-spin') to be detached
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visib</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="FAIL" start="2026-02-17T01:24:14.497214" elapsed="15.117645">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('svg.animate-spin') to be detached
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmln...
+    [ Message content over the limit has been removed. ]
+...="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visib</status>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:29.615471" elapsed="0.000052"/>
+</kw>
+<status status="FAIL" start="2026-02-17T01:24:14.496450" elapsed="15.119239">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('svg.animate-spin') to be detached
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmln...
+    [ Message content over the limit has been removed. ]
+...="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visib</status>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:29.615908" elapsed="0.000023"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>${BL_BTN_CLEAR}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:24:29.616039" elapsed="0.000020"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<status status="NOT RUN" start="2026-02-17T01:24:29.616227" elapsed="0.000026"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. เลือกวันที่เริ่มต้น = "01/01/2026"
+3. เลือกวันที่สิ้นสุด = "31/12/2026"
+4. กดปุ่ม "ค้นหา"
+ผลลัพธ์: แสดงเฉพาะรายการที่อยู่ในช่วงวันที่ที่เลือก</doc>
+<tag>filter</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:24:13.674673" elapsed="15.941755">TimeoutError: locator.waitFor: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('svg.animate-spin') to be detached
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmln...
+    [ Message content over the limit has been removed. ]
+...="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visible &lt;svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 animate-spin text-cta"&gt;…&lt;/svg&gt;
+  -   locator resolved to visib</status>
+</test>
+<test id="s1-s1-t6" name="TC-BL-009 ผู้ใช้ทั่วไปไม่สามารถเข้าหน้า Blacklist ได้" line="124">
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-17T01:24:30.689353" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/login</msg>
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-17T01:24:29.627942" elapsed="1.066530"/>
+</kw>
+<kw name="Login As Passenger" owner="common">
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:24:30.703715" level="INFO">Fills the text 'testpassenger@test.com' in the given field.</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:30.700178" elapsed="0.182056"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T01:24:30.883559" level="INFO">Fills the text 'Test1234' in the given field.</msg>
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${PASSENGER_PASSWORD}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:30.882644" elapsed="0.067038"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T01:24:30.959978" level="INFO">Clicks the element 'css=#loginForm button[type="submit"]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T01:24:30.951250" elapsed="0.076932"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T01:25:01.031557" level="FAIL">ConnectionError: Playwright process has been terminated with code 130</msg>
+<arg>${BTN_LOGIN}</arg>
+<arg>detached</arg>
+<arg>timeout=30s</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="FAIL" start="2026-02-17T01:24:31.029133" elapsed="30.004565">ConnectionError: Playwright process has been terminated with code 130</status>
+</kw>
+<doc>เข้าสู่ระบบด้วยบัญชี Passenger</doc>
+<status status="FAIL" start="2026-02-17T01:24:30.696554" elapsed="30.338409">ConnectionError: Playwright process has been terminated with code 130</status>
+</kw>
+<kw name="Go To" owner="Browser">
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.036772" elapsed="0.000280"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.037267" elapsed="0.000065"/>
+</kw>
+<kw name="Get Url" owner="Browser">
+<var>${current_url}</var>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns the current URL.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.037478" elapsed="0.000021"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${current_url}</arg>
+<arg>/admin/blacklist</arg>
+<arg>msg=Passenger ไม่ควรเข้าถึงหน้า Blacklist ได้!</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.037646" elapsed="0.000039"/>
+</kw>
+<kw name="Go To" owner="Browser">
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.037784" elapsed="0.000019"/>
+</kw>
+<kw name="Login As Admin" owner="common">
+<doc>เข้าสู่ระบบด้วยบัญชี Admin</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.038344" elapsed="0.000022"/>
+</kw>
+<doc>ขั้นตอน:
+1. เข้าสู่ระบบด้วยบัญชี Passenger
+2. พิมพ์ URL หน้า Blacklist ในเบราว์เซอร์โดยตรง
+ผลลัพธ์: ถูก redirect ไปหน้าอื่น หรือแสดงข้อความ "ไม่มีสิทธิ์เข้าถึง" (RBAC)</doc>
+<tag>critical</tag>
+<tag>rbac</tag>
+<tag>security</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:24:29.620571" elapsed="31.418135">ConnectionError: Playwright process has been terminated with code 130</status>
+</test>
+<test id="s1-s1-t7" name="TC-BL-010 ตรวจสอบว่าไม่แสดงเลขบัตรดิบ (Hash Storage)" line="142">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="FAIL" start="2026-02-17T01:25:01.050752" elapsed="0.000735">Execution terminated by signal</status>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.051788" elapsed="0.000035"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="FAIL" start="2026-02-17T01:25:01.050451" elapsed="0.001462">Execution terminated by signal</status>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>css=button:has(i.fa-plus)</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.052411" elapsed="0.000025"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.052562" elapsed="0.000023"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>9876543210987</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.053966" elapsed="0.000031"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ทดสอบ hash</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.054118" elapsed="0.000025"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.054241" elapsed="0.000020"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.054373" elapsed="0.000022"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<status status="NOT RUN" start="2026-02-17T01:25:01.054511" elapsed="0.000022"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<var>${hash_cells}</var>
+<arg>css=table tbody tr td:nth-child(2) code</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.054702" elapsed="0.000069"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Get Text" owner="Browser">
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055165" elapsed="0.000019"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055261" elapsed="0.000017"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055356" elapsed="0.000017"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055442" elapsed="0.000016"/>
+</kw>
+<var name="${cell}"/>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055094" elapsed="0.000393"/>
+</iter>
+<var>${cell}</var>
+<value>@{hash_cells}</value>
+<status status="NOT RUN" start="2026-02-17T01:25:01.054994" elapsed="0.000518"/>
+</for>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ ระบบเก็บเฉพาะ SHA-256 hash ไม่แสดงเลขบัตรดิบ</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-02-17T01:25:01.055599" elapsed="0.000018"/>
+</kw>
+<doc>ขั้นตอน:
+1. Admin เพิ่มเลขบัตรเข้า blacklist
+2. เปิดหน้า Blacklist
+3. ตรวจสอบคอลัมน์ในตาราง — ไม่แสดงเลขบัตรดิบ
+ผลลัพธ์: ไม่มีเลขบัตรประชาชน 13 หลักแสดงในตาราง (PDPA ม.22)</doc>
+<tag>critical</tag>
+<tag>pdpa</tag>
+<tag>security</tag>
+<tag>US3</tag>
+<status status="FAIL" start="2026-02-17T01:25:01.046013" elapsed="0.009706">Execution terminated by signal</status>
+</test>
+<kw name="Close Test Browser" owner="common" type="TEARDOWN">
+<kw name="Close Browser" owner="Browser">
+<msg time="2026-02-17T01:25:01.056902" level="FAIL">ConnectionError: Playwright process has been terminated with code 130</msg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Closes the current browser.</doc>
+<status status="FAIL" start="2026-02-17T01:25:01.056659" elapsed="0.001839">ConnectionError: Playwright process has been terminated with code 130</status>
+</kw>
+<status status="FAIL" start="2026-02-17T01:25:01.056534" elapsed="0.002055">ConnectionError: Playwright process has been terminated with code 130</status>
+</kw>
+<doc>US#3 — Blacklist Management — UAT Automation
+PDPA ม.22 — SHA-256 Hash Only
+ทดสอบการเพิ่ม/ลบ Blacklist, ป้องกันซ้ำ, กรองข้อมูล, RBAC, Hash Storage</doc>
+<status status="FAIL" start="2026-02-17T01:23:21.867509" elapsed="99.191159">Suite teardown failed:
+ConnectionError: Playwright process has been terminated with code 130</status>
+</suite>
+<status status="FAIL" start="2026-02-17T01:23:21.851257" elapsed="99.208766"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="7" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="2" skip="0">critical</stat>
+<stat pass="0" fail="2" skip="0">crud</stat>
+<stat pass="0" fail="1" skip="0">filter</stat>
+<stat pass="0" fail="1" skip="0">negative</stat>
+<stat pass="0" fail="2" skip="0">pdpa</stat>
+<stat pass="0" fail="1" skip="0">rbac</stat>
+<stat pass="0" fail="2" skip="0">security</stat>
+<stat pass="0" fail="1" skip="0">smoke</stat>
+<stat pass="0" fail="7" skip="0">US3</stat>
+</tag>
+<suite>
+<stat pass="0" fail="7" skip="0" id="s1" name="US3 Blacklist">US3 Blacklist</stat>
+<stat pass="0" fail="7" skip="0" id="s1-s1" name="Blacklist Tests">US3 Blacklist.Blacklist Tests</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-02-17T01:25:01.045433" level="ERROR">Calling method '_end_test' of listener 'Browser' failed: ConnectionError: Playwright process has been terminated with code 130</msg>
+<msg time="2026-02-17T01:25:01.055846" level="ERROR">Calling method '_end_test' of listener 'Browser' failed: ConnectionError: Playwright process has been terminated with code 130</msg>
+<msg time="2026-02-17T01:25:01.058982" level="ERROR">Calling method '_end_suite' of listener 'Browser' failed: ConnectionError: Playwright process has been terminated with code 130</msg>
+</errors>
+</robot>

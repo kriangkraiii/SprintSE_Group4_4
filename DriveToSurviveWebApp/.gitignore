@@ -23,6 +23,11 @@ logs
 .env.*
 !.env.example
 
+# Python venv
+venv/
+robot_tests/venv/
+robot_tests/results/
+
 # Prisma
 server/prisma/*.db
 dist/build

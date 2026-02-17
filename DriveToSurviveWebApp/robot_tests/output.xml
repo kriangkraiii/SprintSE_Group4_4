@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.1.1 (Python 3.9.6 on darwin)" generated="2026-02-17T00:20:18.800637" rpa="false" schemaversion="5">
+<suite id="s1" name="System Log Tests" source="/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/US1_SystemLog/system_log_tests.robot">
+<kw name="Open Browser And Login As Admin" type="SETUP">
+<kw name="Open Browser To Login Page" owner="common">
+<kw name="New Browser" owner="Browser">
+<msg time="2026-02-17T00:20:19.002640" level="INFO">{"browser": "chromium", "headless": false, "chromiumSandbox": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "tracesDir": "/Users/conan/Downloads/\u0e0b\u0e2d\u0e1f\u0e40\u0e2d\u0e47\u0e19/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/browser/traces/30a8b845-15b5-480e-96e4-44405faa2031"}</msg>
+<msg time="2026-02-17T00:20:19.035227" level="INFO">Starting Browser process /Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js using port 61710</msg>
+<msg time="2026-02-17T00:20:19.035449" level="INFO">Node startup parameters: ['node', '/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js', '61710']</msg>
+<msg time="2026-02-17T00:20:22.048604" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":false,"chromiumSandbox":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"tracesDir":"/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/DriveToSurviveWebApp/robot_tests/browser/traces/30a8b845-15b5-480e-96e4-44405faa2031"}</msg>
+<arg>chromium</arg>
+<arg>headless=false</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<status status="PASS" start="2026-02-17T00:20:19.002079" elapsed="3.048055"/>
+</kw>
+<kw name="New Context" owner="Browser">
+<msg time="2026-02-17T00:20:22.056145" level="INFO">{
+  "acceptDownloads": true,
+  "bypassCSP": false,
+  "forcedColors": "none",
+  "ignoreHTTPSErrors": false,
+  "javaScriptEnabled": true,
+  "offline": false,
+  "reducedMotion": "no-preference",
+  "serviceWorkers": "allow",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  }
+}</msg>
+<msg time="2026-02-17T00:20:22.080553" level="INFO">Successfully created context. </msg>
+<msg time="2026-02-17T00:20:22.080722" level="INFO">{'acceptDownloads': True, 'bypassCSP': False, 'forcedColors': 'none', 'ignoreHTTPSErrors': False, 'javaScriptEnabled': True, 'offline': False, 'reducedMotion': 'no-preference', 'serviceWorkers': 'allow', 'viewport': {'width': 1280, 'height': 800}}</msg>
+<arg>viewport={'width': 1280, 'height': 800}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new BrowserContext with specified options.</doc>
+<status status="PASS" start="2026-02-17T00:20:22.051354" elapsed="0.029767"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-17T00:20:26.019761" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/login</msg>
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-17T00:20:22.081714" elapsed="3.941069"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T00:20:26.081517" level="INFO">Waited for Element with selector id=identifier at state visible</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.024271" elapsed="0.057380"/>
+</kw>
+<status status="PASS" start="2026-02-17T00:20:19.001609" elapsed="7.080190"/>
+</kw>
+<kw name="Login As Admin" owner="common">
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T00:20:26.083075" level="INFO">Fills the text 'admin@example.com' in the given field.</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.082748" elapsed="0.009243"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-17T00:20:26.093484" level="INFO">Fills the text 'adminpassword' in the given field.</msg>
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.092455" elapsed="0.055956"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-17T00:20:26.149451" level="INFO">Clicks the element 'css=#loginForm button[type="submit"]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.148751" elapsed="0.041966"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T00:20:26.672920" level="INFO">Waited for Element with selector text="เข้าสู่ระบบ" at state detached</msg>
+<arg>text="เข้าสู่ระบบ"</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.190921" elapsed="0.482141"/>
+</kw>
+<doc>เข้าสู่ระบบด้วยบัญชี Admin</doc>
+<status status="PASS" start="2026-02-17T00:20:26.082495" elapsed="0.590679"/>
+</kw>
+<kw name="Navigate To System Logs" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-17T00:20:27.307459" level="INFO">Successfully opened URL http://localhost:3000/admin/system-logs</msg>
+<arg>${SYSTEM_LOG_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-17T00:20:26.673663" elapsed="0.635044"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T00:20:27.336734" level="INFO">Waited for Element with selector css=h1:has-text("System Logs") at state visible</msg>
+<arg>${PAGE_TITLE_SYSTEM_LOGS}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.309446" elapsed="0.027490"/>
+</kw>
+<doc>เปิดหน้า System Logs ผ่าน sidebar</doc>
+<status status="PASS" start="2026-02-17T00:20:26.673371" elapsed="0.664173"/>
+</kw>
+<kw name="Wait Until Table Loaded" owner="common">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T00:20:27.359054" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.338725" elapsed="0.020452"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-17T00:20:27.368416" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${LOG_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.359362" elapsed="0.009187"/>
+</kw>
+<doc>รอจนตารางโหลดเสร็จ (ไม่มี loading spinner)</doc>
+<status status="PASS" start="2026-02-17T00:20:27.338315" elapsed="0.030383"/>
+</kw>
+<status status="PASS" start="2026-02-17T00:20:19.001406" elapsed="8.367384"/>
+</kw>
+<test id="s1-t1" name="TC-LOG-010 Log ยังคงอยู่หลังลบบัญชีผู้ใช้" line="174">
+<kw name="Generate Random String" owner="String">
+<msg time="2026-02-17T00:20:27.381035" level="INFO">${random_id} = ahhrslwa</msg>
+<var>${random_id}</var>
+<arg>8</arg>
+<arg>[LOWER]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.380322" elapsed="0.000748"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-02-17T00:20:27.381395" level="INFO">${test_email} = test_log_ahhrslwa@example.com</msg>
+<var>${test_email}</var>
+<arg>test_log_${random_id}@example.com</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.381207" elapsed="0.000207"/>
+</kw>
+<kw name="Generate Random String" owner="String">
+<msg time="2026-02-17T00:20:27.381930" level="INFO">${test_nid} = 8891633527351</msg>
+<var>${test_nid}</var>
+<arg>13</arg>
+<arg>[NUMBERS]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.381503" elapsed="0.000461"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-02-17T00:20:27.382234" level="INFO">${test_password} = Test1234</msg>
+<var>${test_password}</var>
+<arg>Test1234</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.382107" elapsed="0.000153"/>
+</kw>
+<kw name="Create User via API" owner="api_utils">
+<kw name="Fetch From Left" owner="String">
+<msg time="2026-02-17T00:20:27.383055" level="INFO">${username} = test_log_ahhrslwa</msg>
+<var>${username}</var>
+<arg>${email}</arg>
+<arg>@</arg>
+<doc>Returns contents of the ``string`` before the first occurrence of ``marker``.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.382931" elapsed="0.000153"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-02-17T00:20:27.383682" level="INFO">&amp;{headers} = { Content-Type=application/json }</msg>
+<var>&amp;{headers}</var>
+<arg>Content-Type=application/json</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.383210" elapsed="0.000508"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-02-17T00:20:27.384162" level="INFO">&amp;{body} = { email=test_log_ahhrslwa@example.com | username=test_log_ahhrslwa | password=Test1234 | firstName=TestLog | lastName=User | phoneNumber=0812345678 | nationalIdNumber=8891633527351 }</msg>
+<var>&amp;{body}</var>
+<arg>email=${email}</arg>
+<arg>username=${username}</arg>
+<arg>password=${password}</arg>
+<arg>firstName=${first_name}</arg>
+<arg>lastName=${last_name}</arg>
+<arg>phoneNumber=${phone}</arg>
+<arg>nationalIdNumber=${national_id}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.383821" elapsed="0.000361"/>
+</kw>
+<kw name="POST" owner="RequestsLibrary">
+<msg time="2026-02-17T00:20:27.420884" level="INFO">POST Request : url=http://localhost:3000/api/users 
+ path_url=/api/users 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '209'} 
+ body=b'{"email": "test_log_ahhrslwa@example.com", "username": "test_log_ahhrslwa", "password": "Test1234", "firstName": "TestLog", "lastName": "User", "phoneNumber": "0812345678", "nationalIdNumber": "8891633527351"}' 
+ </msg>
+<msg time="2026-02-17T00:20:27.420993" level="INFO">POST Response : url=http://localhost:3000/api/users 
+ status=400, reason=Bad Request 
+ headers={'content-security-policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'cross-origin-opener-policy': 'same-origin', 'cross-origin-resource-policy': 'same-origin', 'origin-agent-cluster': '?1', 'referrer-policy': 'no-referrer', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'x-content-type-options': 'nosniff', 'x-dns-prefetch-control': 'off', 'x-download-options': 'noopen', 'x-frame-options': 'SAMEORIGIN', 'x-permitted-cross-domain-policies': 'none', 'x-xss-protection': '0', 'vary': 'Origin', 'access-control-allow-credentials': 'true', 'content-type': 'application/json; charset=utf-8', 'content-length': '90', 'etag': 'W/"5a-TQWxSNGCzotffsQ8wzqsW4hC5+s"', 'date': 'Mon, 16 Feb 2026 17:20:27 GMT', 'connection': 'close'} 
+ body={"success":false,"message":"National ID photo and selfie photo are required.","data":null} 
+ </msg>
+<msg time="2026-02-17T00:20:27.421139" level="FAIL">Url: http://localhost:3000/api/users Expected status: 400 != 201</msg>
+<var>${resp}</var>
+<arg>${API_BASE_URL}/users</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=201</arg>
+<doc>Sends a POST request.</doc>
+<status status="FAIL" start="2026-02-17T00:20:27.384278" elapsed="0.042801">Url: http://localhost:3000/api/users Expected status: 400 != 201</status>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<var>${user_id}</var>
+<arg>${resp.json()}[data][user][id]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.427279" elapsed="0.000033"/>
+</kw>
+<return>
+<value>${user_id}</value>
+<status status="NOT RUN" start="2026-02-17T00:20:27.427357" elapsed="0.000024"/>
+</return>
+<var>${user_id}</var>
+<arg>${test_email}</arg>
+<arg>${test_password}</arg>
+<arg>TestLog</arg>
+<arg>User</arg>
+<arg>0812345678</arg>
+<arg>${test_nid}</arg>
+<doc>Creates a new user via API.</doc>
+<status status="FAIL" start="2026-02-17T00:20:27.382434" elapsed="0.045031">Url: http://localhost:3000/api/users Expected status: 400 != 201</status>
+</kw>
+<kw name="Open Browser To Login Page" owner="common">
+<status status="NOT RUN" start="2026-02-17T00:20:27.427623" elapsed="0.000027"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${test_email}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.427734" elapsed="0.000019"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${test_password}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.427828" elapsed="0.000017"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.427919" elapsed="0.000018"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>text=TestLog</arg>
+<arg>visible</arg>
+<arg>timeout=10s</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.428529" elapsed="0.000101"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>text=TestLog</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.428893" elapsed="0.000020"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>text=ออกจากระบบ</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429036" elapsed="0.000024"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>text=ออกจากระบบ</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429146" elapsed="0.000020"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<arg>${BTN_LOGIN}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429420" elapsed="0.000051"/>
+</kw>
+<kw name="Get Admin Token" owner="api_utils">
+<var>${admin_token}</var>
+<doc>Logs in as Admin and returns the JWT token.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429678" elapsed="0.000025"/>
+</kw>
+<kw name="Delete User via API" owner="api_utils">
+<arg>${user_id}</arg>
+<arg>${admin_token}</arg>
+<doc>Deletes a user by ID using an Admin token.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429794" elapsed="0.000069"/>
+</kw>
+<kw name="Login As Admin" owner="common">
+<doc>เข้าสู่ระบบด้วยบัญชี Admin</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.429968" elapsed="0.000020"/>
+</kw>
+<kw name="Navigate To System Logs" owner="common">
+<doc>เปิดหน้า System Logs ผ่าน sidebar</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430069" elapsed="0.000019"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<arg>${FILTER_USER_ID}</arg>
+<arg>${user_id}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430196" elapsed="0.000019"/>
+</kw>
+<kw name="Click" owner="Browser">
+<arg>${BTN_SEARCH}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430297" elapsed="0.000019"/>
+</kw>
+<kw name="Wait Until Table Loaded" owner="common">
+<doc>รอจนตารางโหลดเสร็จ (ไม่มี loading spinner)</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430405" elapsed="0.000020"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<var>${rows}</var>
+<arg>${LOG_TABLE_ROWS}</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430499" elapsed="0.000020"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<var>${row_count}</var>
+<arg>${rows}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430593" elapsed="0.000018"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${row_count} &gt; 0</arg>
+<arg>msg=Log หายไปหลังจากลบ User! (Log Retention Failed)</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430678" elapsed="0.000016"/>
+</kw>
+<kw name="Get Text" owner="Browser">
+<var>${cell_text}</var>
+<arg>css=table tbody tr:nth-child(1) td:nth-child(3)</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430768" elapsed="0.000017"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${cell_text}</arg>
+<arg>${user_id}</arg>
+<arg>msg=User ID ในตารางไม่ตรงกับที่ค้นหา</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430855" elapsed="0.000016"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ System Log persist correctly after user deletion (PDPA/Comp Act Compliance)</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-02-17T00:20:27.430952" elapsed="0.000016"/>
+</kw>
+<doc>เมื่อผู้ใช้ถูกลบ Log ของผู้ใช้ยังคงอยู่ในระบบ
+PDPA ม.33 vs พ.ร.บ.คอมพิวเตอร์ ม.26
+⚠️ Automated: Create User -&gt; Generate Log -&gt; Delete -&gt; Verify</doc>
+<tag>automated</tag>
+<tag>compliance</tag>
+<tag>pdpa</tag>
+<tag>US1</tag>
+<status status="FAIL" start="2026-02-17T00:20:27.370019" elapsed="0.061109">Url: http://localhost:3000/api/users Expected status: 400 != 201</status>
+</test>
+<kw name="Close Test Browser" owner="common" type="TEARDOWN">
+<kw name="Close Browser" owner="Browser">
+<msg time="2026-02-17T00:20:27.735884" level="INFO">Closed browser</msg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-17T00:20:27.449883" elapsed="0.286135"/>
+</kw>
+<status status="PASS" start="2026-02-17T00:20:27.447838" elapsed="0.288280"/>
+</kw>
+<doc>US#1 — System Log (Compliance) — UAT Automation
+พ.ร.บ.คอมพิวเตอร์ พ.ศ. 2560 มาตรา 26
+ทดสอบการแสดงผล, กรองข้อมูล, Pagination, Immutability, RBAC</doc>
+<status status="FAIL" start="2026-02-17T00:20:18.801674" elapsed="8.934475"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1" skip="0">automated</stat>
+<stat pass="0" fail="1" skip="0">compliance</stat>
+<stat pass="0" fail="1" skip="0">pdpa</stat>
+<stat pass="0" fail="1" skip="0">US1</stat>
+</tag>
+<suite>
+<stat pass="0" fail="1" skip="0" id="s1" name="System Log Tests">System Log Tests</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
