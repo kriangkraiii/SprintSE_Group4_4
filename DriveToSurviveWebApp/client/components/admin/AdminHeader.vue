@@ -1,23 +1,40 @@
 <template>
-    <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-white border border-slate-200 shadow-sm">
-        <div class="flex items-center justify-between h-full px-4">
-            <div class="flex items-center gap-4">
-                <!-- Mobile Menu Toggle -->
-                <button @click="toggleMobileSidebar" class="text-slate-500 lg:hidden hover:text-cta">
+    <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between h-full gap-3 px-4 lg:px-6">
+            <div class="flex items-center gap-4 min-w-0">
+                <button @click="toggleMobileSidebar" class="text-slate-500 lg:hidden hover:text-cta" aria-label="Open menu">
                     <i class="text-xl fas fa-bars"></i>
                 </button>
 
-                <!-- Logo -->
-                <div class="flex items-center gap-2">
-                    <div class="flex items-center justify-center w-8 h-8 bg-cta rounded">
+                <NuxtLink to="/" class="flex items-center gap-2 transition-opacity hover:opacity-90">
+                    <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-cta">
                         <i class="text-white fas fa-chart-line"></i>
                     </div>
-                    <span class="text-xl font-semibold text-primary">PNNAdmin</span>
+                    <div class="leading-tight">
+                        <p class="text-base font-semibold text-primary">Admin</p>
+                        <p class="hidden text-xs text-slate-400 sm:block">Control Center</p>
+                    </div>
+                </NuxtLink>
+
+                <div class="hidden lg:block">
+                    <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-cta-light text-cta">
+                        <i class="mr-1.5 fa-solid fa-shield-halved"></i>{{ currentPageLabel }}
+                    </span>
                 </div>
             </div>
 
-            <!-- Right -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 lg:gap-4">
+                <NuxtLink to="/admin/users"
+                    class="hidden md:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span>Dashboard</span>
+                </NuxtLink>
+                <NuxtLink to="/"
+                    class="hidden md:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </NuxtLink>
+
                 <!-- Bell + Dropdown -->
                 <div class="relative">
                     <!-- Bell -->
@@ -117,11 +134,34 @@
                     </transition>
                 </div>
 
-                <!-- Profile -->
-                <div class="flex items-center gap-3">
-                    <span class="hidden text-sm text-primary md:block">{{ user.firstName }}</span>
-                    <div class="flex items-center justify-center w-10 h-10 bg-cta rounded-full">
-                        <i class="w-6 text-lg text-center text-white fas fa-user"></i>
+                <div class="relative">
+                    <button
+                        ref="profileBtn"
+                        class="flex items-center gap-2 pl-2 pr-2 py-1.5 rounded-xl hover:bg-slate-100"
+                        @click="openProfileMenu = !openProfileMenu"
+                        aria-haspopup="true"
+                        :aria-expanded="openProfileMenu ? 'true' : 'false'">
+                        <div class="hidden text-right md:block">
+                            <p class="text-sm font-medium text-primary leading-tight">{{ user?.firstName || 'Admin' }}</p>
+                            <p class="text-xs text-slate-400">{{ user?.role || 'ADMIN' }}</p>
+                        </div>
+                        <div class="flex items-center justify-center w-9 h-9 bg-cta rounded-full">
+                            <i class="text-sm text-white fas fa-user"></i>
+                        </div>
+                    </button>
+
+                    <div v-if="openProfileMenu" ref="profilePanel"
+                        class="absolute right-0 z-[60] w-48 p-1 mt-2 bg-white border rounded-xl shadow-lg border-slate-200">
+                        <NuxtLink to="/" class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-slate-600 hover:bg-slate-50"
+                            @click="openProfileMenu = false">
+                            <i class="fa-solid fa-house w-4 text-center"></i>
+                            กลับหน้า Home
+                        </NuxtLink>
+                        <button class="flex items-center w-full gap-2 px-3 py-2 text-sm text-red-600 rounded-lg hover:bg-red-50"
+                            @click="handleLogout">
+                            <i class="fa-solid fa-right-from-bracket w-4 text-center"></i>
+                            ออกจากระบบ
+                        </button>
                     </div>
                 </div>
             </div>
@@ -134,7 +174,23 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
 
-const { token, user } = useAuth()
+const { token, user, logout } = useAuth()
+const route = useRoute()
+const openProfileMenu = ref(false)
+const profileBtn = ref(null)
+const profilePanel = ref(null)
+
+const currentPageLabel = computed(() => {
+    const path = route.path || ''
+    if (path.includes('/admin/system-logs')) return 'System Logs'
+    if (path.includes('/admin/blacklist')) return 'Blacklist'
+    if (path.includes('/admin/routes')) return 'Routes'
+    if (path.includes('/admin/bookings')) return 'Bookings'
+    if (path.includes('/admin/vehicles')) return 'Vehicles'
+    if (path.includes('/admin/driver-verifications')) return 'Driver Verifications'
+    if (path.includes('/admin/users')) return 'User Management'
+    return 'Admin'
+})
 
 function toggleMobileSidebar() {
     const sidebar = document.getElementById('sidebar')
@@ -265,17 +321,30 @@ async function removeNotification(n) {
 
 /* ปิด dropdown เมื่อคลิกนอก */
 function onClickOutside(e) {
-    if (!openNotif.value) return
+    if (!openNotif.value && !openProfileMenu.value) return
     const t = e.target
-    if (notifPanel.value?.contains(t) || bellBtn.value?.contains(t)) return
-    openNotif.value = false
-    openMenuId.value = null
+    if (!(t instanceof Element)) return
+
+    if (!notifPanel.value?.contains(t) && !bellBtn.value?.contains(t)) {
+        openNotif.value = false
+        openMenuId.value = null
+    }
+
+    if (!profilePanel.value?.contains(t) && !profileBtn.value?.contains(t)) {
+        openProfileMenu.value = false
+    }
 }
 function onKey(e) {
     if (e.key === 'Escape') {
         openNotif.value = false
         openMenuId.value = null
+        openProfileMenu.value = false
     }
+}
+
+const handleLogout = async () => {
+    openProfileMenu.value = false
+    await logout()
 }
 
 onMounted(() => {
