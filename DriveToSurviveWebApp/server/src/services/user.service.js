@@ -56,6 +56,8 @@ const searchUsers = async (opts = {}) => {
                 phoneNumber: true, profilePicture: true,
                 role: true, isVerified: true, isActive: true,
                 createdAt: true, updatedAt: true,
+                driverVerification: { select: { status: true, verifiedByOcr: true } },
+                _count: { select: { vehicles: true } },
             }
         })
     ]);

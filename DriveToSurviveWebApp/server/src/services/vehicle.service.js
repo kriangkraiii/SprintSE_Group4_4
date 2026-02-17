@@ -169,9 +169,21 @@ const updateVehicle = async (vehicleId, userId, updateData) => {
       });
     }
 
+    const { amenities, ...scalarData } = updateData;
+
+    if (amenities !== undefined) {
+      await tx.vehicleAmenity.deleteMany({ where: { vehicleId } });
+      if (Array.isArray(amenities) && amenities.length > 0) {
+        await tx.vehicleAmenity.createMany({
+          data: amenities.map(name => ({ vehicleId, name })),
+        });
+      }
+    }
+
     const updated = await tx.vehicle.update({
       where: { id: vehicleId },
-      data: { ...updateData, userId },
+      data: { ...scalarData, userId },
+      include: { amenities: true },
     });
 
     return updated;
@@ -183,11 +195,14 @@ const deleteVehicle = async (vehicleId, userId) => {
     where: { id: vehicleId, userId },
   });
   if (!existingVehicle) {
-    throw new Error("Vehicle not found or access denied");
+    throw new ApiError(404, "Vehicle not found or access denied");
   }
 
-  await prisma.vehicle.delete({ where: { id: vehicleId } });
-  return { id: vehicleId };
+  return prisma.$transaction(async (tx) => {
+    await tx.vehicleAmenity.deleteMany({ where: { vehicleId } });
+    await tx.vehicle.delete({ where: { id: vehicleId } });
+    return { id: vehicleId };
+  });
 };
 
 const setDefaultVehicle = async (vehicleId, userId) => {
