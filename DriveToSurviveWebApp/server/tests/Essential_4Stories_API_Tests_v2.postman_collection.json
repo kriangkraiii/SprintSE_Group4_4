@@ -1,0 +1,840 @@
+{
+  "info": {
+    "_postman_id": "essential-4-stories-v2",
+    "name": "ชุดทดสอบ API สำหรับ 4 User Stories (v2)",
+    "description": "ชุดทดสอบ API ครอบคลุม 4 user stories หลัก:\n\n1️⃣ ระบบบันทึกกิจกรรมที่สอดคล้องกับกฎหมาย (Story #1)\n3️⃣ ระบบแบล็คลิสต์ผู้ใช้งาน (Story #3)\n4️⃣ ระบบยืนยันตัวตนอัตโนมัติ (Story #4)\n🔟 ระบบลบบัญชีผู้ใช้ตาม PDPA (Story #16)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📋 ก่อนรัน ต้องตั้งค่า Variables ให้ตรง:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n1. adminEmail / adminPassword\n   → ดูจากไฟล์ .env ของ server (ADMIN_EMAIL / ADMIN_PASSWORD)\n   → ค่า default จาก README: admin@example.com / secure_password\n\n2. nonAdminEmail / nonAdminPassword\n   → บัญชีผู้ใช้ทั่วไปที่สมัครผ่านหน้าเว็บแล้ว (role: PASSENGER)\n   → ⚠️ ต้องมีจริงในระบบ ถ้ายังไม่มีให้สมัครผ่าน frontend ก่อน\n\n3. deleteUserEmail / deleteUserPassword\n   → บัญชีที่จะใช้ทดสอบลบ (⚠️ จะถูกลบจริง!)\n   → ⚠️ ต้องสมัครบัญชีใหม่ผ่าน frontend สำหรับทดสอบนี้โดยเฉพาะ\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n▶️ ลำดับการรัน:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. รัน '0) เตรียมความพร้อม' ก่อนเสมอ (login เก็บ token)\n2. รัน Story 1-3 ตามลำดับ\n3. รัน Story 16 เป็นอันสุดท้าย (ลบบัญชีจริง)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🔧 อ้างอิงโค้ด:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n- Admin bootstrap: server/src/bootstrap/ensureAdmin.js\n- Login: server/src/controllers/auth.controller.js\n- System Log: server/src/routes/systemLog.routes.js\n- Blacklist: server/src/routes/blacklist.routes.js\n- Driver Verification: server/src/routes/driverVerification.routes.js + iapp.routes.js\n- Account Deletion: server/src/routes/user.routes.js",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001/api", "type": "string" },
+
+    { "key": "adminEmail", "value": "admin@example.com", "type": "string" },
+    { "key": "adminPassword", "value": "secure_password", "type": "string" },
+
+    { "key": "nonAdminEmail", "value": "testpassenger@test.com", "type": "string" },
+    { "key": "nonAdminPassword", "value": "Test1234", "type": "string" },
+
+    { "key": "deleteUserEmail", "value": "testdelete@test.com", "type": "string" },
+    { "key": "deleteUserPassword", "value": "Test1234", "type": "string" },
+
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "nonAdminToken", "value": "", "type": "string" },
+    { "key": "deleteUserToken", "value": "", "type": "string" },
+
+    { "key": "testNationalId", "value": "", "type": "string" },
+    { "key": "blacklistId", "value": "", "type": "string" },
+    { "key": "deletedUserId", "value": "", "type": "string" },
+
+    { "key": "dummyVerificationId", "value": "cm00000000000000000000000", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "0) เตรียมความพร้อม - Login และเก็บ Token",
+      "item": [
+        {
+          "name": "0.1 เข้าสู่ระบบ Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response;",
+                  "pm.test('ต้องได้สถานะ 200', () => res.to.have.status(200));",
+                  "",
+                  "const body = res.json();",
+                  "pm.test('response.success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "",
+                  "const token = body?.data?.token;",
+                  "pm.test('ต้องมี token ใน data.token', () => {",
+                  "  pm.expect(token).to.be.a('string');",
+                  "  pm.expect(token.length).to.be.above(10);",
+                  "});",
+                  "",
+                  "if (token) pm.collectionVariables.set('adminToken', token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "0.2 เข้าสู่ระบบผู้ใช้ทั่วไป",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const email = pm.collectionVariables.get('nonAdminEmail');",
+                  "if (!email || email.includes('แก้ให้ตรง')) {",
+                  "  console.warn('⚠️ nonAdminEmail ยังไม่ได้ตั้งค่า กรุณาแก้ไขใน Collection Variables');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response;",
+                  "pm.test('ต้องได้สถานะ 200 (ถ้า fail ให้ตรวจ nonAdminEmail/Password)', () => res.to.have.status(200));",
+                  "",
+                  "const body = res.json();",
+                  "const token = body?.data?.token;",
+                  "pm.test('ต้องมี token', () => {",
+                  "  pm.expect(token).to.be.a('string');",
+                  "  pm.expect(token.length).to.be.above(10);",
+                  "});",
+                  "",
+                  "if (token) pm.collectionVariables.set('nonAdminToken', token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{nonAdminEmail}}\",\n  \"password\": \"{{nonAdminPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "0.3 เข้าสู่ระบบผู้ใช้สำหรับทดสอบลบบัญชี",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const email = pm.collectionVariables.get('deleteUserEmail');",
+                  "if (!email || email.includes('แก้ให้ตรง')) {",
+                  "  console.warn('⚠️ deleteUserEmail ยังไม่ได้ตั้งค่า กรุณาแก้ไขใน Collection Variables');",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response;",
+                  "pm.test('ต้องได้สถานะ 200 (ถ้า fail ให้ตรวจ deleteUserEmail/Password)', () => res.to.have.status(200));",
+                  "",
+                  "const body = res.json();",
+                  "const token = body?.data?.token;",
+                  "pm.test('ต้องมี token', () => {",
+                  "  pm.expect(token).to.be.a('string');",
+                  "  pm.expect(token.length).to.be.above(10);",
+                  "});",
+                  "",
+                  "if (token) pm.collectionVariables.set('deleteUserToken', token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{deleteUserEmail}}\",\n  \"password\": \"{{deleteUserPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "1) ระบบบันทึกกิจกรรมที่สอดคล้องกับกฎหมาย",
+      "description": "Story #1: As an admin, I want a log that complies to the related law.\n\nAPI: GET /system-logs (admin only, immutable — ไม่มี PUT/DELETE)\nอ้างอิง: พ.ร.บ.คอมพิวเตอร์ พ.ศ. 2560 มาตรา 26",
+      "item": [
+        {
+          "name": "1.1 Admin ดึงข้อมูล log ได้สำเร็จ -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "pm.test('data ต้องเป็น array', () => pm.expect(body.data).to.be.an('array'));",
+                  "pm.test('ต้องมี pagination ครบ', () => {",
+                  "  pm.expect(body.pagination).to.have.property('page');",
+                  "  pm.expect(body.pagination).to.have.property('limit');",
+                  "  pm.expect(body.pagination).to.have.property('total');",
+                  "  pm.expect(body.pagination).to.have.property('totalPages');",
+                  "});",
+                  "pm.test('pagination.page ต้องเป็นตัวเลข', () => {",
+                  "  pm.expect(typeof body.pagination.page).to.be.oneOf(['number','string']);",
+                  "});",
+                  "pm.test('pagination.totalPages ต้องเป็น finite', () => {",
+                  "  pm.expect(Number.isFinite(Number(body.pagination.totalPages))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/system-logs", "host": ["{{baseUrl}}"], "path": ["system-logs"] }
+          }
+        },
+        {
+          "name": "1.2 ผู้ใช้ทั่วไปไม่สามารถดึง log ได้ -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 403 Forbidden', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/system-logs", "host": ["{{baseUrl}}"], "path": ["system-logs"] }
+          }
+        },
+        {
+          "name": "1.3 ไม่มี Token เข้าถึงไม่ได้ -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/system-logs", "host": ["{{baseUrl}}"], "path": ["system-logs"] }
+          }
+        },
+        {
+          "name": "1.4 Token ปลอมเข้าถึงไม่ได้ -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "fake.invalid.token", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/system-logs", "host": ["{{baseUrl}}"], "path": ["system-logs"] }
+          }
+        },
+        {
+          "name": "1.5 ห้ามลบ log (Immutable ตาม พ.ร.บ.คอมพิวเตอร์ ม.26) -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้ 404 (ไม่มี DELETE route)', () => pm.expect([404,405]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/system-logs/1", "host": ["{{baseUrl}}"], "path": ["system-logs", "1"] }
+          }
+        },
+        {
+          "name": "1.6 ห้ามแก้ไข log (Immutable ตาม พ.ร.บ.คอมพิวเตอร์ ม.26) -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้ 404 (ไม่มี PUT route)', () => pm.expect([404,405]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"action\": \"hacked\" }" },
+            "url": { "raw": "{{baseUrl}}/system-logs/1", "host": ["{{baseUrl}}"], "path": ["system-logs", "1"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "2) ระบบแบล็คลิสต์ผู้ใช้งาน",
+      "description": "Story #3: As an admin, I want to create a blacklist of both the drivers and the passengers.\n\nAPIs: GET/POST/DELETE /blacklist (admin), POST /blacklist/check (protected)\nอ้างอิง: PDPA พ.ศ. 2562 มาตรา 22 — เก็บเฉพาะ SHA-256 Hash",
+      "item": [
+        {
+          "name": "2.1 Admin เพิ่มผู้ใช้เข้า blacklist สำเร็จ -> 201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let n = String(Date.now());",
+                  "while (n.length < 13) n += '0';",
+                  "if (n.length > 13) n = n.slice(0, 13);",
+                  "pm.collectionVariables.set('testNationalId', n);",
+                  "console.log('สร้าง testNationalId:', n);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 201 Created', () => pm.response.to.have.status(201));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "",
+                  "pm.test('ต้องมี data.id (blacklist entry ID)', () => {",
+                  "  pm.expect(body.data).to.have.property('id');",
+                  "});",
+                  "",
+                  "pm.test('ไม่คืนเลขบัตรดิบใน response (PDPA ม.22)', () => {",
+                  "  const raw = pm.collectionVariables.get('testNationalId');",
+                  "  pm.expect(JSON.stringify(body)).to.not.include(raw);",
+                  "});",
+                  "",
+                  "if (body?.data?.id) {",
+                  "  pm.collectionVariables.set('blacklistId', String(body.data.id));",
+                  "  console.log('เก็บ blacklistId:', body.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nationalId\": \"{{testNationalId}}\",\n  \"reason\": \"ทดสอบระบบ blacklist\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/blacklist", "host": ["{{baseUrl}}"], "path": ["blacklist"] }
+          }
+        },
+        {
+          "name": "2.2 เพิ่มเลขบัตรซ้ำไม่ได้ -> 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 409 Conflict', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nationalId\": \"{{testNationalId}}\",\n  \"reason\": \"ซ้ำ\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/blacklist", "host": ["{{baseUrl}}"], "path": ["blacklist"] }
+          }
+        },
+        {
+          "name": "2.3 ตรวจสอบว่าอยู่ใน blacklist -> 200 + isBlacklisted=true",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "pm.test('isBlacklisted ต้องเป็น true', () => pm.expect(body.isBlacklisted).to.eql(true));",
+                  "pm.test('ต้องมีข้อมูล reason ใน data', () => pm.expect(body.data).to.have.property('reason'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nationalId\": \"{{testNationalId}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/blacklist/check", "host": ["{{baseUrl}}"], "path": ["blacklist", "check"] }
+          }
+        },
+        {
+          "name": "2.4 ผู้ใช้ทั่วไปไม่สามารถดึงรายการ blacklist ได้ -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 403 Forbidden', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/blacklist", "host": ["{{baseUrl}}"], "path": ["blacklist"] }
+          }
+        },
+        {
+          "name": "2.5 Admin ดึงรายการ blacklist พร้อม pagination -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "pm.test('data ต้องเป็น array', () => pm.expect(body.data).to.be.an('array'));",
+                  "pm.test('pagination.totalPages ต้องเป็นเลข finite', () => {",
+                  "  pm.expect(Number.isFinite(Number(body.pagination.totalPages))).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/blacklist", "host": ["{{baseUrl}}"], "path": ["blacklist"] }
+          }
+        },
+        {
+          "name": "2.6 ผู้ใช้ทั่วไปไม่สามารถเพิ่ม blacklist ได้ -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 403 Forbidden', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nationalId\": \"1234567890123\",\n  \"reason\": \"hack\"\n}" },
+            "url": { "raw": "{{baseUrl}}/blacklist", "host": ["{{baseUrl}}"], "path": ["blacklist"] }
+          }
+        },
+        {
+          "name": "2.7 ทำความสะอาด - Admin ลบออกจาก blacklist -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/blacklist/{{blacklistId}}", "host": ["{{baseUrl}}"], "path": ["blacklist", "{{blacklistId}}"] }
+          }
+        },
+        {
+          "name": "2.8 ยืนยัน - หลังลบแล้วต้องไม่อยู่ใน blacklist -> isBlacklisted=false",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('isBlacklisted ต้องเป็น false หลังลบ', () => pm.expect(body.isBlacklisted).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nationalId\": \"{{testNationalId}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/blacklist/check", "host": ["{{baseUrl}}"], "path": ["blacklist", "check"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "3) ระบบยืนยันตัวตนอัตโนมัติ",
+      "description": "Story #4: As an admin, I want an automated user verification.\n\nAPIs:\n- GET /driver-verifications/me (user)\n- POST /driver-verifications (user + files)\n- POST /driver-verifications/ocr (user + files)\n- PATCH /driver-verifications/:id/status (admin)\n- POST /ocr/* (OCR/IAPP endpoints)",
+      "item": [
+        {
+          "name": "3.1 ผู้ใช้ดูสถานะการยืนยันตัวตนของตนเอง -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(pm.response.json().success).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/driver-verifications/me", "host": ["{{baseUrl}}"], "path": ["driver-verifications", "me"] }
+          }
+        },
+        {
+          "name": "3.2 ส่งคำขอยืนยันโดยไม่มีไฟล์ -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (ขาดไฟล์ที่จำเป็น)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licenseNumber\": \"TEST-0000\",\n  \"firstNameOnLicense\": \"ทดสอบ\",\n  \"lastNameOnLicense\": \"ระบบ\",\n  \"typeOnLicense\": \"PRIVATE_CAR\",\n  \"licenseIssueDate\": \"2024-01-01\",\n  \"licenseExpiryDate\": \"2030-01-01\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/driver-verifications", "host": ["{{baseUrl}}"], "path": ["driver-verifications"] }
+          }
+        },
+        {
+          "name": "3.3 ส่ง OCR โดยไม่มีไฟล์ -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (ขาดไฟล์ที่จำเป็น)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/driver-verifications/ocr", "host": ["{{baseUrl}}"], "path": ["driver-verifications", "ocr"] }
+          }
+        },
+        {
+          "name": "3.4 ผู้ใช้ทั่วไปอนุมัติสถานะไม่ได้ -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 403 (เฉพาะ admin เท่านั้น)', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"APPROVED\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/driver-verifications/{{dummyVerificationId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["driver-verifications", "{{dummyVerificationId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "3.5 OCR บัตรประชาชนด้านหน้า ไม่มีรูป -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (Image file is required)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/id-card/front", "host": ["{{baseUrl}}"], "path": ["ocr", "id-card", "front"] }
+          }
+        },
+        {
+          "name": "3.6 OCR บัตรประชาชนด้านหลัง ไม่มีรูป -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (Image file is required)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/id-card/back", "host": ["{{baseUrl}}"], "path": ["ocr", "id-card", "back"] }
+          }
+        },
+        {
+          "name": "3.7 OCR ยืนยันใบหน้า ไม่มีไฟล์ -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (idCardImage and selfieImage required)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/face-id-verification", "host": ["{{baseUrl}}"], "path": ["ocr", "face-id-verification"] }
+          }
+        },
+        {
+          "name": "3.8 OCR ใบขับขี่ ไม่มี token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 401 (ต้อง login ก่อน)', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/driver-license", "host": ["{{baseUrl}}"], "path": ["ocr", "driver-license"] }
+          }
+        },
+        {
+          "name": "3.9 OCR ใบขับขี่ มี token แต่ไม่มีรูป -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (Image file is required)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{nonAdminToken}}", "type": "string" }] },
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/driver-license", "host": ["{{baseUrl}}"], "path": ["ocr", "driver-license"] }
+          }
+        },
+        {
+          "name": "3.10 OCR ทะเบียนรถ ไม่มี token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 401 (ต้อง login ก่อน)', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/ocr/vehicle-registration", "host": ["{{baseUrl}}"], "path": ["ocr", "vehicle-registration"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "4) ระบบลบบัญชีผู้ใช้ตาม PDPA [⚠️ ลบบัญชีจริง]",
+      "description": "Story #16: As a user, I want my account and information to be removed from the system.\n\nAPIs:\n- DELETE /users/me (user self-delete)\n- GET /users/admin/:id (admin ตรวจสอบ anonymize)\n- POST /auth/login (ยืนยันว่า login ไม่ได้หลังลบ)\n\n⚠️ คำเตือน: ทดสอบนี้จะลบบัญชี deleteUserEmail จริง!\nอ้างอิง: PDPA ม.33 (Right to Erasure) + พ.ร.บ.คอมพิวเตอร์ ม.26 (เก็บ Log)",
+      "item": [
+        {
+          "name": "4.1 ผู้ใช้ลบบัญชีตนเองสำเร็จ -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "pm.test('success ต้องเป็น true', () => pm.expect(body.success).to.eql(true));",
+                  "pm.test('ต้องมี deletedUserId', () => {",
+                  "  pm.expect(body.data).to.have.property('deletedUserId');",
+                  "  pm.expect(body.data.deletedUserId).to.be.a('string');",
+                  "  pm.expect(body.data.deletedUserId.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "if (body?.data?.deletedUserId) {",
+                  "  pm.collectionVariables.set('deletedUserId', body.data.deletedUserId);",
+                  "  console.log('เก็บ deletedUserId:', body.data.deletedUserId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{deleteUserToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "4.2 ลบบัญชีซ้ำไม่ได้ -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 400 (User already deleted)', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{deleteUserToken}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "4.3 Admin ตรวจว่าข้อมูลถูก anonymize ตาม PDPA -> 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "pm.test('ต้องได้สถานะ 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "const u = body?.data || {};",
+                  "pm.test('firstName ต้องเป็น Deleted', () => pm.expect(u.firstName).to.eql('Deleted'));",
+                  "pm.test('lastName ต้องเป็น User', () => pm.expect(u.lastName).to.eql('User'));",
+                  "pm.test('isActive ต้องเป็น false', () => pm.expect(u.isActive).to.eql(false));",
+                  "pm.test('nationalIdNumber ต้องเป็น null', () => pm.expect(u.nationalIdNumber).to.eql(null));",
+                  "pm.test('phoneNumber ต้องเป็น null', () => pm.expect(u.phoneNumber).to.eql(null));",
+                  "pm.test('email ต้องเป็น deleted_xxx@removed.local', () => {",
+                  "  pm.expect(u.email).to.include('@removed.local');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users/admin/{{deletedUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "admin", "{{deletedUserId}}"]
+            }
+          }
+        },
+        {
+          "name": "4.4 บัญชีที่ถูกลบไม่สามารถ login ได้ -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('ต้องได้สถานะ 401 (บัญชีถูก deactivate แล้ว)', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{deleteUserEmail}}\",\n  \"password\": \"{{deleteUserPassword}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    }
+  ]
+}
