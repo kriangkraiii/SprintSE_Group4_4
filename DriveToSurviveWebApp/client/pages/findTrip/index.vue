@@ -59,11 +59,11 @@
                     </div>
                     <div class="flex gap-2 lg:col-span-3">
                         <button type="submit"
-                            class="flex-1 py-4 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-500/20 cursor-pointer">
+                            class="flex-1 py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-500/20 cursor-pointer">
                             ค้นหา
                         </button>
                         <button type="button" @click="resetSearch"
-                            class="flex-1 py-4 text-sm font-semibold text-white bg-[#137FEC] rounded-xl hover:bg-blue-600 transition shadow-lg shadow-blue-500/20 cursor-pointer">
+                            class="flex-1 py-3 text-sm font-semibold text-white bg-[#137FEC] rounded-xl hover:bg-blue-600 transition shadow-lg shadow-blue-500/20 cursor-pointer">
                             รีเซ็ต
                         </button>
                     </div>
@@ -478,6 +478,10 @@ import buddhistEra from 'dayjs/plugin/buddhistEra'
 import { useToast } from '~/composables/useToast'
 import { useAuth } from '~/composables/useAuth'
 import { navigateTo } from '#app'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
@@ -1119,6 +1123,11 @@ onMounted(() => {
         try { delete window[GMAPS_CB] } catch { }
         initAll()
     }
+
+    if (route.query.from) searchForm.value.origin = route.query.from
+    if (route.query.to) searchForm.value.destination = route.query.to
+    if (route.query.date) searchForm.value.date = route.query.date
+    if (route.query.seat) searchForm.value.seats = route.query.seat
 })
 
 onUnmounted(() => {
