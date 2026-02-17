@@ -234,7 +234,8 @@ watch(() => props.show, (newVal) => {
 const fetchVehicles = async () => {
     isLoading.value = true;
     try {
-        vehicles.value = await $api('/vehicles');
+        const res = await $api('/vehicles');
+        vehicles.value = Array.isArray(res) ? res : (res?.data ?? []);
     } catch (error) {
         toast.error('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลรถยนต์ได้');
     } finally {
@@ -252,8 +253,8 @@ const showFormView = (mode, vehicle = null) => {
         form.color = vehicle.color;
         form.seatCapacity = vehicle.seatCapacity;
         form.isDefault = vehicle.isDefault;
-        amenitiesInput.value = vehicle.amenities.join(', ');
-        photoPreviews.value = [...vehicle.photos, '', '', ''].slice(0, 3);
+        amenitiesInput.value = (vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name).join(', ');
+        photoPreviews.value = [...(vehicle.photos || []), '', '', ''].slice(0, 3);
         form.photos = [null, null, null];
     } else {
         resetForm();
