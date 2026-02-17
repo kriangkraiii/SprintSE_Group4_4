@@ -1,58 +1,24 @@
 <template>
   <div class="flex min-h-screen">
     <!-- Left panel -->
-    <div class="hidden lg:flex lg:w-5/12 bg-primary items-center justify-center p-12">
-      <div class="max-w-sm text-center">
-        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-2xl bg-cta/20">
-          <svg class="w-8 h-8 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-          </svg>
-        </div>
-        <h2 class="mb-4 text-3xl font-bold text-white font-heading">สร้างบัญชีใหม่</h2>
-        <p class="mb-8 text-slate-300">เข้าร่วม Drive To Survive เพื่อเดินทางร่วมกันอย่างปลอดภัย</p>
-        <div class="space-y-3 text-left">
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">ยืนยันตัวตน eKYC ทุกคน</span>
-          </div>
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">ปลอดภัยด้วย GPS เรียลไทม์</span>
-          </div>
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">PDPA คุ้มครองข้อมูลส่วนตัว</span>
-          </div>
-        </div>
-      </div>
+     
+    
+    <div class="hidden lg:flex lg:w-6/12 bg-[#236993] items-center justify-center p-12 relative">
+      <div class="absolute inset-0 opacity-100 bg-no-repeat bg-cover " style="background-image: url('/images/bgregister.png'); background-position:center 100%;"></div>
     </div>
 
     <!-- Right form -->
     <div class="flex items-center justify-center flex-1 p-4 sm:p-6 lg:p-12 bg-surface">
       <main class="w-full max-w-lg">
-        <!-- Mobile brand -->
-        <div class="flex items-center justify-center gap-2 mb-6 lg:hidden">
-          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary">
-            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <span class="text-xl font-bold font-heading text-primary">Drive To Survive</span>
-        </div>
+        
 
-        <h1 class="mb-2 text-2xl font-bold text-center font-heading text-primary">สมัครสมาชิก</h1>
-        <p class="mb-6 text-sm text-center text-slate-500">กรอกข้อมูลเพื่อสร้างบัญชี Drive To Survive</p>
+        <h1 class="mb-2 text-2xl lg:text-6xl font-bold text-center font-heading text-[#236993]">สมัครสมาชิก</h1>
+        <p class="mb-6 text-sm text-center text-slate-500">กรอกข้อมูลเพื่อสร้างบัญชี Ride To Survive</p>
 
         <!-- Stepper -->
         <div class="relative mb-8">
           <div class="absolute left-0 right-0 h-0.5 bg-slate-200 top-5"></div>
-          <div class="absolute left-0 h-0.5 transition-all duration-500 bg-cta top-5" :style="{ width: stepProgress }"></div>
+          <div class="absolute left-0 h-0.5 transition-all duration-500 bg-[#236993] top-5" :style="{ width: stepProgress }"></div>
           <div class="relative flex items-center justify-between">
             <div v-for="step in totalSteps" :key="step" class="z-10 flex flex-col items-center w-1/3">
               <div :class="getStepClass(step)">
@@ -431,14 +397,14 @@ const getStepLabel = (step) => {
 
 const getStepClass = (step) => {
   let base = 'flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-500 text-sm';
-  if (step < currentStep.value) return `${base} bg-cta text-white`;
-  if (step === currentStep.value) return `${base} bg-cta text-white ring-4 ring-sky-200`;
+  if (step < currentStep.value) return `${base} bg-[#236993] text-white`;
+  if (step === currentStep.value) return `${base} bg-[#236993] text-white ring-4 ring-sky-200`;
   return `${base} bg-slate-200 text-slate-400`;
 };
 
 const getLabelClass = (step) => {
   let base = 'text-xs text-center mt-2 transition-all duration-500';
-  if (step <= currentStep.value) return `${base} font-semibold text-cta`;
+  if (step <= currentStep.value) return `${base} font-semibold text-[#236993]`;
   return `${base} text-slate-400`;
 };
 
@@ -609,6 +575,17 @@ const nextStep = () => {
   if (validationFunctions[currentStep.value - 1]()) {
     if (currentStep.value < totalSteps) currentStep.value++;
   }
+};
+
+const testClick = () => {
+  alert('Button clicked! Current step: ' + currentStep.value);
+  console.log('=== BUTTON CLICKED ===');
+  console.log('currentStep:', currentStep.value);
+  console.log('formData:', JSON.stringify(formData, null, 2));
+  
+  // ทดสอบเปลี่ยน step โดยตรง
+  currentStep.value = 2;
+  console.log('Changed to step:', currentStep.value);
 };
 
 const prevStep = () => {
