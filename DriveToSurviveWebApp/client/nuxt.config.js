@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      apiBase: "/api",
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || "/api",
       googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
     },
   },
