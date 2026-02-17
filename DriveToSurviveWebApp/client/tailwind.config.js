@@ -10,13 +10,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#236993', // Dark Green
+        primary: '#137FEC', 
         secondary: '#fff',
-        cta: {
-          DEFAULT: '#fff', // Gold
-          hover: '#CA8A04',
-          light: '#FEF9C3', // Light Gold/Yellow
-        },
+        cta: '#137FEC',           
+        'cta-hover': '#145ee7ff',
+        'cta-light': '#E0F2FE',   
         surface: '#F9FAFB',
       },
       fontFamily: {
