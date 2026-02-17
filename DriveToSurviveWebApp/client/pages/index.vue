@@ -231,7 +231,7 @@
               </div>
               <span class="text-3xl font-bold text-[#236993] font-heading">Ride</span>
             </div>
-            <p class="text-[#236993] max-w-md mb-6 leading-relaxed font-semibold">
+            <p class="text-slate-600 max-w-md mb-6 leading-relaxed font-semibold">
               แพลตฟอร์มแชร์รถที่ปลอดภัยและน่าเชื่อถือ<br>
               ด้วยระบบยืนยันตัวตน eKYC และการติดตาม GPS แบบเรียลไทม์
             </p>
@@ -240,17 +240,17 @@
           <div>
             <h4 class="mb-4 font-bold text-slate-600 text-lg font-heading">ลิงก์สำคัญ</h4>
             <div class="space-y-3">
-              <NuxtLink :to="localePath('/findTrip')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium">ค้นหาเส้นทาง</NuxtLink>
-              <NuxtLink :to="localePath('/createTrip')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium">สร้างเส้นทาง</NuxtLink>
-              <NuxtLink :to="localePath('/about')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium">เกี่ยวกับเรา</NuxtLink>
+              <NuxtLink :to="localePath('/findTrip')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium ml-3">ค้นหาเส้นทาง</NuxtLink>
+              <NuxtLink :to="localePath('/createTrip')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium ml-3">สร้างเส้นทาง</NuxtLink>
+              <NuxtLink :to="localePath('/about')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium ml-3">เกี่ยวกับเรา</NuxtLink>
             </div>
           </div>
           
           <div>
-            <h4 class="mb-4 font-bold text-[#236993] text-lg font-heading">นโยบาย</h4>
+            <h4 class="mb-4 font-bold text-slate-600 text-lg font-heading">นโยบาย</h4>
             <div class="space-y-3">
-              <NuxtLink :to="localePath('/terms-of-service')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium">ข้อกำหนดการใช้งาน</NuxtLink>
-              <NuxtLink :to="localePath('/privacy')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium">นโยบายความเป็นส่วนตัว</NuxtLink>
+              <NuxtLink :to="localePath('/terms-of-service')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium ml-3">ข้อกำหนดการใช้งาน</NuxtLink>
+              <NuxtLink :to="localePath('/privacy')" class="block text-[#236993] hover:text-[#137FEC] transition-colors font-medium ml-3">นโยบายความเป็นส่วนตัว</NuxtLink>
             </div>
           </div>
         </div>
