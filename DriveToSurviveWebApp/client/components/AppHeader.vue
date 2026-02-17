@@ -1,68 +1,67 @@
 <template>
     <header class="fixed top-0 left-0 z-50 w-full ">
-        <div class="px-6 py-5">
-        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-4 bg-white  backdrop-blur-md shadow-sm rounded-full">
-            <div class="flex items-center justify-between h-16">
-                <!-- Brand & Left Nav Group -->
-                <div class="flex items-center gap-1 md:gap-12 lg:gap-16">
-                    <!-- Brand -->
+        <div class="py-5">
+        <div class="pl-6 pr-3 mx-auto max-w-7xl bg-white backdrop-blur-md shadow-sm rounded-full">
+            <div class="flex items-center justify-between h-16 relative">
+                <!-- Brand (Left) -->
+                <div class="flex items-center">
                     <NuxtLink to="/" class="flex items-center gap-1">
                         <img src="/Ride.png" alt="Ride Logo" class="h-8 w-auto object-contain" />
                         <span class="text-3xl font-bold text-[#236993] font-heading tracking-tight">Ride</span>
                     </NuxtLink>
-    
-                    <!-- Desktop Nav -->
-                    <nav class="items-center hidden gap-1 md:flex">
-                        <NuxtLink to="/findTrip"
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            ค้นหาเส้นทาง
-                        </NuxtLink>
-    
-                        <NuxtLink  to="/createTrip"
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            สร้างเส้นทาง
-                        </NuxtLink>
-    
-                        <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                        <div v-if="user" class="relative dropdown-trigger">
-                            <button
-                                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                                :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                </svg>
-                                การเดินทางทั้งหมด
-                                <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div class="absolute right-0 w-56 py-2 mt-2 bg-white border rounded-xl shadow-xl dropdown-menu top-full border-slate-200">
-                                <NuxtLink to="/myTrip"
-                                    class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                    การเดินทางของฉัน
-                                </NuxtLink>
-                                <NuxtLink to="/myRoute"
-                                    class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    คำขอจองเส้นทางของฉัน
-                                </NuxtLink>
-                            </div>
-                        </div>
-                    </nav>
                 </div>
+
+                <!-- Desktop Nav (Center) -->
+                <nav class="absolute left-1/2 transform -translate-x-1/2 items-center hidden gap-1 md:flex">
+                    <NuxtLink to="/findTrip"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
+                        :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        ค้นหาเส้นทาง
+                    </NuxtLink>
+
+                    <NuxtLink  to="/createTrip"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
+                        :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        สร้างเส้นทาง
+                    </NuxtLink>
+
+                    <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
+                    <div v-if="user" class="relative dropdown-trigger">
+                        <button
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
+                            :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            การเดินทางทั้งหมด
+                            <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 w-56 py-2 mt-2 bg-white border rounded-xl shadow-xl dropdown-menu top-full border-slate-200">
+                            <NuxtLink to="/myTrip"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                การเดินทางของฉัน
+                            </NuxtLink>
+                            <NuxtLink to="/myRoute"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-secondary hover:bg-slate-50 hover:text-primary transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                คำขอจองเส้นทางของฉัน
+                            </NuxtLink>
+                        </div>
+                    </div>
+                </nav>
                 <nav class="items-center hidden gap-1 md:flex">
                     
 
@@ -87,7 +86,7 @@
                     <div v-if="token" class="relative ml-2">
                         <button ref="bellBtn"
                             class="relative p-2 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="openNotif ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'"
+                            :class="openNotif ? 'text-[#236993] bg-white/10' : 'text-black hover:text-[#236993]'"
                             @click="onBellClick" aria-haspopup="true" :aria-expanded="openNotif ? 'true' : 'false'">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
