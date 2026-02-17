@@ -4,17 +4,17 @@
         <div class="relative h-[280px] w-full">
             <img src="/images/bgmyroute.png" alt="My Route Background" class="object-cover w-full h-full" />
             <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-bold text-white drop-shadow-md -ml-4">การเดินทางของฉัน</h2>
+                <h2 class="text-4xl font-bold text-white drop-shadow-md -ml-4">คำขอจองเส้นทางของฉัน</h2>
                 <p class="mt-2 text-white/90 drop-shadow-sm">บริหารจัดการและติดตามทุกการเดินทางของคุณ</p>
             </div>
         </div>
 
         <!-- Floating Tabs -->
         <div class="relative px-4 mx-auto -mt-8 max-w-7xl sm:px-6 lg:px-8">
-            <div class="p-2 mb-8 bg-white border border-slate-200 rounded-xl shadow-lg">
+            <div class="p-3 mb-8 bg-white border border-slate-200 rounded-xl shadow-lg">
                 <div class="flex flex-wrap gap-2">
                     <button v-for="tab in tabs" :key="tab.status" @click="activeTab = tab.status"
-                        :class="['px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                        :class="['flex-1 text-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
                         activeTab === tab.status
                             ? 'bg-primary text-white shadow-md'
                             : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
@@ -28,7 +28,7 @@
                 <div class="lg:col-span-2">
                     <div class="overflow-hidden bg-white border border-slate-200 rounded-xl shadow-sm">
                         <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                            <h3 class="flex items-center gap-2 text-lg font-bold text-primary">
+                            <h3 class="flex items-center gap-2 text-lg font-bold text-[#137FEC]">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
