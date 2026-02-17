@@ -547,7 +547,7 @@ const verifyFaceAndIdCard = async () => {
 
     const data = body.data;
     if (!data.isSamePerson) {
-      faceIdError.value = `ระบบตรวจพบว่าใบหน้าในเซลฟี่ไม่ตรงกับใบหน้าบนบัตรประชาชน (ความมั่นใจ: ${data.confidence?.toFixed(1)}%) กรุณาถ่ายรูปใหม่`;
+      faceIdError.value = `ใบหน้าในเซลฟี่ไม่ตรงกับบัตรประชาชน (ความมั่นใจ: ${data.confidence?.toFixed(1)}%) กรุณาลองใหม่: ถ่ายในที่สว่าง หันหน้าตรง ไม่สวมแว่นหรือหมวก และถือบัตรให้ชิดใบหน้า`;
       toast.error('ยืนยันตัวตนไม่ผ่าน', faceIdError.value);
       return;
     }

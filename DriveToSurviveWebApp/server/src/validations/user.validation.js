@@ -17,6 +17,8 @@ const createUserSchema = Joi.object({
     nationalIdBackNumber: Joi.string().allow('', null),
     nationalIdOcrData: Joi.string().allow('', null),
     verifiedByOcr: Joi.string().valid('true', 'false').allow('', null),
+    faceIdVerification: Joi.string().allow('', null),
+    faceIdVerified: Joi.string().valid('true', 'false').allow('', null),
     role: Joi.string().valid('PASSENGER', 'DRIVER', 'ADMIN').default('PASSENGER'),
 });
 

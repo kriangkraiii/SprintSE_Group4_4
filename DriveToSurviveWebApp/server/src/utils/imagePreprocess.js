@@ -47,4 +47,32 @@ const preprocessForOcr = async (inputBuffer, options = {}) => {
     }
 };
 
-module.exports = { preprocessForOcr };
+/**
+ * Preprocess สำหรับ Face Verification
+ * - Resize ไม่เกิน maxDimension (ป้องกัน 500 error จาก API)
+ * - Quality สูง, ไม่ mozjpeg
+ * @param {Buffer} inputBuffer
+ * @param {object} [options]
+ * @param {number} [options.maxDimension=1600]
+ * @param {number} [options.quality=92]
+ * @returns {Promise<{buffer: Buffer, mimeType: string, fileName: string}>}
+ */
+const preprocessForFaceVerification = async (inputBuffer, options = {}) => {
+    const { maxDimension = 1600, quality = 92 } = options;
+    try {
+        const processed = await sharp(inputBuffer)
+            .rotate()
+            .resize(maxDimension, maxDimension, {
+                fit: 'inside',
+                withoutEnlargement: true,
+            })
+            .jpeg({ quality, mozjpeg: false })
+            .toBuffer();
+        return { buffer: processed, mimeType: 'image/jpeg', fileName: 'face_verify.jpg' };
+    } catch (err) {
+        console.error('Face preprocess failed, using original:', err.message);
+        return { buffer: inputBuffer, mimeType: 'image/jpeg', fileName: 'original.jpg' };
+    }
+};
+
+module.exports = { preprocessForOcr, preprocessForFaceVerification };
