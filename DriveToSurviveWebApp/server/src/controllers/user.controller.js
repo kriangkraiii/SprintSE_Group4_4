@@ -56,20 +56,17 @@ const getMyUser = asyncHandler(async (req, res) => {
     })
 
 })
-const createUser = asyncHandler(async (req, res) => {
-    const userData = req.body;
 
+const uploadIdentityImages = async (req, userData) => {
     if (!req.files || !req.files.nationalIdPhotoUrl || !req.files.selfiePhotoUrl) {
         throw new ApiError(400, "National ID photo and selfie photo are required.");
     }
 
-    // อัปโหลดรูปทั้งหมดไปยัง Cloudinary
     const uploadPromises = [
         uploadToCloudinary(req.files.nationalIdPhotoUrl[0].buffer, 'drivetosurvive/national_ids'),
         uploadToCloudinary(req.files.selfiePhotoUrl[0].buffer, 'drivetosurvive/selfies')
     ];
 
-    // อัปโหลดรูปด้านหลังถ้ามี
     if (req.files.nationalIdBackPhotoUrl) {
         uploadPromises.push(
             uploadToCloudinary(req.files.nationalIdBackPhotoUrl[0].buffer, 'drivetosurvive/national_ids_back')
@@ -79,13 +76,14 @@ const createUser = asyncHandler(async (req, res) => {
     const results = await Promise.all(uploadPromises);
     const [nationalIdResult, selfieResult] = results;
 
-    // เพิ่ม URL ของรูปภาพเข้าไปในข้อมูลที่จะบันทึก
     userData.nationalIdPhotoUrl = nationalIdResult.url;
     userData.selfiePhotoUrl = selfieResult.url;
+    if (results[2]) userData.nationalIdBackPhotoUrl = results[2].url;
+};
 
-    if (results[2]) {
-        userData.nationalIdBackPhotoUrl = results[2].url;
-    }
+const createUser = asyncHandler(async (req, res) => {
+    const userData = req.body;
+    await uploadIdentityImages(req, userData);
 
     const newUser = await userService.createUser(userData);
 
@@ -107,6 +105,22 @@ const createUser = asyncHandler(async (req, res) => {
     res.status(201).json({
         success: true,
         message: "User created and verified successfully.",
+        data: newUser
+    });
+});
+
+const createAdminUser = asyncHandler(async (req, res) => {
+    const userData = req.body;
+    await uploadIdentityImages(req, userData);
+
+    userData.role = 'ADMIN';
+    userData.createdByAdmin = true;
+
+    const newUser = await userService.createUser(userData);
+
+    res.status(201).json({
+        success: true,
+        message: 'Admin user created successfully.',
         data: newUser
     });
 });
@@ -233,6 +247,7 @@ module.exports = {
     getMyUser,
     getUserPublicById,
     createUser,
+    createAdminUser,
     updateCurrentUserProfile,
     adminUpdateUser,
     adminDeleteUser,

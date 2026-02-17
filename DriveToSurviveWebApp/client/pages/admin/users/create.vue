@@ -87,13 +87,10 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">บทบาท *</label>
-                                        <select v-model="form.role"
-                                            class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta">
-                                            <option value="PASSENGER">PASSENGER</option>
-                                            <option value="DRIVER">DRIVER</option>
-                                            <option value="ADMIN">ADMIN</option>
-                                        </select>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">บทบาท</label>
+                                        <input type="text" value="ADMIN" disabled
+                                            class="w-full px-3 py-2 border border-slate-200 rounded-md bg-slate-50 text-slate-500" />
+                                        <p class="mt-1 text-xs text-slate-400">แอดมินสร้างได้เฉพาะบัญชี ADMIN เท่านั้น</p>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +195,7 @@ const form = reactive({
     lastName: '',
     phoneNumber: '',
     gender: '',
-    role: 'PASSENGER',
+    role: 'ADMIN',
     nationalIdNumber: '',
     nationalIdExpiryDate: '', // YYYY-MM-DD
     nationalIdPhotoUrl: null, // File
@@ -375,7 +372,7 @@ async function handleSubmit() {
         fd.append('nationalIdExpiryDate', toISODate(form.nationalIdExpiryDate))
         fd.append('nationalIdPhotoUrl', form.nationalIdPhotoUrl)
         fd.append('selfiePhotoUrl', form.selfiePhotoUrl)
-        fd.append('role', form.role)
+        fd.append('role', 'ADMIN')
 
         // token (cookie -> localStorage)
         let token = ''
@@ -383,7 +380,7 @@ async function handleSubmit() {
         if (process.client && !token) token = localStorage.getItem('token') || ''
 
         const apiBase = useRuntimeConfig().public.apiBase || 'http://localhost:3000/api'
-        const result = await postForm(`${apiBase}/users`, fd, token)
+        const result = await postForm(`${apiBase}/users/admin`, fd, token)
 
         toast.success('สำเร็จ', result?.message || 'สร้างผู้ใช้เรียบร้อย')
         navigateTo('/admin/users')
