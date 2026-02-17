@@ -22,14 +22,14 @@
                             ค้นหาเส้นทาง
                         </NuxtLink>
 
-                        <NuxtLink v-if="user" to="/createTrip"
+                        <NuxtLink v-if="token" to="/createTrip"
                             class="px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
                             :class="$route.path === '/createTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'">
                             สร้างเส้นทาง
                         </NuxtLink>
 
                         <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                        <div v-if="user" class="relative dropdown-trigger">
+                        <div v-if="token" class="relative dropdown-trigger">
                             <button
                                 class="flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
                                 :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white'">
@@ -221,7 +221,7 @@
                             ค้นหาเส้นทาง
                         </NuxtLink>
 
-                        <NuxtLink v-if="user" to="/createTrip"
+                        <NuxtLink v-if="token" to="/createTrip"
                             class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
                             :class="$route.path === '/createTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white hover:bg-white/5'"
                             @click="closeMobileMenu">
@@ -229,7 +229,7 @@
                         </NuxtLink>
 
                         <!-- ทุกคนเห็น dropdown —  ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                        <div v-if="user">
+                        <div v-if="token">
                             <button @click="toggleMobileTripMenu"
                                 class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-left rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5">
                                 การเดินทางทั้งหมด
