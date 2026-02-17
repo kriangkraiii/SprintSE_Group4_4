@@ -4,7 +4,7 @@ const systemLogService = require('../services/systemLog.service');
 /**
  * GET /api/system-logs
  * Admin-only: ดู activity logs ของระบบ
- * พ.ร.บ.คอมพิวเตอร์ ม.26 — ต้องเก็บ ≥ 90 วัน, ห้ามแก้ไข/ลบ
+ * พ.ร.บ.คอมพิวเตอร์ ม.26 — ต้องเก็บ ≥ 90 วัน
  */
 const getLogs = asyncHandler(async (req, res) => {
     const {
@@ -33,4 +33,19 @@ const getLogs = asyncHandler(async (req, res) => {
     });
 });
 
-module.exports = { getLogs };
+/**
+ * DELETE /api/system-logs/:id
+ * Admin-only: ลบ log ได้เฉพาะรายการที่อายุเกิน 90 วันเท่านั้น
+ */
+const deleteLog = asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    const result = await systemLogService.deleteLogById(id);
+
+    res.status(200).json({
+        success: true,
+        message: 'System log deleted.',
+        data: result,
+    });
+});
+
+module.exports = { getLogs, deleteLog };
