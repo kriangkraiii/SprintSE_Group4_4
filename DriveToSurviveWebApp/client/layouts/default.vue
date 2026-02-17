@@ -1,35 +1,38 @@
 <template>
     <div class="min-h-screen bg-surface">
         <!-- Navbar -->
-        <header class="sticky top-0 z-50 border-b border-white/10 bg-primary/95 backdrop-blur-md shadow-sm">
-            <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <header class="fixed top-0 left-0 z-50 w-full ">
+            <div class="px-6 py-5">
+            <div class="px-4 mx-auto max-w-5xl sm:px-6 lg:px-4 bg-white  backdrop-blur-md shadow-sm rounded-full">
                 <div class="flex items-center justify-between h-16">
                     <!-- Brand -->
-                    <NuxtLink to="/" class="flex items-center gap-2">
-                        <img src="/Ride.png" alt="Ride Logo" class="h-10 w-auto object-contain" />
-                        <span class="text-xl font-bold text-white font-heading tracking-tight">Ride</span>
+                    <NuxtLink to="/" class="flex items-center gap-1">
+                        <img src="/Ride.png" alt="Ride Logo" class="h-8 w-auto object-contain" />
+                        <span class="text-3xl font-bold text-[#236993] font-heading tracking-tight">Ride</span>
                     </NuxtLink>
 
                     <!-- Desktop Nav -->
-                    <nav class="items-center hidden gap-1 md:flex">
+                     <nav class="items-center hidden gap-1 md:flex md:ml-16">
                         <NuxtLink to="/findTrip"
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-slate-300 hover:text-white'">
+                            :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             ค้นหาเส้นทาง
                         </NuxtLink>
 
-                        <NuxtLink v-if="user" to="/createTrip"
+                        <NuxtLink  to="/createTrip"
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-slate-300 hover:text-white'">
+                            :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                             </svg>
                             สร้างเส้นทาง
                         </NuxtLink>
-
+                    </nav>
+                    <nav class="items-center hidden gap-1 md:flex">
+                        
                         <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
                         <div v-if="user" class="relative dropdown-trigger">
                             <button
@@ -62,14 +65,14 @@
                         </div>
 
                         <!-- Auth buttons -->
-                        <div v-if="!token" class="flex items-center gap-3 ml-4">
-                            <NuxtLink to="/login" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-white/10">
+                        <div v-if="!token" class="flex items-center gap-2">
+                            <NuxtLink to="/login" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black hover:text-[#236993] transition-colors rounded-lg hover:bg-white/10">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                                 </svg>
                                 เข้าสู่ระบบ
                             </NuxtLink>
-                            <NuxtLink to="/register" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-primary bg-cta hover:bg-cta-hover rounded-lg shadow-lg shadow-cta/20 transition-all hover:shadow-xl hover:-translate-y-0.5">
+                            <NuxtLink to="/register" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-[#137FEC] hover:bg-[#236993] rounded-full shadow-lg shadow-black/10 transition-all hover:shadow-xl hover:-translate-y-0.5">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                 </svg>
@@ -303,6 +306,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </header>
 
