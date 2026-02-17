@@ -11,9 +11,11 @@
     "build": "cd client && npm run build",
     "install:all": "cd client && npm install && cd ../server && npm install",
     "lint": "cd client && npm run lint",
-    "postinstall": "cd client && npm run postinstall"
+    "postinstall": "cd client && npm run postinstall",
+     "start": "node src/index.js"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
   }
+  
 }
