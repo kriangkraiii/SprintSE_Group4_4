@@ -191,14 +191,27 @@
               </div>
 
               <!-- แสดง error ถ้า OCR ไม่ผ่าน -->
-              <div v-if="ocrFrontError" class="p-3 mt-3 border rounded-lg bg-red-50 border-red-200">
+              <div v-if="ocrFrontError && !isBlacklisted" class="p-3 mt-3 border rounded-lg bg-red-50 border-red-200">
                 <p class="text-sm text-red-600">{{ ocrFrontError }}</p>
                 <button type="button" @click="resetOcrFront" class="mt-2 text-xs font-medium text-red-700 underline">ลองใหม่</button>
+              </div>
+
+              <!-- แสดง Blacklist Warning -->
+              <div v-if="isBlacklisted" class="p-4 mt-3 border-2 rounded-lg bg-red-100 border-red-400">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                  </svg>
+                  <span class="text-base font-bold text-red-700">ไม่สามารถสมัครสมาชิกได้</span>
+                </div>
+                <p class="text-sm text-red-700">{{ ocrFrontError }}</p>
+                <p class="mt-2 text-xs text-red-600">หากคุณเชื่อว่าเกิดข้อผิดพลาด กรุณาติดต่อฝ่ายสนับสนุน</p>
+                <button type="button" @click="resetOcrFront" class="mt-3 text-xs font-medium text-red-700 underline">ลองใหม่ด้วยบัตรอื่น</button>
               </div>
             </div>
 
             <!-- บัตรประชาชน ด้านหลัง -->
-            <div>
+            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
               <label class="block mb-1.5 text-sm font-medium text-primary">บัตรประชาชน (ด้านหลัง) <span class="text-red-500">*</span></label>
               <div v-if="!idCardBackPreview" @click="triggerFileUpload('idCardBackFile')"
                 class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-cta hover:bg-cta-light/30"
@@ -260,7 +273,7 @@
               <p class="text-xs text-blue-600">ข้อมูลจากบัตรจะถูกใช้ในการสร้างบัญชีของคุณโดยอัตโนมัติ</p>
             </div>
 
-            <div>
+            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
               <label class="block mb-1.5 text-sm font-medium text-primary">รูปถ่ายเซลฟี่ (ยืนยันตัวตน) <span class="text-red-500">*</span></label>
               <p class="mb-2 text-xs text-slate-400">ระบบจะเปรียบเทียบใบหน้าในรูปเซลฟี่กับรูปบนบัตรประชาชนเพื่อยืนยันตัวตน</p>
               <div v-if="!selfiePreview" @click="triggerFileUpload('selfieFile')"
@@ -348,7 +361,7 @@
 
             <div class="flex gap-3 pt-2">
               <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
-              <button type="submit" :disabled="isLoading"
+              <button type="submit" :disabled="isLoading || isBlacklisted"
                 class="flex items-center justify-center w-full py-3 btn-primary disabled:opacity-50">
                 <svg v-if="isLoading" class="w-5 h-5 mr-2 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -412,6 +425,7 @@ const ocrFrontResult = ref(null);
 const ocrFrontError = ref(null);
 const ocrBackResult = ref(null);
 const ocrBackError = ref(null);
+const isBlacklisted = ref(false); // ถูก Blacklist → บล็อกการสมัครทั้งหมด
 
 // Face + ID Card Verification states
 const isFaceIdLoading = ref(false);
@@ -452,12 +466,23 @@ const scanIdCardFront = async () => {
   isOcrLoading.value = true;
   ocrFrontError.value = null;
   ocrFrontResult.value = null;
+  isBlacklisted.value = false;
 
   try {
     const fd = new FormData();
     fd.append('image', formData.idCardFile);
     const res = await fetch(`${apiBase}/ocr/id-card/front`, { method: 'POST', body: fd });
     const body = await res.json();
+
+    // ── ตรวจจับ Blacklist (403) ──
+    if (res.status === 403) {
+      isBlacklisted.value = true;
+      const msg = body?.message || 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้';
+      ocrFrontError.value = msg;
+      toast.error('ไม่สามารถสมัครสมาชิกได้', msg);
+      return;
+    }
+
     if (!res.ok) throw new Error(body?.message || 'OCR ล้มเหลว');
 
     ocrFrontResult.value = body.data;
@@ -517,6 +542,7 @@ const scanIdCardBack = async () => {
 const resetOcrFront = () => {
   ocrFrontResult.value = null;
   ocrFrontError.value = null;
+  isBlacklisted.value = false;
   idCardPreview.value = null;
   formData.idCardFile = null;
   formData.idNumber = '';
@@ -652,6 +678,10 @@ function toISODateFromDDMMYYYY(ddmmyyyy) {
 }
 
 const handleRegister = async () => {
+  if (isBlacklisted.value) {
+    toast.error('ไม่สามารถสมัครสมาชิกได้', 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ');
+    return;
+  }
   if (!validationFunctions[currentStep.value - 1]()) return;
   isLoading.value = true;
   await nextTick();
@@ -760,6 +790,7 @@ const handleFileUpload = (event, type) => {
       if (errors.idCardFile) delete errors.idCardFile;
       // reset OCR result เมื่อเปลี่ยนรูป
       ocrFrontResult.value = null; ocrFrontError.value = null;
+      isBlacklisted.value = false;
       // reset face+ID verification เมื่อเปลี่ยนบัตร
       faceIdResult.value = null; faceIdError.value = null;
     } else if (type === 'idCardBack') {
@@ -777,7 +808,7 @@ const handleFileUpload = (event, type) => {
 };
 
 const removeImage = (type) => {
-  if (type === 'idCard') { idCardPreview.value = null; formData.idCardFile = null; ocrFrontResult.value = null; ocrFrontError.value = null; faceIdResult.value = null; faceIdError.value = null; }
+  if (type === 'idCard') { idCardPreview.value = null; formData.idCardFile = null; ocrFrontResult.value = null; ocrFrontError.value = null; isBlacklisted.value = false; faceIdResult.value = null; faceIdError.value = null; }
   else if (type === 'idCardBack') { idCardBackPreview.value = null; formData.idCardBackFile = null; ocrBackResult.value = null; ocrBackError.value = null; }
   else if (type === 'selfie') { selfiePreview.value = null; formData.selfieFile = null; faceIdResult.value = null; faceIdError.value = null; }
 };
