@@ -12,4 +12,8 @@ const searchLogsSchema = z.object({
     sortOrder: z.enum(['asc', 'desc']).optional(),
 });
 
-module.exports = { searchLogsSchema };
+const deleteLogParamsSchema = z.object({
+    id: z.coerce.number().int().positive(),
+});
+
+module.exports = { searchLogsSchema, deleteLogParamsSchema };
