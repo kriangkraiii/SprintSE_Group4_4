@@ -11,7 +11,7 @@
                 <ul class="space-y-1">
                     <li>
                         <NuxtLink to="/profile" class="block px-4 py-2 text-sm rounded-md"
-                            :class="isActive('/profile') ? 'font-semibold text-cta bg-cta-light' : 'text-primary hover:bg-slate-100'">
+                            :class="isActive('/profile') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
                             โปรไฟล์ของฉัน
                         </NuxtLink>
                     </li>
@@ -22,13 +22,13 @@
                 <ul class="space-y-1">
                     <li>
                         <NuxtLink to="/profile/verification" class="block px-4 py-2 text-sm rounded-md"
-                            :class="isActive('/profile/verification') ? 'font-semibold text-cta bg-cta-light' : 'text-primary hover:bg-slate-100'">
+                            :class="isActive('/profile/verification') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
                             การยืนยันตัวตนขั้นพื้นฐาน
                         </NuxtLink>
                     </li>
                     <li>
                         <NuxtLink to="/profile/driver-verification" class="block px-4 py-2 text-sm rounded-md"
-                            :class="isActive('/profile/driver-verification') ? 'font-semibold text-cta bg-cta-light' : 'text-primary hover:bg-slate-100'">
+                            :class="isActive('/profile/driver-verification') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
                             การยืนยันตัวตนสำหรับผู้ขับขี่
                         </NuxtLink>
                     </li>
@@ -39,7 +39,7 @@
                 <ul class="space-y-1">
                     <li>
                         <NuxtLink to="/profile/my-vehicle" class="block px-4 py-2 text-sm rounded-md"
-                            :class="isActive('/profile/my-vehicle') ? 'font-semibold text-cta bg-cta-light' : 'text-primary hover:bg-slate-100'">
+                            :class="isActive('/profile/my-vehicle') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
                             ข้อมูลรถยนต์ของฉัน
                         </NuxtLink>
                     </li>
