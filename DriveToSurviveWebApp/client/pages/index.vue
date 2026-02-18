@@ -1,26 +1,26 @@
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="relative min-h-[95vh] flex items-start justify-center ">
+    <section class="relative min-h-[60vh] sm:min-h-[80vh] lg:min-h-[95vh] flex items-start justify-center ">
       <!-- Subtle grid pattern -->
       <div class="absolute inset-0 opacity-100 bg-no-repeat bg-cover "
         style="background-image: url('/images/bgindex.png'); background-position:center 70%;"></div>
 
-      <div class="relative py-24 mx-auto max-w-7xl sm:px-8 lg:px-12 w-full ">
-        <div class="max-w-7xl text-center mx-auto mt-10">
+      <div class="relative py-12 sm:py-16 lg:py-24 mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 w-full ">
+        <div class="max-w-7xl text-center mx-auto mt-2 sm:mt-10">
 
           <!-- Main Heading -->
           <h1
-            class=" text-5xl font-semibold leading-[1.1] text-white font-heading sm:text-6xl lg:text-8xl tracking-tight">
+            class="text-3xl font-semibold leading-[1.1] text-white font-heading sm:text-5xl lg:text-8xl tracking-tight">
             แชร์รถ แชร์ค่าใช้จ่าย<br />
           </h1>
           <h1
-            class="mb-8 text-3xl font-semibold leading-[1.1] text-white font-heading sm:text-6xl lg:text-7xl tracking-tight">
+            class="mb-8 text-xl font-semibold leading-[1.1] text-white font-heading sm:text-3xl lg:text-7xl tracking-tight">
             ปลอดภัยทุกเส้นทาง
           </h1>
 
           <!-- Trust Indicators -->
-          <div class="flex flex-wrap items-center gap-8 w-full">
+          <div class="hidden sm:flex flex-wrap items-center justify-center sm:justify-start gap-4 sm:gap-8 w-full">
             <div class="flex items-center gap-2 text-white">
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20 shadow-lg">
                 <path fill-rule="evenodd"
@@ -49,7 +49,7 @@
         </div>
 
       </div>
-      <div class="absolute -bottom-14 left-1/2 -translate-x-1/2 w-full px-6">
+      <div class="absolute -bottom-8 sm:-bottom-14 left-1/2 -translate-x-1/2 w-full px-4 sm:px-6">
         <div class="max-w-6xl mx-auto p-4 bg-white h-auto rounded-2xl shadow-[0_5px_10px_rgba(0,0,0,0.25)]">
           <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
 
@@ -117,13 +117,13 @@
     </section>
 
     <!-- How It Works -->
-    <section class="py-20 bg-white sm:py-24 lg:py-28">
-      <div class="px-20 mx-auto max-w-7xl">
+    <section class="py-12 bg-white sm:py-20 lg:py-28">
+      <div class="px-4 sm:px-10 lg:px-20 mx-auto max-w-7xl">
         <div class="max-w-3xl mb-16 text-left">
-          <h2 class="text-3xl font-semibold text-[#137FEC] font-heading sm:text-5xl lg:text-7xl mb-4">
+          <h2 class="text-2xl font-semibold text-[#137FEC] font-heading sm:text-4xl lg:text-7xl mb-4">
             ใช้งานง่าย เริ่มได้ทันที!
           </h2>
-          <p class="text-lg text-slate-600 pl-8">
+          <p class="text-base sm:text-lg text-slate-600 sm:pl-8">
             เพียง 3 ขั้นตอน ก็สามารถเริ่มแชร์รถหรือค้นหาเส้นทางได้แล้ว
           </p>
         </div>
@@ -139,8 +139,8 @@
                 </div>
               </div>
               <div class="pt-1">
-                <h3 class="text-4xl font-semibold text-[#137FEC] mb-2 font-heading">ลงทะเบียน</h3>
-                <p class="text-slate-600 leading-relaxed text-lg ml-5">
+                <h3 class="text-2xl sm:text-4xl font-semibold text-[#137FEC] mb-2 font-heading">ลงทะเบียน</h3>
+                <p class="text-slate-600 leading-relaxed text-base sm:text-lg sm:ml-5">
                   สร้างบัญชีและยืนยันตัวตนด้วยบัตรประชาชนและใบขับขี่ ผ่านระบบ OCR อัตโนมัติ
                 </p>
               </div>
@@ -157,8 +157,8 @@
                 </div>
               </div>
               <div class="pt-1">
-                <h3 class="text-4xl font-semibold text-[#137FEC] mb-2 font-heading">เลือก/ค้นหาเส้นทาง</h3>
-                <p class="text-slate-600 leading-relaxed text-lg ml-5">
+                <h3 class="text-2xl sm:text-4xl font-semibold text-[#137FEC] mb-2 font-heading">เลือก/ค้นหาเส้นทาง</h3>
+                <p class="text-slate-600 leading-relaxed text-base sm:text-lg sm:ml-5">
                   ค้นหาเส้นทางที่ต้องการ หรือสร้างเส้นทางใหม่ พร้อมกำหนดจุดรับ-ส่ง และเวลาที่สะดวก
                 </p>
               </div>
@@ -175,8 +175,8 @@
                 </div>
               </div>
               <div class="pt-1">
-                <h3 class="text-4xl font-semibold text-[#137FEC] mb-2 font-heading">เริ่มเดินทาง</h3>
-                <p class="text-slate-600 leading-relaxed text-lg ml-5">
+                <h3 class="text-2xl sm:text-4xl font-semibold text-[#137FEC] mb-2 font-heading">เริ่มเดินทาง</h3>
+                <p class="text-slate-600 leading-relaxed text-base sm:text-lg sm:ml-5">
                   จองที่นั่ง ชำระเงิน และติดต่อกับคนขับหรือผู้โดยสาร พร้อมเริ่มต้นการเดินทางอย่างปลอดภัย
                 </p>
               </div>
@@ -187,9 +187,9 @@
     </section>
 
     <!-- CTA -->
-    <section v-if="!token" class="pt-10 pb-55 bg-slate-100 sm:pt-24 lg:pt-28">
+    <section v-if="!token" class="pt-10 pb-32 sm:pb-55 bg-slate-100 sm:pt-24 lg:pt-28">
       <div class="px-6 mx-auto max-w-4xl sm:px-8 lg:px-12 text-center">
-        <h2 class="text-3xl font-semibold text-[#137FEC] font-heading sm:text-5xl lg:text-7xl mb-4">
+        <h2 class="text-2xl font-semibold text-[#137FEC] font-heading sm:text-4xl lg:text-7xl mb-4">
           พร้อมเริ่มต้นแล้วหรือยัง?
         </h2>
         <p class="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">

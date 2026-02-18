@@ -1,7 +1,7 @@
 <template>
     <footer class="py-8 bg-white border-t border-slate-200">
       <div class="px-6 mx-auto max-w-7xl sm:px-8 lg:px-12">
-        <div class="grid gap-12 md:grid-cols-4">
+        <div class="grid gap-8 md:gap-12 md:grid-cols-4">
           <div class="md:col-span-2">
             <div class="flex items-center gap-3 mb-6">
               <div class="flex items-center justify-center w-10 h-10 rounded-lg ">
@@ -33,7 +33,7 @@
           </div>
         </div>
         
-        <div class="pt-20 mt-15 text-center">
+        <div class="pt-8 mt-8 text-center">
           <p class="text-[#236993] text-sm font-medium">© {{ new Date().getFullYear() }} Ride | สงวนลิขสิทธิ์</p>
         </div>
       </div>
