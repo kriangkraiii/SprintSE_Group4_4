@@ -395,7 +395,7 @@ async function handleSearch() {
                 if (route.vehicle) {
                     carDetailsList.push(`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`);
                     if (route.vehicle.amenities && route.vehicle.amenities.length > 0) {
-                        carDetailsList.push(...route.vehicle.amenities);
+                        carDetailsList.push(...route.vehicle.amenities.map(a => typeof a === 'string' ? a : a.name));
                     }
                 } else {
                     carDetailsList.push('ไม่มีข้อมูลรถ');

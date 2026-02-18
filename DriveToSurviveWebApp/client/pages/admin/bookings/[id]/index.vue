@@ -527,7 +527,7 @@ async function fetchBooking() {
             conditions: r.conditions,
 
             carDetails: r.vehicle
-                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || [])]
+                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)]
                 : [],
 
             driver: {
