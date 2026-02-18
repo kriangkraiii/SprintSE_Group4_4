@@ -1,6 +1,6 @@
 <template>
     <div class="bg-slate-50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
             <main class="max-w-4xl mx-auto">
                 <!-- Header Section -->
                 <div class="text-center mb-8">
@@ -351,7 +351,7 @@
                         </div>
 
                         <div v-if="!verificationSuccess" class="pt-8 border-t border-slate-100">
-                            <button type="submit" :disabled="!isFormValid || isSubmitting" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-lg shadow-sm 
+                            <button type="submit" :disabled="!isFormValid || isSubmitting" class="w-full py-4 bg-primary text-white rounded-lg font-semibold text-lg shadow-sm 
                                 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cta focus:ring-offset-2
                                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
                                 <span v-if="isSubmitting" class="flex items-center justify-center">
@@ -574,7 +574,7 @@ const handleSubmit = async () => {
 }
 
 .step-indicator {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    background-color: #1E4D40;
     color: white;
     width: 2.25rem;
     /* 36px */
@@ -592,7 +592,7 @@ const handleSubmit = async () => {
 }
 
 .license-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background-color: #F8FAFC;
     border: 3px solid #1e40af;
     border-radius: 12px;
     position: relative;
@@ -607,7 +607,7 @@ const handleSubmit = async () => {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+    background: transparent;
     animation: shine 4s infinite;
 }
 
@@ -622,7 +622,7 @@ const handleSubmit = async () => {
 }
 
 .selfie-frame {
-    background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+    background-color: #F9FAFB;
     border: 3px solid #f59e0b;
     border-radius: 20px;
     position: relative;
@@ -631,13 +631,13 @@ const handleSubmit = async () => {
 }
 
 .person-silhouette {
-    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    background-color: #64748B;
     border-radius: 50%;
     position: relative;
 }
 
 .held-card {
-    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    background-color: #E2E8F0;
     border: 2px solid #3b82f6;
     border-radius: 6px;
     transform: rotate(-15deg);
@@ -655,7 +655,7 @@ const handleSubmit = async () => {
 }
 
 .step-indicator {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background-color: #1E4D40;
     color: white;
     width: 28px;
     height: 28px;

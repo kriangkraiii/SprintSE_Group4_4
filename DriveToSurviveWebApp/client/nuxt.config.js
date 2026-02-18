@@ -43,16 +43,16 @@ export default defineNuxtConfig({
   plugins: ["~/plugins/api.client.js"],
   app: {
     head: {
-      title: "Drive To Survive — เดินทางร่วมกันอย่างปลอดภัย",
+      title: "Ride — เดินทางร่วมกันอย่างปลอดภัย",
       meta: [
-        { name: "description", content: "Drive To Survive — แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย ยืนยันตัวตน OTP ติดตามเรียลไทม์ ปุ่ม SOS พร้อมระบบรีวิว" }
+        { name: "description", content: "Ride — แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย ยืนยันตัวตน OTP ติดตามเรียลไทม์ ปุ่ม SOS พร้อมระบบรีวิว" }
       ],
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1, maximum-scale=1",
       link: [
         {
           rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap'
+          href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap'
         }
       ]
     },

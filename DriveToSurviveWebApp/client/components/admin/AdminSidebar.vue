@@ -32,7 +32,6 @@
                     </NuxtLink>
                 </div>
 
- 
 
                 <div class="pt-3 mt-3 border-t border-slate-200">
                     <button @click="toggleSubmenu('settings-menu')"

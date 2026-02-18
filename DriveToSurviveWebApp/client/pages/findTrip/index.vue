@@ -1,19 +1,20 @@
 <template>
     <div class="min-h-screen bg-gray-50">
-        <!-- Hero header -->
-        <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white">
-            <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">ค้นหาเส้นทาง</h1>
-                <p class="mt-1 text-emerald-100 text-sm">หาเส้นทางร่วมเดินทาง ประหยัด ปลอดภัย</p>
+        <!-- Graphical Header -->
+        <div class="relative h-[280px] w-full">
+            <img src="/images/bgfindtrip.png" alt="Find Trip Background" class="object-cover w-full h-full" />
+            <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h1 class="text-4xl font-bold text-white drop-shadow-md">ค้นหาเส้นทาง</h1>
+                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">ระบุจุดเริ่มต้น ปลายทาง และรายละเอียดการเดินทางของคุณ เพื่อจับคู่กับผู้ขับขี่ที่ไปในเส้นทางเดียวกัน</p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <!-- Search bar (Grab-style) -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-24">
+            <!-- Search bar (Floating) -->
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 mb-8">
                 <form @submit.prevent="handleSearch"
-                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
-                    <div>
+                    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
+                    <div class="lg:col-span-3">
                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดเริ่มต้น</label>
                         <div class="relative">
                             <input ref="originInputEl" v-model="searchForm.origin" type="text"
@@ -28,7 +29,7 @@
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div class="lg:col-span-3">
                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดปลายทาง</label>
                         <div class="relative">
                             <input ref="destinationInputEl" v-model="searchForm.destination" type="text"
@@ -43,12 +44,12 @@
                             </button>
                         </div>
                     </div>
-                    <div>
+                    <div class="lg:col-span-2">
                         <label class="block text-xs font-medium text-gray-500 mb-1">วันที่</label>
-                        <input v-model="searchForm.date" type="date"
+                        <input v-model="searchForm.date" type="date" :min="minDate"
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50" />
                     </div>
-                    <div>
+                    <div class="lg:col-span-1">
                         <label class="block text-xs font-medium text-gray-500 mb-1">ที่นั่ง</label>
                         <select v-model="searchForm.seats"
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50">
@@ -56,13 +57,13 @@
                             <option v-for="s in 5" :key="s" :value="s">{{ s }} ที่นั่ง</option>
                         </select>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 lg:col-span-3">
                         <button type="submit"
-                            class="flex-1 py-2.5 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                            class="flex-1 py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-green-700 transition shadow-lg shadow-green-500/20 cursor-pointer">
                             ค้นหา
                         </button>
                         <button type="button" @click="resetSearch"
-                            class="px-4 py-2.5 text-sm font-medium text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition cursor-pointer">
+                            class="flex-1 py-3 text-sm font-semibold text-white bg-[#137FEC] rounded-xl hover:bg-blue-600 transition shadow-lg shadow-blue-500/20 cursor-pointer">
                             รีเซ็ต
                         </button>
                     </div>
@@ -234,7 +235,7 @@
 
                                 <div class="flex justify-end">
                                     <button @click.stop="openModal(route)" :disabled="route.availableSeats === 0"
-                                        class="px-6 py-2.5 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                                        class="px-6 py-2.5 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 transition cursor-pointer">
                                         จองที่นั่ง
                                     </button>
                                 </div>
@@ -418,7 +419,7 @@
                                     ยกเลิก
                                 </button>
                                 <button @click="confirmBooking"
-                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/30 transition cursor-pointer">
+                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
                                     ยืนยันการจอง
                                 </button>
                             </div>
@@ -434,7 +435,7 @@
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
                 @click.self="closePlacePicker">
                 <div class="bg-white rounded-2xl w-[95%] max-w-lg max-h-[90vh] overflow-hidden shadow-2xl">
-                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                    <div class="flex items-center justify-between px-7 py-5 border-b border-gray-100">
                         <h3 class="text-base font-semibold text-gray-800">
                             เลือก{{ pickingField === 'origin' ? 'จุดเริ่มต้น' : 'จุดปลายทาง' }}
                         </h3>
@@ -477,6 +478,11 @@ import buddhistEra from 'dayjs/plugin/buddhistEra'
 import { useToast } from '~/composables/useToast'
 import { useAuth } from '~/composables/useAuth'
 import { navigateTo } from '#app'
+import { useRoute } from 'vue-router'
+import { getProvinceFromPlace } from '~/utils/googleMaps'
+
+const route = useRoute()
+
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
@@ -520,7 +526,7 @@ const pickingField = ref(null)
 const placePickerMapEl = ref(null)
 let placePickerMap = null
 let placePickerMarker = null
-const pickedPlace = ref({ name: '', lat: null, lng: null })
+const pickedPlace = ref({ name: '', lat: null, lng: null, province: null })
 
 const headScripts = []
 if (process.client && !window.google?.maps) {
@@ -538,6 +544,7 @@ useHead({
 })
 
 const searchForm = ref({ origin: '', destination: '', date: '', seats: '' })
+const minDate = new Date().toISOString().split('T')[0]
 const RADIUS_METERS = 500
 const routes = ref([])
 const selectedRoute = ref(null)
@@ -633,6 +640,11 @@ async function handleSearch() {
             const { lat, lng } = await ensureLatLng('destination')
             if (lat != null) { q.endNearLat = lat; q.endNearLng = lng; usedRadius = true }
         }
+        
+        // Province filtering
+        if (searchForm.value._originMeta?.province) q.startProvince = searchForm.value._originMeta.province
+        if (searchForm.value._destinationMeta?.province) q.endProvince = searchForm.value._destinationMeta.province
+
         if (usedRadius) q.radiusMeters = RADIUS_METERS
 
         const apiRes = await $api('/routes', { query: q })
@@ -890,7 +902,13 @@ function initAutocomplete() {
         const p = originAutocomplete.getPlace()
         if (!p) return
         searchForm.value.origin = p.name || p.formatted_address || searchForm.value.origin
-        searchForm.value._originMeta = { placeId: p.place_id || null, fullAddress: p.formatted_address || null, lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+        searchForm.value._originMeta = { 
+            placeId: p.place_id || null, 
+            fullAddress: p.formatted_address || null, 
+            lat: p.geometry?.location?.lat?.() ?? null, 
+            lng: p.geometry?.location?.lng?.() ?? null,
+            province: getProvinceFromPlace(p)
+        }
     })
 
     destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputEl.value, { ...commonOpts, types: ['geocode', 'establishment'] })
@@ -898,14 +916,20 @@ function initAutocomplete() {
         const p = destinationAutocomplete.getPlace()
         if (!p) return
         searchForm.value.destination = p.name || p.formatted_address || searchForm.value.destination
-        searchForm.value._destinationMeta = { placeId: p.place_id || null, fullAddress: p.formatted_address || null, lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+        searchForm.value._destinationMeta = { 
+            placeId: p.place_id || null, 
+            fullAddress: p.formatted_address || null, 
+            lat: p.geometry?.location?.lat?.() ?? null, 
+            lng: p.geometry?.location?.lng?.() ?? null,
+            province: getProvinceFromPlace(p)
+        }
     })
 }
 
 // ==================== Place Picker (Search) ====================
 function openPlacePicker(field) {
     pickingField.value = field
-    pickedPlace.value = { name: '', lat: null, lng: null }
+    pickedPlace.value = { name: '', lat: null, lng: null, province: null }
     showPlacePicker.value = true
     nextTick(() => {
         const meta = field === 'origin' ? searchForm.value._originMeta : searchForm.value._destinationMeta
@@ -929,26 +953,28 @@ async function resolvePicked(latlng) {
         })
     })
     let name = ''
+    let province = null
     if (geocodeRes) {
         const parts = await extractNameParts(geocodeRes)
         name = parts.name || ''
+        province = getProvinceFromPlace(geocodeRes)
     }
     if (!name || isPlusCode(name)) {
         const poi = await findNearestPoi(lat, lng, 120)
         if (poi?.name) name = poi.name
         else if (geocodeRes?.formatted_address) name = cleanAddr(geocodeRes.formatted_address)
     }
-    pickedPlace.value = { name, lat, lng }
+    pickedPlace.value = { name, lat, lng, province }
 }
 
 function applyPickedPlace() {
     if (!pickingField.value || !pickedPlace.value.name) return
     if (pickingField.value === 'origin') {
         searchForm.value.origin = pickedPlace.value.name
-        searchForm.value._originMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+        searchForm.value._originMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
     } else {
         searchForm.value.destination = pickedPlace.value.name
-        searchForm.value._destinationMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+        searchForm.value._destinationMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
     }
     closePlacePicker()
 }
@@ -1113,6 +1139,35 @@ function initAll() {
 }
 
 onMounted(() => {
+    // 1. Parse query params first
+    if (route.query.from) {
+        searchForm.value.origin = route.query.from
+        if (route.query.fromLat && route.query.fromLng) {
+            searchForm.value._originMeta = {
+                lat: parseFloat(route.query.fromLat),
+                lng: parseFloat(route.query.fromLng),
+                name: route.query.from,
+                fullAddress: route.query.from,
+                province: route.query.fromProvince || null
+            }
+        }
+    }
+    if (route.query.to) {
+        searchForm.value.destination = route.query.to
+        if (route.query.toLat && route.query.toLng) {
+            searchForm.value._destinationMeta = {
+                lat: parseFloat(route.query.toLat),
+                lng: parseFloat(route.query.toLng),
+                name: route.query.to,
+                fullAddress: route.query.to,
+                province: route.query.toProvince || null
+            }
+        }
+    }
+    if (route.query.date) searchForm.value.date = route.query.date
+    if (route.query.seat) searchForm.value.seats = route.query.seat
+
+    // 2. Initialize
     if (window.google?.maps) { initAll(); return }
     window[GMAPS_CB] = () => {
         try { delete window[GMAPS_CB] } catch { }

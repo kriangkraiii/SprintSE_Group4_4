@@ -25,6 +25,7 @@ app.use(helmet());
 const defaultAllowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
+    'http://localhost:3003',
     'https://amazing-crisp-9bcb1a.netlify.app',
 ];
 

@@ -1,51 +1,96 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <!-- Guard: ยังไม่ผ่านเงื่อนไข -->
-        <div v-if="!canCreateRoute" class="flex items-center justify-center min-h-screen py-12">
-            <div class="max-w-lg w-full mx-4 bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
-                    <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <div v-if="!canCreateRoute" class="flex items-center justify-center min-h-screen py-12 bg-gray-50/50">
+            <div class="max-w-xl w-full mx-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-6 animate-pulse">
+                    <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
-                <h2 class="text-xl font-bold text-gray-800 mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
-                <p class="text-gray-500 mb-6">คุณต้องดำเนินการตามขั้นตอนด้านล่างให้ครบก่อนจึงจะสร้างเส้นทางได้</p>
-                <div class="space-y-3 text-left">
+                <h2 class="text-4xl font-bold text-[#B50000] mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
+                <p class="text-gray-500 mb-8 max-w-sm mx-auto">คุณจำเป็นต้องดำเนินการตามขั้นตอนด้านล่างให้ครบถ้วน <br> จึงจะสามารถสร้างเส้นทางได้</p>
+                
+                <div class="space-y-4 text-left">
                     <!-- ขั้นตอน 1: บัตร ปชช. -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.idCard ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.idCard" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">1️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.idCard ? 'text-green-700' : 'text-gray-700'">ยืนยันบัตรประชาชน</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="guardStatus.idCard 
+                            ? 'bg-green-50 border-green-200 shadow-sm' 
+                            : 'bg-blue-50 border-blue-200 shadow-sm'">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="guardStatus.idCard ? 'text-green-800' : 'text-blue-900'">
+                                ยืนยันบัตรประชาชน
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.idCard" to="/profile/verification"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        <div v-if="guardStatus.idCard" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+                        <NuxtLink v-else to="/profile"
+                            class="px-4 py-2 text-sm font-medium text-white bg-[#1B4D89] rounded-lg hover:bg-[#164070] shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
+
                     <!-- ขั้นตอน 2: ใบขับขี่ -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.driver ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.driver" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">2️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.driver ? 'text-green-700' : 'text-gray-700'">ยืนยันใบขับขี่</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="guardStatus.driver 
+                            ? 'bg-green-50 border-green-200 shadow-sm' 
+                            : 'bg-blue-50 border-blue-200 shadow-sm'">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="guardStatus.driver ? 'text-green-800' : 'text-blue-900'">
+                                ยืนยันใบขับขี่
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.driver" to="/driverVerify"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                        <div v-if="guardStatus.driver" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+                        <NuxtLink v-else to="/driverVerify"
+                            class="px-4 py-2 text-sm font-medium text-white bg-[#1B4D89] rounded-lg hover:bg-[#164070] shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
+
                     <!-- ขั้นตอน 3: รถยนต์ -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl" :class="guardStatus.vehicle ? 'bg-green-50' : 'bg-gray-50'">
-                        <span v-if="guardStatus.vehicle" class="text-green-600 text-lg">✅</span>
-                        <span v-else class="text-gray-400 text-lg">3️⃣</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium" :class="guardStatus.vehicle ? 'text-green-700' : 'text-gray-700'">เพิ่มข้อมูลรถยนต์</p>
+                    <div class="flex items-center justify-between p-4 rounded-xl border transition-all duration-200" 
+                        :class="[
+                            guardStatus.vehicle ? 'bg-green-50 border-green-200 shadow-sm' : '',
+                            !guardStatus.vehicle && (guardStatus.idCard && guardStatus.driver) ? 'bg-blue-50 border-blue-200 shadow-sm' : '',
+                            !guardStatus.vehicle && (!guardStatus.idCard || !guardStatus.driver) ? 'bg-gray-100 border-gray-200 opacity-75' : ''
+                        ]">
+                        <div class="flex items-center gap-3">
+                            <span class="font-semibold text-sm sm:text-base" 
+                                :class="[
+                                    guardStatus.vehicle ? 'text-green-800' : '',
+                                    !guardStatus.vehicle && (guardStatus.idCard && guardStatus.driver) ? 'text-blue-900' : '',
+                                    !guardStatus.vehicle && (!guardStatus.idCard || !guardStatus.driver) ? 'text-gray-500' : ''
+                                ]">
+                                เพิ่มข้อมูลรถยนต์
+                            </span>
                         </div>
-                        <NuxtLink v-if="!guardStatus.vehicle" to="/profile/my-vehicle"
-                            class="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-                            :class="{ 'opacity-50 pointer-events-none': !guardStatus.idCard || !guardStatus.driver }">
+                        
+                        <div v-if="guardStatus.vehicle" class="text-green-600 font-medium text-sm flex items-center gap-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ผ่านการยืนยันแล้ว
+                        </div>
+
+                        <button v-else-if="!guardStatus.idCard || !guardStatus.driver" disabled
+                            class="px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-lg cursor-not-allowed">
+                            ดำเนินการ
+                        </button>
+
+                        <NuxtLink v-else to="/profile/my-vehicle"
+                            class="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700 shadow-sm transition-colors">
                             ดำเนินการ
                         </NuxtLink>
                     </div>
@@ -55,14 +100,16 @@
 
         <!-- Hero header -->
         <template v-else>
-        <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white">
-            <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">สร้างเส้นทางใหม่</h1>
-                <p class="mt-1 text-emerald-100 text-sm">แชร์การเดินทางของคุณ ให้คนอื่นร่วมทาง</p>
+        <!-- Graphical Header -->
+        <div class="relative h-[280px] w-full">
+            <img src="/images/bgmytrip.png" alt="Create Trip Background" class="object-cover w-full h-full" />
+            <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h1 class="text-4xl font-bold text-white drop-shadow-md">สร้างเส้นทาง</h1>
+                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">สร้างเส้นทางของคุณ เพื่อแชร์ที่นั่งว่างให้กับเพื่อนร่วมทางที่มีจุดหมายเดียวกัน</p>
             </div>
         </div>
 
-        <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <!-- Left panel: Form -->
                 <div class="lg:col-span-2 space-y-4">
@@ -77,11 +124,11 @@
                                 </h3>
                                 <div class="relative pl-8">
                                     <!-- Timeline line -->
-                                    <div class="absolute left-[14px] top-4 bottom-4 w-0.5 bg-gray-200"></div>
+                                    <div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200"></div>
                                     <!-- Start -->
                                     <div class="relative mb-4">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดเริ่มต้น</label>
                                         <div class="relative">
@@ -113,7 +160,7 @@
                                     <!-- Waypoints -->
                                     <div v-for="(wp, idx) in waypoints" :key="idx" class="relative mb-4">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดแวะ {{ idx + 1
                                             }}</label>
@@ -144,7 +191,7 @@
                                     <!-- End -->
                                     <div class="relative">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดปลายทาง</label>
                                         <div class="relative">
@@ -183,7 +230,7 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">วันที่เดินทาง</label>
-                                        <input v-model="form.date" type="date"
+                                        <input v-model="form.date" type="date" :min="minDate"
                                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50" />
                                     </div>
                                     <div>
@@ -261,13 +308,13 @@
                         </div>
 
                         <!-- Submit -->
-                        <div class="flex gap-3 mt-4">
+                        <div class="flex gap-3 mt-4 mb-24">
                             <button type="button" @click="navigateTo('/findTrip')"
                                 class="flex-1 py-3 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 transition cursor-pointer">
                                 ยกเลิก
                             </button>
                             <button type="submit" :disabled="isLoading"
-                                class="flex-[2] py-3 text-sm font-semibold text-white bg-emerald-500 rounded-2xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 transition cursor-pointer">
+                                class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-2xl hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition cursor-pointer">
                                 <span v-if="isLoading" class="flex items-center justify-center gap-2">
                                     <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
@@ -317,8 +364,8 @@
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
                 @click.self="closePlacePicker">
                 <div class="bg-white rounded-2xl w-[95%] max-w-lg max-h-[90vh] overflow-hidden shadow-2xl">
-                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                        <h3 class="text-base font-semibold text-gray-800">
+                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 ">
+                        <h3 class="text-base font-semibold text-gray-800 ">
                             เลือก{{ pickingField === 'start' ? 'จุดเริ่มต้น' : pickingField === 'end' ? 'จุดปลายทาง' :
                                 'จุดแวะ' }}
                         </h3>
@@ -359,6 +406,7 @@ import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRuntimeConfig, useHead, navigateTo } from '#app'
 import { useToast } from '~/composables/useToast'
 import VehicleModal from '~/components/VehicleModal.vue'
+import { getProvinceFromPlace , stripCountry, stripLeadingPlusCode } from '~/utils/googleMaps'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -393,6 +441,7 @@ const isLoading = ref(false)
 const vehicles = ref([])
 
 const waypoints = ref([])
+const minDate = new Date().toISOString().split('T')[0]
 const waypointMetas = ref([])
 const waypointInputs = ref([])
 let waypointAutocompletes = []
@@ -413,8 +462,8 @@ const endInputEl = ref(null)
 let startAutocomplete = null
 let endAutocomplete = null
 
-const startMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null })
-const endMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null })
+const startMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null, province: null })
+const endMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null, province: null })
 
 const showPlacePicker = ref(false)
 const pickingField = ref(null)
@@ -520,13 +569,14 @@ function useCurrentLocation(field) {
             })
             const name = geocodeRes ? stripLeadingPlusCode(stripCountry(geocodeRes.formatted_address || '')) : `${lat.toFixed(6)}, ${lng.toFixed(6)}`
             const address = geocodeRes ? stripCountry(geocodeRes.formatted_address || '') : name
+            const province = getProvinceFromPlace(geocodeRes)
 
             if (field === 'start') {
                 form.startPoint = name
-                startMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null }
+                startMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null, province }
             } else {
                 form.endPoint = name
-                endMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null }
+                endMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null, province }
             }
             updateMainMap()
             if (mainMap) mainMap.panTo(latlng)
@@ -586,8 +636,20 @@ const handleSubmit = async () => {
 
     const payload = {
         vehicleId: form.vehicleId,
-        startLocation: { lat: Number(startMeta.value.lat), lng: Number(startMeta.value.lng), name: startMeta.value.name || form.startPoint, address: startMeta.value.address || form.startPoint },
-        endLocation: { lat: Number(endMeta.value.lat), lng: Number(endMeta.value.lng), name: endMeta.value.name || form.endPoint, address: endMeta.value.address || form.endPoint },
+        startLocation: { 
+            lat: Number(startMeta.value.lat), 
+            lng: Number(startMeta.value.lng), 
+            name: startMeta.value.name || form.startPoint, 
+            address: startMeta.value.address || form.startPoint,
+            province: startMeta.value.province 
+        },
+        endLocation: { 
+            lat: Number(endMeta.value.lat), 
+            lng: Number(endMeta.value.lng), 
+            name: endMeta.value.name || form.endPoint, 
+            address: endMeta.value.address || form.endPoint,
+            province: endMeta.value.province
+        },
         waypoints: waypointsPayload,
         optimizeWaypoints: true,
         departureTime,
@@ -691,8 +753,10 @@ function initStartEndAutocomplete() {
             const lng = p.geometry?.location?.lng?.() ?? null
             const name = p.name || stripLeadingPlusCode(stripCountry(p.formatted_address || ''))
             const address = stripCountry(p.formatted_address || name || '')
+            const province = getProvinceFromPlace(p)
+            
             form.startPoint = name
-            startMeta.value = { lat, lng, name, address, placeId: p.place_id || null }
+            startMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
         })
     }
@@ -707,8 +771,10 @@ function initStartEndAutocomplete() {
             const lng = p.geometry?.location?.lng?.() ?? null
             const name = p.name || stripLeadingPlusCode(stripCountry(p.formatted_address || ''))
             const address = stripCountry(p.formatted_address || name || '')
+            const province = getProvinceFromPlace(p)
+
             form.endPoint = name
-            endMeta.value = { lat, lng, name, address, placeId: p.place_id || null }
+            endMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
         })
     }
@@ -752,8 +818,8 @@ function clearMainMapMarkers() {
 }
 
 async function updateMainMap() {
-    if (!mainMap) return
     clearMainMapMarkers()
+    if (!mainMap) return
 
     const hasStart = startMeta.value.lat != null
     const hasEnd = endMeta.value.lat != null
@@ -945,8 +1011,6 @@ function closePlacePicker() {
 
 // ==================== Helpers ====================
 function isPlusCode(text) { return text ? /^[A-Z0-9]{4,}\+[A-Z0-9]{2,}/i.test(text.trim()) : false }
-function stripCountry(text) { return (text || '').replace(/,?\s*(Thailand|ไทย)\s*$/i, '') }
-function stripLeadingPlusCode(text) { return (text || '').replace(/^[A-Z0-9]{4,}\+[A-Z0-9]{2,}\s*,?\s*/i, '') }
 function findNearestPoi(lat, lng, radius = 120) {
     return new Promise(resolve => {
         if (!placesService) return resolve(null)
