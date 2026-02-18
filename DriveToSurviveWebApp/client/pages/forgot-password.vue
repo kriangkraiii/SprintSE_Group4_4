@@ -112,7 +112,24 @@
             <div>
               <label for="newPassword" class="block mb-1.5 text-sm font-medium text-primary">รหัสผ่านใหม่ <span class="text-red-500">*</span></label>
               <input type="password" id="newPassword" v-model="newPassword" required minlength="8"
-                placeholder="อย่างน้อย 8 ตัวอักษร" class="input-field" />
+                placeholder="อย่างน้อย 8 ตัวอักษร" class="input-field"
+                :class="{ 'border-red-400': newPassword && !passwordValid }" />
+              <!-- Password rules indicator -->
+              <div v-if="newPassword" class="mt-2 space-y-1">
+                <p :class="['text-xs flex items-center gap-1.5', pwRules.minLength ? 'text-emerald-600' : 'text-red-500']">
+                  <span>{{ pwRules.minLength ? '✓' : '✗' }}</span> อย่างน้อย 8 ตัวอักษร
+                </p>
+                <p :class="['text-xs flex items-center gap-1.5', pwRules.hasUpper ? 'text-emerald-600' : 'text-red-500']">
+                  <span>{{ pwRules.hasUpper ? '✓' : '✗' }}</span> ตัวพิมพ์ใหญ่ (A–Z)
+                </p>
+                <p :class="['text-xs flex items-center gap-1.5', pwRules.hasLower ? 'text-emerald-600' : 'text-red-500']">
+                  <span>{{ pwRules.hasLower ? '✓' : '✗' }}</span> ตัวพิมพ์เล็ก (a–z)
+                </p>
+                <p :class="['text-xs flex items-center gap-1.5', pwRules.hasNumber ? 'text-emerald-600' : 'text-red-500']">
+                  <span>{{ pwRules.hasNumber ? '✓' : '✗' }}</span> ตัวเลข (0–9)
+                </p>
+              </div>
+              <p v-else class="mt-1 text-xs text-slate-400">ต้องประกอบด้วย A–Z, a–z และ 0–9</p>
             </div>
             <div>
               <label for="confirmPassword" class="block mb-1.5 text-sm font-medium text-primary">ยืนยันรหัสผ่านใหม่ <span class="text-red-500">*</span></label>
@@ -122,8 +139,11 @@
               <p v-if="confirmPassword && newPassword !== confirmPassword" class="mt-1 text-xs text-red-600">
                 รหัสผ่านไม่ตรงกัน
               </p>
+              <p v-else-if="confirmPassword && newPassword === confirmPassword" class="mt-1 text-xs text-emerald-600">
+                ✓ รหัสผ่านตรงกัน
+              </p>
             </div>
-            <button type="submit" :disabled="isLoading || !newPassword || newPassword !== confirmPassword"
+            <button type="submit" :disabled="isLoading || !passwordValid || newPassword !== confirmPassword"
               class="flex items-center justify-center w-full py-3 btn-primary disabled:opacity-50">
               <svg v-if="isLoading" class="w-5 h-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
@@ -184,6 +204,18 @@ const isLoading = ref(false)
 const errorMessage = ref('')
 const resendCooldown = ref(0)
 let cooldownTimer = null
+
+// Password validation rules (real-time)
+const pwRules = computed(() => ({
+  minLength: newPassword.value.length >= 8,
+  hasUpper: /[A-Z]/.test(newPassword.value),
+  hasLower: /[a-z]/.test(newPassword.value),
+  hasNumber: /[0-9]/.test(newPassword.value),
+}))
+
+const passwordValid = computed(() =>
+  pwRules.value.minLength && pwRules.value.hasUpper && pwRules.value.hasLower && pwRules.value.hasNumber
+)
 
 const stepProgress = computed(() => {
   return `${((step.value - 1) / 2) * 100}%`
@@ -249,6 +281,10 @@ const checkOtp = async () => {
 }
 
 const resetPwd = async () => {
+  if (!passwordValid.value) {
+    errorMessage.value = 'รหัสผ่านไม่ผ่านเงื่อนไข กรุณาตรวจสอบอีกครั้ง'
+    return
+  }
   if (newPassword.value !== confirmPassword.value) {
     errorMessage.value = 'รหัสผ่านไม่ตรงกัน'
     return
@@ -263,7 +299,6 @@ const resetPwd = async () => {
         email: email.value,
         otpCode: otpCode.value,
         newPassword: newPassword.value,
-        confirmNewPassword: confirmPassword.value,
       }),
     })
     const data = await res.json()
