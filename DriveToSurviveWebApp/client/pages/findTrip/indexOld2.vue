@@ -684,7 +684,7 @@ async function handleSearch() {
                     isVerified: !!route.driver?.isVerified
                 },
                 carDetails: route.vehicle
-                    ? [`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`, ...(route.vehicle.amenities || [])]
+                    ? [`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`, ...(route.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)]
                     : ['ไม่มีข้อมูลรถ'],
                 conditions: route.conditions,
                 photos: route.vehicle?.photos || [],

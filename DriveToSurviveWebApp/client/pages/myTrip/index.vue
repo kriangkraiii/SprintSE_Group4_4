@@ -335,7 +335,7 @@ async function fetchMyTrips() {
             if (b.route.vehicle) {
                 carDetails.push(`${b.route.vehicle.vehicleModel} (${b.route.vehicle.vehicleType})`)
                 if (Array.isArray(b.route.vehicle.amenities) && b.route.vehicle.amenities.length) {
-                    carDetails.push(...b.route.vehicle.amenities)
+                    carDetails.push(...b.route.vehicle.amenities.map(a => typeof a === 'string' ? a : a.name))
                 }
             } else {
                 carDetails.push('ไม่มีข้อมูลรถ')

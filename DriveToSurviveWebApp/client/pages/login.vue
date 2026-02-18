@@ -172,7 +172,12 @@ const submit = async () => {
     router.push('/')
   } catch (e) {
     console.error(e)
-    errorMessage.value = e?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
+    const status = e?.status || e?.statusCode || e?.response?.status
+    if (status === 403) {
+      errorMessage.value = e?.data?.message || 'บัญชีของคุณถูกระงับการใช้งาน'
+    } else {
+      errorMessage.value = e?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
+    }
   } finally {
     isLoading.value = false
   }

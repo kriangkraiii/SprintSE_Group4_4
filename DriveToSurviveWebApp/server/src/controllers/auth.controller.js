@@ -23,6 +23,15 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid credentials");
     }
 
+    // ─── Blacklist Check: ตรวจสอบว่าบัญชีถูก Blacklist หรือไม่ ───
+    if (user.nationalIdNumber) {
+        const blacklistService = require('../services/blacklist.service');
+        const blacklisted = await blacklistService.checkBlacklist(user.nationalIdNumber);
+        if (blacklisted) {
+            throw new ApiError(403, 'บัญชีของคุณถูกระงับการใช้งาน (Blacklisted)');
+        }
+    }
+
     const token = signToken({ sub: user.id, role: user.role });
     const {
         password: _,

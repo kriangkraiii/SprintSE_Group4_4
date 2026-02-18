@@ -499,7 +499,7 @@ async function fetchMyRoutes() {
             if (r.vehicle) {
                 carDetailsList.push(`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`)
                 if (Array.isArray(r.vehicle.amenities) && r.vehicle.amenities.length > 0) {
-                    carDetailsList.push(...r.vehicle.amenities)
+                    carDetailsList.push(...r.vehicle.amenities.map(a => typeof a === 'string' ? a : a.name))
                 }
             } else {
                 carDetailsList.push('ไม่มีข้อมูลรถ')
@@ -590,7 +590,7 @@ async function fetchMyRoutes() {
                 stops,
                 stopsCoords,
                 carDetails: (r.vehicle
-                    ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || [])]
+                    ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)]
                     : ['ไม่มีข้อมูลรถ']),
                 photos: r.vehicle?.photos || [],
                 conditions: r.conditions || '',

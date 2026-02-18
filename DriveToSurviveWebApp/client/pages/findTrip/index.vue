@@ -685,7 +685,7 @@ async function handleSearch() {
                     reviews: Math.floor(Math.random() * 50) + 5,
                     isVerified: !!route.driver?.isVerified,
                 },
-                carDetails: route.vehicle ? [`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`, ...(route.vehicle.amenities || [])] : ['ไม่มีข้อมูลรถ'],
+                carDetails: route.vehicle ? [`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`, ...(route.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)] : ['ไม่มีข้อมูลรถ'],
                 conditions: route.conditions,
                 photos: route.vehicle?.photos || [],
                 durationText: formatDuration(route.duration) || route.duration || '-',

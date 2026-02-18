@@ -456,7 +456,7 @@ async function fetchRoute() {
             conditions: r.conditions,
             photos: r.vehicle?.photos || [],
             carDetails: r.vehicle
-                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || [])]
+                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)]
                 : ['ไม่มีข้อมูลรถ'],
 
             driver: {
