@@ -105,7 +105,7 @@
                                 <label for="travelDate" class="block mb-2 text-sm font-medium text-gray-700">
                                     วันที่เดินทาง <span class="text-red-500">*</span>
                                 </label>
-                                <input v-model="form.date" id="travelDate" name="travelDate" type="date" required
+                                <input v-model="form.date" id="travelDate" name="travelDate" type="date" required :min="minDate"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500" />
                             </div>
                             <div>
@@ -262,6 +262,8 @@ definePageMeta({ middleware: 'auth' })
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+
+const minDate = new Date().toISOString().split('T')[0]
 
 const isModalOpen = ref(false)
 const isLoading = ref(false)

@@ -37,7 +37,9 @@ const searchRoutes = async (opts) => {
   const hasStart = typeof startNearLat === 'number' && typeof startNearLng === 'number';
   const hasEnd = typeof endNearLat === 'number' && typeof endNearLng === 'number';
 
-  if (hasStart || hasEnd) {
+  // ถ้ามีการระบุจังหวัด ให้ใช้การค้นหาแบบปกติ (กรองตามจังหวัด) แทนการค้นหาด้วยรัศมี
+  // เพื่อให้เจอรถทั้งหมดในจังหวัดนั้นๆ ไม่ใช่แค่ในรัศมี 500m
+  if ((hasStart || hasEnd) && !opts.startProvince && !opts.endProvince) {
     return searchRoutesByEndpointProximity(opts);
   }
 
@@ -56,6 +58,8 @@ const searchRoutes = async (opts) => {
     sortOrder = 'desc',
 
     seatsRequired,
+    startProvince,
+    endProvince,
   } = opts || {};
 
   // รวม startName / endName เข้ากับ q เพื่อค้นหาใน routeSummary (ซึ่งมีชื่อสถานที่ต้นทาง-ปลายทาง)
@@ -72,6 +76,18 @@ const searchRoutes = async (opts) => {
       }
     } : {}),
     ...(typeof seatsRequired === 'number' ? { availableSeats: seatsRequired } : {}),
+    ...(startProvince ? {
+      startLocation: {
+        path: '$.province',
+        equals: startProvince
+      }
+    } : {}),
+    ...(endProvince ? {
+      endLocation: {
+        path: '$.province',
+        equals: endProvince
+      }
+    } : {}),
     ...(searchText ? {
       OR: [
         { routeSummary: { contains: searchText } },
@@ -136,6 +152,8 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
     radiusMeters = 500,
     sortBy = 'createdAt',
     sortOrder = 'desc',
+    startProvince,
+    endProvince,
   } = opts;
 
   const offset = (page - 1) * limit;
@@ -150,6 +168,8 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
   const sLng = startNearLng ?? null;
   const eLat = endNearLat ?? null;
   const eLng = endNearLng ?? null;
+  const sProv = startProvince || null;
+  const eProv = endProvince || null;
 
   // เลือกเฉพาะ id ก่อน เพื่อทำ include รอบสอง
   // ใช้ Haversine (เป็นเมตร) กับ lat/lng ที่ดึงจาก JSON
@@ -176,6 +196,8 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
             SIN(RADIANS(${eLat})) * SIN(RADIANS(CAST(JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.lat')) AS DOUBLE)))
           )) <= ${radiusMeters}
         )
+        AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
+        AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
       ORDER BY ${Prisma.raw(`r.\`${sortField}\``)} ${Prisma.raw(sortDir)}
       LIMIT ${limit} OFFSET ${offset}
     `
@@ -205,6 +227,8 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
             SIN(RADIANS(${eLat})) * SIN(RADIANS(CAST(JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.lat')) AS DOUBLE)))
           )) <= ${radiusMeters}
         )
+        AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
+        AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
     `
   );
   const total = Number(totalRows?.[0]?.cnt) || 0;

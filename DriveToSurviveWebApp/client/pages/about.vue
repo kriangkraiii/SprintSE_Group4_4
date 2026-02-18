@@ -3,7 +3,7 @@
     <!-- Hero Section -->
     <section class="relative py-20 overflow-hidden bg-primary">
       <div class="absolute inset-0 opacity-10">
-        <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 32px 32px;"></div>
+        <div class="hidden"></div>
       </div>
       <div class="relative px-4 mx-auto text-center max-w-7xl sm:px-6 lg:px-8">
         <h1 class="mb-4 text-4xl font-bold text-white font-heading lg:text-5xl">เกี่ยวกับ Drive To Survive</h1>
@@ -126,7 +126,7 @@
     </section>
 
     <!-- CTA -->
-    <section class="py-20 bg-gradient-to-br from-primary via-slate-900 to-primary">
+    <section class="py-20 bg-primary">
       <div class="max-w-3xl px-4 mx-auto text-center sm:px-6 lg:px-8">
         <h2 class="mb-4 text-3xl font-bold text-white font-heading lg:text-4xl">พร้อมเดินทางอย่างปลอดภัย?</h2>
         <p class="mb-8 text-lg text-slate-300">สมัครฟรี ไม่มีค่าใช้จ่ายแฝง เริ่มต้นได้เลยวันนี้</p>

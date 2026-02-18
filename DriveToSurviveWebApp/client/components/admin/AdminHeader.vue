@@ -1,3 +1,4 @@
+```html
 <template>
     <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-white border-b border-slate-200 shadow-sm">
         <div class="flex items-center justify-between h-full gap-3 px-4 lg:px-6">
@@ -378,3 +379,4 @@ function timeAgo(ts) {
     overflow: hidden;
 }
 </style>
+```

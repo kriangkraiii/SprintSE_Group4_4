@@ -1,8 +1,8 @@
 <template>
     <div class="bg-gray-50">
-        <div class="flex items-center justify-center min-h-screen py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
             <div
-                class="flex w-full max-w-6xl mx-4 overflow-hidden bg-white border border-gray-300 rounded-lg shadow-lg">
+                class="flex w-full overflow-hidden bg-white border border-gray-300 rounded-lg shadow-lg">
 
                 <ProfileSidebar />
 
@@ -20,7 +20,7 @@
                                     <!-- OCR Badge -->
                                     <span v-if="meBasic.verifiedByOcr"
                                         class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200">
-                                        🤖 OCR
+                                        OCR
                                     </span>
                                     <!-- VERIFIED -->
                                     <span v-if="meBasic.isVerified || meBasic.verifiedByOcr"
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="mt-4 text-xs text-gray-400">ยืนยันอัตโนมัติ — ไม่ต้องรอแอดมินอนุมัติ</p>
+                            <p class="mt-4 text-xs text-gray-400">ยืนยันด้วยระบบการยืนยันอัตโนมัติ</p>
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@
                                 <div class="ml-auto flex items-center gap-2">
                                     <span v-if="meDriver?.verifiedByOcr"
                                         class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200">
-                                        🤖 OCR
+                                        OCR
                                     </span>
                                     <span v-if="isDriverVerifiedLocal"
                                         class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200">
@@ -252,7 +252,7 @@
                                 <div v-if="meDriver.ocrData.thIssueDate || meDriver.ocrData.enIssueDate"><span class="text-gray-500">วันออก:</span> <span class="font-medium">{{ meDriver.ocrData.thIssueDate || meDriver.ocrData.enIssueDate }}</span></div>
                                 <div v-if="meDriver.ocrData.thExpiryDate || meDriver.ocrData.enExpiryDate"><span class="text-gray-500">หมดอายุ:</span> <span class="font-medium">{{ meDriver.ocrData.thExpiryDate || meDriver.ocrData.enExpiryDate }}</span></div>
                             </div>
-                            <p class="mt-4 text-xs text-gray-400">ยืนยันอัตโนมัติ — ไม่ต้องรอแอดมินอนุมัติ</p>
+                            <p class="mt-4 text-xs text-gray-400">ยืนยันด้วยระบบการยืนยันอัตโนมัติ</p>
                         </div>
                     </div>
 

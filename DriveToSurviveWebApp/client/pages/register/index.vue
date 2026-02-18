@@ -1,58 +1,24 @@
 <template>
   <div class="flex min-h-screen">
     <!-- Left panel -->
-    <div class="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-primary via-slate-900 to-primary items-center justify-center p-12">
-      <div class="max-w-sm text-center">
-        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-2xl bg-cta/20">
-          <svg class="w-8 h-8 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-          </svg>
-        </div>
-        <h2 class="mb-4 text-3xl font-bold text-white font-heading">สร้างบัญชีใหม่</h2>
-        <p class="mb-8 text-slate-300">เข้าร่วม Drive To Survive เพื่อเดินทางร่วมกันอย่างปลอดภัย</p>
-        <div class="space-y-3 text-left">
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">ยืนยันตัวตน eKYC ทุกคน</span>
-          </div>
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">ปลอดภัยด้วย GPS เรียลไทม์</span>
-          </div>
-          <div class="flex items-center gap-3 p-3 border rounded-xl bg-white/5 border-white/10">
-            <svg class="w-5 h-5 shrink-0 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-sm text-slate-300">PDPA คุ้มครองข้อมูลส่วนตัว</span>
-          </div>
-        </div>
-      </div>
+     
+    
+    <div class="hidden lg:flex lg:w-6/12 bg-[#236993] items-center justify-center p-12 relative">
+      <div class="absolute inset-0 opacity-100 bg-no-repeat bg-cover " style="background-image: url('/images/bgregister.png'); background-position:center 100%;"></div>
     </div>
 
     <!-- Right form -->
     <div class="flex items-center justify-center flex-1 p-4 sm:p-6 lg:p-12 bg-surface">
       <main class="w-full max-w-lg">
-        <!-- Mobile brand -->
-        <div class="flex items-center justify-center gap-2 mb-6 lg:hidden">
-          <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary">
-            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <span class="text-xl font-bold font-heading text-primary">Drive To Survive</span>
-        </div>
+        
 
-        <h1 class="mb-2 text-2xl font-bold text-center font-heading text-primary">สมัครสมาชิก</h1>
-        <p class="mb-6 text-sm text-center text-slate-500">กรอกข้อมูลเพื่อสร้างบัญชี Drive To Survive</p>
+        <h1 class="mb-2 text-2xl lg:text-6xl font-bold text-center font-heading text-[#137FEC]">สมัครสมาชิก</h1>
+        <p class="mb-6 text-sm text-center text-slate-500">กรอกข้อมูลเพื่อสร้างบัญชี Ride</p>
 
         <!-- Stepper -->
         <div class="relative mb-8">
           <div class="absolute left-0 right-0 h-0.5 bg-slate-200 top-5"></div>
-          <div class="absolute left-0 h-0.5 transition-all duration-500 bg-cta top-5" :style="{ width: stepProgress }"></div>
+          <div class="absolute left-0 h-0.5 transition-all duration-500 bg-[#137FEC] top-5" :style="{ width: stepProgress }"></div>
           <div class="relative flex items-center justify-between">
             <div v-for="step in totalSteps" :key="step" class="z-10 flex flex-col items-center w-1/3">
               <div :class="getStepClass(step)">
@@ -67,59 +33,59 @@
         <form @submit.prevent="handleRegister" novalidate>
           <!-- Step 1: Account Info -->
           <div v-if="currentStep === 1" class="space-y-4">
-            <h2 class="mb-4 text-lg font-semibold font-heading text-primary">ข้อมูลบัญชีผู้ใช้</h2>
+            <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ข้อมูลบัญชีผู้ใช้</h2>
             <div>
-              <label for="username" class="block mb-1.5 text-sm font-medium text-primary">ชื่อผู้ใช้ <span class="text-red-500">*</span></label>
+              <label for="username" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ชื่อผู้ใช้ <span class="text-red-500">*</span></label>
               <input type="text" id="username" v-model="formData.username" placeholder="example123"
                 class="input-field" :class="{ 'border-red-400 focus:border-red-400 focus:shadow-red-100': errors.username }">
               <p v-if="errors.username" class="mt-1 text-xs text-red-600">{{ errors.username }}</p>
-              <p v-else class="mt-1 text-xs text-slate-400">ความยาว 4–20 ตัวอักษร ภาษาอังกฤษ ตัวเลข หรือขีดล่าง (_) เท่านั้น</p>
+              <p v-else class="mt-1 text-xs text-slate-400 ml-6">ความยาว 4–20 ตัวอักษร ภาษาอังกฤษ ตัวเลข หรือขีดล่าง (_) เท่านั้น</p>
             </div>
             <div>
-              <label for="email" class="block mb-1.5 text-sm font-medium text-primary">อีเมล <span class="text-red-500">*</span></label>
+              <label for="email" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">อีเมล <span class="text-red-500">*</span></label>
               <input type="email" id="email" v-model="formData.email" placeholder="example@example.com"
                 class="input-field" :class="{ 'border-red-400': errors.email }">
               <p v-if="errors.email" class="mt-1 text-xs text-red-600">{{ errors.email }}</p>
             </div>
             <div>
-              <label for="password" class="block mb-1.5 text-sm font-medium text-primary">รหัสผ่าน <span class="text-red-500">*</span></label>
+              <label for="password" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">รหัสผ่าน <span class="text-red-500">*</span></label>
               <input type="password" id="password" v-model="formData.password" placeholder="อย่างน้อย 8 ตัวอักษร"
                 class="input-field" :class="{ 'border-red-400': errors.password }">
               <p v-if="errors.password" class="mt-1 text-xs text-red-600">{{ errors.password }}</p>
-              <p v-else class="mt-1 text-xs text-slate-400">ต้องประกอบด้วย A–Z, a–z และตัวเลข 0–9</p>
+              <p v-else class="mt-1 text-xs text-slate-400 ml-6">ต้องประกอบด้วย A–Z, a–z และตัวเลข 0–9</p>
             </div>
             <div>
-              <label for="confirmPassword" class="block mb-1.5 text-sm font-medium text-primary">ยืนยันรหัสผ่าน <span class="text-red-500">*</span></label>
+              <label for="confirmPassword" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ยืนยันรหัสผ่าน <span class="text-red-500">*</span></label>
               <input type="password" id="confirmPassword" v-model="formData.confirmPassword" placeholder="กรอกรหัสผ่านอีกครั้ง"
                 class="input-field" :class="{ 'border-red-400': errors.confirmPassword }">
               <p v-if="errors.confirmPassword" class="mt-1 text-xs text-red-600">{{ errors.confirmPassword }}</p>
             </div>
-            <button type="button" @click="nextStep" class="w-full py-3 btn-primary">ถัดไป</button>
+            <button type="button" @click="nextStep" class="w-full max-w-lg py-4 mx-auto text-lg font-semibold text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg block">ถัดไป</button>
           </div>
 
           <!-- Step 2: Personal Info -->
           <div v-if="currentStep === 2" class="space-y-4">
-            <h2 class="mb-4 text-lg font-semibold font-heading text-primary">ข้อมูลส่วนตัว</h2>
+            <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ข้อมูลส่วนตัว</h2>
             <div>
-              <label for="firstName" class="block mb-1.5 text-sm font-medium text-primary">ชื่อจริง <span class="text-red-500">*</span></label>
+              <label for="firstName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ชื่อจริง <span class="text-red-500">*</span></label>
               <input type="text" id="firstName" v-model="formData.firstName" placeholder="กรอกชื่อจริง"
                 class="input-field" :class="{ 'border-red-400': errors.firstName }">
               <p v-if="errors.firstName" class="mt-1 text-xs text-red-600">{{ errors.firstName }}</p>
             </div>
             <div>
-              <label for="lastName" class="block mb-1.5 text-sm font-medium text-primary">นามสกุล <span class="text-red-500">*</span></label>
+              <label for="lastName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">นามสกุล <span class="text-red-500">*</span></label>
               <input type="text" id="lastName" v-model="formData.lastName" placeholder="กรอกนามสกุล"
                 class="input-field" :class="{ 'border-red-400': errors.lastName }">
               <p v-if="errors.lastName" class="mt-1 text-xs text-red-600">{{ errors.lastName }}</p>
             </div>
             <div>
-              <label for="phoneNumber" class="block mb-1.5 text-sm font-medium text-primary">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
+              <label for="phoneNumber" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
               <input type="tel" id="phoneNumber" v-model="formData.phoneNumber" placeholder="เช่น 0891234567"
                 class="input-field" :class="{ 'border-red-400': errors.phoneNumber }">
               <p v-if="errors.phoneNumber" class="mt-1 text-xs text-red-600">{{ errors.phoneNumber }}</p>
             </div>
             <div>
-              <label class="block mb-2 text-sm font-medium text-primary">เพศ <span class="text-red-500">*</span></label>
+              <label class="block mb-2 text-sm font-medium text-[#383838] ml-1">เพศ <span class="text-red-500">*</span></label>
               <div class="flex gap-6">
                 <label class="flex items-center cursor-pointer"><input type="radio" name="gender" value="male" v-model="formData.gender"
                     class="mr-2 text-cta focus:ring-cta"> ชาย</label>
@@ -130,20 +96,23 @@
             </div>
             <div class="flex gap-3 pt-2">
               <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
-              <button type="button" @click="nextStep" class="w-full py-3 btn-primary">ถัดไป</button>
+              <button type="button" @click="nextStep" class="w-full py-3 text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg font-semibold">ถัดไป</button>
             </div>
           </div>
 
           <!-- Step 3: Verification -->
           <div v-if="currentStep === 3" class="space-y-4">
-            <h2 class="mb-4 text-lg font-semibold font-heading text-primary">ยืนยันตัวตนด้วยบัตรประชาชน</h2>
+            <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ยืนยันตัวตนด้วยบัตรประชาชน</h2>
 
             <!-- บัตรประชาชน ด้านหน้า -->
             <div>
-              <label class="block mb-1.5 text-sm font-medium text-primary">บัตรประชาชน (ด้านหน้า) <span class="text-red-500">*</span></label>
+              <label class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">บัตรประชาชน (ด้านหน้า) <span class="text-red-500">*</span></label>
               <div v-if="!idCardPreview" @click="triggerFileUpload('idCardFile')"
-                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-cta hover:bg-cta-light/30"
-                :class="{ 'border-red-400': errors.idCardFile }">
+                @dragover.prevent="dropping.idCard = true"
+                @dragleave.prevent="dropping.idCard = false"
+                @drop.prevent="handleDrop($event, 'idCard')"
+                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-[#0C5EB1] hover:bg-[#0C5EB1]/5"
+                :class="{ 'border-red-400': errors.idCardFile, 'border-[#0C5EB1] bg-[#0C5EB1]/10': dropping.idCard }">
                 <svg class="w-10 h-10 mx-auto text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
                 </svg>
@@ -162,7 +131,7 @@
               <!-- ปุ่มตรวจสอบ OCR ด้านหน้า -->
               <button v-if="formData.idCardFile && !ocrFrontResult" type="button" @click="scanIdCardFront"
                 :disabled="isOcrLoading"
-                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-cta hover:bg-cta-hover disabled:opacity-50">
+                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-[#0C5EB1] hover:bg-[#0C5EB1]/90 disabled:opacity-50">
                 <span v-if="isOcrLoading" class="flex items-center justify-center">
                   <svg class="w-4 h-4 mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -170,7 +139,7 @@
                   </svg>
                   กำลังตรวจสอบ...
                 </span>
-                <span v-else>🔍 ตรวจสอบบัตรประชาชน (ด้านหน้า)</span>
+                <span v-else>กดเพื่อตรวจสอบบัตรประชาชน (ด้านหน้า)</span>
               </button>
 
               <!-- แสดงผล OCR ด้านหน้า -->
@@ -212,10 +181,13 @@
 
             <!-- บัตรประชาชน ด้านหลัง -->
             <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
-              <label class="block mb-1.5 text-sm font-medium text-primary">บัตรประชาชน (ด้านหลัง) <span class="text-red-500">*</span></label>
+              <label class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">บัตรประชาชน (ด้านหลัง) <span class="text-red-500">*</span></label>
               <div v-if="!idCardBackPreview" @click="triggerFileUpload('idCardBackFile')"
-                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-cta hover:bg-cta-light/30"
-                :class="{ 'border-red-400': errors.idCardBackFile }">
+                @dragover.prevent="dropping.idCardBack = true"
+                @dragleave.prevent="dropping.idCardBack = false"
+                @drop.prevent="handleDrop($event, 'idCardBack')"
+                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-[#0C5EB1] hover:bg-[#0C5EB1]/5"
+                :class="{ 'border-red-400': errors.idCardBackFile, 'border-[#0C5EB1] bg-[#0C5EB1]/10': dropping.idCardBack }">
                 <svg class="w-10 h-10 mx-auto text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
                 </svg>
@@ -234,7 +206,7 @@
               <!-- ปุ่มตรวจสอบ OCR ด้านหลัง -->
               <button v-if="formData.idCardBackFile && !ocrBackResult" type="button" @click="scanIdCardBack"
                 :disabled="isOcrBackLoading"
-                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-cta hover:bg-cta-hover disabled:opacity-50">
+                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-[#0C5EB1] hover:bg-[#0C5EB1]/90 disabled:opacity-50">
                 <span v-if="isOcrBackLoading" class="flex items-center justify-center">
                   <svg class="w-4 h-4 mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -242,7 +214,7 @@
                   </svg>
                   กำลังตรวจสอบ...
                 </span>
-                <span v-else>🔍 ตรวจสอบบัตรประชาชน (ด้านหลัง)</span>
+                <span v-else>กดเพื่อตรวจสอบบัตรประชาชน (ด้านหลัง)</span>
               </button>
 
               <!-- แสดงผล OCR ด้านหลัง -->
@@ -268,17 +240,20 @@
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span class="text-sm font-semibold text-blue-700">✅ ตรวจสอบบัตรประชาชนผ่านทั้งสองด้าน</span>
+                <span class="text-sm font-semibold text-blue-700">การตรวจสอบบัตรประชาชนผ่านทั้งสองด้าน</span>
               </div>
               <p class="text-xs text-blue-600">ข้อมูลจากบัตรจะถูกใช้ในการสร้างบัญชีของคุณโดยอัตโนมัติ</p>
             </div>
 
             <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
-              <label class="block mb-1.5 text-sm font-medium text-primary">รูปถ่ายเซลฟี่ (ยืนยันตัวตน) <span class="text-red-500">*</span></label>
-              <p class="mb-2 text-xs text-slate-400">ระบบจะเปรียบเทียบใบหน้าในรูปเซลฟี่กับรูปบนบัตรประชาชนเพื่อยืนยันตัวตน</p>
+              <label class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">รูปถ่ายใบหน้าตรงคู่บัตรประชาชน<span class="text-red-500">*</span></label>
+              <p class="mb-2 text-xs text-slate-400 ml-6">ระบบจะเปรียบเทียบรูปถ่ายใบหน้าของคุณคู่บัตรประชาชน เพื่อยืนยันตัวตน</p>
               <div v-if="!selfiePreview" @click="triggerFileUpload('selfieFile')"
-                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-cta hover:bg-cta-light/30"
-                :class="{ 'border-red-400': errors.selfieFile }">
+                @dragover.prevent="dropping.selfie = true"
+                @dragleave.prevent="dropping.selfie = false"
+                @drop.prevent="handleDrop($event, 'selfie')"
+                class="p-6 text-center transition-colors border-2 border-dashed rounded-lg cursor-pointer border-slate-300 hover:border-[#0C5EB1] hover:bg-[#0C5EB1]/5"
+                :class="{ 'border-red-400': errors.selfieFile, 'border-[#0C5EB1] bg-[#0C5EB1]/10': dropping.selfie }">
                 <svg class="w-10 h-10 mx-auto text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
@@ -297,7 +272,7 @@
               <!-- ปุ่มยืนยันตัวตนด้วยใบหน้า + บัตร ปชช. -->
               <button v-if="formData.selfieFile && formData.idCardFile && !faceIdResult" type="button" @click="verifyFaceAndIdCard"
                 :disabled="isFaceIdLoading"
-                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-cta hover:bg-cta-hover disabled:opacity-50">
+                class="w-full py-2 mt-2 text-sm font-medium text-white rounded-lg bg-[#0C5EB1] hover:bg-[#0C5EB1]/90 disabled:opacity-50">
                 <span v-if="isFaceIdLoading" class="flex items-center justify-center">
                   <svg class="w-4 h-4 mr-2 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -351,9 +326,9 @@
                   class="w-4 h-4 mt-1 mr-3 border-slate-300 rounded text-cta focus:ring-cta">
                 <span class="text-sm text-slate-600">ข้าพเจ้ายินยอมรับ
                   <NuxtLink to="/terms-of-service" target="_blank" rel="noopener noreferrer"
-                    class="font-medium text-cta hover:text-cta-hover">ข้อตกลงและเงื่อนไขฯ</NuxtLink> และได้อ่าน
+                    class="font-medium text-[#137FEC] hover:text-cta-hover">ข้อตกลงและเงื่อนไขฯ</NuxtLink> และได้อ่าน
                   <NuxtLink to="/privacy" target="_blank" rel="noopener noreferrer"
-                    class="font-medium text-cta hover:text-cta-hover">นโยบายความเป็นส่วนตัว</NuxtLink> แล้ว
+                    class="font-medium text-[#137FEC] hover:text-cta-hover">นโยบายความเป็นส่วนตัว</NuxtLink> แล้ว
                 </span>
               </label>
               <p v-if="errors.pdpa" class="mt-1 text-xs text-red-600">{{ errors.pdpa }}</p>
@@ -362,7 +337,7 @@
             <div class="flex gap-3 pt-2">
               <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
               <button type="submit" :disabled="isLoading || isBlacklisted"
-                class="flex items-center justify-center w-full py-3 btn-primary disabled:opacity-50">
+                class="flex items-center justify-center w-full py-3 text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg font-semibold disabled:opacity-50">
                 <svg v-if="isLoading" class="w-5 h-5 mr-2 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -375,7 +350,7 @@
 
         <p class="mt-8 text-sm text-center text-slate-500">
           มีบัญชีแล้ว?
-          <NuxtLink to="/login" class="font-medium cursor-pointer text-cta hover:text-cta-hover">เข้าสู่ระบบ</NuxtLink>
+          <NuxtLink to="/login" class="font-medium cursor-pointer text-[#137FEC] hover:underline">เข้าสู่ระบบ</NuxtLink>
         </p>
       </main>
     </div>
@@ -427,6 +402,12 @@ const ocrBackResult = ref(null);
 const ocrBackError = ref(null);
 const isBlacklisted = ref(false); // ถูก Blacklist → บล็อกการสมัครทั้งหมด
 
+const dropping = reactive({
+  idCard: false,
+  idCardBack: false,
+  selfie: false
+});
+
 // Face + ID Card Verification states
 const isFaceIdLoading = ref(false);
 const faceIdResult = ref(null);
@@ -445,14 +426,14 @@ const getStepLabel = (step) => {
 
 const getStepClass = (step) => {
   let base = 'flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-all duration-500 text-sm';
-  if (step < currentStep.value) return `${base} bg-cta text-white`;
-  if (step === currentStep.value) return `${base} bg-cta text-white ring-4 ring-sky-200`;
+  if (step < currentStep.value) return `${base} bg-[#137FEC] text-white`;
+  if (step === currentStep.value) return `${base} bg-[#137FEC] text-white ring-4 ring-[#137FEC]/20`;
   return `${base} bg-slate-200 text-slate-400`;
 };
 
 const getLabelClass = (step) => {
   let base = 'text-xs text-center mt-2 transition-all duration-500';
-  if (step <= currentStep.value) return `${base} font-semibold text-cta`;
+  if (step <= currentStep.value) return `${base} font-semibold text-[#137FEC]`;
   return `${base} text-slate-400`;
 };
 
@@ -639,6 +620,17 @@ const nextStep = () => {
   }
 };
 
+const testClick = () => {
+  alert('Button clicked! Current step: ' + currentStep.value);
+  console.log('=== BUTTON CLICKED ===');
+  console.log('currentStep:', currentStep.value);
+  console.log('formData:', JSON.stringify(formData, null, 2));
+  
+  // ทดสอบเปลี่ยน step โดยตรง
+  currentStep.value = 2;
+  console.log('Changed to step:', currentStep.value);
+};
+
 const prevStep = () => {
   if (currentStep.value > 1) { currentStep.value--; clearErrors(); }
 };
@@ -773,14 +765,10 @@ const validateImageFile = (file) => {
     return null;
 };
 
-const handleFileUpload = (event, type) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
+const processFile = (file, type) => {
   const error = validateImageFile(file);
   if (error) {
     toast.error('ไฟล์ไม่ถูกต้อง', error);
-    event.target.value = '';
     return;
   }
 
@@ -807,6 +795,20 @@ const handleFileUpload = (event, type) => {
     }
   };
   reader.readAsDataURL(file);
+};
+
+const handleFileUpload = (event, type) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  processFile(file, type);
+  event.target.value = '';
+};
+
+const handleDrop = (event, type) => {
+  dropping[type] = false;
+  const file = event.dataTransfer.files?.[0];
+  if (!file) return;
+  processFile(file, type);
 };
 
 const removeImage = (type) => {

@@ -1,15 +1,23 @@
 <template>
-    <div>
-        <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="mb-8">
-                <h2 class="text-2xl font-bold text-primary">การเดินทางของฉัน</h2>
-                <p class="mt-2 text-slate-500">จัดการและติดตามการเดินทางทั้งหมดของคุณ</p>
+    <div class="min-h-screen bg-surface pb-12">
+        <!-- New Graphical Header -->
+        <div class="relative h-[280px] w-full">
+            <img src="/images/bgmytrip.png" alt="My Trip Background" class="object-cover w-full h-full" />
+            <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-white drop-shadow-md -ml-4">การเดินทางของฉัน</h2>
+                <p class="mt-2 text-white/90 drop-shadow-sm">จัดการและติดตามการเดินทางทั้งหมดของคุณ</p>
             </div>
+        </div>
 
-            <div class="p-6 mb-8 bg-white border border-slate-200 rounded-lg shadow-sm">
+        <!-- Floating Tabs -->
+        <div class="relative px-4 mx-auto -mt-8 max-w-7xl sm:px-6 lg:px-8">
+            <div class="p-3 mb-8 bg-white border border-slate-200 rounded-xl shadow-lg">
                 <div class="flex flex-wrap gap-2">
                     <button v-for="tab in tabs" :key="tab.status" @click="activeTab = tab.status"
-                        :class="['tab-button px-4 py-2 rounded-md font-medium', { 'active': activeTab === tab.status }]">
+                        :class="['flex-1 text-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+                        activeTab === tab.status
+                            ? 'bg-primary text-white shadow-md'
+                            : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
                         {{ tab.label }} ({{ getTripCount(tab.status) }})
                     </button>
                 </div>
@@ -17,9 +25,9 @@
 
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div class="lg:col-span-2">
-                    <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
-                        <div class="p-6 border-b border-slate-200">
-                            <h3 class="text-lg font-semibold text-primary">รายการการเดินทาง</h3>
+                    <div class="overflow-hidden bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="text-lg font-semibold text-[#383838]">รายการการเดินทาง</h3>
                         </div>
 
                         <div v-if="isLoading" class="p-12 text-center text-slate-400">
@@ -173,9 +181,12 @@
                 </div>
 
                 <div class="lg:col-span-1">
-                    <div class="sticky overflow-hidden bg-white border border-slate-200 rounded-lg shadow-sm top-8">
-                        <div class="p-6 border-b border-slate-200">
-                            <h3 class="text-lg font-semibold text-primary">แผนที่เส้นทาง</h3>
+                    <div class="sticky overflow-hidden bg-white border border-slate-200 rounded-xl shadow-sm top-8">
+                        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="text-lg font-semibold text-[#383838]">แผนที่เส้นทาง</h3>
+                              <p class="mt-1 text-sm text-slate-500">
+                                {{ selectedLabel ? selectedLabel : 'คลิกที่รายการเพื่อดูเส้นทาง' }}
+                            </p>
                         </div>
                         <div ref="mapContainer" id="map" class="h-96"></div>
                     </div>
@@ -716,7 +727,6 @@ function formatDuration(input) {
 // --- Lifecycle and Watchers ---
 useHead({
     title: 'การเดินทางของฉัน - Drive To Survive',
-    link: [{ rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap' }],
     script:
         process.client && !window.google?.maps
             ? [
@@ -815,24 +825,12 @@ function initializeMap() {
     font-weight: 500;
 }
 
-.status-pending {
-    background-color: #fef3c7;
-    color: #d97706;
-}
-
-.status-confirmed {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.status-rejected {
-    background-color: #fee2e2;
-    color: #dc2626;
-}
-
+.status-pending,
+.status-confirmed,
+.status-rejected,
 .status-cancelled {
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: #137FEC;
+    color: white;
 }
 
 @keyframes slide-in-from-top {
