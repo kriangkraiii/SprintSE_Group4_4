@@ -9,7 +9,7 @@
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
-                <h2 class="text-4xl font-bold text-[#B50000] mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
+                <h2 class="text-2xl sm:text-4xl font-bold text-[#B50000] mb-2">ยังไม่สามารถสร้างเส้นทางได้</h2>
                 <p class="text-gray-500 mb-8 max-w-sm mx-auto">คุณจำเป็นต้องดำเนินการตามขั้นตอนด้านล่างให้ครบถ้วน <br> จึงจะสามารถสร้างเส้นทางได้</p>
                 
                 <div class="space-y-4 text-left">
@@ -101,11 +101,11 @@
         <!-- Hero header -->
         <template v-else>
         <!-- Graphical Header -->
-        <div class="relative h-[280px] w-full">
+        <div class="relative h-[200px] sm:h-[280px] w-full">
             <img src="/images/bgmytrip.png" alt="Create Trip Background" class="object-cover w-full h-full" />
             <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <h1 class="text-4xl font-bold text-white drop-shadow-md">สร้างเส้นทาง</h1>
-                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">สร้างเส้นทางของคุณ เพื่อแชร์ที่นั่งว่างให้กับเพื่อนร่วมทางที่มีจุดหมายเดียวกัน</p>
+                <h1 class="text-2xl sm:text-4xl font-bold text-white drop-shadow-md">สร้างเส้นทาง</h1>
+                <p class="mt-2 text-sm sm:text-base text-white/90 drop-shadow-sm sm:ml-4">สร้างเส้นทางของคุณ เพื่อแชร์ที่นั่งว่างให้กับเพื่อนร่วมทางที่มีจุดหมายเดียวกัน</p>
             </div>
         </div>
 
@@ -334,8 +334,7 @@
                 <div class="lg:col-span-3 relative">
                     <div class="sticky top-4">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-                            <div ref="mainMapEl" class="w-full"
-                                style="height: calc(100vh - 160px); min-height: 500px;"></div>
+                            <div ref="mainMapEl" class="w-full h-[300px] lg:h-[calc(100vh-160px)]" style="min-height: 300px;"></div>
                             <!-- Realtime location badge -->
                             <div v-if="userLocation.lat" class="absolute bottom-4 left-4 z-10">
                                 <div
