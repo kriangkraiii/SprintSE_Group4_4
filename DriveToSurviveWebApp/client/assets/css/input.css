@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1e3a8a;
-  --color-secondary: #334155;
-  --color-cta: #0369A1;
-  --color-cta-hover: #075985;
+  --color-primary: #137FEC;
+  --color-secondary: #fff;
+  --color-third: #145ee7ff;
+  --color-cta: #137FEC;
+  --color-cta-hover: #145ee7ff;
   --color-cta-light: #E0F2FE;
-  --color-surface: #F8FAFC;
+  --color-surface: #F9FAFB;
 
-  --font-heading: 'Lexend', sans-serif;
-  --font-body: 'Source Sans 3', sans-serif;
+  --font-heading: 'Kanit', sans-serif;
+  --font-body: 'Kanit', sans-serif;
 
   --radius-card: 0.75rem;
 }
@@ -18,7 +19,7 @@
 
 /* Base */
 body {
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: 'Kanit', sans-serif;
   color: #020617;
   background-color: #F8FAFC;
 }
@@ -29,7 +30,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* ── Buttons ── */
@@ -38,16 +39,17 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 0.625rem 1.5rem;
-  font-weight: 500;
-  color: #fff;
-  background-color: #0369A1;
+  font-weight: 600;
+  color: #137FEC;
+  /* Dark Green text on Gold button */
+  background-color: #137FEC;
   border-radius: 0.5rem;
   transition: background-color 200ms, box-shadow 200ms;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background-color: #075985;
+  background-color: #137FEC;
 }
 
 .btn-primary:focus-visible {
@@ -66,17 +68,17 @@ h6 {
   justify-content: center;
   padding: 0.625rem 1.5rem;
   font-weight: 500;
-  color: #0369A1;
+  color: #137FEC;
   background-color: #fff;
-  border: 1px solid #BAE6FD;
+  border: 1px solid #137FEC;
   border-radius: 0.5rem;
   transition: background-color 200ms, border-color 200ms;
   cursor: pointer;
 }
 
 .btn-outline:hover {
-  background-color: #E0F2FE;
-  border-color: #0369A1;
+  background-color: #FEF9C3;
+  border-color: #137FEC;
 }
 
 .btn-ghost {
@@ -189,7 +191,7 @@ h6 {
 
 /* ── Section ── */
 .section-heading {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Kanit', sans-serif;
   font-weight: 700;
   color: #0F172A;
 }
