@@ -355,20 +355,20 @@ const processFaceIdVerification = async (idCardBuffer, idCardFileName, idCardMim
 
     let result;
 
-    // ── 1. Standard endpoint: file0=บัตร, file1=เซลฟี่ ──
-    result = await tryFaceVerification(faceAndIdCardVerification, idCard, selfie, '1) Standard (card→selfie)');
+    // ── 1. Standard endpoint: file0=เซลฟี่, file1=บัตร (ลำดับที่ iApp คาดหวัง) ──
+    result = await tryFaceVerification(faceAndIdCardVerification, selfie, idCard, '1) Standard (selfie→card)');
     if (result) return result;
 
-    // ── 2. Standard endpoint: SWAP file0=เซลฟี่, file1=บัตร ──
-    result = await tryFaceVerification(faceAndIdCardVerification, selfie, idCard, '2) Standard SWAP (selfie→card)');
+    // ── 2. Standard endpoint: file0=บัตร, file1=เซลฟี่ (fallback สลับลำดับ) ──
+    result = await tryFaceVerification(faceAndIdCardVerification, idCard, selfie, '2) Standard (card→selfie)');
     if (result) return result;
 
-    // ── 3. KYC-front endpoint: file0=บัตร, file1=เซลฟี่ ──
-    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, idCard, selfie, '3) KYC-front (card→selfie)');
+    // ── 3. KYC-front endpoint: file0=เซลฟี่, file1=บัตร ──
+    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, selfie, idCard, '3) KYC-front (selfie→card)');
     if (result) return result;
 
-    // ── 4. KYC-front endpoint: SWAP file0=เซลฟี่, file1=บัตร ──
-    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, selfie, idCard, '4) KYC-front SWAP (selfie→card)');
+    // ── 4. KYC-front endpoint: file0=บัตร, file1=เซลฟี่ ──
+    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, idCard, selfie, '4) KYC-front (card→selfie)');
     if (result) return result;
 
     // ทุก attempt ล้มเหลว

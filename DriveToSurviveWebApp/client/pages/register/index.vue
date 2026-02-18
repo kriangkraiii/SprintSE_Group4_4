@@ -474,10 +474,12 @@ const scanIdCardFront = async () => {
     const res = await fetch(`${apiBase}/ocr/id-card/front`, { method: 'POST', body: fd });
     const body = await res.json();
 
-    // ── ตรวจจับ Blacklist (403) ──
-    if (res.status === 403) {
+    // ── ตรวจจับ Blacklist (403) หรือ บัตรซ้ำ (409) ──
+    if (res.status === 403 || res.status === 409) {
       isBlacklisted.value = true;
-      const msg = body?.message || 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้';
+      const msg = body?.message || (res.status === 403
+        ? 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้'
+        : 'หมายเลขบัตรประชาชนนี้ถูกใช้สมัครสมาชิกไปแล้ว');
       ocrFrontError.value = msg;
       toast.error('ไม่สามารถสมัครสมาชิกได้', msg);
       return;
