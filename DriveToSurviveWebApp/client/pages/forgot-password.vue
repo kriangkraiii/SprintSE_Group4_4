@@ -202,7 +202,7 @@
 
         <!-- Back to login (only steps < 4) -->
         <p v-if="step < 4" class="mt-8 text-sm text-center text-slate-500">
-          จำรหัสผ่านได้ปล้ว?
+          จำรหัสผ่านได้แล้ว?
           <NuxtLink to="/login" class="font-medium cursor-pointer text-[#137FEC] hover:text-[#236993]">
             เข้าสู่ระบบ
           </NuxtLink>
