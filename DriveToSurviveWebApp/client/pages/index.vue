@@ -88,7 +88,7 @@
             <!-- วันที่ -->
             <div>
               <label class="text-sm font-medium text-gray-600">วันที่</label>
-              <input type="date" v-model="date"
+              <input type="date" v-model="date" :min="minDate"
                 class="w-full mt-1 px-4 py-2 rounded-xl border border-[#CCCCCC] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
             </div>
 
@@ -255,6 +255,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
+import { getProvinceFromPlace } from '~/utils/googleMaps'
 
 const localePath = useLocalePath()
 const { token } = useAuth()
@@ -265,11 +266,12 @@ const GMAPS_CB = '__gmapsReady__'
 const from = ref('')
 const to = ref('')
 const date = ref('')
+const minDate = new Date().toISOString().split('T')[0]
 const seat = ref('')
 
 // Lat/Lng state
-const fromData = ref({ lat: null, lng: null })
-const toData = ref({ lat: null, lng: null })
+const fromData = ref({ lat: null, lng: null, province: null })
+const toData = ref({ lat: null, lng: null, province: null })
 
 // Google Maps Refs
 const originInputEl = ref(null)
@@ -315,7 +317,11 @@ function initAutocomplete() {
     const p = originAutocomplete.getPlace()
     if (!p) return
     from.value = p.name || p.formatted_address || from.value
-    fromData.value = { lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+    fromData.value = { 
+      lat: p.geometry?.location?.lat?.() ?? null, 
+      lng: p.geometry?.location?.lng?.() ?? null,
+      province: getProvinceFromPlace(p)
+    }
   })
 
   destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputEl.value, commonOpts)
@@ -323,7 +329,11 @@ function initAutocomplete() {
     const p = destinationAutocomplete.getPlace()
     if (!p) return
     to.value = p.name || p.formatted_address || to.value
-    toData.value = { lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+    toData.value = { 
+      lat: p.geometry?.location?.lat?.() ?? null, 
+      lng: p.geometry?.location?.lng?.() ?? null,
+      province: getProvinceFromPlace(p)
+    }
   })
 }
 
@@ -362,13 +372,19 @@ function setPickerMarker(latlng) {
 
 async function resolvePicked(latlng) {
   const lat = latlng.lat(), lng = latlng.lng()
-  const geocodeRes = await new Promise(resolve => {
+  let geocodeRes = null
+  await new Promise(resolve => {
     geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-      if (status === 'OK' && results?.length) resolve(results[0]); else resolve(null)
+      if (status === 'OK' && results?.length) {
+        geocodeRes = results[0]
+        resolve(results[0])
+      } else resolve(null)
     })
   })
   
   let name = ''
+  let province = null
+
   if (geocodeRes) {
       // Extract name parts logic similar to findTrip
       const comps = geocodeRes.address_components || []
@@ -377,22 +393,23 @@ async function resolvePicked(latlng) {
       const streetNumber = byType('street_number')
       const route = byType('route')
       name = (streetNumber && route) ? `${streetNumber} ${route}` : (route || geocodeRes.formatted_address || null)
+      province = getProvinceFromPlace(geocodeRes)
   }
   
   // Clean address
   if (name) name = name.replace(/,?\s*(Thailand|ไทย|ประเทศ)\s*$/i, '')
   
-  pickedPlace.value = { name: name || 'หมุดที่เลือก', lat, lng }
+  pickedPlace.value = { name: name || 'หมุดที่เลือก', lat, lng, province }
 }
 
 function applyPickedPlace() {
   if (!pickingField.value || !pickedPlace.value.name) return
   if (pickingField.value === 'origin') {
     from.value = pickedPlace.value.name
-    fromData.value = { lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+    fromData.value = { lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
   } else {
     to.value = pickedPlace.value.name
-    toData.value = { lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+    toData.value = { lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
   }
   closePlacePicker()
 }
@@ -411,8 +428,10 @@ const searchTrip = () => {
       seat: seat.value,
       fromLat: fromData.value.lat,
       fromLng: fromData.value.lng,
+      fromProvince: fromData.value.province,
       toLat: toData.value.lat,
-      toLng: toData.value.lng
+      toLng: toData.value.lng,
+      toProvince: toData.value.province
     }
   })
 }

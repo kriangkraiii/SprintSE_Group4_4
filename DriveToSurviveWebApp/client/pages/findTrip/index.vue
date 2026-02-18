@@ -46,7 +46,7 @@
                     </div>
                     <div class="lg:col-span-2">
                         <label class="block text-xs font-medium text-gray-500 mb-1">วันที่</label>
-                        <input v-model="searchForm.date" type="date"
+                        <input v-model="searchForm.date" type="date" :min="minDate"
                             class="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-gray-50" />
                     </div>
                     <div class="lg:col-span-1">
@@ -479,6 +479,7 @@ import { useToast } from '~/composables/useToast'
 import { useAuth } from '~/composables/useAuth'
 import { navigateTo } from '#app'
 import { useRoute } from 'vue-router'
+import { getProvinceFromPlace } from '~/utils/googleMaps'
 
 const route = useRoute()
 
@@ -525,7 +526,7 @@ const pickingField = ref(null)
 const placePickerMapEl = ref(null)
 let placePickerMap = null
 let placePickerMarker = null
-const pickedPlace = ref({ name: '', lat: null, lng: null })
+const pickedPlace = ref({ name: '', lat: null, lng: null, province: null })
 
 const headScripts = []
 if (process.client && !window.google?.maps) {
@@ -543,6 +544,7 @@ useHead({
 })
 
 const searchForm = ref({ origin: '', destination: '', date: '', seats: '' })
+const minDate = new Date().toISOString().split('T')[0]
 const RADIUS_METERS = 500
 const routes = ref([])
 const selectedRoute = ref(null)
@@ -638,6 +640,11 @@ async function handleSearch() {
             const { lat, lng } = await ensureLatLng('destination')
             if (lat != null) { q.endNearLat = lat; q.endNearLng = lng; usedRadius = true }
         }
+        
+        // Province filtering
+        if (searchForm.value._originMeta?.province) q.startProvince = searchForm.value._originMeta.province
+        if (searchForm.value._destinationMeta?.province) q.endProvince = searchForm.value._destinationMeta.province
+
         if (usedRadius) q.radiusMeters = RADIUS_METERS
 
         const apiRes = await $api('/routes', { query: q })
@@ -895,7 +902,13 @@ function initAutocomplete() {
         const p = originAutocomplete.getPlace()
         if (!p) return
         searchForm.value.origin = p.name || p.formatted_address || searchForm.value.origin
-        searchForm.value._originMeta = { placeId: p.place_id || null, fullAddress: p.formatted_address || null, lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+        searchForm.value._originMeta = { 
+            placeId: p.place_id || null, 
+            fullAddress: p.formatted_address || null, 
+            lat: p.geometry?.location?.lat?.() ?? null, 
+            lng: p.geometry?.location?.lng?.() ?? null,
+            province: getProvinceFromPlace(p)
+        }
     })
 
     destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputEl.value, { ...commonOpts, types: ['geocode', 'establishment'] })
@@ -903,14 +916,20 @@ function initAutocomplete() {
         const p = destinationAutocomplete.getPlace()
         if (!p) return
         searchForm.value.destination = p.name || p.formatted_address || searchForm.value.destination
-        searchForm.value._destinationMeta = { placeId: p.place_id || null, fullAddress: p.formatted_address || null, lat: p.geometry?.location?.lat?.() ?? null, lng: p.geometry?.location?.lng?.() ?? null }
+        searchForm.value._destinationMeta = { 
+            placeId: p.place_id || null, 
+            fullAddress: p.formatted_address || null, 
+            lat: p.geometry?.location?.lat?.() ?? null, 
+            lng: p.geometry?.location?.lng?.() ?? null,
+            province: getProvinceFromPlace(p)
+        }
     })
 }
 
 // ==================== Place Picker (Search) ====================
 function openPlacePicker(field) {
     pickingField.value = field
-    pickedPlace.value = { name: '', lat: null, lng: null }
+    pickedPlace.value = { name: '', lat: null, lng: null, province: null }
     showPlacePicker.value = true
     nextTick(() => {
         const meta = field === 'origin' ? searchForm.value._originMeta : searchForm.value._destinationMeta
@@ -934,26 +953,28 @@ async function resolvePicked(latlng) {
         })
     })
     let name = ''
+    let province = null
     if (geocodeRes) {
         const parts = await extractNameParts(geocodeRes)
         name = parts.name || ''
+        province = getProvinceFromPlace(geocodeRes)
     }
     if (!name || isPlusCode(name)) {
         const poi = await findNearestPoi(lat, lng, 120)
         if (poi?.name) name = poi.name
         else if (geocodeRes?.formatted_address) name = cleanAddr(geocodeRes.formatted_address)
     }
-    pickedPlace.value = { name, lat, lng }
+    pickedPlace.value = { name, lat, lng, province }
 }
 
 function applyPickedPlace() {
     if (!pickingField.value || !pickedPlace.value.name) return
     if (pickingField.value === 'origin') {
         searchForm.value.origin = pickedPlace.value.name
-        searchForm.value._originMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+        searchForm.value._originMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
     } else {
         searchForm.value.destination = pickedPlace.value.name
-        searchForm.value._destinationMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng }
+        searchForm.value._destinationMeta = { placeId: null, fullAddress: null, lat: pickedPlace.value.lat, lng: pickedPlace.value.lng, province: pickedPlace.value.province }
     }
     closePlacePicker()
 }
@@ -1126,7 +1147,8 @@ onMounted(() => {
                 lat: parseFloat(route.query.fromLat),
                 lng: parseFloat(route.query.fromLng),
                 name: route.query.from,
-                fullAddress: route.query.from
+                fullAddress: route.query.from,
+                province: route.query.fromProvince || null
             }
         }
     }
@@ -1137,7 +1159,8 @@ onMounted(() => {
                 lat: parseFloat(route.query.toLat),
                 lng: parseFloat(route.query.toLng),
                 name: route.query.to,
-                fullAddress: route.query.to
+                fullAddress: route.query.to,
+                province: route.query.toProvince || null
             }
         }
     }
