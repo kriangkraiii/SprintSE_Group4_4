@@ -324,7 +324,7 @@ import AdminSidebar from '~/components/admin/AdminSidebar.vue'
 import { useToast } from '~/composables/useToast'
 
 dayjs.locale('th')
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 useHead({
     title: 'ดูรายละเอียดผู้ใช้ • Admin',
     link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]

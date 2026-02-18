@@ -26,12 +26,7 @@
                             การยืนยันตัวตนขั้นพื้นฐาน
                         </NuxtLink>
                     </li>
-                    <li v-if="!isDriverVerified">
-                        <NuxtLink to="/profile/driver-verification" class="block px-4 py-2 text-sm rounded-md"
-                            :class="isActive('/profile/driver-verification') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
-                            การยืนยันตัวตนสำหรับผู้ขับขี่
-                        </NuxtLink>
-                    </li>
+
                 </ul>
             </div>
             <div>
