@@ -1,11 +1,11 @@
 <template>
     <div class="min-h-screen bg-gray-50">
         <!-- Graphical Header -->
-        <div class="relative h-[280px] w-full">
+        <div class="relative h-[200px] sm:h-[280px] w-full">
             <img src="/images/bgfindtrip.png" alt="Find Trip Background" class="object-cover w-full h-full" />
             <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <h1 class="text-4xl font-bold text-white drop-shadow-md">ค้นหาเส้นทาง</h1>
-                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">ระบุจุดเริ่มต้น ปลายทาง และรายละเอียดการเดินทางของคุณ เพื่อจับคู่กับผู้ขับขี่ที่ไปในเส้นทางเดียวกัน</p>
+                <h1 class="text-2xl sm:text-4xl font-bold text-white drop-shadow-md">ค้นหาเส้นทาง</h1>
+                <p class="mt-2 text-sm sm:text-base text-white/90 drop-shadow-sm sm:ml-4">ระบุจุดเริ่มต้น ปลายทาง และรายละเอียดการเดินทางของคุณ เพื่อจับคู่กับผู้ขับขี่ที่ไปในเส้นทางเดียวกัน</p>
             </div>
         </div>
 
@@ -248,7 +248,7 @@
                 <div class="lg:col-span-2 relative">
                     <div class="sticky top-4">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-                            <div ref="mapContainer" class="w-full" style="height: 500px;"></div>
+                            <div ref="mapContainer" class="w-full h-[300px] sm:h-[500px]"></div>
                             <!-- Realtime location badge -->
                             <div v-if="userLocation.lat" class="absolute bottom-4 left-4 z-10">
                                 <div

@@ -19,7 +19,7 @@
         </div>
 
         <div class="text-center">
-          <h1 class="mb-5 text-6xl font-bold font-heading text-[#137FEC]">
+          <h1 class="mb-5 text-3xl sm:text-5xl lg:text-6xl font-bold font-heading text-[#137FEC]">
             เข้าสู่ระบบ
           </h1>
           <p class="mb-8 text-sm text-[#383838]">
