@@ -169,7 +169,7 @@
                     </div>
                 </main>
             </div>
-        </div>
+
 
         <!-- Delete confirmation popup -->
         <transition name="modal-fade">
