@@ -3,10 +3,7 @@
         <div class="flex-1 flex overflow-hidden">
                 <ProfileSidebar />
                 <main class="flex-1 overflow-y-auto w-full p-8">
-                    <div class="text-center mb-8">
-                        <h1 class="text-2xl font-bold text-gray-800 mb-1">ข้อมูลรถยนต์ของฉัน</h1>
-                        <p class="text-gray-500 text-sm">จัดการข้อมูลรถยนต์ของคุณเพื่อใช้ในการสร้างเส้นทาง</p>
-                    </div>
+
 
                     <!-- ยังไม่ยืนยันตัวตน -->
                     <div v-if="!canManageVehicle" class="bg-white rounded-xl shadow p-8 border border-gray-200 text-center">
@@ -30,6 +27,12 @@
 
                         <!-- ════ ฟอร์มเพิ่ม/แก้ไข (inline) ════ -->
                         <div v-if="showForm" class="bg-white rounded-xl shadow p-6 border border-gray-200 mb-6">
+                            <!-- Page Header (Inside Form) -->
+                            <div class="text-center mb-6">
+                                <h1 class="text-2xl font-bold text-gray-800 mb-1">ข้อมูลรถยนต์ของฉัน</h1>
+                                <p class="text-gray-500 text-sm">จัดการข้อมูลรถยนต์ของคุณเพื่อใช้ในการสร้างเส้นทาง</p>
+                            </div>
+
                             <div class="flex items-center justify-between mb-5">
                                 <h2 class="text-lg font-semibold text-gray-800">{{ formMode === 'add' ? 'เพิ่มรถยนต์คันใหม่' : 'แก้ไขข้อมูลรถยนต์' }}</h2>
                                 <button @click="cancelForm" class="text-gray-400 hover:text-gray-600 p-1">
@@ -102,12 +105,19 @@
                         </div>
 
                         <!-- ════ รายการรถ ════ -->
-                        <div class="bg-white rounded-xl shadow p-6 border border-gray-200">
-                            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
+                        <div v-if="!showForm" class="bg-white rounded-xl shadow p-6 border border-gray-200">
+                            <!-- Page Header (Inside List Box) -->
+                            <div class="text-center mb-6">
+                                <h1 class="text-2xl font-bold text-gray-800 mb-1">ข้อมูลรถยนต์ของฉัน</h1>
+                                <p class="text-gray-500 text-sm">จัดการข้อมูลรถยนต์ของคุณเพื่อใช้ในการสร้างเส้นทาง</p>
+                            </div>
+
+                            <!-- Top Bar (Show only if vehicles exist) -->
+                            <div v-if="vehicles.length > 0 && !showForm" class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5 border-b border-gray-100 pb-4">
                                 <p class="text-gray-800 font-medium">
-                                    {{ vehicles.length > 0 ? `รถยนต์ ${vehicles.length} คัน` : 'ยังไม่มีข้อมูลรถยนต์' }}
+                                    รถยนต์ {{ vehicles.length }} คัน
                                 </p>
-                                <button v-if="!showForm" @click="openAddForm"
+                                <button @click="openAddForm"
                                     class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition-colors font-medium">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
                                     เพิ่มรถยนต์
@@ -134,12 +144,14 @@
                                     <div class="flex flex-col sm:flex-row gap-4">
                                         <img :src="vehicle.photos?.[0] || 'https://placehold.co/120x90/e2e8f0/94a3b8?text=No+Photo'" alt="Vehicle" class="w-full sm:w-24 h-20 rounded-lg object-cover bg-gray-100 shrink-0" />
                                         <div class="flex-1 min-w-0">
-                                            <div class="flex items-start justify-between gap-2">
-                                                <div>
+                                            <div class="flex flex-col">
+                                                <div class="flex items-center gap-2 mb-0.5">
                                                     <h3 class="font-semibold text-gray-800">{{ vehicle.vehicleModel }}</h3>
-                                                    <p class="text-sm text-gray-500">{{ vehicle.licensePlate }}</p>
+                                                    <span v-if="vehicle.isDefault" class="shrink-0 text-xs font-medium text-white bg-blue-600 px-2.5 py-1 rounded-full shadow-sm">
+                                                        คันหลัก
+                                                    </span>
                                                 </div>
-                                                <span v-if="vehicle.isDefault" class="shrink-0 text-xs font-medium text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">คันหลัก</span>
+                                                <p class="text-sm text-gray-500">{{ vehicle.licensePlate }}</p>
                                             </div>
                                             <div class="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-xs text-gray-500">
                                                 <span>{{ vehicle.vehicleType }}</span>
@@ -151,15 +163,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3 mt-3 pt-2.5 border-t border-gray-100">
-                                        <button v-if="!vehicle.isDefault" @click="handleSetDefault(vehicle.id)" class="text-xs text-gray-400 hover:text-blue-600 font-medium">ตั้งเป็นคันหลัก</button>
-                                        <span class="flex-1"></span>
-                                        <button @click="openEditForm(vehicle)" class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 font-medium">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" /></svg>
+                                    <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t -mx-4 px-4 py-2"
+                                        :class="vehicle.isDefault ? 'border-blue-200 bg-blue-50/40' : 'border-gray-100 bg-white'">
+                                        <button v-if="!vehicle.isDefault" @click="handleSetDefault(vehicle.id)" 
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-blue-600 hover:border-blue-200 font-medium transition-all shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>
+                                            ตั้งเป็นคันหลัก
+                                        </button>
+                                        <button @click="openEditForm(vehicle)" 
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 font-medium transition-all shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" /></svg>
                                             แก้ไข
                                         </button>
-                                        <button @click="confirmDelete(vehicle)" class="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-medium">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
+                                        <button @click="confirmDelete(vehicle)" 
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 font-medium transition-all shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                                             ลบ
                                         </button>
                                     </div>
