@@ -21,6 +21,13 @@
         *   หากพบข้อมูลตรงกัน การลงทะเบียนจะถูกบล็อกทันที พร้อมส่ง error `403 Forbidden` ("This National ID has been blacklisted")
     *   **ระบบจัดการสำหรับ Admin**: เพิ่ม API Endpoints สำหรับ Admin เพื่อบริหารจัดการ Blacklist (เพิ่ม/ลบ/ค้นหา) พร้อมบันทึกเหตุผลประกอบ
 
+### ⏳ ระบบจัดการเซสชันอัตโนมัติ (Session Timeout)
+*   **เพิ่มการตัดการเชื่อมต่อเมื่อไม่มีการใช้งาน** (`useSessionTimeout.js`):
+    *   **Auto-Logout Mechanism**: ระบบจะทำการออกจากระบบ (Log out) อัตโนมัติหากผู้ใช้ไม่มีการเคลื่อนไหว (Inactivity) เกิน **20 นาที**
+    *   **Activity Tracking**: ตรวจจับกิจกรรมของผู้ใช้ผ่าน Mouse movement, Key press, Click, Touch, และ Scroll เพื่อรีเซ็ตตัวจับเวลา
+    *   **Security & Privacy**: ช่วยป้องกันการเข้าถึงบัญชีโดยไม่ได้รับอนุญาตในกรณีที่ผู้ใช้ลืมล็อกเอาท์จากอุปกรณ์สาธารณะ
+    *   **Implementation**: พัฒนาในรูปแบบ Nuxt Plugin (`session-timeout.client.js`) ทำงานแบบ Client-side Global Scope
+
 ### ⚖️ การปฏิบัติตามกฎหมาย (System Logs)
 *   **เพิ่มการจัดเก็บข้อมูลจราจรคอมพิวเตอร์ (Traffic Data Logging)** (`systemLog.middleware.js`): พัฒนาระบบ Logging ศูนย์กลางเพื่อให้เป็นไปตาม **พ.ร.บ.คอมพิวเตอร์ฯ พ.ศ. 2560 มาตรา 26**
     *   **การเก็บรักษาข้อมูล**: ระบบจะดักจับและบันทึกข้อมูลจราจรของทุก API Request (`/api/*`)
