@@ -67,7 +67,7 @@
       </div>
       <div class="absolute -bottom-14 left-1/2 -translate-x-1/2 w-full px-6">
           <div class="max-w-6xl mx-auto p-4 bg-white h-28 rounded-2xl shadow-[0_5px_10px_rgba(0,0,0,0.25)]">
-              <div class="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
 
     <!-- จุดเริ่มต้น -->
     <div>
@@ -75,6 +75,7 @@
       <input
         type="text"
         placeholder="ค้นหาจุดเริ่มต้น..."
+        v-model="from"
         class="w-full mt-1 px-4 py-2 rounded-xl border border-[#CCCCCC] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
     </div>
@@ -85,6 +86,7 @@
       <input
         type="text"
         placeholder="ค้นหาจุดปลายทาง..."
+        v-model="to"
         class="w-full mt-1 px-4 py-2 rounded-xl border border-[#CCCCCC] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
     </div>
@@ -94,14 +96,16 @@
       <label class="text-sm font-medium text-gray-600">วันที่</label>
       <input
         type="date"
+        v-model="date"
         class="w-full mt-1 px-4 py-2 rounded-xl border border-[#CCCCCC] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
     </div>
 
     <!-- ที่นั่ง -->
     <div>
-      <label class="text-sm font-medium text-gray-600">ที่นั่ง</label>
+      <label  class="text-sm font-medium text-gray-600">ที่นั่ง</label>
       <select
+        v-model="seat"
         class="w-full mt-1 px-4 py-2 rounded-xl border border-[#CCCCCC] shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         <option>ทั้งหมด</option>
@@ -113,12 +117,9 @@
     </div>
 
     <!-- ปุ่ม -->
-    <div class="flex gap-2 col-span-2">
-      <button class="flex-1 bg-[#1B9329] hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl shadow">
+    <div class="flex gap-2 ">
+      <button @click="searchTrip" class="flex-1 bg-[#1B9329] hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl shadow">
         ค้นหา
-      </button>
-      <button class="flex-1 bg-[#1B4593] hover:bg-[#137FEC] text-white font-semibold py-2.5 rounded-xl shadow">
-        ดูเส้นทางทั้งหมด
       </button>
     </div>
 
@@ -196,7 +197,7 @@
     </section>
 
     <!-- CTA -->
-    <section class="pt-10 pb-55 bg-slate-100 sm:pt-24 lg:pt-28">
+    <section v-if="!token" class="pt-10 pb-55 bg-slate-100 sm:pt-24 lg:pt-28">
       <div class="px-6 mx-auto max-w-4xl sm:px-8 lg:px-12 text-center">
         <h2 class="text-3xl font-semibold text-[#137FEC] font-heading sm:text-5xl lg:text-7xl mb-4">
           พร้อมเริ่มต้นแล้วหรือยัง?
@@ -228,4 +229,26 @@
 
 <script setup>
 const localePath = useLocalePath()
+
+const { token, user, logout } = useAuth()
+
+const router = useRouter()
+
+const from = ref('')
+const to = ref('')
+const date = ref('')
+const seat = ref('')
+
+const searchTrip = () => {
+  router.push({
+    path: localePath('/findTrip'),
+    query: {
+      from: from.value,
+      to: to.value,
+      date: date.value,
+      seat: seat.value
+    }
+  })
+}
+
 </script>

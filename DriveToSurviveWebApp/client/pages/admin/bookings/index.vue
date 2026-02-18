@@ -4,7 +4,7 @@
         <AdminSidebar />
 
         <!-- Main Content -->
-        <main id="main-content" class="main-content mt-16 ml-0 lg:ml-[280px] p-6">
+        <main id="main-content" class="main-content mt-24 ml-0 lg:ml-[280px] p-6">
             <div class="mx-auto max-w-8xl">
                 <!-- Title + Controls -->
                 <div class="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
