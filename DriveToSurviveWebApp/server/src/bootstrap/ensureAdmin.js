@@ -15,13 +15,13 @@ module.exports = async function ensureAdmin() {
 
     if (!ADMIN_EMAIL || !ADMIN_USERNAME || !ADMIN_PASSWORD) {
         console.warn('⚠️  Skipping auto-admin bootstrap: ADMIN_EMAIL/ADMIN_USERNAME/ADMIN_PASSWORD not fully set.');
-        return;
+        return { status: 'skipped', reason: 'missing-env' };
     }
     try {
         const adminCount = await prisma.user.count({ where: { role: 'ADMIN' } });
         if (adminCount > 0) {
             console.log('✔ Admin already exists. Skipping admin bootstrap.');
-            return;
+            return { status: 'skipped', reason: 'already-exists' };
         }
 
         const existing = await prisma.user.findFirst({
@@ -45,6 +45,7 @@ module.exports = async function ensureAdmin() {
                 },
             });
             console.log(`🔐 Elevated existing user (${existing.email || existing.username}) to ADMIN.`);
+            return { status: 'done', reason: 'elevated-existing-user' };
         } else {
             await prisma.user.create({
                 data: {
@@ -59,11 +60,12 @@ module.exports = async function ensureAdmin() {
                 },
             });
             console.log(`🔐 Created initial ADMIN account (${ADMIN_EMAIL}).`);
+            return { status: 'done', reason: 'created-initial-admin' };
         }
     } catch (error) {
         if (error instanceof Prisma.PrismaClientInitializationError) {
             console.warn(`⚠️  Skipping auto-admin bootstrap: database unreachable (${error.message.split('\n')[0]}).`);
-            return;
+            return { status: 'skipped', reason: 'database-unreachable' };
         }
         throw error;
     }
