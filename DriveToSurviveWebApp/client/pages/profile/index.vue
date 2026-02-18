@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="flex items-center justify-center min-h-screen py-8">
-            <div class="flex w-full max-w-6xl mx-4 overflow-hidden border card border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8">
+            <div class="flex w-full overflow-hidden border card border-slate-200">
 
                 <ProfileSidebar />
 
-                <main class="flex-1 p-8">
+                <main class="flex-1 p-4 sm:p-6 lg:p-8">
                     <div>
                         <div class="mb-8 text-center">
                             <div class="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-cta/10">
@@ -33,7 +33,7 @@
 
                             <div>
                                 <label for="username"
-                                    class="block mb-1.5 text-sm font-medium text-primary">ชื่อผู้ใช้</label>
+                                    class="block mb-1.5 text-sm font-medium text-black">ชื่อผู้ใช้</label>
                                 <input id="username" :value="originalUserData?.username" type="text" disabled
                                     class="input-field disabled:bg-slate-50 disabled:text-slate-400" />
                             </div>
@@ -41,7 +41,7 @@
                             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div>
                                     <label for="firstName"
-                                        class="block mb-1.5 text-sm font-medium text-primary">ชื่อจริง</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">ชื่อจริง</label>
                                     <input id="firstName" v-model="form.firstName" type="text"
                                         placeholder="กรอกชื่อจริง" @focus="showNameWarning = true"
                                         @blur="showNameWarning = false"
@@ -49,7 +49,7 @@
                                 </div>
                                 <div>
                                     <label for="lastName"
-                                        class="block mb-1.5 text-sm font-medium text-primary">นามสกุล</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">นามสกุล</label>
                                     <input id="lastName" v-model="form.lastName" type="text" placeholder="กรอกนามสกุล"
                                         @focus="showNameWarning = true" @blur="showNameWarning = false"
                                         class="input-field" />
@@ -66,14 +66,14 @@
                             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div>
                                     <label for="email"
-                                        class="block mb-1.5 text-sm font-medium text-primary">อีเมล</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">อีเมล</label>
                                     <input id="email" v-model="form.email" type="email"
                                         placeholder="example@example.com"
                                         class="input-field" />
                                 </div>
                                 <div>
                                     <label for="phoneNumber"
-                                        class="block mb-1.5 text-sm font-medium text-primary">เบอร์โทรศัพท์</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">เบอร์โทรศัพท์</label>
                                     <input id="phoneNumber" v-model="form.phoneNumber" type="text"
                                         placeholder="กรอกเบอร์โทรศัพท์"
                                         class="input-field" />
@@ -82,23 +82,23 @@
 
                             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div>
-                                    <label class="block mb-1.5 text-sm font-medium text-primary">วันที่สร้างบัญชี</label>
+                                    <label class="block mb-1.5 text-sm font-medium text-black">วันที่สร้างบัญชี</label>
                                     <input type="text" :value="formatDate(originalUserData?.createdAt)" disabled
                                         class="input-field disabled:bg-slate-50 disabled:text-slate-400" />
                                 </div>
                                 <div>
                                     <label
-                                        class="block mb-1.5 text-sm font-medium text-primary">วันที่แก้ไขล่าสุด</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">วันที่แก้ไขล่าสุด</label>
                                     <input type="text" :value="formatDate(originalUserData?.updatedAt)" disabled
                                         class="input-field disabled:bg-slate-50 disabled:text-slate-400" />
                                 </div>
                             </div>
 
                             <div class="pt-6 border-t border-slate-200">
-                                <h3 class="mb-4 text-lg font-semibold font-heading text-primary">เปลี่ยนรหัสผ่าน</h3>
+                                <h3 class="mb-4 text-lg font-semibold font-heading text-black">เปลี่ยนรหัสผ่าน</h3>
                                 <div>
                                     <label for="currentPassword"
-                                        class="block mb-1.5 text-sm font-medium text-primary">รหัสผ่านเดิม</label>
+                                        class="block mb-1.5 text-sm font-medium text-black">รหัสผ่านเดิม</label>
                                     <input type="password" id="currentPassword" placeholder="กรอกรหัสผ่านเดิม"
                                         v-model="form.currentPassword"
                                         class="input-field" />
@@ -107,14 +107,14 @@
                                 <div class="grid grid-cols-1 gap-6 mt-4 md:grid-cols-2">
                                     <div>
                                         <label for="newPassword"
-                                            class="block mb-1.5 text-sm font-medium text-primary">รหัสผ่านใหม่</label>
+                                            class="block mb-1.5 text-sm font-medium text-black">รหัสผ่านใหม่</label>
                                         <input type="password" id="newPassword" minlength="6" v-model="form.newPassword"
                                             placeholder="รหัสผ่านใหม่ (อย่างน้อย 6 ตัวอักษร)"
                                             class="input-field" />
                                     </div>
                                     <div>
                                         <label for="confirmNewPassword"
-                                            class="block mb-1.5 text-sm font-medium text-primary">ยืนยันรหัสผ่านใหม่</label>
+                                            class="block mb-1.5 text-sm font-medium text-black">ยืนยันรหัสผ่านใหม่</label>
                                         <input type="password" id="confirmNewPassword" minlength="6"
                                             v-model="form.confirmNewPassword" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง"
                                             class="input-field" />
@@ -122,13 +122,13 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end gap-4 pt-6">
+                            <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-6">
                                 <button type="button" @click="resetForm" :disabled="isLoading"
                                     class="px-6 py-3 btn-ghost border border-slate-200 disabled:opacity-50">
                                     ยกเลิก
                                 </button>
                                 <button type="submit" :disabled="isLoading"
-                                    class="flex items-center px-6 py-3 btn-primary disabled:opacity-50">
+                                    class="flex items-center px-6 py-3 btn-primary disabled:opacity-50 text-white">
                                     <svg v-if="isLoading" class="w-5 h-5 mr-3 -ml-1 text-white animate-spin"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
@@ -137,7 +137,9 @@
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
                                     </svg>
-                                    {{ isLoading ? 'กำลังบันทึก...' : 'บันทึกการเปลี่ยนแปลง' }}
+                                    <span class="text-white">
+                                        {{ isLoading ? 'กำลังบันทึก...' : 'บันทึกการเปลี่ยนแปลง' }}
+                                    </span>
                                 </button>
                             </div>
                         </form>
