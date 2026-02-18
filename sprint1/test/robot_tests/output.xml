@@ -1,0 +1,1176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.1.1 (Python 3.9.6 on darwin)" generated="2026-02-18T19:40:21.153767" rpa="false" schemaversion="5">
+<suite id="s1" name="Blacklist Tests" source="/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/US3_Blacklist/blacklist_tests.robot">
+<kw name="Open Browser And Login As Admin" type="SETUP">
+<kw name="Open Browser To Login Page" owner="common">
+<kw name="New Browser" owner="Browser">
+<msg time="2026-02-18T19:40:21.341417" level="INFO">{"browser": "chromium", "headless": true, "chromiumSandbox": false, "devtools": false, "handleSIGHUP": true, "handleSIGINT": true, "handleSIGTERM": true, "slowMo": 0.0, "timeout": 30000.0, "tracesDir": "/Users/conan/Downloads/\u0e0b\u0e2d\u0e1f\u0e40\u0e2d\u0e47\u0e19/SprintSE_Group4_4/sprint1/test/robot_tests/browser/traces/ae0b8b3f-2bcd-4024-9a13-48b12263ed26"}</msg>
+<msg time="2026-02-18T19:40:21.364428" level="INFO">Starting Browser process /Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js using port 59264</msg>
+<msg time="2026-02-18T19:40:21.364580" level="INFO">Node startup parameters: ['node', '/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js', '59264']</msg>
+<msg time="2026-02-18T19:40:24.306409" level="INFO">Successfully created browser with options: {"browser":"chromium","headless":true,"chromiumSandbox":false,"devtools":false,"handleSIGHUP":true,"handleSIGINT":true,"handleSIGTERM":true,"slowMo":0,"timeout":30000,"tracesDir":"/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/browser/traces/ae0b8b3f-2bcd-4024-9a13-48b12263ed26"}</msg>
+<arg>chromium</arg>
+<arg>headless=true</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new playwright Browser with specified options.</doc>
+<status status="PASS" start="2026-02-18T19:40:21.340934" elapsed="2.970855"/>
+</kw>
+<kw name="New Context" owner="Browser">
+<msg time="2026-02-18T19:40:24.327127" level="INFO">{
+  "acceptDownloads": true,
+  "bypassCSP": false,
+  "forcedColors": "none",
+  "ignoreHTTPSErrors": false,
+  "javaScriptEnabled": true,
+  "offline": false,
+  "reducedMotion": "no-preference",
+  "serviceWorkers": "allow",
+  "viewport": {
+    "height": 800,
+    "width": 1280
+  }
+}</msg>
+<msg time="2026-02-18T19:40:24.347482" level="INFO">Successfully created context. </msg>
+<msg time="2026-02-18T19:40:24.347536" level="INFO">{'acceptDownloads': True, 'bypassCSP': False, 'forcedColors': 'none', 'ignoreHTTPSErrors': False, 'javaScriptEnabled': True, 'offline': False, 'reducedMotion': 'no-preference', 'serviceWorkers': 'allow', 'viewport': {'height': 800, 'width': 1280}}</msg>
+<arg>viewport={'width': 1280, 'height': 800}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new BrowserContext with specified options.</doc>
+<status status="PASS" start="2026-02-18T19:40:24.317429" elapsed="0.038280"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-18T19:40:25.424727" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/login</msg>
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-18T19:40:24.356411" elapsed="1.069481"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:25.452191" level="INFO">Waited for Element with selector id=identifier at state visible</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:25.430061" elapsed="0.022260"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:21.340044" elapsed="4.112490"/>
+</kw>
+<kw name="Login As Admin" owner="common">
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:25.454683" level="INFO">Fills the text 'admin@example.com' in the given field.</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:25.454305" elapsed="0.040131"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:25.495077" level="INFO">Fills the text 'adminpassword' in the given field.</msg>
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:25.494718" elapsed="0.034575"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:25.530132" level="INFO">Clicks the element 'css=#loginForm button[type="submit"]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:25.529522" elapsed="0.048451"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-18T19:40:28.578761" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-18T19:40:25.578188" elapsed="3.001177"/>
+</kw>
+<kw name="Get Url" owner="Browser">
+<msg time="2026-02-18T19:40:28.591797" level="INFO">${url} = http://localhost:3000/</msg>
+<var>${url}</var>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns the current URL.</doc>
+<status status="PASS" start="2026-02-18T19:40:28.580410" elapsed="0.011457"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${url}</arg>
+<arg>/login</arg>
+<arg>msg=Admin login failed - still on login page</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T19:40:28.592311" elapsed="0.000643"/>
+</kw>
+<doc>เข้าสู่ระบบด้วยบัญชี Admin</doc>
+<status status="PASS" start="2026-02-18T19:40:25.453536" elapsed="3.139611"/>
+</kw>
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-18T19:40:29.164431" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:28.594005" elapsed="0.571654"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.195442" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.170017" elapsed="0.025591"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-18T19:40:28.593559" elapsed="0.602233"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:21.339875" elapsed="7.856028"/>
+</kw>
+<test id="s1-t1" name="TC-BL-001 เปิดหน้า Blacklist สำเร็จ" line="23">
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:29.212560" level="INFO">Text: 'Blacklist Management'</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>==</arg>
+<arg>Blacklist Management</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.201517" elapsed="0.011438"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.227644" level="INFO">Waited for Element with selector text=PDPA ม.22 — SHA-256 Hash Only at state visible</msg>
+<arg>${PDPA_BADGE_BLACKLIST}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.213347" elapsed="0.014449"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.232604" level="INFO">Waited for Element with selector css=button:has(i.fa-plus) at state visible</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.228125" elapsed="0.004567"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.235997" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.232834" elapsed="0.003251"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Admin Dashboard
+2. คลิกเมนู "Blacklist" ที่แถบด้านข้าง
+ผลลัพธ์: แสดงหน้า Blacklist พร้อมตารางรายชื่อที่ถูก blacklist</doc>
+<tag>smoke</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:29.196089" elapsed="0.040152"/>
+</test>
+<test id="s1-t2" name="TC-BL-002 เพิ่มเลขบัตรประชาชนเข้า Blacklist" line="38">
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.250482" level="INFO">Clicks the element 'css=button:has(i.fa-plus)'.</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.249386" elapsed="0.047155"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.300089" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state visible</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.296750" elapsed="0.003429"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:29.300645" level="INFO">Fills the text '1234567890001' in the given field.</msg>
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>1234567890001</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.300353" elapsed="0.005568"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:29.307237" level="INFO">Fills the text 'ฉ้อโกง' in the given field.</msg>
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ฉ้อโกง</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.306177" elapsed="0.010236"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.317480" level="INFO">Clicks the element 'css=.fixed button:has-text("เพิ่ม Blacklist")'.</msg>
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.316834" elapsed="0.040946"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.383645" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state detached</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.358048" elapsed="0.025712"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.387550" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.384345" elapsed="0.003329"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.390244" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.387865" elapsed="0.002483"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:29.384060" elapsed="0.006363"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<msg time="2026-02-18T19:40:29.395680" level="INFO">Found locator('table tbody tr').first(),locator('table tbody tr').nth(1),locator('table tbody tr').nth(2),locator('table tbody tr').nth(3) Locators successfully.</msg>
+<msg time="2026-02-18T19:40:29.395951" level="INFO">${rows} = ['css=table tbody tr &gt;&gt; nth=0', 'css=table tbody tr &gt;&gt; nth=1', 'css=table tbody tr &gt;&gt; nth=2', 'css=table tbody tr &gt;&gt; nth=3']</msg>
+<var>${rows}</var>
+<arg>${BL_TABLE_ROWS}</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.390554" elapsed="0.005438"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:29.396502" level="INFO">Length is 4.</msg>
+<msg time="2026-02-18T19:40:29.396562" level="INFO">${row_count} = 4</msg>
+<var>${row_count}</var>
+<arg>${rows}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.396151" elapsed="0.000438"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${row_count} &gt; 0</arg>
+<arg>msg=ไม่พบรายการ Blacklist หลังเพิ่ม</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.396712" elapsed="0.000696"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "เพิ่ม Blacklist"
+3. กรอกเลขบัตรประชาชน = "1234567890123"
+4. กรอกเหตุผล = "ฉ้อโกง"
+5. กดปุ่ม "ยืนยัน"
+ผลลัพธ์: เพิ่มสำเร็จ แสดงรายการใหม่ในตาราง (PDPA ม.22 — เก็บเป็น SHA-256 hash)</doc>
+<tag>crud</tag>
+<tag>pdpa</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:29.241282" elapsed="0.156224"/>
+</test>
+<test id="s1-t3" name="TC-BL-003 เพิ่มเลขบัตรเดียวกันซ้ำ" line="66">
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.405153" level="INFO">Clicks the element 'css=button:has(i.fa-plus)'.</msg>
+<arg>${BTN_ADD_BLACKLIST}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.404837" elapsed="0.036448"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.445445" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state visible</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.441490" elapsed="0.004408"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:29.446521" level="INFO">Fills the text '1234567890123' in the given field.</msg>
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>${TEST_NATIONAL_ID}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.446111" elapsed="0.005419"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:29.452001" level="INFO">Fills the text 'ทดสอบซ้ำ' in the given field.</msg>
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ทดสอบซ้ำ</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.451706" elapsed="0.004973"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.457187" level="INFO">Clicks the element 'css=.fixed button:has-text("เพิ่ม Blacklist")'.</msg>
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.456866" elapsed="0.034151"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.518561" level="INFO">Waited for Element with selector css=.fixed .text-red-600 at state visible</msg>
+<arg>css=.fixed .text-red-600</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.491241" elapsed="0.027497"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.519593" level="INFO">Clicks the element 'css=.fixed button:has-text("ยกเลิก")'.</msg>
+<arg>css=.fixed button:has-text("ยกเลิก")</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.519211" elapsed="0.035596"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.557717" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state detached</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.554984" elapsed="0.002807"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "เพิ่ม Blacklist"
+3. กรอกเลขบัตร = "1234567890123" (เพิ่มไปแล้ว)
+4. กดปุ่ม "ยืนยัน"
+ผลลัพธ์: แสดงข้อความ "เลขบัตรนี้อยู่ใน Blacklist แล้ว"</doc>
+<tag>negative</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:29.400296" elapsed="0.157615"/>
+</test>
+<test id="s1-t4" name="TC-BL-004 ลบรายชื่อออกจาก Blacklist" line="85">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-18T19:40:29.692288" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.563953" elapsed="0.128538"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.727097" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.692904" elapsed="0.035565"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-18T19:40:29.563716" elapsed="0.164987"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.814344" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.729136" elapsed="0.085320"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.816966" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.814615" elapsed="0.002430"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:29.728886" elapsed="0.088238"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<msg time="2026-02-18T19:40:29.820311" level="INFO">Found locator('table tbody tr').first(),locator('table tbody tr').nth(1),locator('table tbody tr').nth(2),locator('table tbody tr').nth(3) Locators successfully.</msg>
+<msg time="2026-02-18T19:40:29.820441" level="INFO">${rows_before} = ['css=table tbody tr &gt;&gt; nth=0', 'css=table tbody tr &gt;&gt; nth=1', 'css=table tbody tr &gt;&gt; nth=2', 'css=table tbody tr &gt;&gt; nth=3']</msg>
+<var>${rows_before}</var>
+<arg>${BL_TABLE_ROWS}</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.817221" elapsed="0.003239"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:29.820710" level="INFO">Length is 4.</msg>
+<msg time="2026-02-18T19:40:29.820754" level="INFO">${count_before} = 4</msg>
+<var>${count_before}</var>
+<arg>${rows_before}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.820601" elapsed="0.000166"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:29.821044" level="INFO">Clicks the element 'css=table tbody tr:first-child button:has-text("ลบ")'.</msg>
+<arg>css=table tbody tr:first-child button:has-text("ลบ")</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.820844" elapsed="0.039174"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:29.863371" level="INFO">Waited for Element with selector text=ต้องการลบรายการ at state visible</msg>
+<arg>text=ต้องการลบรายการ</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.860219" elapsed="0.003238"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-18T19:40:30.364849" level="INFO">Slept 500 milliseconds.</msg>
+<arg>500ms</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-18T19:40:29.863592" elapsed="0.501598"/>
+</kw>
+<kw name="Evaluate JavaScript" owner="Browser">
+<msg time="2026-02-18T19:40:30.383295" level="INFO">JavaScript executed successfully.</msg>
+<arg>css=div:has-text("ต้องการลบรายการ") &gt;&gt; button.bg-red-600 &gt;&gt; nth=0</arg>
+<arg>(element) =&gt; element.click()</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Executes given javascript on the selected element(s) or on page.</doc>
+<status status="PASS" start="2026-02-18T19:40:30.365639" elapsed="0.017791"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-18T19:40:32.385080" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-18T19:40:30.384296" elapsed="2.001076"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.396009" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.386657" elapsed="0.009544"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.403055" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.396509" elapsed="0.006638"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:32.385791" elapsed="0.017449"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. กดปุ่ม "ลบ" ที่รายการที่ต้องการ
+3. กดปุ่ม "ยืนยันการลบ"
+ผลลัพธ์: ลบสำเร็จ รายการหายจากตาราง</doc>
+<tag>crud</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:29.560347" elapsed="2.843028"/>
+</test>
+<test id="s1-t5" name="TC-BL-008 กรอง Blacklist ตามช่วงวันที่" line="107">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-18T19:40:32.632488" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.413435" elapsed="0.219602"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.661483" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.633363" elapsed="0.028727"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-18T19:40:32.413092" elapsed="0.249391"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:32.664022" level="INFO">Fills the text '2026-01-01T00:00' in the given field.</msg>
+<arg>${BL_FILTER_DATE_FROM}</arg>
+<arg>2026-01-01T00:00</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.663050" elapsed="0.022199"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:32.686084" level="INFO">Fills the text '2026-12-31T23:59' in the given field.</msg>
+<arg>${BL_FILTER_DATE_TO}</arg>
+<arg>2026-12-31T23:59</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.685570" elapsed="0.010137"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:32.696838" level="INFO">Clicks the element 'css=button:has-text("ค้นหา")'.</msg>
+<arg>${BL_BTN_SEARCH}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.696407" elapsed="0.033537"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.760188" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.730535" elapsed="0.029782"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.763371" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.760528" elapsed="0.002938"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:32.730207" elapsed="0.033341"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.765588" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.763646" elapsed="0.002016"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:32.765986" level="INFO">Clicks the element 'css=button:has-text("ล้าง")'.</msg>
+<arg>${BL_BTN_CLEAR}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.765767" elapsed="0.041622"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.832818" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.807883" elapsed="0.025047"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:32.835939" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.833089" elapsed="0.002952"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:32.807626" elapsed="0.028535"/>
+</kw>
+<doc>ขั้นตอน:
+1. เปิดหน้า Blacklist
+2. เลือกวันที่เริ่มต้น = "01/01/2026"
+3. เลือกวันที่สิ้นสุด = "31/12/2026"
+4. กดปุ่ม "ค้นหา"
+ผลลัพธ์: แสดงเฉพาะรายการที่อยู่ในช่วงวันที่ที่เลือก</doc>
+<tag>filter</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:32.407630" elapsed="0.428640"/>
+</test>
+<test id="s1-t6" name="TC-BL-009 ผู้ใช้ทั่วไปไม่สามารถเข้าหน้า Blacklist ได้" line="125">
+<kw name="New Context" owner="Browser">
+<msg time="2026-02-18T19:40:32.843248" level="INFO">{
+  "acceptDownloads": true,
+  "bypassCSP": false,
+  "forcedColors": "none",
+  "ignoreHTTPSErrors": false,
+  "javaScriptEnabled": true,
+  "offline": false,
+  "reducedMotion": "no-preference",
+  "serviceWorkers": "allow",
+  "viewport": {
+    "height": 720,
+    "width": 1280
+  }
+}</msg>
+<msg time="2026-02-18T19:40:32.858697" level="INFO">Successfully created context. </msg>
+<msg time="2026-02-18T19:40:32.858758" level="INFO">{'acceptDownloads': True, 'bypassCSP': False, 'forcedColors': 'none', 'ignoreHTTPSErrors': False, 'javaScriptEnabled': True, 'offline': False, 'reducedMotion': 'no-preference', 'serviceWorkers': 'allow', 'viewport': {'height': 720, 'width': 1280}}</msg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Create a new BrowserContext with specified options.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.842891" elapsed="0.015952"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-18T19:40:33.343373" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/login</msg>
+<arg>${LOGIN_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-18T19:40:32.859028" elapsed="0.486023"/>
+</kw>
+<kw name="Login As Passenger" owner="common">
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:33.348484" level="INFO">Fills the text 'testpassenger@test.com' in the given field.</msg>
+<arg>${INPUT_IDENTIFIER}</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:33.347781" elapsed="0.020408"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:33.370187" level="INFO">Fills the text 'Test1234' in the given field.</msg>
+<arg>${INPUT_PASSWORD}</arg>
+<arg>${PASSENGER_PASSWORD}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:33.368784" elapsed="0.047667"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:33.417227" level="INFO">Clicks the element 'css=#loginForm button[type="submit"]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:33.416656" elapsed="0.040911"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-18T19:40:36.458796" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-18T19:40:33.457767" elapsed="3.001374"/>
+</kw>
+<kw name="Get Url" owner="Browser">
+<msg time="2026-02-18T19:40:36.463542" level="INFO">${url} = http://localhost:3000/</msg>
+<var>${url}</var>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns the current URL.</doc>
+<status status="PASS" start="2026-02-18T19:40:36.459553" elapsed="0.004029"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${url}</arg>
+<arg>/login</arg>
+<arg>msg=Passenger login failed - still on login page</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T19:40:36.463767" elapsed="0.000243"/>
+</kw>
+<doc>เข้าสู่ระบบด้วยบัญชี Passenger</doc>
+<status status="PASS" start="2026-02-18T19:40:33.347081" elapsed="3.117015"/>
+</kw>
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-18T19:40:37.013865" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:36.464241" elapsed="0.550674"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.023985" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-18T19:40:37.019045" elapsed="2.006152"/>
+</kw>
+<kw name="Get Url" owner="Browser">
+<msg time="2026-02-18T19:40:39.032764" level="INFO">${current_url} = http://localhost:3000/</msg>
+<var>${current_url}</var>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns the current URL.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.026747" elapsed="0.006074"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${current_url}</arg>
+<arg>/admin/blacklist</arg>
+<arg>msg=Passenger ไม่ควรเข้าถึงหน้า Blacklist ได้!</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.033031" elapsed="0.000366"/>
+</kw>
+<kw name="Close Context" owner="Browser">
+<msg time="2026-02-18T19:40:39.040339" level="INFO">Switching browser to CURRENT</msg>
+<msg time="2026-02-18T19:40:39.042242" level="INFO">Returned active browser id. CURRENT</msg>
+<msg time="2026-02-18T19:40:39.042388" level="INFO">Switching browser to browser=689c4a19-5fa2-42b6-8ff1-1a3ab3ef14a2</msg>
+<msg time="2026-02-18T19:40:39.044400" level="INFO">Successfully changed active browser: browser=689c4a19-5fa2-42b6-8ff1-1a3ab3ef14a2</msg>
+<msg time="2026-02-18T19:40:39.044562" level="INFO">Switching context to CURRENT in CURRENT</msg>
+<msg time="2026-02-18T19:40:39.047169" level="INFO">Returned active context id: CURRENT</msg>
+<msg time="2026-02-18T19:40:39.047763" level="INFO">Switching context to context=584a68d3-3e64-4b55-b486-fb596215bdc5 in CURRENT</msg>
+<msg time="2026-02-18T19:40:39.051369" level="INFO">Successfully changed active context: context=584a68d3-3e64-4b55-b486-fb596215bdc5</msg>
+<msg time="2026-02-18T19:40:39.069460" level="INFO">Successfully closed Context</msg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Closes a Context.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.033560" elapsed="0.036419"/>
+</kw>
+<kw name="New Page" owner="Browser">
+<msg time="2026-02-18T19:40:39.359082" level="INFO">Successfully initialized new page object and opened url: http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Open a new Page.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.070313" elapsed="0.289331"/>
+</kw>
+<doc>ขั้นตอน:
+1. เข้าสู่ระบบด้วยบัญชี Passenger
+2. พิมพ์ URL หน้า Blacklist ในเบราว์เซอร์โดยตรง
+ผลลัพธ์: ถูก redirect ไปหน้าอื่น หรือแสดงข้อความ "ไม่มีสิทธิ์เข้าถึง" (RBAC)</doc>
+<tag>critical</tag>
+<tag>rbac</tag>
+<tag>security</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:32.839079" elapsed="6.522946"/>
+</test>
+<test id="s1-t7" name="TC-BL-010 ตรวจสอบว่าไม่แสดงเลขบัตรดิบ (Hash Storage)" line="145">
+<kw name="Navigate To Blacklist" owner="common">
+<kw name="Go To" owner="Browser">
+<msg time="2026-02-18T19:40:39.544968" level="INFO">Successfully opened URL http://localhost:3000/admin/blacklist</msg>
+<arg>${BLACKLIST_URL}</arg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Navigates to the given ``url``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.426736" elapsed="0.118514"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:39.575701" level="INFO">Waited for Element with selector css=h1:has-text("Blacklist Management") at state visible</msg>
+<arg>${PAGE_TITLE_BLACKLIST}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.545969" elapsed="0.029919"/>
+</kw>
+<doc>เปิดหน้า Blacklist Management</doc>
+<status status="PASS" start="2026-02-18T19:40:39.426423" elapsed="0.149681"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:39.577223" level="INFO">Clicks the element 'css=button:has(i.fa-plus)'.</msg>
+<arg>css=button:has(i.fa-plus)</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.576273" elapsed="0.060314"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:39.642237" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state visible</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>visible</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.636839" elapsed="0.005789"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.644754" level="INFO">${RANDOM_ID} = 2793378070928</msg>
+<var>${RANDOM_ID}</var>
+<arg>str(random.randint(1000000000000, 9999999999999))</arg>
+<arg>random</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.643207" elapsed="0.001620"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.646013" level="INFO">Fills the text '2793378070928' in the given field.</msg>
+<arg>${BL_INPUT_NATIONAL_ID}</arg>
+<arg>${RANDOM_ID}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.645053" elapsed="0.028634"/>
+</kw>
+<kw name="Fill Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.674584" level="INFO">Fills the text 'ทดสอบ hash' in the given field.</msg>
+<arg>${BL_INPUT_REASON}</arg>
+<arg>ทดสอบ hash</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Clears and fills the given ``txt`` into the text field found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.674101" elapsed="0.005421"/>
+</kw>
+<kw name="Click" owner="Browser">
+<msg time="2026-02-18T19:40:39.679971" level="INFO">Clicks the element 'css=.fixed button:has-text("เพิ่ม Blacklist")'.</msg>
+<arg>${BL_MODAL_CONFIRM}</arg>
+<tag>PageContent</tag>
+<tag>Setter</tag>
+<doc>Simulates mouse click on the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.679684" elapsed="0.026804"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:39.732516" level="INFO">Waited for Element with selector css=h2:has-text("เพิ่ม Blacklist") at state detached</msg>
+<arg>${BL_MODAL_TITLE}</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.706714" elapsed="0.025919"/>
+</kw>
+<kw name="Wait Until Blacklist Table Loaded">
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:39.737001" level="INFO">Waited for Element with selector css=svg.animate-spin at state detached</msg>
+<arg>css=svg.animate-spin</arg>
+<arg>detached</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.733066" elapsed="0.004035"/>
+</kw>
+<kw name="Wait For Elements State" owner="Browser">
+<msg time="2026-02-18T19:40:39.739476" level="INFO">Waited for Element with selector css=table at state visible</msg>
+<arg>${BL_TABLE}</arg>
+<arg>visible</arg>
+<arg>timeout=${BROWSER_TIMEOUT}</arg>
+<tag>PageContent</tag>
+<tag>Wait</tag>
+<doc>Waits for the element found by ``selector`` to satisfy state option.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.737264" elapsed="0.002293"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:39.732845" elapsed="0.006788"/>
+</kw>
+<kw name="Get Elements" owner="Browser">
+<msg time="2026-02-18T19:40:39.742994" level="INFO">Found locator('table tbody tr td:nth-child(2) code').first(),locator('table tbody tr td:nth-child(2) code').nth(1),locator('table tbody tr td:nth-child(2) code').nth(2),locator('table tbody tr td:nth-child(2) code').nth(3),locator('table tbody tr td:nth-child(2) code').nth(4) Locators successfully.</msg>
+<msg time="2026-02-18T19:40:39.743178" level="INFO">${hash_cells} = ['css=table tbody tr td:nth-child(2) code &gt;&gt; nth=0', 'css=table tbody tr td:nth-child(2) code &gt;&gt; nth=1', 'css=table tbody tr td:nth-child(2) code &gt;&gt; nth=2', 'css=table tbody tr td:nth-child(2) code &gt;&gt;...</msg>
+<var>${hash_cells}</var>
+<arg>css=table tbody tr td:nth-child(2) code</arg>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns a reference to Playwright [https://playwright.dev/docs/api/class-locator|Locator]
+for all matched elements by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.739730" elapsed="0.003474"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.753240" level="INFO">Text: '9204d05ebf2e01c5f48003ef1f76c02f164d8d6abed9bb000c247ec75c1df820'</msg>
+<msg time="2026-02-18T19:40:39.753364" level="INFO">${text} = 9204d05ebf2e01c5f48003ef1f76c02f164d8d6abed9bb000c247ec75c1df820</msg>
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.743623" elapsed="0.009762"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.753688" level="INFO">Length is 64.</msg>
+<msg time="2026-02-18T19:40:39.753737" level="INFO">${length} = 64</msg>
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.753547" elapsed="0.000206"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.754021" level="INFO">Checking cell: text='9204d05ebf2e01c5f48003ef1f76c02f164d8d6abed9bb000c247ec75c1df820' length=64</msg>
+<arg>Checking cell: text='${text}' length=${length}</arg>
+<arg>console=True</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.753849" elapsed="0.000234"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น (Found: '${text}')</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.754167" elapsed="0.000192"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.754450" elapsed="0.000694"/>
+</kw>
+<var name="${cell}">css=table tbody tr td:nth-child(2) code &gt;&gt; nth=0</var>
+<status status="PASS" start="2026-02-18T19:40:39.743476" elapsed="0.011705"/>
+</iter>
+<iter>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.759581" level="INFO">Text: '268530a7499e8e4a2a8a0f548777fb28dfc6d74f452094139c94818043cccd3c'</msg>
+<msg time="2026-02-18T19:40:39.759657" level="INFO">${text} = 268530a7499e8e4a2a8a0f548777fb28dfc6d74f452094139c94818043cccd3c</msg>
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.755336" elapsed="0.004340"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.759885" level="INFO">Length is 64.</msg>
+<msg time="2026-02-18T19:40:39.759934" level="INFO">${length} = 64</msg>
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.759783" elapsed="0.000166"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.760254" level="INFO">Checking cell: text='268530a7499e8e4a2a8a0f548777fb28dfc6d74f452094139c94818043cccd3c' length=64</msg>
+<arg>Checking cell: text='${text}' length=${length}</arg>
+<arg>console=True</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.760067" elapsed="0.000232"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น (Found: '${text}')</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.760410" elapsed="0.000225"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.760718" elapsed="0.000123"/>
+</kw>
+<var name="${cell}">css=table tbody tr td:nth-child(2) code &gt;&gt; nth=1</var>
+<status status="PASS" start="2026-02-18T19:40:39.755268" elapsed="0.005608"/>
+</iter>
+<iter>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.765465" level="INFO">Text: 'b65d0d5c4111d00c01d97063787b26d2933cede865b66e7c5b7e46cf62594af2'</msg>
+<msg time="2026-02-18T19:40:39.765548" level="INFO">${text} = b65d0d5c4111d00c01d97063787b26d2933cede865b66e7c5b7e46cf62594af2</msg>
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.761024" elapsed="0.004542"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.765783" level="INFO">Length is 64.</msg>
+<msg time="2026-02-18T19:40:39.765827" level="INFO">${length} = 64</msg>
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.765682" elapsed="0.000159"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.766049" level="INFO">Checking cell: text='b65d0d5c4111d00c01d97063787b26d2933cede865b66e7c5b7e46cf62594af2' length=64</msg>
+<arg>Checking cell: text='${text}' length=${length}</arg>
+<arg>console=True</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.765918" elapsed="0.000175"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น (Found: '${text}')</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.766185" elapsed="0.000243"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.766517" elapsed="0.000124"/>
+</kw>
+<var name="${cell}">css=table tbody tr td:nth-child(2) code &gt;&gt; nth=2</var>
+<status status="PASS" start="2026-02-18T19:40:39.760958" elapsed="0.005720"/>
+</iter>
+<iter>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.772856" level="INFO">Text: '32b8312546ed20c94e1ff082f1ac94c4795e5a7e29ef9d318e9d586daccc76a1'</msg>
+<msg time="2026-02-18T19:40:39.772972" level="INFO">${text} = 32b8312546ed20c94e1ff082f1ac94c4795e5a7e29ef9d318e9d586daccc76a1</msg>
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.766823" elapsed="0.006170"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.773287" level="INFO">Length is 64.</msg>
+<msg time="2026-02-18T19:40:39.773348" level="INFO">${length} = 64</msg>
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.773160" elapsed="0.000202"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.773619" level="INFO">Checking cell: text='32b8312546ed20c94e1ff082f1ac94c4795e5a7e29ef9d318e9d586daccc76a1' length=64</msg>
+<arg>Checking cell: text='${text}' length=${length}</arg>
+<arg>console=True</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.773448" elapsed="0.000225"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น (Found: '${text}')</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.773765" elapsed="0.000200"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.774051" elapsed="0.000132"/>
+</kw>
+<var name="${cell}">css=table tbody tr td:nth-child(2) code &gt;&gt; nth=3</var>
+<status status="PASS" start="2026-02-18T19:40:39.766757" elapsed="0.007461"/>
+</iter>
+<iter>
+<kw name="Get Text" owner="Browser">
+<msg time="2026-02-18T19:40:39.779569" level="INFO">Text: 'bca2b41a2b25e137c83fee346af7bd1e0f52bd560583ca07a1b42f9944c5c50b'</msg>
+<msg time="2026-02-18T19:40:39.779669" level="INFO">${text} = bca2b41a2b25e137c83fee346af7bd1e0f52bd560583ca07a1b42f9944c5c50b</msg>
+<var>${text}</var>
+<arg>${cell}</arg>
+<tag>Assertion</tag>
+<tag>Getter</tag>
+<tag>PageContent</tag>
+<doc>Returns text attribute of the element found by ``selector``.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.774397" elapsed="0.005295"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.779949" level="INFO">Length is 64.</msg>
+<msg time="2026-02-18T19:40:39.779993" level="INFO">${length} = 64</msg>
+<var>${length}</var>
+<arg>${text}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.779836" elapsed="0.000171"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.780209" level="INFO">Checking cell: text='bca2b41a2b25e137c83fee346af7bd1e0f52bd560583ca07a1b42f9944c5c50b' length=64</msg>
+<arg>Checking cell: text='${text}' length=${length}</arg>
+<arg>console=True</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.780081" elapsed="0.000174"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${length} &gt; 13</arg>
+<arg>msg=พบเลขบัตรดิบในตาราง! ต้องแสดงเป็น SHA-256 Hash เท่านั้น (Found: '${text}')</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.780342" elapsed="0.000179"/>
+</kw>
+<kw name="Should Not Match Regexp" owner="BuiltIn">
+<arg>${text}</arg>
+<arg>^\\d{13}$</arg>
+<arg>msg=พบเลขบัตรประชาชน 13 หลักดิบ! ละเมิด PDPA ม.22</arg>
+<doc>Fails if ``string`` matches ``pattern`` as a regular expression.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.780607" elapsed="0.000125"/>
+</kw>
+<var name="${cell}">css=table tbody tr td:nth-child(2) code &gt;&gt; nth=4</var>
+<status status="PASS" start="2026-02-18T19:40:39.774312" elapsed="0.006479"/>
+</iter>
+<var>${cell}</var>
+<value>@{hash_cells}</value>
+<status status="PASS" start="2026-02-18T19:40:39.743307" elapsed="0.037688"/>
+</for>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-02-18T19:40:39.781212" level="INFO">✅ ระบบเก็บเฉพาะ SHA-256 hash ไม่แสดงเลขบัตรดิบ</msg>
+<arg>✅ ระบบเก็บเฉพาะ SHA-256 hash ไม่แสดงเลขบัตรดิบ</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.781110" elapsed="0.000143"/>
+</kw>
+<doc>ขั้นตอน:
+1. Admin เพิ่มเลขบัตรเข้า blacklist
+2. เปิดหน้า Blacklist
+3. ตรวจสอบคอลัมน์ในตาราง — ไม่แสดงเลขบัตรดิบ
+ผลลัพธ์: ไม่มีเลขบัตรประชาชน 13 หลักแสดงในตาราง (PDPA ม.22)</doc>
+<tag>critical</tag>
+<tag>pdpa</tag>
+<tag>security</tag>
+<tag>US3</tag>
+<status status="PASS" start="2026-02-18T19:40:39.421761" elapsed="0.359587"/>
+</test>
+<kw name="Close Test Browser" owner="common" type="TEARDOWN">
+<kw name="Close Browser" owner="Browser">
+<msg time="2026-02-18T19:40:39.837115" level="INFO">Closed browser</msg>
+<tag>BrowserControl</tag>
+<tag>Setter</tag>
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-18T19:40:39.785291" elapsed="0.051954"/>
+</kw>
+<status status="PASS" start="2026-02-18T19:40:39.784921" elapsed="0.052430"/>
+</kw>
+<doc>US#3 — Blacklist Management — UAT Automation
+PDPA ม.22 — SHA-256 Hash Only
+ทดสอบการเพิ่ม/ลบ Blacklist, ป้องกันซ้ำ, กรองข้อมูล, RBAC, Hash Storage</doc>
+<status status="PASS" start="2026-02-18T19:40:21.155118" elapsed="18.682269"/>
+</suite>
+<statistics>
+<total>
+<stat pass="7" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="2" fail="0" skip="0">critical</stat>
+<stat pass="2" fail="0" skip="0">crud</stat>
+<stat pass="1" fail="0" skip="0">filter</stat>
+<stat pass="1" fail="0" skip="0">negative</stat>
+<stat pass="2" fail="0" skip="0">pdpa</stat>
+<stat pass="1" fail="0" skip="0">rbac</stat>
+<stat pass="2" fail="0" skip="0">security</stat>
+<stat pass="1" fail="0" skip="0">smoke</stat>
+<stat pass="7" fail="0" skip="0">US3</stat>
+</tag>
+<suite>
+<stat pass="7" fail="0" skip="0" id="s1" name="Blacklist Tests">Blacklist Tests</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
