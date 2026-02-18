@@ -1,4 +1,7 @@
-require("dotenv").config({ path: require('path').resolve(__dirname, '../../.env') });
+require("dotenv").config({
+    path: require('path').resolve(__dirname, '../../.env'),
+    quiet: true,
+});
 
 const express = require('express');
 const cors = require('cors');
@@ -61,6 +64,21 @@ app.use(metricsMiddleware);
 app.use('/api', systemLogMiddleware);
 
 // --- Routes ---
+// Root route for platform probes / browser checks
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        service: 'DriveToSurvive API',
+        docs: '/documentation',
+        health: '/api/health',
+    });
+});
+
+// Avoid noisy 404s from browser favicon probing
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
 // Health Check Route
 app.get('/api/health', async (req, res) => {
     try {

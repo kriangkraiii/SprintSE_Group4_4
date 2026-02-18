@@ -2,7 +2,9 @@ const { Prisma } = require('@prisma/client');
 const ApiError = require('../utils/ApiError');
 
 const errorHandler = (err, req, res, next) => {
-    if (process.env.NODE_ENV !== 'production') {
+    const isApiClientError = err instanceof ApiError && (err.statusCode || 500) < 500;
+
+    if (!isApiClientError && process.env.NODE_ENV !== 'production') {
         console.error('💥 AN ERROR OCCURRED 💥:', err);
     }
 
