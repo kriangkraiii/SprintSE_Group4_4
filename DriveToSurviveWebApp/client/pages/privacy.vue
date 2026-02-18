@@ -518,7 +518,7 @@ onBeforeUnmount(() => {
 
 /* Highlight box */
 .highlight-box {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    background-color: #F8FAFC;
     border-left: 4px solid #3b82f6;
 }
 
@@ -535,7 +535,7 @@ onBeforeUnmount(() => {
 
 .scroll-progress {
     height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    background-color: #EAB308;
     width: 0%;
     transition: width 0.1s ease-out;
 }

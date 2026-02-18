@@ -4,18 +4,13 @@
         <AdminSidebar />
 
         <!-- Main Content -->
-        <main id="main-content" class="main-content mt-16 ml-0 lg:ml-[280px] p-6">
+        <main id="main-content" class="main-content mt-24 ml-0 lg:ml-[280px] p-6">
             <div class="mx-auto max-w-8xl">
                 <!-- Title + Controls -->
                 <div class="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
                     <!-- Left: Title -->
                     <div class="flex items-center gap-3">
                         <h1 class="text-2xl font-semibold text-primary">Booking Management</h1>
-                        <button @click="onCreateBooking"
-                            class="inline-flex items-center gap-2 px-3 py-2 text-white bg-cta rounded-md cursor-pointer hover:bg-cta-hover">
-                            <i class="fa-solid fa-plus"></i>
-                            <span class="hidden sm:inline">สร้างการจองใหม่</span>
-                        </button>
                     </div>
 
                     <!-- Right: Quick Search -->
@@ -312,6 +307,14 @@ definePageMeta({ middleware: ['admin-auth'] })
 
 const { toast } = useToast()
 
+const showDelete = ref(false)
+const deletingBooking = ref(null)
+
+function askDelete(b) {
+    deletingBooking.value = b
+    showDelete.value = true
+}
+
 const isLoading = ref(false)
 const loadError = ref('')
 
@@ -527,15 +530,7 @@ function onEditBooking(b) {
         toast.info('ยังไม่รองรับ', `ดูรายละเอียด Booking: ${b.id}`)
     })
 }
-function onCreateBooking(b) {
-    navigateTo('/admin/bookings/create').catch(() => {
-        toast.info('ยังไม่รองรับ', `ดูรายละเอียด Booking: ${b.id}`)
-    })
-}
 
-const showDelete = ref(false)
-const deletingBooking = ref(null)
-function askDelete(b) { deletingBooking.value = b; showDelete.value = true }
 function cancelDelete() { showDelete.value = false; deletingBooking.value = null }
 
 async function confirmDelete() {

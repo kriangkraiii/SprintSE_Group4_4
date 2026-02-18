@@ -3,17 +3,12 @@
         <AdminHeader />
         <AdminSidebar />
 
-        <main id="main-content" class="main-content mt-16 ml-0 lg:ml-[280px] p-6">
+        <main id="main-content" class="main-content mt-24 ml-0 lg:ml-[280px] p-6">
             <div class="mx-auto max-w-8xl">
                 <!-- Header + Quick Actions -->
                 <div class="flex flex-col gap-3 mb-6 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center gap-3">
                         <h1 class="text-2xl font-semibold text-primary">Driver Verification Management</h1>
-                        <button @click="onCreate"
-                            class="inline-flex items-center gap-2 px-3 py-2 text-white bg-cta rounded-md cursor-pointer hover:bg-cta-hover">
-                            <i class="fa-solid fa-plus"></i>
-                            <span class="hidden sm:inline">สร้างคำขอยืนยันตัวตน (แอดมิน)</span>
-                        </button>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -434,9 +429,6 @@ async function confirmDelete() {
 }
 
 /* ---------- Navigation ---------- */
-function onCreate() {
-    navigateTo('/admin/driver-verifications/create').catch(() => { })
-}
 function onView(r) {
     navigateTo(`/admin/driver-verifications/${r.id}`).catch(() => { })
 }

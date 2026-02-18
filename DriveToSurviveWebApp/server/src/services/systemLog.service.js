@@ -5,10 +5,23 @@
  *   CREATE — ✅ (middleware auto-creates)
  *   READ   — ✅ (admin-only)
  *   UPDATE — ❌ (immutable by law)
- *   DELETE — ❌ (immutable by law, ต้องเก็บ ≥ 90 วัน)
+ *   DELETE — ✅ ได้เฉพาะ log ที่มีอายุเกิน 90 วัน
  */
 
 const prisma = require('../utils/prisma');
+const ApiError = require('../utils/ApiError');
+
+const MIN_RETENTION_DAYS = 90;
+
+const getRetentionCutoffDate = (now = new Date()) => {
+    const cutoff = new Date(now);
+    cutoff.setDate(cutoff.getDate() - MIN_RETENTION_DAYS);
+    return cutoff;
+};
+
+const isOlderThanRetention = (createdAt, now = new Date()) => {
+    return new Date(createdAt) <= getRetentionCutoffDate(now);
+};
 
 const searchLogs = async (opts = {}) => {
     const {
@@ -61,4 +74,28 @@ const searchLogs = async (opts = {}) => {
     };
 };
 
-module.exports = { searchLogs };
+const deleteLogById = async (id, now = new Date()) => {
+    const log = await prisma.systemLog.findUnique({ where: { id } });
+
+    if (!log) {
+        throw new ApiError(404, 'System log not found.');
+    }
+
+    if (!isOlderThanRetention(log.createdAt, now)) {
+        throw new ApiError(
+            403,
+            `Cannot delete this system log yet. Logs must be retained for at least ${MIN_RETENTION_DAYS} days.`
+        );
+    }
+
+    await prisma.systemLog.delete({ where: { id } });
+    return { id };
+};
+
+module.exports = {
+    MIN_RETENTION_DAYS,
+    getRetentionCutoffDate,
+    isOlderThanRetention,
+    searchLogs,
+    deleteLogById,
+};
