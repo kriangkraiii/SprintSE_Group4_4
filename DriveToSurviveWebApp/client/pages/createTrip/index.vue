@@ -100,14 +100,16 @@
 
         <!-- Hero header -->
         <template v-else>
-        <div class="bg-primary text-white">
-            <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">สร้างเส้นทางใหม่</h1>
-                <p class="mt-1 text-emerald-100 text-sm">แชร์การเดินทางของคุณ ให้คนอื่นร่วมทาง</p>
+        <!-- Graphical Header -->
+        <div class="relative h-[280px] w-full">
+            <img src="/images/bgmytrip.png" alt="Create Trip Background" class="object-cover w-full h-full" />
+            <div class="absolute inset-0 flex flex-col justify-center px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h1 class="text-4xl font-bold text-white drop-shadow-md">สร้างเส้นทาง</h1>
+                <p class="mt-2 text-white/90 drop-shadow-sm ml-4">สร้างเส้นทางของคุณ เพื่อแชร์ที่นั่งว่างให้กับเพื่อนร่วมทางที่มีจุดหมายเดียวกัน</p>
             </div>
         </div>
 
-        <div class="max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <!-- Left panel: Form -->
                 <div class="lg:col-span-2 space-y-4">
@@ -306,13 +308,13 @@
                         </div>
 
                         <!-- Submit -->
-                        <div class="flex gap-3 mt-4">
+                        <div class="flex gap-3 mt-4 mb-24">
                             <button type="button" @click="navigateTo('/findTrip')"
                                 class="flex-1 py-3 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 transition cursor-pointer">
                                 ยกเลิก
                             </button>
                             <button type="submit" :disabled="isLoading"
-                                class="flex-[2] py-3 text-sm font-semibold text-white bg-emerald-500 rounded-2xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/30 transition cursor-pointer">
+                                class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-2xl hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition cursor-pointer">
                                 <span v-if="isLoading" class="flex items-center justify-center gap-2">
                                     <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
