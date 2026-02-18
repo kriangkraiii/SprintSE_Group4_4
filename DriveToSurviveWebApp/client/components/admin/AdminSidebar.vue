@@ -3,64 +3,32 @@
         <div class="py-4">
             <!-- Toggle Button -->
             <button @click="toggleSidebar"
-                class="absolute flex items-center justify-center hidden w-6 h-6 transition-colors bg-white rounded-full shadow-sm lg:block -right-3 top-6 hover:bg-cta hover:text-white">
+                class="absolute items-center justify-center hidden w-6 h-6 transition-colors bg-white border rounded-full shadow-sm lg:flex -right-3 top-6 border-slate-200 text-slate-500 hover:bg-cta hover:text-white hover:border-cta">
                 <i class="text-xs fas fa-chevron-left" id="toggle-icon"></i>
             </button>
 
-            <!-- Menu Items -->
-            <nav class="px-3 space-y-1">
-                <NuxtLink to="/admin/users"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-user"></i>
-                    <span class="sidebar-text">User Management</span>
-                </NuxtLink>
+            <div class="px-2 pb-3 mb-3 border-b border-slate-100">
+                <p class="text-xs font-semibold tracking-wider uppercase sidebar-text text-slate-400">Admin Panel</p>
+                <p class="mt-1 text-sm sidebar-text text-slate-600">จัดการระบบหลักของแพลตฟอร์ม</p>
+            </div>
 
-                <NuxtLink to="/admin/vehicles"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
+            <nav class="space-y-1">
+                <NuxtLink v-for="item in mainMenus" :key="item.to" :to="item.to"
+                    class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
                     active-class="font-semibold text-cta bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-car-side"></i>
-                    <span class="sidebar-text">Vehicle Management</span>
+                    <i :class="item.icon" class="w-5 text-center text-slate-400 group-[.router-link-active]:text-cta"></i>
+                    <span class="sidebar-text">{{ item.label }}</span>
                 </NuxtLink>
 
-                <NuxtLink to="/admin/routes"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
-                    active-class="font-semibold text-cta bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-route"></i>
-                    <span class="sidebar-text">Route Management</span>
-                </NuxtLink>
-
-                <NuxtLink to="/admin/bookings"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
-                    active-class="font-semibold text-cta bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-calendar-check"></i>
-                    <span class="sidebar-text">Booking Management</span>
-                </NuxtLink>
-
-                <NuxtLink to="/admin/driver-verifications"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
-                    active-class="font-semibold text-cta bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-id-card"></i>
-                    <span class="sidebar-text">Driver Verification Management</span>
-                </NuxtLink>
-
-                <!-- Legal Compliance Section -->
                 <div class="pt-3 mt-3 border-t border-slate-200">
                     <p class="px-3 mb-2 text-xs font-semibold tracking-wider uppercase sidebar-text text-slate-400">
                         กฎหมาย & ความปลอดภัย
                     </p>
-
-                    <NuxtLink to="/admin/system-logs"
-                        class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
+                    <NuxtLink v-for="item in complianceMenus" :key="item.to" :to="item.to"
+                        class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
                         active-class="font-semibold text-cta bg-cta-light">
-                        <i class="w-6 text-lg text-center text-slate-400 fas fa-file-lines"></i>
-                        <span class="sidebar-text">System Logs</span>
-                    </NuxtLink>
-
-                    <NuxtLink to="/admin/blacklist"
-                        class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light"
-                        active-class="font-semibold text-cta bg-cta-light">
-                        <i class="w-6 text-lg text-center text-slate-400 fas fa-ban"></i>
-                        <span class="sidebar-text">Blacklist</span>
+                        <i :class="item.icon" class="w-5 text-center text-slate-400 group-[.router-link-active]:text-cta"></i>
+                        <span class="sidebar-text">{{ item.label }}</span>
                     </NuxtLink>
                 </div>
 
@@ -72,7 +40,21 @@
 
 <script setup>
 import { useAuth } from '~/composables/useAuth'
+
 const { logout } = useAuth()
+
+const mainMenus = [
+    { to: '/admin/users', label: 'User Management', icon: 'fas fa-user' },
+    { to: '/admin/vehicles', label: 'Vehicle Management', icon: 'fas fa-car-side' },
+    { to: '/admin/routes', label: 'Route Management', icon: 'fas fa-route' },
+    { to: '/admin/bookings', label: 'Booking Management', icon: 'fas fa-calendar-check' },
+    { to: '/admin/driver-verifications', label: 'Driver Verification Management', icon: 'fas fa-id-card' },
+]
+
+const complianceMenus = [
+    { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
+    { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
+]
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar')
@@ -99,3 +81,27 @@ function toggleSubmenu(menuId) {
     icon.classList.toggle('fa-chevron-up')
 }
 </script>
+
+<style scoped>
+#sidebar.collapsed {
+    width: 80px;
+}
+
+#sidebar.collapsed .sidebar-text {
+    display: none;
+}
+
+#sidebar.collapsed .sidebar-item {
+    justify-content: center;
+}
+
+@media (max-width: 1023px) {
+    #sidebar {
+        transform: translateX(-100%);
+    }
+
+    #sidebar.mobile-open {
+        transform: translateX(0);
+    }
+}
+</style>

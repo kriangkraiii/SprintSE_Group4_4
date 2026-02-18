@@ -20,7 +20,7 @@
 
                 <!-- Filters -->
                 <div class="mb-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                    <div class="grid grid-cols-1 gap-3 px-4 py-4 sm:px-6 lg:grid-cols-6">
+                    <div class="grid grid-cols-1 gap-3 px-4 py-4 sm:px-6 lg:grid-cols-7">
                         <div>
                             <label class="block mb-1 text-xs font-medium text-slate-500">User ID</label>
                             <input v-model="filters.userId" type="text" placeholder="cuid..."
@@ -53,6 +53,12 @@
                             <input v-model="filters.createdTo" type="datetime-local"
                                 class="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-cta" />
                         </div>
+                        <div class="flex items-end">
+                            <label class="inline-flex items-center gap-2 px-3 py-2 text-sm border rounded-md cursor-pointer border-slate-200 text-slate-700">
+                                <input v-model="filters.onlyOlderThanRetention" type="checkbox" class="rounded text-cta focus:ring-cta">
+                                เฉพาะ Log ที่เกิน 90 วัน (ลบได้)
+                            </label>
+                        </div>
                         <div class="flex items-end gap-2">
                             <button @click="applyFilters"
                                 class="px-4 py-2 text-white bg-cta rounded-md cursor-pointer hover:bg-cta-hover">
@@ -64,6 +70,26 @@
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <!-- Bulk Actions -->
+                <div class="flex flex-col gap-3 px-4 py-3 mb-4 bg-white border rounded-lg border-slate-200 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="inline-flex items-center gap-2 text-sm text-slate-600">
+                        <input
+                            type="checkbox"
+                            :checked="allDeletableSelected"
+                            :disabled="deletableLogs.length === 0 || isLoading || isDeleting"
+                            class="rounded text-cta focus:ring-cta"
+                            @change="toggleSelectAll(($event.target).checked)">
+                        <span>เลือกทั้งหมด (เฉพาะ log ที่เกิน 90 วันในหน้านี้)</span>
+                    </div>
+                    <button
+                        @click="openBulkDeleteConfirm"
+                        :disabled="selectedLogIds.length === 0 || isDeleting"
+                        class="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700">
+                        <i class="fas fa-trash-can"></i>
+                        <span>{{ isDeleting ? 'กำลังลบ...' : `ลบที่เลือก (${selectedLogIds.length})` }}</span>
+                    </button>
                 </div>
 
                 <!-- Table -->
@@ -81,6 +107,7 @@
                     <table v-else class="w-full text-sm text-left">
                         <thead class="text-xs uppercase bg-slate-50 text-slate-500">
                             <tr>
+                                <th class="px-4 py-3 text-center">เลือก</th>
                                 <th class="px-4 py-3">ID</th>
                                 <th class="px-4 py-3">Timestamp</th>
                                 <th class="px-4 py-3">User ID</th>
@@ -88,16 +115,25 @@
                                 <th class="px-4 py-3">Action</th>
                                 <th class="px-4 py-3">Resource</th>
                                 <th class="px-4 py-3">User Agent</th>
+                                <th class="px-4 py-3 text-center">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="logs.length === 0">
-                                <td colspan="7" class="px-4 py-12 text-center text-slate-400">
+                                <td colspan="9" class="px-4 py-12 text-center text-slate-400">
                                     ไม่พบข้อมูล Log
                                 </td>
                             </tr>
                             <tr v-for="log in logs" :key="log.id"
                                 class="border-t border-slate-100 hover:bg-slate-50">
+                                <td class="px-4 py-3 text-center">
+                                    <input
+                                        type="checkbox"
+                                        :checked="isSelected(log.id)"
+                                        :disabled="!isLogOlderThanRetention(log.createdAt) || isDeleting"
+                                        class="rounded text-cta focus:ring-cta"
+                                        @change="toggleLogSelection(log.id, ($event.target).checked)">
+                                </td>
                                 <td class="px-4 py-3 font-mono text-xs text-slate-400">{{ log.id }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap">{{ formatDate(log.createdAt) }}</td>
                                 <td class="px-4 py-3">
@@ -115,6 +151,19 @@
                                 <td class="px-4 py-3 max-w-[200px] truncate text-xs text-slate-400"
                                     :title="log.userAgent">
                                     {{ log.userAgent || '—' }}
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <button
+                                        @click="openSingleDeleteConfirm(log)"
+                                        :disabled="!isLogOlderThanRetention(log.createdAt) || isDeleting"
+                                        :title="retentionHint(log.createdAt)"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border transition-colors"
+                                        :class="isLogOlderThanRetention(log.createdAt)
+                                            ? 'text-red-700 bg-red-50 border-red-200 hover:bg-red-100 hover:border-red-300 cursor-pointer'
+                                            : 'text-slate-400 bg-slate-100 border-slate-200 cursor-not-allowed'">
+                                        <i class="fas fa-trash-can"></i>
+                                        <span>{{ deletingLogIds.includes(log.id) ? 'กำลังลบ...' : 'ลบ' }}</span>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -148,6 +197,15 @@
                 </div>
             </div>
         </main>
+
+        <ConfirmModal
+            :show="showDeleteConfirm"
+            title="ลบ System Log"
+            :message="deleteConfirmMessage"
+            confirmText="ลบ"
+            confirmClass="bg-red-600 hover:bg-red-700 text-white"
+            @confirm="handleDeleteLogs"
+            @cancel="cancelDelete" />
     </div>
 </template>
 
@@ -155,6 +213,8 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import AdminHeader from '~/components/admin/AdminHeader.vue'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
+import ConfirmModal from '~/components/ConfirmModal.vue'
+import { useToast } from '~/composables/useToast'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 
@@ -163,10 +223,17 @@ dayjs.locale('th')
 definePageMeta({ middleware: 'admin-auth' })
 
 const { $api } = useNuxtApp()
+const { toast } = useToast()
+const retentionDays = 90
 
 const isLoading = ref(false)
 const logs = ref([])
 const pagination = reactive({ page: 1, limit: 50, total: 0, totalPages: 0 })
+const showDeleteConfirm = ref(false)
+const pendingDeleteIds = ref([])
+const selectedLogIds = ref([])
+const deletingLogIds = ref([])
+const isDeleting = ref(false)
 
 const filters = reactive({
     userId: '',
@@ -174,6 +241,7 @@ const filters = reactive({
     action: '',
     createdFrom: '',
     createdTo: '',
+    onlyOlderThanRetention: false,
 })
 
 const fetchLogs = async () => {
@@ -186,10 +254,21 @@ const fetchLogs = async () => {
         if (filters.ipAddress) params.set('ipAddress', filters.ipAddress)
         if (filters.action) params.set('action', filters.action)
         if (filters.createdFrom) params.set('createdFrom', new Date(filters.createdFrom).toISOString())
-        if (filters.createdTo) params.set('createdTo', new Date(filters.createdTo).toISOString())
+
+        const ninetyDaysCutoffIso = dayjs().subtract(retentionDays, 'day').toISOString()
+        let effectiveCreatedTo = filters.createdTo ? new Date(filters.createdTo).toISOString() : ''
+
+        if (filters.onlyOlderThanRetention) {
+            effectiveCreatedTo = effectiveCreatedTo
+                ? (new Date(effectiveCreatedTo) < new Date(ninetyDaysCutoffIso) ? effectiveCreatedTo : ninetyDaysCutoffIso)
+                : ninetyDaysCutoffIso
+        }
+
+        if (effectiveCreatedTo) params.set('createdTo', effectiveCreatedTo)
 
         const res = await $api(`/system-logs?${params.toString()}`)
         logs.value = res.data || res
+        selectedLogIds.value = []
         if (res.pagination) Object.assign(pagination, res.pagination)
     } catch (err) {
         console.error('Failed to fetch logs:', err)
@@ -204,7 +283,15 @@ const applyFilters = () => {
 }
 
 const clearFilters = () => {
-    Object.assign(filters, { userId: '', ipAddress: '', action: '', createdFrom: '', createdTo: '' })
+    Object.assign(filters, {
+        userId: '',
+        ipAddress: '',
+        action: '',
+        createdFrom: '',
+        createdTo: '',
+        onlyOlderThanRetention: false,
+    })
+    selectedLogIds.value = []
     applyFilters()
 }
 
@@ -235,6 +322,110 @@ const actionBadge = (action) => {
         DELETE: 'bg-red-50 text-red-600',
     }
     return map[action] || 'bg-slate-100 text-slate-500'
+}
+
+const deletableLogs = computed(() => logs.value.filter(log => isLogOlderThanRetention(log.createdAt)))
+
+const allDeletableSelected = computed(() => {
+    if (deletableLogs.value.length === 0) return false
+    return deletableLogs.value.every(log => selectedLogIds.value.includes(log.id))
+})
+
+const isSelected = (id) => selectedLogIds.value.includes(id)
+
+const toggleLogSelection = (id, checked) => {
+    if (checked) {
+        if (!selectedLogIds.value.includes(id)) selectedLogIds.value.push(id)
+        return
+    }
+    selectedLogIds.value = selectedLogIds.value.filter(v => v !== id)
+}
+
+const toggleSelectAll = (checked) => {
+    if (!checked) {
+        selectedLogIds.value = []
+        return
+    }
+    selectedLogIds.value = deletableLogs.value.map(log => log.id)
+}
+
+const isLogOlderThanRetention = (createdAt) => {
+    if (!createdAt) return false
+    return dayjs().diff(dayjs(createdAt), 'day') >= retentionDays
+}
+
+const retentionHint = (createdAt) => {
+    if (isLogOlderThanRetention(createdAt)) return `เกิน ${retentionDays} วันแล้ว ลบได้`
+    return `ยังไม่ครบ ${retentionDays} วัน`
+}
+
+const openSingleDeleteConfirm = (log) => {
+    if (!isLogOlderThanRetention(log.createdAt)) {
+        toast.warning('ยังลบไม่ได้', `System log นี้ยังอายุไม่ครบ ${retentionDays} วัน`)
+        return
+    }
+    pendingDeleteIds.value = [log.id]
+    showDeleteConfirm.value = true
+}
+
+const openBulkDeleteConfirm = () => {
+    if (selectedLogIds.value.length === 0) {
+        toast.warning('ยังไม่ได้เลือกรายการ', 'กรุณาเลือก System Log ที่ต้องการลบก่อน')
+        return
+    }
+    pendingDeleteIds.value = [...selectedLogIds.value]
+    showDeleteConfirm.value = true
+}
+
+const deleteConfirmMessage = computed(() => {
+    if (pendingDeleteIds.value.length <= 1) {
+        return `ยืนยันการลบ System Log #${pendingDeleteIds.value[0] || ''} ?`
+    }
+    return `ยืนยันการลบ System Log ที่เลือกทั้งหมด ${pendingDeleteIds.value.length} รายการ ?`
+})
+
+const handleDeleteLogs = async () => {
+    if (pendingDeleteIds.value.length === 0) return
+
+    isDeleting.value = true
+    deletingLogIds.value = [...pendingDeleteIds.value]
+    let successCount = 0
+    let failCount = 0
+    let failMessage = ''
+
+    try {
+        for (const logId of pendingDeleteIds.value) {
+            try {
+                await $api(`/system-logs/${logId}`, { method: 'DELETE' })
+                successCount += 1
+                selectedLogIds.value = selectedLogIds.value.filter(v => v !== logId)
+            } catch (err) {
+                failCount += 1
+                if (!failMessage) {
+                    failMessage = err?.data?.message || err?.message || 'ไม่สามารถลบบางรายการได้'
+                }
+            }
+        }
+
+        if (successCount > 0) {
+            toast.success('ลบสำเร็จ', `ลบ System Log แล้ว ${successCount} รายการ`)
+        }
+        if (failCount > 0) {
+            toast.error('ลบบางรายการไม่สำเร็จ', `${failCount} รายการ: ${failMessage}`)
+        }
+
+        showDeleteConfirm.value = false
+        pendingDeleteIds.value = []
+        await fetchLogs()
+    } finally {
+        deletingLogIds.value = []
+        isDeleting.value = false
+    }
+}
+
+const cancelDelete = () => {
+    showDeleteConfirm.value = false
+    pendingDeleteIds.value = []
 }
 
 onMounted(fetchLogs)

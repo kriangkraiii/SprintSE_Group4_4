@@ -9,8 +9,8 @@
  */
 
 const { uploadToCloudinary } = require('../utils/cloudinary');
-const { ocrIdCardFront, ocrIdCardBack, ocrDriverLicense, ocrVehicleRegistration, faceAndIdCardVerification } = require('../utils/iapp');
-const { preprocessForOcr } = require('../utils/imagePreprocess');
+const { ocrIdCardFront, ocrIdCardBack, ocrDriverLicense, ocrVehicleRegistration, faceAndIdCardVerification, faceAndIdCardVerificationKycFront } = require('../utils/iapp');
+const { preprocessForOcr, preprocessForFaceVerification } = require('../utils/imagePreprocess');
 const ApiError = require('../utils/ApiError');
 
 // ── iApp Error Code Mapping ──
@@ -274,58 +274,105 @@ const processVehicleRegistrationOcr = async (fileBuffer) => {
     }
 };
 
+// Confidence threshold — ลดลงเพื่อรองรับกรณีหน้าเปลี่ยนจากตอนทำบัตร
+const FACE_CONFIDENCE_THRESHOLD = 40;
+
 /**
- * ยืนยันตัวตนด้วยใบหน้าและบัตรประชาชน — ส่งรูป 2 รูปไปยัง iApp v3
- * เปรียบเทียบใบหน้าในเซลฟี่กับใบหน้าบนบัตรประชาชน
+ * ตรวจสอบว่า error ควร retry ด้วยวิธีอื่น (face/id detection error หรือ server error)
  */
-const processFaceIdVerification = async (idCardBuffer, idCardFileName, idCardMimeType, selfieBuffer, selfieFileName, selfieMimeType) => {
-    // Preprocess ทั้ง 2 รูป
-    const processedIdCard = await preprocessForOcr(idCardBuffer);
-    const processedSelfie = await preprocessForOcr(selfieBuffer);
-    console.log(`[Face+ID] ID Card: ${(idCardBuffer.length / 1024).toFixed(0)}KB → ${(processedIdCard.buffer.length / 1024).toFixed(0)}KB`);
-    console.log(`[Face+ID] Selfie: ${(selfieBuffer.length / 1024).toFixed(0)}KB → ${(processedSelfie.buffer.length / 1024).toFixed(0)}KB`);
+const isRetryableError = (err) => {
+    const statusCode = err.response?.data?.status_code || err.response?.status;
+    // 421/422 = face/id not found, 500 = server error (อาจเป็นเพราะรูปใหญ่เกิน)
+    return [421, 422, 500].includes(statusCode);
+};
 
+/**
+ * แปลง iApp result เป็น response format พร้อม custom threshold
+ */
+const parseFaceVerificationResult = (result) => {
+    if (!result) return null;
+    const confidence = result.total?.confidence || 0;
+    const apiSays = result.total?.isSamePerson === 'true' || result.total?.isSamePerson === true;
+    const isSamePerson = apiSays || confidence >= FACE_CONFIDENCE_THRESHOLD;
+    return {
+        isSamePerson,
+        confidence,
+        idcard: result.idcard || null,
+        selfie: result.selfie || null,
+        total: result.total || null,
+        processTime: result.time_process || 0,
+    };
+};
+
+/**
+ * Helper: ลองเรียก API แล้ว parse ผลลัพธ์
+ * @returns {object|null} parsed result หรือ null ถ้าควร retry
+ */
+const tryFaceVerification = async (apiFn, file0, file1, label) => {
     try {
-        const result = await faceAndIdCardVerification(
-            processedIdCard.buffer, processedIdCard.fileName, processedIdCard.mimeType,
-            processedSelfie.buffer, processedSelfie.fileName, processedSelfie.mimeType
+        const result = await apiFn(
+            file0.buffer, file0.fileName, file0.mimeType,
+            file1.buffer, file1.fileName, file1.mimeType
         );
-
-        // ตรวจสอบผลลัพธ์
-        if (!result) {
-            throw new ApiError(422, 'ไม่สามารถยืนยันตัวตนได้ กรุณาลองใหม่อีกครั้ง');
+        const parsed = parseFaceVerificationResult(result);
+        if (parsed) {
+            console.log(`[Face+ID] ${label} ✅ confidence: ${parsed.confidence}%, isSamePerson: ${parsed.isSamePerson}`);
+            return { success: true, data: parsed };
         }
-
-        // ตรวจสอบว่าเป็นคนเดียวกัน
-        const isSamePerson = result.total?.isSamePerson === 'true' || result.total?.isSamePerson === true;
-        const confidence = result.total?.confidence || 0;
-
-        return {
-            success: true,
-            data: {
-                isSamePerson,
-                confidence,
-                idcard: result.idcard || null,
-                selfie: result.selfie || null,
-                total: result.total || null,
-                processTime: result.time_process || 0,
-            }
-        };
     } catch (err) {
         if (err instanceof ApiError) throw err;
         const respData = err.response?.data;
-        console.error('iApp Face+ID Verification error:', respData || err.message);
+        const httpStatus = err.response?.status;
+        const iappStatus = respData?.status_code;
+        console.warn(`[Face+ID] ${label} ❌ http=${httpStatus} iapp=${iappStatus}:`, JSON.stringify(respData || err.message));
 
-        const statusCode = respData?.status_code || err.response?.status;
-        if (statusCode === 420) {
+        if (httpStatus === 420 || iappStatus === 420) {
             throw new ApiError(400, 'กรุณาอัปโหลดทั้งรูปบัตรประชาชนและรูปเซลฟี่');
         }
-        if (statusCode === 421 || statusCode === 422) {
-            throw new ApiError(422, 'ไม่พบใบหน้าหรือบัตรประชาชนในรูปภาพ กรุณาถ่ายรูปใหม่ให้ชัดเจน');
-        }
-
-        throw new ApiError(422, 'ไม่สามารถยืนยันตัวตนด้วยใบหน้าและบัตรประชาชนได้ กรุณาลองใหม่');
+        // retryable → return null เพื่อลอง attempt ถัดไป
+        if (isRetryableError(err)) return null;
+        // non-retryable → throw ทันที
+        throw new ApiError(422, `ไม่สามารถยืนยันตัวตนได้: ${respData?.status_message || err.message}`);
     }
+    return null;
+};
+
+/**
+ * ยืนยันตัวตนด้วยใบหน้าและบัตรประชาชน — ส่งรูป 2 รูปไปยัง iApp v3
+ *
+ * Strategy:
+ *   1. Standard endpoint — file0=บัตร, file1=เซลฟี่ (resize 1600)
+ *   2. Standard endpoint — SWAP: file0=เซลฟี่, file1=บัตร
+ *   3. KYC-front endpoint — file0=บัตร, file1=เซลฟี่
+ *   4. KYC-front endpoint — SWAP: file0=เซลฟี่, file1=บัตร
+ *   ใช้ custom confidence threshold (>= 40%)
+ */
+const processFaceIdVerification = async (idCardBuffer, idCardFileName, idCardMimeType, selfieBuffer, selfieFileName, selfieMimeType) => {
+    // Preprocess ทั้ง 2 รูป (resize + JPEG, ไม่ sharpen)
+    const idCard = await preprocessForFaceVerification(idCardBuffer);
+    const selfie = await preprocessForFaceVerification(selfieBuffer);
+    console.log(`[Face+ID] Preprocessed — ID Card: ${(idCardBuffer.length / 1024).toFixed(0)}KB → ${(idCard.buffer.length / 1024).toFixed(0)}KB, Selfie: ${(selfieBuffer.length / 1024).toFixed(0)}KB → ${(selfie.buffer.length / 1024).toFixed(0)}KB`);
+
+    let result;
+
+    // ── 1. Standard endpoint: file0=บัตร, file1=เซลฟี่ ──
+    result = await tryFaceVerification(faceAndIdCardVerification, idCard, selfie, '1) Standard (card→selfie)');
+    if (result) return result;
+
+    // ── 2. Standard endpoint: SWAP file0=เซลฟี่, file1=บัตร ──
+    result = await tryFaceVerification(faceAndIdCardVerification, selfie, idCard, '2) Standard SWAP (selfie→card)');
+    if (result) return result;
+
+    // ── 3. KYC-front endpoint: file0=บัตร, file1=เซลฟี่ ──
+    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, idCard, selfie, '3) KYC-front (card→selfie)');
+    if (result) return result;
+
+    // ── 4. KYC-front endpoint: SWAP file0=เซลฟี่, file1=บัตร ──
+    result = await tryFaceVerification(faceAndIdCardVerificationKycFront, selfie, idCard, '4) KYC-front SWAP (selfie→card)');
+    if (result) return result;
+
+    // ทุก attempt ล้มเหลว
+    throw new ApiError(422, 'ไม่พบใบหน้าหรือบัตรประชาชนในรูปภาพ กรุณาถ่ายรูปใหม่ โดยถือบัตรให้ชิดใบหน้า ในที่มีแสงสว่างเพียงพอ และอย่าให้มือบังรูปบนบัตร');
 };
 
 module.exports = {

@@ -2,7 +2,7 @@ const express = require('express');
 const userController = require("../controllers/user.controller");
 const validate = require('../middlewares/validate');
 const upload = require('../middlewares/upload.middleware');
-const { idParamSchema, createUserSchema, updateMyProfileSchema, updateUserByAdminSchema, updateUserStatusSchema, listUsersQuerySchema } = require('../validations/user.validation');
+const { idParamSchema, createUserSchema, createAdminUserSchema, updateMyProfileSchema, updateUserByAdminSchema, updateUserStatusSchema, listUsersQuerySchema } = require('../validations/user.validation');
 const { protect, requireAdmin } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -56,6 +56,20 @@ router.patch(
     requireAdmin,
     validate({ params: idParamSchema, body: updateUserStatusSchema }),
     userController.setUserStatus
+);
+
+// POST /api/users/admin (admin can create ADMIN user only)
+router.post(
+    '/admin',
+    protect,
+    requireAdmin,
+    upload.fields([
+        { name: 'nationalIdPhotoUrl', maxCount: 1 },
+        { name: 'nationalIdBackPhotoUrl', maxCount: 1 },
+        { name: 'selfiePhotoUrl', maxCount: 1 }
+    ]),
+    validate({ body: createAdminUserSchema }),
+    userController.createAdminUser
 );
 
 // --- Public / User-specific Routes ---

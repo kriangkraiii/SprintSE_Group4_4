@@ -166,9 +166,9 @@
                                     <td class="px-4 py-3">
                                         <span
                                             class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full"
-                                            :class="roleBadge(u.role)">
+                                            :class="roleBadge(displayRole(u))">
                                             <i class="mr-1 fa-solid fa-shield-halved" v-if="u.role === 'ADMIN'"></i>
-                                            {{ u.role }}
+                                            {{ displayRole(u) }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-3">
@@ -342,9 +342,19 @@ const pageButtons = computed(() => {
     return out
 })
 
+function displayRole(u) {
+    if (u.role === 'ADMIN') return 'ADMIN'
+    const dv = u.driverVerification
+    const isDriverVerified = dv && (dv.status === 'APPROVED' || dv.verifiedByOcr)
+    const hasVehicle = u._count?.vehicles > 0
+    if (isDriverVerified && hasVehicle) return 'PASSENGER / DRIVER'
+    if (isDriverVerified) return 'PASSENGER / DRIVER (ยังไม่มีรถ)'
+    return 'PASSENGER'
+}
+
 function roleBadge(role) {
     if (role === 'ADMIN') return 'bg-purple-100 text-purple-700'
-    if (role === 'DRIVER') return 'bg-cta-light text-cta-hover'
+    if (role.includes('DRIVER')) return 'bg-cta-light text-cta-hover'
     return 'bg-slate-100 text-primary'
 }
 

@@ -56,6 +56,8 @@ const searchUsers = async (opts = {}) => {
                 phoneNumber: true, profilePicture: true,
                 role: true, isVerified: true, isActive: true,
                 createdAt: true, updatedAt: true,
+                driverVerification: { select: { status: true, verifiedByOcr: true } },
+                _count: { select: { vehicles: true } },
             }
         })
     ]);
@@ -160,6 +162,19 @@ const createUser = async (data) => {
         }
     }
 
+    const isAdminCreateFlow = data.createdByAdmin === true;
+    const requestedRole = (data.role || 'PASSENGER').toUpperCase();
+
+    if (!isAdminCreateFlow && requestedRole !== 'PASSENGER') {
+        throw new ApiError(403, 'Only PASSENGER registration is allowed on this endpoint.');
+    }
+
+    if (isAdminCreateFlow && requestedRole !== 'ADMIN') {
+        throw new ApiError(403, 'Admin create endpoint can create ADMIN user only.');
+    }
+
+    const finalRole = isAdminCreateFlow ? 'ADMIN' : 'PASSENGER';
+
     const hashedPassword = await bcrypt.hash(data.password, SALT_ROUNDS);
 
     const createData = {
@@ -174,7 +189,7 @@ const createUser = async (data) => {
         nationalIdExpiryDate: new Date(data.nationalIdExpiryDate), // แปลง string เป็น Date object
         nationalIdPhotoUrl: data.nationalIdPhotoUrl, // URL จาก Cloudinary
         selfiePhotoUrl: data.selfiePhotoUrl, // URL จาก Cloudinary
-        role: data.role || 'PASSENGER',
+        role: finalRole,
         // ข้อมูล OCR จากบัตรประชาชน
         ...(data.nationalIdBackPhotoUrl && { nationalIdBackPhotoUrl: data.nationalIdBackPhotoUrl }),
         ...(data.nationalIdBackNumber && { nationalIdBackNumber: data.nationalIdBackNumber }),
