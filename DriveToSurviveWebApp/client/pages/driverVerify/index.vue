@@ -347,7 +347,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <h3 class="mb-2 text-xl font-bold text-green-700">ยืนยันตัวตนคนขับสำเร็จ!</h3>
-                            <p class="text-sm text-green-600">ระบบกำลังพาคุณไปหน้าสร้างเส้นทาง...</p>
+                            <p class="text-sm text-green-600">ระบบกำลังพาคุณไปหน้าข้อมูลรถยนต์...</p>
                         </div>
 
                         <div v-if="!verificationSuccess" class="pt-8 border-t border-slate-100">
@@ -378,8 +378,10 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useToast } from '~/composables/useToast';
+import { useDriverStatus } from '~/composables/useDriverStatus';
 
 const { user: authUser } = useAuth();
+const { isDriverVerified, fetchDriverStatus } = useDriverStatus();
 const { toast } = useToast();
 const apiBase = useRuntimeConfig().public.apiBase || 'http://localhost:3000/api';
 
@@ -545,10 +547,11 @@ const handleSubmit = async () => {
         if (!res.ok) throw new Error(body?.message || 'ส่งคำขอไม่สำเร็จ');
 
         verificationSuccess.value = true;
+        isDriverVerified.value = true;
         toast.success('ยืนยันตัวตนสำเร็จ', 'ระบบ OCR ตรวจสอบใบขับขี่ของคุณเรียบร้อยแล้ว คุณสามารถสร้างเส้นทางได้ทันที');
 
         setTimeout(() => {
-            window.location.href = '/myRoute';
+            navigateTo('/profile/my-vehicle');
         }, 2500);
     } catch (err) {
         console.error('Verification failed:', err);

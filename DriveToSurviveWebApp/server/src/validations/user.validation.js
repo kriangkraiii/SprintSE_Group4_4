@@ -4,7 +4,7 @@ const idParamSchema = Joi.object({
     id: Joi.string().required(), // Adjusted parameter name to 'id' to match common express usage or check route definition
 });
 
-const createUserSchema = Joi.object({
+const baseCreateUserSchema = {
     email: Joi.string().email().required(),
     password: Joi.string().min(8).pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/).message('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร ประกอบด้วย A-Z, a-z และ 0-9').required(),
     username: Joi.string().allow('', null),
@@ -17,7 +17,18 @@ const createUserSchema = Joi.object({
     nationalIdBackNumber: Joi.string().allow('', null),
     nationalIdOcrData: Joi.string().allow('', null),
     verifiedByOcr: Joi.string().valid('true', 'false').allow('', null),
-    role: Joi.string().valid('PASSENGER', 'DRIVER', 'ADMIN').default('PASSENGER'),
+    faceIdVerification: Joi.string().allow('', null),
+    faceIdVerified: Joi.string().valid('true', 'false').allow('', null),
+};
+
+const createUserSchema = Joi.object({
+    ...baseCreateUserSchema,
+    role: Joi.string().valid('PASSENGER').default('PASSENGER'),
+});
+
+const createAdminUserSchema = Joi.object({
+    ...baseCreateUserSchema,
+    role: Joi.string().valid('ADMIN').default('ADMIN'),
 });
 
 const updateMyProfileSchema = Joi.object({
@@ -59,6 +70,7 @@ const listUsersQuerySchema = Joi.object({
 module.exports = {
     idParamSchema,
     createUserSchema,
+    createAdminUserSchema,
     updateMyProfileSchema,
     updateUserByAdminSchema,
     updateUserStatusSchema,

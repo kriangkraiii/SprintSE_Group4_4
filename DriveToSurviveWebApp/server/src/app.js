@@ -1,4 +1,7 @@
-require("dotenv").config({ path: require('path').resolve(__dirname, '../../.env') });
+require("dotenv").config({
+    path: require('path').resolve(__dirname, '../../.env'),
+    quiet: true,
+});
 
 const express = require('express');
 const cors = require('cors');
@@ -19,9 +22,21 @@ promClient.collectDefaultMetrics();
 
 app.use(helmet());
 
+const defaultAllowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://amazing-crisp-9bcb1a.netlify.app',
+];
+
+const envAllowedOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(Boolean);
+
+const allowedOrigins = [...new Set([...defaultAllowedOrigins, ...envAllowedOrigins])];
+
 const corsOptions = {
-    origin: ['http://localhost:3000', 'http://localhost:3001',
-        'https://amazing-crisp-9bcb1a.netlify.app'],
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -49,6 +64,21 @@ app.use(metricsMiddleware);
 app.use('/api', systemLogMiddleware);
 
 // --- Routes ---
+// Root route for platform probes / browser checks
+app.get('/', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        service: 'DriveToSurvive API',
+        docs: '/documentation',
+        health: '/api/health',
+    });
+});
+
+// Avoid noisy 404s from browser favicon probing
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
 // Health Check Route
 app.get('/api/health', async (req, res) => {
     try {

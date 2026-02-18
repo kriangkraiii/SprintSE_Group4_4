@@ -143,4 +143,31 @@ const faceAndIdCardVerification = async (
     return response.data;
 };
 
-module.exports = { ocrIdCardFront, ocrIdCardBack, ocrDriverLicense, ocrVehicleRegistration, faceAndIdCardVerification };
+/**
+ * Face and ID Card Verification for KYC (Front)
+ * ใช้ endpoint /front ซึ่งอาจใช้โมเดลที่ต่างจาก base endpoint
+ */
+const faceAndIdCardVerificationKycFront = async (
+    idCardBuffer, idCardFileName = 'id_card.jpg', idCardMimeType = 'image/jpeg',
+    selfieBuffer, selfieFileName = 'selfie.jpg', selfieMimeType = 'image/jpeg'
+) => {
+    const form = new FormData();
+    form.append('file0', idCardBuffer, { filename: idCardFileName, contentType: idCardMimeType });
+    form.append('file1', selfieBuffer, { filename: selfieFileName, contentType: selfieMimeType });
+
+    const response = await axios.post(
+        'https://api.iapp.co.th/v3/store/ekyc/face-and-id-card-verification/front',
+        form,
+        {
+            headers: {
+                ...form.getHeaders(),
+                'apikey': IAPP_API_KEY,
+            },
+            timeout: 30000,
+            maxContentLength: 10 * 1024 * 1024,
+        }
+    );
+    return response.data;
+};
+
+module.exports = { ocrIdCardFront, ocrIdCardBack, ocrDriverLicense, ocrVehicleRegistration, faceAndIdCardVerification, faceAndIdCardVerificationKycFront };

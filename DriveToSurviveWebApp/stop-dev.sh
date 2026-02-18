@@ -17,6 +17,7 @@ kill_port() {
 
 kill_port 3000 "Client (Nuxt)"
 kill_port 3001 "Server (Express)"
+kill_port 24678 "Vite HMR (WebSocket)"
 
 echo "✅ All services stopped."
 

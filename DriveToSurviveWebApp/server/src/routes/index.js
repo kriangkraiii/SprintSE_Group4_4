@@ -10,7 +10,6 @@ const mapRoutes = require('./maps.routes')
 const systemLogRoutes = require('./systemLog.routes');
 const blacklistRoutes = require('./blacklist.routes');
 const iappRoutes = require('./iapp.routes');
-
 const router = express.Router();
 
 router.use('/auth', authRoutes);
@@ -24,5 +23,6 @@ router.use('/api/maps', mapRoutes);
 router.use('/system-logs', systemLogRoutes);
 router.use('/blacklist', blacklistRoutes);
 router.use('/ocr', iappRoutes);
+
 
 module.exports = router;
