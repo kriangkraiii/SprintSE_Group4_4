@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-10 pb-24">
             <!-- Search bar (Floating) -->
             <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 mb-8">
                 <form @submit.prevent="handleSearch"
@@ -235,7 +235,7 @@
 
                                 <div class="flex justify-end">
                                     <button @click.stop="openModal(route)" :disabled="route.availableSeats === 0"
-                                        class="px-6 py-2.5 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                                        class="px-6 py-2.5 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 transition cursor-pointer">
                                         จองที่นั่ง
                                     </button>
                                 </div>
@@ -419,7 +419,7 @@
                                     ยกเลิก
                                 </button>
                                 <button @click="confirmBooking"
-                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-emerald-500 rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/30 transition cursor-pointer">
+                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
                                     ยืนยันการจอง
                                 </button>
                             </div>
@@ -1118,16 +1118,38 @@ function initAll() {
 }
 
 onMounted(() => {
+    // 1. Parse query params first
+    if (route.query.from) {
+        searchForm.value.origin = route.query.from
+        if (route.query.fromLat && route.query.fromLng) {
+            searchForm.value._originMeta = {
+                lat: parseFloat(route.query.fromLat),
+                lng: parseFloat(route.query.fromLng),
+                name: route.query.from,
+                fullAddress: route.query.from
+            }
+        }
+    }
+    if (route.query.to) {
+        searchForm.value.destination = route.query.to
+        if (route.query.toLat && route.query.toLng) {
+            searchForm.value._destinationMeta = {
+                lat: parseFloat(route.query.toLat),
+                lng: parseFloat(route.query.toLng),
+                name: route.query.to,
+                fullAddress: route.query.to
+            }
+        }
+    }
+    if (route.query.date) searchForm.value.date = route.query.date
+    if (route.query.seat) searchForm.value.seats = route.query.seat
+
+    // 2. Initialize
     if (window.google?.maps) { initAll(); return }
     window[GMAPS_CB] = () => {
         try { delete window[GMAPS_CB] } catch { }
         initAll()
     }
-
-    if (route.query.from) searchForm.value.origin = route.query.from
-    if (route.query.to) searchForm.value.destination = route.query.to
-    if (route.query.date) searchForm.value.date = route.query.date
-    if (route.query.seat) searchForm.value.seats = route.query.seat
 })
 
 onUnmounted(() => {

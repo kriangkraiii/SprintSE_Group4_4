@@ -124,11 +124,11 @@
                                 </h3>
                                 <div class="relative pl-8">
                                     <!-- Timeline line -->
-                                    <div class="absolute left-[14px] top-4 bottom-4 w-0.5 bg-gray-200"></div>
+                                    <div class="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200"></div>
                                     <!-- Start -->
                                     <div class="relative mb-4">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดเริ่มต้น</label>
                                         <div class="relative">
@@ -160,7 +160,7 @@
                                     <!-- Waypoints -->
                                     <div v-for="(wp, idx) in waypoints" :key="idx" class="relative mb-4">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดแวะ {{ idx + 1
                                             }}</label>
@@ -191,7 +191,7 @@
                                     <!-- End -->
                                     <div class="relative">
                                         <div
-                                            class="absolute -left-8 top-3 w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100 z-10">
+                                            class="absolute -left-[18px] top-3 w-3 h-3 rounded-full bg-red-500 ring-4 ring-red-100 z-10">
                                         </div>
                                         <label class="block text-xs font-medium text-gray-500 mb-1">จุดปลายทาง</label>
                                         <div class="relative">
@@ -364,8 +364,8 @@
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
                 @click.self="closePlacePicker">
                 <div class="bg-white rounded-2xl w-[95%] max-w-lg max-h-[90vh] overflow-hidden shadow-2xl">
-                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                        <h3 class="text-base font-semibold text-gray-800">
+                    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 ">
+                        <h3 class="text-base font-semibold text-gray-800 ">
                             เลือก{{ pickingField === 'start' ? 'จุดเริ่มต้น' : pickingField === 'end' ? 'จุดปลายทาง' :
                                 'จุดแวะ' }}
                         </h3>
@@ -406,158 +406,15 @@ import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRuntimeConfig, useHead, navigateTo } from '#app'
 import { useToast } from '~/composables/useToast'
 import VehicleModal from '~/components/VehicleModal.vue'
+import { getProvinceFromPlace , stripCountry, stripLeadingPlusCode } from '~/utils/googleMaps'
 
 definePageMeta({ middleware: 'auth' })
-
-const { $api } = useNuxtApp()
-const { toast } = useToast()
-const config = useRuntimeConfig()
-
-// ==================== Guard: ตรวจสอบสิทธิ์ก่อนสร้างเส้นทาง ====================
-const guardStatus = reactive({ idCard: false, driver: false, vehicle: false })
-const guardLoaded = ref(false)
-const canCreateRoute = computed(() => guardLoaded.value && guardStatus.idCard && guardStatus.driver && guardStatus.vehicle)
-
-const fetchGuardStatus = async () => {
-    try {
-        const me = await $api('/users/me')
-        guardStatus.idCard = !!(me.isVerified || me.verifiedByOcr)
-    } catch { guardStatus.idCard = false }
-    try {
-        const dv = await $api('/driver-verifications/me')
-        guardStatus.driver = !!(dv?.status === 'APPROVED' || dv?.verifiedByOcr)
-    } catch { guardStatus.driver = false }
-    try {
-        const v = await $api('/vehicles')
-        const vList = Array.isArray(v) ? v : (v?.data ?? [])
-        guardStatus.vehicle = vList.length > 0
-    } catch { guardStatus.vehicle = false }
-    guardLoaded.value = true
-}
-
-const isModalOpen = ref(false)
-const isLoading = ref(false)
-const vehicles = ref([])
-
-const waypoints = ref([])
-const waypointMetas = ref([])
-const waypointInputs = ref([])
-let waypointAutocompletes = []
-
-const form = reactive({
-    vehicleId: '',
-    startPoint: '',
-    endPoint: '',
-    date: '',
-    time: '',
-    availableSeats: null,
-    pricePerSeat: null,
-    conditions: '',
-})
-
-const startInputEl = ref(null)
-const endInputEl = ref(null)
-let startAutocomplete = null
-let endAutocomplete = null
-
-const startMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null })
-const endMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null })
-
-const showPlacePicker = ref(false)
-const pickingField = ref(null)
-const placePickerMapEl = ref(null)
-let placePickerMap = null
-let placePickerMarker = null
-const pickedPlace = ref({ name: '', lat: null, lng: null })
-
-let geocoder = null
-let placesService = null
-
-// Main map
-const mainMapEl = ref(null)
-let mainMap = null
-let mainStartMarker = null
-let mainEndMarker = null
-let mainPolyline = null
-let mainWaypointMarkers = []
-
-// User real-time location
-const userLocation = ref({ lat: null, lng: null })
-let userLocationMarker = null
-let userLocationCircle = null
-let watchId = null
-
-const GMAPS_CB = '__gmapsReadyCreateTrip__'
-const headScripts = []
-if (process.client && !window.google?.maps) {
-    headScripts.push({
-        key: 'gmaps',
-        src: `https://maps.googleapis.com/maps/api/js?key=${config.public.googleMapsApiKey}&libraries=places,geometry&callback=${GMAPS_CB}`,
-        async: true,
-        defer: true,
-    })
-}
-useHead({ script: headScripts })
-
-// ==================== Real-time Location ====================
-function startLocationTracking() {
-    if (!navigator.geolocation) return
-    watchId = navigator.geolocation.watchPosition(
-        (pos) => {
-            const lat = pos.coords.latitude
-            const lng = pos.coords.longitude
-            userLocation.value = { lat, lng }
-            updateUserLocationOnMap(lat, lng)
-        },
-        () => { },
-        { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
-    )
-}
-
-function updateUserLocationOnMap(lat, lng) {
-    if (!mainMap) return
-    const pos = new google.maps.LatLng(lat, lng)
-
-    if (userLocationMarker) {
-        userLocationMarker.setPosition(pos)
-        userLocationCircle.setCenter(pos)
-    } else {
-        userLocationMarker = new google.maps.Marker({
-            position: pos,
-            map: mainMap,
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: '#10b981',
-                fillOpacity: 1,
-                strokeColor: '#ffffff',
-                strokeWeight: 3,
-            },
-            zIndex: 999,
-            title: 'ตำแหน่งของคุณ',
-        })
-        userLocationCircle = new google.maps.Circle({
-            map: mainMap,
-            center: pos,
-            radius: 100,
-            fillColor: '#10b981',
-            fillOpacity: 0.1,
-            strokeColor: '#10b981',
-            strokeOpacity: 0.3,
-            strokeWeight: 1,
-        })
-    }
-}
-
+// ... existing code ...
+const startMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null, province: null })
+const endMeta = ref({ lat: null, lng: null, name: null, address: null, placeId: null, province: null })
+// ... existing code ...
 function useCurrentLocation(field) {
-    if (!navigator.geolocation) {
-        toast.error('ไม่รองรับ', 'เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง')
-        return
-    }
-    navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-            const lat = pos.coords.latitude
-            const lng = pos.coords.longitude
+    // ... existing code ...
             const latlng = new google.maps.LatLng(lat, lng)
             const geocodeRes = await new Promise(resolve => {
                 geocoder.geocode({ location: { lat, lng } }, (results, status) => {
@@ -567,145 +424,42 @@ function useCurrentLocation(field) {
             })
             const name = geocodeRes ? stripLeadingPlusCode(stripCountry(geocodeRes.formatted_address || '')) : `${lat.toFixed(6)}, ${lng.toFixed(6)}`
             const address = geocodeRes ? stripCountry(geocodeRes.formatted_address || '') : name
+            const province = getProvinceFromPlace(geocodeRes)
 
             if (field === 'start') {
                 form.startPoint = name
-                startMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null }
+                startMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null, province }
             } else {
                 form.endPoint = name
-                endMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null }
+                endMeta.value = { lat, lng, name, address, placeId: geocodeRes?.place_id || null, province }
             }
             updateMainMap()
             if (mainMap) mainMap.panTo(latlng)
         },
-        () => toast.error('ไม่สามารถระบุตำแหน่ง', 'กรุณาอนุญาตการเข้าถึงตำแหน่ง'),
-        { enableHighAccuracy: true }
-    )
+        // ... existing code ...
 }
-
-// ==================== Vehicle ====================
-const fetchVehicles = async (showError = true) => {
-    try {
-        const res = await $api('/vehicles')
-        const list = Array.isArray(res) ? res : (res?.data ?? [])
-        vehicles.value = list
-        if (list.length > 0) {
-            const def = list.find(v => v.isDefault) || list[0]
-            form.vehicleId = def.id
-        }
-    } catch (e) {
-        if (showError) toast.error('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลรถยนต์ได้')
-    }
-}
-
-const closeAndRefresh = async () => {
-    isModalOpen.value = false
-    await fetchVehicles(false)
-}
-
-// ==================== Submit ====================
-const handleSubmit = async () => {
-    if (isLoading.value) return
-
-    if (!form.vehicleId || !form.date || !form.time || !form.availableSeats || !form.pricePerSeat) {
-        toast.error('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน')
-        return
-    }
-
-    if (!startMeta.value.lat || !endMeta.value.lat) {
-        toast.error('ข้อมูลไม่ครบถ้วน', 'กรุณาเลือกจุดเริ่มต้นและจุดปลายทาง')
-        return
-    }
-
-    isLoading.value = true
-    const departureTime = new Date(`${form.date}T${form.time}`).toISOString()
-
-    const waypointsPayload = waypointMetas.value
-        .map((m, i) => {
-            const name = m?.name || waypoints.value[i]?.text || null
-            const address = m?.address || waypoints.value[i]?.text || null
-            const lat = m?.lat != null ? Number(m.lat) : null
-            const lng = m?.lng != null ? Number(m.lng) : null
-            if (!name && lat == null) return null
-            return { lat, lng, name, address }
-        })
-        .filter(Boolean)
-
+// ... existing code ...
+// Inside handleSubmit
     const payload = {
         vehicleId: form.vehicleId,
-        startLocation: { lat: Number(startMeta.value.lat), lng: Number(startMeta.value.lng), name: startMeta.value.name || form.startPoint, address: startMeta.value.address || form.startPoint },
-        endLocation: { lat: Number(endMeta.value.lat), lng: Number(endMeta.value.lng), name: endMeta.value.name || form.endPoint, address: endMeta.value.address || form.endPoint },
-        waypoints: waypointsPayload,
-        optimizeWaypoints: true,
-        departureTime,
-        availableSeats: Number(form.availableSeats),
-        pricePerSeat: Number(form.pricePerSeat),
-        conditions: form.conditions,
+        startLocation: { 
+            lat: Number(startMeta.value.lat), 
+            lng: Number(startMeta.value.lng), 
+            name: startMeta.value.name || form.startPoint, 
+            address: startMeta.value.address || form.startPoint,
+            province: startMeta.value.province 
+        },
+        endLocation: { 
+            lat: Number(endMeta.value.lat), 
+            lng: Number(endMeta.value.lng), 
+            name: endMeta.value.name || form.endPoint, 
+            address: endMeta.value.address || form.endPoint,
+            province: endMeta.value.province
+        },
+        // ... existing code ...
     }
-
-    try {
-        const apiBase = config.public.apiBase || 'http://localhost:3000/api'
-        let token = ''
-        try { const m = document.cookie.match(/(?:^|;\s*)token=([^;]+)/); if (m) token = decodeURIComponent(m[1]) } catch { }
-        if (process.client && !token) { try { token = localStorage.getItem('token') || '' } catch { } }
-
-        const res = await fetch(`${apiBase}/routes`, {
-            method: 'POST',
-            headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-            body: JSON.stringify(payload),
-            credentials: 'include',
-        })
-
-        let body
-        try { body = await res.json() } catch { throw new Error('Unexpected response') }
-        if (!res.ok) { const err = new Error(body?.message || `${res.status}`); err.status = res.status; err.payload = body; throw err }
-
-        toast.success('สำเร็จ', body?.message || 'สร้างเส้นทางเรียบร้อยแล้ว!')
-        setTimeout(() => navigateTo('/findTrip'), 1500)
-    } catch (err) {
-        const msg = String(err?.message || '')
-        const is403 = err?.status === 403
-
-        if (is403 && /ยืนยันบัตรประชาชน/.test(msg)) {
-            toast.error('ต้องยืนยันตัวตน', 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะสร้างเส้นทางได้')
-            setTimeout(() => navigateTo('/profile'), 1500)
-        } else if (is403) {
-            toast.error('ต้องยืนยันตัวตน', 'คุณต้องยืนยันบัตรประชาชนและใบขับขี่ก่อนจึงจะสร้างเส้นทางได้')
-            setTimeout(() => navigateTo('/driverVerify'), 1500)
-        } else {
-            toast.error('เกิดข้อผิดพลาด', msg || 'ไม่สามารถสร้างเส้นทางได้')
-        }
-    } finally {
-        isLoading.value = false
-    }
-}
-
-// ==================== Waypoints ====================
-function addWaypoint() {
-    waypoints.value.push({ text: '' })
-    waypointMetas.value.push({ lat: null, lng: null, name: null, address: null, placeId: null })
-    nextTick(() => initWaypointAutocomplete(waypoints.value.length - 1))
-}
-
-function removeWaypoint(idx) {
-    waypoints.value.splice(idx, 1)
-    waypointMetas.value.splice(idx, 1)
-    const ac = waypointAutocompletes[idx]
-    if (ac && typeof ac.unbindAll === 'function') ac.unbindAll()
-    waypointAutocompletes.splice(idx, 1)
-    waypointInputs.value.splice(idx, 1)
-    updateMainMap()
-}
-
-function initWaypointAutocomplete(idx) {
-    if (!window.google?.maps?.places) return
-    const el = waypointInputs.value[idx]
-    if (!el) return
-
-    const opts = { fields: ['place_id', 'name', 'formatted_address', 'geometry'], types: ['geocode', 'establishment'] }
-    const ac = new google.maps.places.Autocomplete(el, opts)
-    waypointAutocompletes[idx] = ac
-
+// ... existing code ...
+// Inside initWaypointAutocomplete
     ac.addListener('place_changed', () => {
         const p = ac.getPlace()
         if (!p) return
@@ -713,24 +467,13 @@ function initWaypointAutocomplete(idx) {
         const lng = p.geometry?.location?.lng?.() ?? null
         const name = p.name || stripLeadingPlusCode(stripCountry(p.formatted_address || ''))
         const address = stripCountry(p.formatted_address || name || '')
+        // Waypoints don't strictly need province for this feature, but good for consistency if needed later
         waypoints.value[idx].text = name
         waypointMetas.value[idx] = { lat, lng, name, address, placeId: p.place_id || null }
         updateMainMap()
     })
-}
 
-// ==================== Autocomplete ====================
-function initStartEndAutocomplete() {
-    if (!window.google?.maps?.places) return
-    geocoder = new google.maps.Geocoder()
-    const tmpDiv = document.createElement('div')
-    placesService = new google.maps.places.PlacesService(tmpDiv)
-
-    const opts = { fields: ['place_id', 'name', 'formatted_address', 'geometry'], types: ['geocode', 'establishment'] }
-
-    if (startInputEl.value) {
-        if (startAutocomplete?.unbindAll) startAutocomplete.unbindAll()
-        startAutocomplete = new google.maps.places.Autocomplete(startInputEl.value, opts)
+// Inside initStartEndAutocomplete (start)
         startAutocomplete.addListener('place_changed', () => {
             const p = startAutocomplete.getPlace()
             if (!p) return
@@ -738,15 +481,14 @@ function initStartEndAutocomplete() {
             const lng = p.geometry?.location?.lng?.() ?? null
             const name = p.name || stripLeadingPlusCode(stripCountry(p.formatted_address || ''))
             const address = stripCountry(p.formatted_address || name || '')
+            const province = getProvinceFromPlace(p)
+            
             form.startPoint = name
-            startMeta.value = { lat, lng, name, address, placeId: p.place_id || null }
+            startMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
         })
-    }
 
-    if (endInputEl.value) {
-        if (endAutocomplete?.unbindAll) endAutocomplete.unbindAll()
-        endAutocomplete = new google.maps.places.Autocomplete(endInputEl.value, opts)
+// Inside initStartEndAutocomplete (end)
         endAutocomplete.addListener('place_changed', () => {
             const p = endAutocomplete.getPlace()
             if (!p) return
@@ -754,14 +496,13 @@ function initStartEndAutocomplete() {
             const lng = p.geometry?.location?.lng?.() ?? null
             const name = p.name || stripLeadingPlusCode(stripCountry(p.formatted_address || ''))
             const address = stripCountry(p.formatted_address || name || '')
+            const province = getProvinceFromPlace(p)
+
             form.endPoint = name
-            endMeta.value = { lat, lng, name, address, placeId: p.place_id || null }
+            endMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
         })
-    }
 
-    for (let i = 0; i < waypoints.value.length; i++) initWaypointAutocomplete(i)
-}
 
 // ==================== Main Map ====================
 function initMainMap() {
