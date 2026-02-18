@@ -427,7 +427,8 @@ const fetchGuardStatus = async () => {
     } catch { guardStatus.driver = false }
     try {
         const v = await $api('/vehicles')
-        guardStatus.vehicle = Array.isArray(v) && v.length > 0
+        const vList = Array.isArray(v) ? v : (v?.data ?? [])
+        guardStatus.vehicle = vList.length > 0
     } catch { guardStatus.vehicle = false }
     guardLoaded.value = true
 }
@@ -583,10 +584,11 @@ function useCurrentLocation(field) {
 // ==================== Vehicle ====================
 const fetchVehicles = async (showError = true) => {
     try {
-        const data = await $api('/vehicles')
-        vehicles.value = data
-        if (data.length > 0) {
-            const def = data.find(v => v.isDefault) || data[0]
+        const res = await $api('/vehicles')
+        const list = Array.isArray(res) ? res : (res?.data ?? [])
+        vehicles.value = list
+        if (list.length > 0) {
+            const def = list.find(v => v.isDefault) || list[0]
             form.vehicleId = def.id
         }
     } catch (e) {

@@ -139,14 +139,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import ProfileSidebar from '~/components/ProfileSidebar.vue';
+import { useDriverStatus } from '~/composables/useDriverStatus';
 
 definePageMeta({
     middleware: 'auth'
 });
 
 const { $api } = useNuxtApp();
+const { isDriverVerified: sharedDriverVerified } = useDriverStatus();
 
 const meVerification = ref(null)
 const isLoadingMe = ref(false)
@@ -190,6 +192,10 @@ const statusBadgeClass = (v) => {
 const isDriverVerified = computed(() => {
     return !!(meVerification.value && (meVerification.value.status === 'APPROVED' || meVerification.value.verifiedByOcr))
 })
+
+watch(isDriverVerified, (val) => {
+    sharedDriverVerified.value = val
+}, { immediate: true })
 
 const fetchMyDriverVerification = async () => {
     isLoadingMe.value = true

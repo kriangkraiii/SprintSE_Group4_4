@@ -11,11 +11,7 @@
                     <!-- Left: Title + Create Button -->
                     <div class="flex items-center gap-3">
                         <h1 class="text-2xl font-semibold text-primary">Route Management</h1>
-                        <button @click="onCreateRoute"
-                            class="inline-flex items-center gap-2 px-3 py-2 text-white bg-cta rounded-md cursor-pointer hover:bg-cta-hover">
-                            <i class="fa-solid fa-plus"></i>
-                            <span class="hidden sm:inline">สร้างเส้นทางใหม่</span>
-                        </button>
+      
                     </div>
 
                     <!-- Right: Quick Search -->

@@ -26,7 +26,7 @@
                             การยืนยันตัวตนขั้นพื้นฐาน
                         </NuxtLink>
                     </li>
-                    <li>
+                    <li v-if="!isDriverVerified">
                         <NuxtLink to="/profile/driver-verification" class="block px-4 py-2 text-sm rounded-md"
                             :class="isActive('/profile/driver-verification') ? 'font-semibold text-cta-hover bg-cta-light' : 'text-primary hover:bg-slate-100'">
                             การยืนยันตัวตนสำหรับผู้ขับขี่
@@ -61,7 +61,7 @@
                 :class="isActive('/profile/verification') ? 'bg-cta text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'">
                 ยืนยันตัวตน
             </NuxtLink>
-            <NuxtLink to="/profile/driver-verification"
+            <NuxtLink v-if="!isDriverVerified" to="/profile/driver-verification"
                 class="shrink-0 px-3 py-1.5 text-sm font-medium rounded-full whitespace-nowrap"
                 :class="isActive('/profile/driver-verification') ? 'bg-cta text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'">
                 ยืนยันใบขับขี่
@@ -77,8 +77,10 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
+import { useDriverStatus } from '~/composables/useDriverStatus';
 
 const route = useRoute();
+const { isDriverVerified } = useDriverStatus();
 
 // Function to check if a menu item is active (exact match)
 const isActive = (path) => {
