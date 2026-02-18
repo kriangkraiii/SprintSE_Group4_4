@@ -1,0 +1,325 @@
+{"level":30,"time":"2026-02-18T12:40:21.719Z","pid":20238,"hostname":"conan.local","msg":"Listening on 59264"}
+(node:20238) DeprecationWarning: Calling start() is no longer necessary. It can be safely omitted.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+{"level":30,"time":"2026-02-18T12:40:22.871Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-18T12:40:24.291Z","pid":20238,"hostname":"conan.local","msg":"Adding browser to stack: chromium, version: 130.0.6723.31"}
+{"level":30,"time":"2026-02-18T12:40:24.293Z","pid":20238,"hostname":"conan.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-18T12:40:24.291Z","pid":20238,"hostname":"conan.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-18T12:40:24.332Z","pid":20238,"hostname":"conan.local","msg":"currentBrowser: [object Object]"}
+{"level":30,"time":"2026-02-18T12:40:24.332Z","pid":20238,"hostname":"conan.local","msg":"Trace file: "}
+{"level":30,"time":"2026-02-18T12:40:24.346Z","pid":20238,"hostname":"conan.local","msg":"Changed active context"}
+{"level":30,"time":"2026-02-18T12:40:24.331Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newContext"}
+{"level":30,"time":"2026-02-18T12:40:24.346Z","pid":20238,"hostname":"conan.local","msg":"End of node method newContext"}
+{"level":30,"time":"2026-02-18T12:40:24.359Z","pid":20238,"hostname":"conan.local","msg":"currentBrowser: [object Object]"}
+{"level":30,"time":"2026-02-18T12:40:24.359Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:24.743Z","pid":20238,"hostname":"conan.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-18T12:40:24.743Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:25.422Z","pid":20238,"hostname":"conan.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:25.436Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:25.436Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with id=identifier in page."}
+{"level":30,"time":"2026-02-18T12:40:25.451Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:25.456Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:25.456Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with id=identifier in page."}
+{"level":30,"time":"2026-02-18T12:40:25.493Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:25.495Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:25.495Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with id=password in page."}
+{"level":30,"time":"2026-02-18T12:40:25.528Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:25.531Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:25.531Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=#loginForm button[type=\"submit\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:25.577Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:28.597Z","pid":20238,"hostname":"conan.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:29.162Z","pid":20238,"hostname":"conan.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:29.181Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.181Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h1:has-text(\"Blacklist Management\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.194Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.199Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.200Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.202Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:29.202Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h1:has-text(\"Blacklist Management\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.211Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=h1:has-text(\"Blacklist Management\") containing Blacklist Management"}
+{"level":30,"time":"2026-02-18T12:40:29.212Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:29.214Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.214Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with text=PDPA ม.22 — SHA-256 Hash Only in page."}
+{"level":30,"time":"2026-02-18T12:40:29.227Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.229Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.229Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has(i.fa-plus) in page."}
+{"level":30,"time":"2026-02-18T12:40:29.232Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.233Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.233Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:29.235Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.239Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.240Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.245Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.247Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.253Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.253Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has(i.fa-plus) in page."}
+{"level":30,"time":"2026-02-18T12:40:29.295Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.298Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.298Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.299Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.301Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.301Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=input[placeholder=\"กรอกเลข 13 หลัก\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:29.305Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.309Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.309Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=textarea[placeholder=\"ระบุเหตุผล (ไม่บังคับ)\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:29.315Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.318Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.318Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=.fixed button:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.357Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.359Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.359Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.383Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.385Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.385Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:29.387Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.388Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.388Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:29.390Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.391Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:29.391Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is disabled, return Locator: css=table tbody tr in page."}
+{"level":30,"time":"2026-02-18T12:40:29.391Z","pid":20238,"hostname":"conan.local","msg":"Wait element to reach attached state."}
+{"level":30,"time":"2026-02-18T12:40:29.393Z","pid":20238,"hostname":"conan.local","msg":"Found 4 elements."}
+{"level":30,"time":"2026-02-18T12:40:29.394Z","pid":20238,"hostname":"conan.local","msg":"End of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:29.399Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.399Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.403Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.404Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.405Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.405Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has(i.fa-plus) in page."}
+{"level":30,"time":"2026-02-18T12:40:29.440Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.442Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.442Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.444Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.447Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.447Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=input[placeholder=\"กรอกเลข 13 หลัก\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:29.451Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.452Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.452Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=textarea[placeholder=\"ระบุเหตุผล (ไม่บังคับ)\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:29.456Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:29.457Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.457Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=.fixed button:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.490Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.492Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.492Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=.fixed .text-red-600 in page."}
+{"level":30,"time":"2026-02-18T12:40:29.517Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.520Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.520Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=.fixed button:has-text(\"ยกเลิก\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.554Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.556Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.556Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.557Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.559Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.559Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.562Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.563Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:29.564Z","pid":20238,"hostname":"conan.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:29.691Z","pid":20238,"hostname":"conan.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:29.695Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.696Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h1:has-text(\"Blacklist Management\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.724Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.730Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.730Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:29.813Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.815Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.815Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:29.816Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.818Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:29.818Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is disabled, return Locator: css=table tbody tr in page."}
+{"level":30,"time":"2026-02-18T12:40:29.818Z","pid":20238,"hostname":"conan.local","msg":"Wait element to reach attached state."}
+{"level":30,"time":"2026-02-18T12:40:29.819Z","pid":20238,"hostname":"conan.local","msg":"Found 4 elements."}
+{"level":30,"time":"2026-02-18T12:40:29.820Z","pid":20238,"hostname":"conan.local","msg":"End of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:29.821Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.821Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr:first-child button:has-text(\"ลบ\") in page."}
+{"level":30,"time":"2026-02-18T12:40:29.859Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:29.861Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:29.861Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with text=ต้องการลบรายการ in page."}
+{"level":30,"time":"2026-02-18T12:40:29.863Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:30.367Z","pid":20238,"hostname":"conan.local","msg":"Start of node method evaluateJavascript"}
+{"level":30,"time":"2026-02-18T12:40:30.367Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=div:has-text(\"ต้องการลบรายการ\") >> button.bg-red-600 >> nth=0 in page."}
+{"level":30,"time":"2026-02-18T12:40:30.382Z","pid":20238,"hostname":"conan.local","msg":"End of node method evaluateJavascript"}
+{"level":30,"time":"2026-02-18T12:40:32.390Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.391Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:32.395Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.399Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.399Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:32.402Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.405Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.406Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.411Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.412Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.414Z","pid":20238,"hostname":"conan.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:32.626Z","pid":20238,"hostname":"conan.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:32.636Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.636Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h1:has-text(\"Blacklist Management\") in page."}
+{"level":30,"time":"2026-02-18T12:40:32.660Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.665Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:32.665Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=input[type=\"datetime-local\"] >> nth=0 in page."}
+{"level":30,"time":"2026-02-18T12:40:32.684Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:32.687Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:32.687Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=input[type=\"datetime-local\"] >> nth=1 in page."}
+{"level":30,"time":"2026-02-18T12:40:32.694Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:32.697Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:32.697Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has-text(\"ค้นหา\") in page."}
+{"level":30,"time":"2026-02-18T12:40:32.729Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:32.732Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.732Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:32.759Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.761Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.761Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:32.763Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.764Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.764Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:32.765Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.766Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:32.766Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has-text(\"ล้าง\") in page."}
+{"level":30,"time":"2026-02-18T12:40:32.806Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:32.809Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.809Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:32.832Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.834Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.834Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:32.835Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:32.838Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.838Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.841Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.842Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:32.844Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newContext"}
+{"level":30,"time":"2026-02-18T12:40:32.844Z","pid":20238,"hostname":"conan.local","msg":"currentBrowser: [object Object]"}
+{"level":30,"time":"2026-02-18T12:40:32.844Z","pid":20238,"hostname":"conan.local","msg":"Trace file: "}
+{"level":30,"time":"2026-02-18T12:40:32.858Z","pid":20238,"hostname":"conan.local","msg":"Changed active context"}
+{"level":30,"time":"2026-02-18T12:40:32.858Z","pid":20238,"hostname":"conan.local","msg":"End of node method newContext"}
+{"level":30,"time":"2026-02-18T12:40:32.860Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:32.860Z","pid":20238,"hostname":"conan.local","msg":"currentBrowser: [object Object]"}
+{"level":30,"time":"2026-02-18T12:40:32.972Z","pid":20238,"hostname":"conan.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-18T12:40:32.972Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:33.342Z","pid":20238,"hostname":"conan.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:33.349Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:33.349Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with id=identifier in page."}
+{"level":30,"time":"2026-02-18T12:40:33.367Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:33.372Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:33.372Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with id=password in page."}
+{"level":30,"time":"2026-02-18T12:40:33.415Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:33.418Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:33.418Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=#loginForm button[type=\"submit\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:33.457Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:36.465Z","pid":20238,"hostname":"conan.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:37.012Z","pid":20238,"hostname":"conan.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:39.035Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.039Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.041Z","pid":20238,"hostname":"conan.local","msg":"Start of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.041Z","pid":20238,"hostname":"conan.local","msg":"End of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.043Z","pid":20238,"hostname":"conan.local","msg":"Start of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.043Z","pid":20238,"hostname":"conan.local","msg":"End of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.045Z","pid":20238,"hostname":"conan.local","msg":"Changing current active page: page=554554e5-cde4-440f-9cc3-2e76ca2f0746"}
+{"level":30,"time":"2026-02-18T12:40:39.045Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:39.048Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.049Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.050Z","pid":20238,"hostname":"conan.local","msg":"Changed active context"}
+{"level":30,"time":"2026-02-18T12:40:39.050Z","pid":20238,"hostname":"conan.local","msg":"Changing current active page: page=554554e5-cde4-440f-9cc3-2e76ca2f0746"}
+{"level":30,"time":"2026-02-18T12:40:39.050Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:39.051Z","pid":20238,"hostname":"conan.local","msg":"Start of node method closeContext"}
+{"level":30,"time":"2026-02-18T12:40:39.062Z","pid":20238,"hostname":"conan.local","msg":"Removed page=6dc1c544-ca15-46aa-898c-25e51068adee from context=584a68d3-3e64-4b55-b486-fb596215bdc5 page stack"}
+{"level":30,"time":"2026-02-18T12:40:39.068Z","pid":20238,"hostname":"conan.local","msg":"End of node method closeContext"}
+{"level":30,"time":"2026-02-18T12:40:39.072Z","pid":20238,"hostname":"conan.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:39.072Z","pid":20238,"hostname":"conan.local","msg":"currentBrowser: [object Object]"}
+{"level":30,"time":"2026-02-18T12:40:39.125Z","pid":20238,"hostname":"conan.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-18T12:40:39.125Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:39.358Z","pid":20238,"hostname":"conan.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-18T12:40:39.366Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.374Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.379Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.382Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.383Z","pid":20238,"hostname":"conan.local","msg":"Start of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.384Z","pid":20238,"hostname":"conan.local","msg":"End of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.385Z","pid":20238,"hostname":"conan.local","msg":"Start of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.385Z","pid":20238,"hostname":"conan.local","msg":"End of node method switchBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.386Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.407Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.409Z","pid":20238,"hostname":"conan.local","msg":"Changed active context"}
+{"level":30,"time":"2026-02-18T12:40:39.409Z","pid":20238,"hostname":"conan.local","msg":"Changing current active page: page=5873ee47-50ef-4862-a6c3-6afb2b492ef0"}
+{"level":30,"time":"2026-02-18T12:40:39.409Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:39.412Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.414Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.416Z","pid":20238,"hostname":"conan.local","msg":"Changing current active page: page=5873ee47-50ef-4862-a6c3-6afb2b492ef0"}
+{"level":30,"time":"2026-02-18T12:40:39.416Z","pid":20238,"hostname":"conan.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-18T12:40:39.417Z","pid":20238,"hostname":"conan.local","msg":"Start of node method closePage"}
+{"level":30,"time":"2026-02-18T12:40:39.417Z","pid":20238,"hostname":"conan.local","msg":"Closing page with runBeforeUnload false"}
+{"level":30,"time":"2026-02-18T12:40:39.420Z","pid":20238,"hostname":"conan.local","msg":"End of node method closePage"}
+{"level":30,"time":"2026-02-18T12:40:39.425Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.425Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.428Z","pid":20238,"hostname":"conan.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:39.544Z","pid":20238,"hostname":"conan.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-18T12:40:39.550Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.550Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h1:has-text(\"Blacklist Management\") in page."}
+{"level":30,"time":"2026-02-18T12:40:39.575Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.578Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:39.578Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=button:has(i.fa-plus) in page."}
+{"level":30,"time":"2026-02-18T12:40:39.635Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:39.638Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.638Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:39.641Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.647Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:39.647Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=input[placeholder=\"กรอกเลข 13 หลัก\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:39.672Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:39.675Z","pid":20238,"hostname":"conan.local","msg":"Start of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:39.675Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=textarea[placeholder=\"ระบุเหตุผล (ไม่บังคับ)\"] in page."}
+{"level":30,"time":"2026-02-18T12:40:39.679Z","pid":20238,"hostname":"conan.local","msg":"End of node method fillText"}
+{"level":30,"time":"2026-02-18T12:40:39.680Z","pid":20238,"hostname":"conan.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-18T12:40:39.680Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=.fixed button:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:39.705Z","pid":20238,"hostname":"conan.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-18T12:40:39.708Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.708Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=h2:has-text(\"เพิ่ม Blacklist\") in page."}
+{"level":30,"time":"2026-02-18T12:40:39.732Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.734Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.734Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=svg.animate-spin in page."}
+{"level":30,"time":"2026-02-18T12:40:39.736Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.738Z","pid":20238,"hostname":"conan.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.738Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table in page."}
+{"level":30,"time":"2026-02-18T12:40:39.739Z","pid":20238,"hostname":"conan.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-18T12:40:39.740Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:39.740Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is disabled, return Locator: css=table tbody tr td:nth-child(2) code in page."}
+{"level":30,"time":"2026-02-18T12:40:39.740Z","pid":20238,"hostname":"conan.local","msg":"Wait element to reach attached state."}
+{"level":30,"time":"2026-02-18T12:40:39.742Z","pid":20238,"hostname":"conan.local","msg":"Found 5 elements."}
+{"level":30,"time":"2026-02-18T12:40:39.742Z","pid":20238,"hostname":"conan.local","msg":"End of node method getElements"}
+{"level":30,"time":"2026-02-18T12:40:39.744Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.744Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr td:nth-child(2) code >> nth=0 in page."}
+{"level":30,"time":"2026-02-18T12:40:39.752Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=table tbody tr td:nth-child(2) code >> nth=0 containing 9204d05ebf2e01c5f48003ef1f76c02f164d8d6abed9bb000c247ec75c1df820"}
+{"level":30,"time":"2026-02-18T12:40:39.752Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.756Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.756Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr td:nth-child(2) code >> nth=1 in page."}
+{"level":30,"time":"2026-02-18T12:40:39.759Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=table tbody tr td:nth-child(2) code >> nth=1 containing 268530a7499e8e4a2a8a0f548777fb28dfc6d74f452094139c94818043cccd3c"}
+{"level":30,"time":"2026-02-18T12:40:39.759Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.761Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.761Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr td:nth-child(2) code >> nth=2 in page."}
+{"level":30,"time":"2026-02-18T12:40:39.765Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=table tbody tr td:nth-child(2) code >> nth=2 containing b65d0d5c4111d00c01d97063787b26d2933cede865b66e7c5b7e46cf62594af2"}
+{"level":30,"time":"2026-02-18T12:40:39.765Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.767Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.767Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr td:nth-child(2) code >> nth=3 in page."}
+{"level":30,"time":"2026-02-18T12:40:39.772Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=table tbody tr td:nth-child(2) code >> nth=3 containing 32b8312546ed20c94e1ff082f1ac94c4795e5a7e29ef9d318e9d586daccc76a1"}
+{"level":30,"time":"2026-02-18T12:40:39.772Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.775Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.775Z","pid":20238,"hostname":"conan.local","msg":"Strict mode is enabled, find Locator with css=table tbody tr td:nth-child(2) code >> nth=4 in page."}
+{"level":30,"time":"2026-02-18T12:40:39.779Z","pid":20238,"hostname":"conan.local","msg":"Retrieved text for element css=table tbody tr td:nth-child(2) code >> nth=4 containing bca2b41a2b25e137c83fee346af7bd1e0f52bd560583ca07a1b42f9944c5c50b"}
+{"level":30,"time":"2026-02-18T12:40:39.779Z","pid":20238,"hostname":"conan.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-18T12:40:39.782Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.783Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.786Z","pid":20238,"hostname":"conan.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-18T12:40:39.797Z","pid":20238,"hostname":"conan.local","msg":"Removed page=ec66bf17-30f1-44fb-b09d-157e019e6b85 from context=5f651fbc-d574-4ad0-8b21-e153348746d1 page stack"}
+{"level":30,"time":"2026-02-18T12:40:39.836Z","pid":20238,"hostname":"conan.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js:10982:15)
+    at PlaywrightServer.getActiveBrowser (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js:11598:59)
+    at PlaywrightServer.setTimeout (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/index.js:11837:57)
+    at Object.onReceiveHalfClose (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1425:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:569:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:609:14)
+    at ServerHttp2Stream.<anonymous> (/Users/conan/Downloads/ซอฟเอ็น/SprintSE_Group4_4/sprint1/test/robot_tests/venv/lib/python3.9/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:376:18)
+    at ServerHttp2Stream.emit (node:events:520:22)
+    at endReadableNT (node:internal/streams/readable:1729:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+=============================================================
+{"level":30,"time":"2026-02-18T12:40:39.843Z","pid":20238,"hostname":"conan.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.843Z","pid":20238,"hostname":"conan.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-18T12:40:39.875Z","pid":20238,"hostname":"conan.local","msg":"Start of node method closeAllBrowsers"}
+{"level":30,"time":"2026-02-18T12:40:39.875Z","pid":20238,"hostname":"conan.local","msg":"End of node method closeAllBrowsers"}
