@@ -1,5 +1,5 @@
 <template>
-    <aside id="sidebar" class="fixed bottom-0 left-0 bg-white shadow-sm sidebar top-16">
+    <aside id="sidebar" class="fixed bottom-0 left-3 bg-white shadow-sm sidebar top-32 h-fit rounded-md ">
         <div class="py-4">
             <!-- Toggle Button -->
             <button @click="toggleSidebar"
@@ -64,30 +64,7 @@
                     </NuxtLink>
                 </div>
 
-                <NuxtLink to="/"
-                    class="sidebar-item flex items-center gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light">
-                    <i class="w-6 text-lg text-center text-slate-400 fas fa-home"></i>
-                    <span class="sidebar-text">Home</span>
-                </NuxtLink>
-
-                <!-- Settings -->
-                <div class="group">
-                    <button @click="toggleSubmenu('ecom-menu')"
-                        class="sidebar-item w-full flex items-center justify-between gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light">
-                        <div class="flex items-center gap-3">
-                            <i class="w-6 text-lg text-center text-slate-400 fas fa-gear"></i>
-                            <span class="sidebar-text">Setting</span>
-                        </div>
-                        <i class="text-xs transition-transform fas fa-chevron-down sidebar-text"
-                            id="ecom-menu-icon"></i>
-                    </button>
-
-                    <div id="ecom-menu" class="hidden mt-1 ml-12 space-y-1 sidebar-text">
-                        <button @click="logout" class="block px-3 py-2 text-sm text-slate-500 hover:text-cta">
-                            Logout
-                        </button>
-                    </div>
-                </div>
+                
             </nav>
         </div>
     </aside>

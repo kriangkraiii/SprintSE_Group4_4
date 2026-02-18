@@ -1,8 +1,8 @@
 <template>
     <div >
-        <div class=" flex items-center justify-center py-36">
+        <div class="max-w-5xl mx-auto pt-32 pb-12 px-4 sm:px-6 lg:px-8">
             <div
-                class="flex bg-white rounded-lg shadow-lg overflow-hidden max-w-6xl w-full mx-4 border border-gray-300">
+                class="flex bg-white rounded-lg shadow-lg overflow-hidden w-full border border-gray-300">
 
                 <ProfileSidebar />
 
