@@ -1,18 +1,20 @@
 const asyncHandler = require('express-async-handler');
 const iappService = require('../services/iapp.service');
 const blacklistService = require('../services/blacklist.service');
+const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 
 /**
  * POST /api/ocr/id-card/front
- * Upload รูปบัตรประชาชนด้านหน้า → OCR → ตรวจ Blacklist → ส่งข้อมูลกลับ
+ * Upload รูปบัตรประชาชนด้านหน้า → OCR → ตรวจ Blacklist → ตรวจซ้ำ → ส่งข้อมูลกลับ
  * ใช้ตอนลงทะเบียน (ไม่ต้อง login)
  *
  * Flow:
  *   1. OCR อ่านข้อมูลจากบัตร
  *   2. ถ้าได้เลขบัตร ปชช. → ตรวจสอบกับ Blacklist (SHA-256 hash)
  *   3. ถ้าอยู่ใน Blacklist → ปฏิเสธทันที (HTTP 403)
- *   4. ถ้าไม่อยู่ → ส่งข้อมูล OCR กลับตามปกติ
+ *   4. ตรวจว่าเลขบัตรนี้มีคนสมัครไปแล้วหรือไม่ (HTTP 409)
+ *   5. ถ้าไม่อยู่ → ส่งข้อมูล OCR กลับตามปกติ
  */
 const ocrIdCardFront = asyncHandler(async (req, res) => {
     if (!req.file) {
@@ -21,14 +23,24 @@ const ocrIdCardFront = asyncHandler(async (req, res) => {
 
     const result = await iappService.processIdCardFrontOcr(req.file.buffer, req.file.originalname, req.file.mimetype);
 
-    // ── Blacklist Check ──
-    // ตรวจสอบเลข ปชช. ที่ OCR อ่านได้กับ Blacklist ทันที
-    // เพื่อบล็อกตั้งแต่ขั้นตอนแรกของการสมัคร ไม่ต้องรอจนกด submit
+    // ── Blacklist & Duplicate Check ──
     const idNumber = result.data?.idNumber;
     if (idNumber && /^\d{13}$/.test(idNumber.replace(/\s/g, ''))) {
-        const blacklisted = await blacklistService.checkBlacklist(idNumber.replace(/\s/g, ''));
+        const cleanId = idNumber.replace(/\s/g, '');
+
+        // 1) ตรวจ Blacklist (SHA-256 hash)
+        const blacklisted = await blacklistService.checkBlacklist(cleanId);
         if (blacklisted) {
             throw new ApiError(403, 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้');
+        }
+
+        // 2) ตรวจว่าเลขบัตรนี้มีคนสมัครไปแล้วหรือยัง
+        const existingUser = await prisma.user.findUnique({
+            where: { nationalIdNumber: cleanId },
+            select: { id: true },
+        });
+        if (existingUser) {
+            throw new ApiError(409, 'หมายเลขบัตรประชาชนนี้ถูกใช้สมัครสมาชิกไปแล้ว');
         }
     }
 

@@ -20,6 +20,14 @@ jest.mock('../services/blacklist.service', () => ({
     checkBlacklist: mockCheckBlacklist,
 }));
 
+// Mock Prisma (needed because controller now checks for duplicate national ID)
+const mockFindUnique = jest.fn();
+jest.mock('../utils/prisma', () => ({
+    user: {
+        findUnique: mockFindUnique,
+    },
+}));
+
 // Import controller after mocks
 const { ocrIdCardFront } = require('../controllers/iapp.controller');
 const ApiError = require('../utils/ApiError');
@@ -61,6 +69,8 @@ async function callController(handler, req, res) {
 describe('OCR ID Card Front - Blacklist Check', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        // Default: ไม่มีคนสมัครซ้ำ (เพื่อให้ test blacklist ผ่าน duplicate check)
+        mockFindUnique.mockResolvedValue(null);
     });
 
     // ─── 1. ปกติ: เลข ปชช. ไม่อยู่ใน Blacklist → ส่งข้อมูล OCR กลับ ───
