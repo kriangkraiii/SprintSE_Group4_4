@@ -4,8 +4,12 @@ const PORT = process.env.PORT || 3001;
 
 (async () => {
   try {
-    await ensureAdmin();
-    console.log('✅ Admin bootstrap completed');
+    const bootstrapResult = await ensureAdmin();
+    if (bootstrapResult?.status === 'done') {
+      console.log('✅ Admin bootstrap completed');
+    } else if (bootstrapResult?.status === 'skipped') {
+      console.log(`ℹ️ Admin bootstrap skipped (${bootstrapResult.reason})`);
+    }
   } catch (e) {
     console.error('Admin bootstrap failed:', e);
   }
