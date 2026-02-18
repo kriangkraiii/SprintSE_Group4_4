@@ -6,12 +6,15 @@ dotenv.config({ path: resolve(__dirname || process.cwd(), "../.env") });
 
 import tailwindcssVite from "@tailwindcss/vite";
 
+const productionApiBase = "https://sparkling-benetta-kraeeeeeew-9ef9bd6d.koyeb.app";
+const defaultApiBase = process.env.NODE_ENV === "production" ? productionApiBase : "/api";
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || "/api",
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || defaultApiBase,
       googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
     },
   },
