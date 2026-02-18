@@ -14,7 +14,7 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white">
+    <section class="py-12 sm:py-20 bg-white">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="mb-16 text-center">
           <h2 class="mb-4 text-3xl font-bold font-heading text-primary lg:text-4xl">ทำไมต้อง Drive To Survive?</h2>
@@ -35,7 +35,7 @@
     </section>
 
     <!-- How it works -->
-    <section class="py-20 bg-surface">
+    <section class="py-12 sm:py-20 bg-surface">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="mb-16 text-center">
           <h2 class="mb-4 text-3xl font-bold font-heading text-primary lg:text-4xl">เริ่มต้นง่ายๆ 4 ขั้นตอน</h2>
@@ -55,7 +55,7 @@
     </section>
 
     <!-- Safety Highlights -->
-    <section class="py-20 bg-white">
+    <section class="py-12 sm:py-20 bg-white">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="grid items-center gap-12 lg:grid-cols-2">
           <div>
@@ -75,7 +75,7 @@
               </div>
             </div>
           </div>
-          <div class="hidden lg:block">
+          <div class="mt-8 lg:mt-0">
             <div class="grid grid-cols-2 gap-4">
               <div class="p-6 text-center border card border-slate-100">
                 <div class="mb-2 text-3xl font-bold text-cta font-heading">100%</div>
@@ -100,7 +100,7 @@
     </section>
 
     <!-- FAQ -->
-    <section class="py-20 bg-surface">
+    <section class="py-12 sm:py-20 bg-surface">
       <div class="max-w-3xl px-4 mx-auto sm:px-6 lg:px-8">
         <div class="mb-12 text-center">
           <h2 class="mb-4 text-3xl font-bold font-heading text-primary">คำถามที่พบบ่อย</h2>
@@ -126,7 +126,7 @@
     </section>
 
     <!-- CTA -->
-    <section class="py-20 bg-primary">
+    <section class="py-12 sm:py-20 bg-primary">
       <div class="max-w-3xl px-4 mx-auto text-center sm:px-6 lg:px-8">
         <h2 class="mb-4 text-3xl font-bold text-white font-heading lg:text-4xl">พร้อมเดินทางอย่างปลอดภัย?</h2>
         <p class="mb-8 text-lg text-slate-300">สมัครฟรี ไม่มีค่าใช้จ่ายแฝง เริ่มต้นได้เลยวันนี้</p>

@@ -1,7 +1,7 @@
 <template>
     <header class="fixed top-0 left-0 z-50 w-full ">
         <div class="py-5">
-        <div class="pl-6 pr-3 mx-auto max-w-7xl bg-white backdrop-blur-md shadow-sm rounded-full">
+        <div class="pl-6 pr-3 mx-auto max-w-7xl bg-white backdrop-blur-md shadow-sm transition-all duration-200" :class="isMobileMenuOpen ? 'rounded-2xl' : 'rounded-full'">
             <div class="flex items-center justify-between h-16 relative">
                 <!-- Brand (Left) -->
                 <div class="flex items-center">
@@ -239,7 +239,7 @@
                 <!-- Mobile hamburger -->
                 <div class="md:hidden">
                     <button @click="toggleMobileMenu" type="button"
-                        class="p-2 transition-colors duration-200 rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/10">
+                        class="p-2 transition-colors duration-200 rounded-lg cursor-pointer text-slate-600 hover:text-primary hover:bg-slate-100">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                             <path v-else stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -248,19 +248,22 @@
                 </div>
             </div>
 
+            <!-- Mobile Menu Backdrop -->
+            <div v-show="isMobileMenuOpen" class="fixed inset-0 bg-black/30 z-40 md:hidden" @click="closeMobileMenu"></div>
+
             <!-- Mobile Menu -->
-            <div v-show="isMobileMenuOpen" class="pb-4 border-t md:hidden border-slate-700/50">
+            <div v-show="isMobileMenuOpen" class="pb-4 border-t md:hidden border-slate-200 bg-white relative z-50">
                 <div class="pt-3 space-y-1">
                     <NuxtLink to="/findTrip"
                         class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
-                        :class="$route.path === '/findTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white hover:bg-white/5'"
+                        :class="$route.path === '/findTrip' ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
                         ค้นหาเส้นทาง
                     </NuxtLink>
 
                     <NuxtLink v-if="user" to="/createTrip"
                         class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
-                        :class="$route.path === '/createTrip' ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white hover:bg-white/5'"
+                        :class="$route.path === '/createTrip' ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
                         สร้างเส้นทาง
                     </NuxtLink>
@@ -268,7 +271,7 @@
                     <!-- ทุกคนเห็น dropdown —  ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
                     <div v-if="user">
                         <button @click="toggleMobileTripMenu"
-                            class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-left rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5">
+                            class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-left rounded-lg cursor-pointer text-slate-700 hover:text-primary hover:bg-slate-50">
                             การเดินทางทั้งหมด
                             <svg class="w-4 h-4 transition-transform duration-200"
                                 :class="{ 'rotate-180': isMobileTripMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -276,34 +279,34 @@
                             </svg>
                         </button>
                         <div v-show="isMobileTripMenuOpen" class="mt-1 ml-4 space-y-1">
-                            <NuxtLink to="/myTrip" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-400 hover:text-white hover:bg-white/5" @click="closeMobileMenu">
+                            <NuxtLink to="/myTrip" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
                                 การเดินทางของฉัน
                             </NuxtLink>
-                            <NuxtLink to="/myRoute" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-400 hover:text-white hover:bg-white/5" @click="closeMobileMenu">
+                            <NuxtLink to="/myRoute" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
                                 คำขอจองเส้นทางของฉัน
                             </NuxtLink>
                         </div>
                     </div>
 
-                    <div v-if="!token" class="pt-3 mt-3 space-y-2 border-t border-slate-700/50">
-                        <NuxtLink to="/login" class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer text-slate-300 hover:bg-white/10 hover:text-white" @click="closeMobileMenu">เข้าสู่ระบบ</NuxtLink>
-                        <NuxtLink to="/register" class="block px-3 py-2 text-sm font-medium text-center text-primary bg-white rounded-lg cursor-pointer hover:bg-slate-100" @click="closeMobileMenu">สมัครสมาชิก</NuxtLink>
+                    <div v-if="!token" class="pt-3 mt-3 space-y-2 border-t border-slate-200">
+                        <NuxtLink to="/login" class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer text-slate-700 hover:bg-slate-50 hover:text-primary" @click="closeMobileMenu">เข้าสู่ระบบ</NuxtLink>
+                        <NuxtLink to="/register" class="block px-3 py-2.5 text-sm font-semibold text-center text-white bg-cta rounded-lg cursor-pointer hover:bg-cta-hover" @click="closeMobileMenu">สมัครสมาชิก</NuxtLink>
                     </div>
 
-                    <div v-else class="pt-3 mt-3 border-t border-slate-700/50">
+                    <div v-else class="pt-3 mt-3 border-t border-slate-200">
                         <div class="flex items-center gap-3 px-3 py-2">
                             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cta-light">
                                 <svg class="w-4 h-4 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
-                            <span class="text-sm font-medium text-white">{{ user?.firstName }}</span>
+                            <span class="text-sm font-medium text-primary">{{ user?.firstName }}</span>
                         </div>
-                        <NuxtLink to="/profile" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">บัญชีของฉัน</NuxtLink>
-                        <NuxtLink v-if="!isDriverVerified" to="/profile/driver-verification" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">ยื่นยันใบขับขี่</NuxtLink>
-                        <NuxtLink to="/profile/my-vehicle" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">ข้อมูลรถยนต์</NuxtLink>
-                        <NuxtLink v-if="user?.role === 'ADMIN'" to="/admin/users" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-300 hover:text-white hover:bg-white/5" @click="closeMobileMenu">Dashboard</NuxtLink>
-                        <button @click="logout" class="block w-full px-3 py-2 ml-4 text-sm text-left text-red-400 rounded-lg cursor-pointer hover:bg-red-400/10">ออกจากระบบ</button>
+                        <NuxtLink to="/profile" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">บัญชีของฉัน</NuxtLink>
+                        <NuxtLink v-if="!isDriverVerified" to="/profile/driver-verification" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">ยื่นยันใบขับขี่</NuxtLink>
+                        <NuxtLink to="/profile/my-vehicle" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">ข้อมูลรถยนต์</NuxtLink>
+                        <NuxtLink v-if="user?.role === 'ADMIN'" to="/admin/users" class="block px-3 py-2 ml-4 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">Dashboard</NuxtLink>
+                        <button @click="logout" class="block w-full px-3 py-2 ml-4 text-sm text-left text-red-500 rounded-lg cursor-pointer hover:bg-red-50">ออกจากระบบ</button>
                     </div>
                 </div>
             </div>
