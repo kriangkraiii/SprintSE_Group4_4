@@ -60,48 +60,19 @@
                 class="input-field" :class="{ 'border-red-400': errors.confirmPassword }">
               <p v-if="errors.confirmPassword" class="mt-1 text-xs text-red-600">{{ errors.confirmPassword }}</p>
             </div>
-            <button type="button" @click="nextStep" class="w-full max-w-lg py-4 mx-auto text-lg font-semibold text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg block">ถัดไป</button>
-          </div>
-
-          <!-- Step 2: Personal Info -->
-          <div v-if="currentStep === 2" class="space-y-4">
-            <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ข้อมูลส่วนตัว</h2>
-            <div>
-              <label for="firstName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ชื่อจริง <span class="text-red-500">*</span></label>
-              <input type="text" id="firstName" v-model="formData.firstName" placeholder="กรอกชื่อจริง"
-                class="input-field" :class="{ 'border-red-400': errors.firstName }">
-              <p v-if="errors.firstName" class="mt-1 text-xs text-red-600">{{ errors.firstName }}</p>
-            </div>
-            <div>
-              <label for="lastName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">นามสกุล <span class="text-red-500">*</span></label>
-              <input type="text" id="lastName" v-model="formData.lastName" placeholder="กรอกนามสกุล"
-                class="input-field" :class="{ 'border-red-400': errors.lastName }">
-              <p v-if="errors.lastName" class="mt-1 text-xs text-red-600">{{ errors.lastName }}</p>
-            </div>
             <div>
               <label for="phoneNumber" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
               <input type="tel" id="phoneNumber" v-model="formData.phoneNumber" placeholder="เช่น 0891234567"
                 class="input-field" :class="{ 'border-red-400': errors.phoneNumber }">
               <p v-if="errors.phoneNumber" class="mt-1 text-xs text-red-600">{{ errors.phoneNumber }}</p>
             </div>
-            <div>
-              <label class="block mb-2 text-sm font-medium text-[#383838] ml-1">เพศ <span class="text-red-500">*</span></label>
-              <div class="flex gap-6">
-                <label class="flex items-center cursor-pointer"><input type="radio" name="gender" value="male" v-model="formData.gender"
-                    class="mr-2 text-cta focus:ring-cta"> ชาย</label>
-                <label class="flex items-center cursor-pointer"><input type="radio" name="gender" value="female" v-model="formData.gender"
-                    class="mr-2 text-cta focus:ring-cta"> หญิง</label>
-              </div>
-              <p v-if="errors.gender" class="mt-1 text-xs text-red-600">{{ errors.gender }}</p>
-            </div>
-            <div class="flex gap-3 pt-2">
-              <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
-              <button type="button" @click="nextStep" class="w-full py-3 text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg font-semibold">ถัดไป</button>
-            </div>
+            <button type="button" @click="nextStep" class="w-full max-w-lg py-4 mx-auto text-lg font-semibold text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg block">ถัดไป</button>
           </div>
 
-          <!-- Step 3: Verification -->
-          <div v-if="currentStep === 3" class="space-y-4">
+
+
+          <!-- Step 2: Verification -->
+          <div v-if="currentStep === 2" class="space-y-4">
             <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ยืนยันตัวตนด้วยบัตรประชาชน</h2>
 
             <!-- บัตรประชาชน ด้านหน้า -->
@@ -153,6 +124,9 @@
                 <div class="grid grid-cols-2 gap-2 text-sm">
                   <div><span class="text-slate-500">เลขบัตร:</span> <span class="font-medium">{{ ocrFrontResult.idNumber }}</span></div>
                   <div><span class="text-slate-500">ชื่อ:</span> <span class="font-medium">{{ ocrFrontResult.thName }}</span></div>
+                  <div><span class="text-slate-500">ชื่อจริง:</span> <span class="font-medium">{{ formData.firstName }}</span></div>
+                  <div><span class="text-slate-500">นามสกุล:</span> <span class="font-medium">{{ formData.lastName }}</span></div>
+                  <div><span class="text-slate-500">เพศ:</span> <span class="font-medium">{{ formData.gender === 'MALE' ? 'ชาย' : formData.gender === 'FEMALE' ? 'หญิง' : '-' }}</span></div>
                   <div><span class="text-slate-500">วันเกิด:</span> <span class="font-medium">{{ ocrFrontResult.thDob }}</span></div>
                   <div><span class="text-slate-500">หมดอายุ:</span> <span class="font-medium">{{ ocrFrontResult.thExpiryDate }}</span></div>
                   <div class="col-span-2"><span class="text-slate-500">ที่อยู่:</span> <span class="font-medium">{{ ocrFrontResult.address }}</span></div>
@@ -368,7 +342,7 @@ const { toast } = useToast();
 const router = useRouter();
 
 const currentStep = ref(1);
-const totalSteps = 3;
+const totalSteps = 2;
 
 const formData = reactive({
   username: '',
@@ -421,7 +395,7 @@ const stepProgress = computed(() => {
 });
 
 const getStepLabel = (step) => {
-  return ['บัญชีผู้ใช้', 'ข้อมูลส่วนตัว', 'ยืนยันตัวตน'][step - 1];
+  return ['บัญชีผู้ใช้', 'ยืนยันตัวตน'][step - 1];
 };
 
 const getStepClass = (step) => {
@@ -484,6 +458,21 @@ const scanIdCardFront = async () => {
       } catch { }
     }
 
+    // Auto-fill ชื่อจริง, นามสกุล จาก OCR
+    if (body.data.thFirstName) formData.firstName = body.data.thFirstName;
+    if (body.data.thLastName) formData.lastName = body.data.thLastName;
+
+    // Auto-fill เพศ จากคำนำหน้า (thInit)
+    const prefix = (body.data.thInit || '').trim();
+    if (prefix === 'นาย') {
+      formData.gender = 'MALE';
+    } else if (['นาง', 'น.ส.', 'นางสาว'].includes(prefix)) {
+      formData.gender = 'FEMALE';
+    } else if (body.data.gender) {
+      // fallback ใช้ gender จาก iApp (ถ้ามี)
+      formData.gender = body.data.gender.toUpperCase();
+    }
+
     toast.success('ตรวจสอบสำเร็จ', 'อ่านข้อมูลบัตรประชาชน (ด้านหน้า) สำเร็จ');
   } catch (err) {
     const msg = err.name === 'TypeError' && err.message === 'Failed to fetch'
@@ -530,6 +519,9 @@ const resetOcrFront = () => {
   formData.idCardFile = null;
   formData.idNumber = '';
   formData.expiryDate = '';
+  formData.firstName = '';
+  formData.lastName = '';
+  formData.gender = '';
 };
 
 const resetOcrBack = () => {
@@ -591,20 +583,14 @@ const validationFunctions = [
     else if (!/[a-z]/.test(formData.password)) errors.password = 'รหัสผ่านต้องมีตัวพิมพ์เล็ก (a–z) อย่างน้อย 1 ตัว';
     else if (!/[0-9]/.test(formData.password)) errors.password = 'รหัสผ่านต้องมีตัวเลข (0–9) อย่างน้อย 1 ตัว';
     if (formData.password !== formData.confirmPassword || !formData.confirmPassword) errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
-    return Object.keys(errors).length === 0;
-  },
-  () => {
-    clearErrors();
-    if (!formData.firstName.trim()) errors.firstName = 'กรุณากรอกชื่อจริง';
-    if (!formData.lastName.trim()) errors.lastName = 'กรุณากรอกนามสกุล';
     if (!/^\d{9,10}$/.test(formData.phoneNumber)) errors.phoneNumber = 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง';
-    if (!formData.gender) errors.gender = 'กรุณาเลือกเพศ';
     return Object.keys(errors).length === 0;
   },
   () => {
     clearErrors();
     if (!formData.idCardFile) errors.idCardFile = 'กรุณาอัปโหลดรูปบัตรประชาชน (ด้านหน้า)';
     if (!ocrFrontResult.value) errors.idCardFile = 'กรุณากดตรวจสอบบัตรประชาชน (ด้านหน้า)';
+    if (!formData.firstName) errors.idCardFile = 'ไม่สามารถอ่านชื่อจริงจากบัตรได้ กรุณาถ่ายรูปใหม่';
     if (!formData.idCardBackFile) errors.idCardBackFile = 'กรุณาอัปโหลดรูปบัตรประชาชน (ด้านหลัง)';
     if (!ocrBackResult.value) errors.idCardBackFile = 'กรุณากดตรวจสอบบัตรประชาชน (ด้านหลัง)';
     if (!formData.selfieFile) errors.selfieFile = 'กรุณาอัปโหลดรูปเซลฟี่';
@@ -703,7 +689,7 @@ const handleRegister = async () => {
   fd.append('firstName', formData.firstName);
   fd.append('lastName', formData.lastName);
   fd.append('phoneNumber', formData.phoneNumber);
-  fd.append('gender', String(formData.gender || '').toUpperCase());
+  fd.append('gender', String(formData.gender || ''));
   fd.append('nationalIdNumber', idNumber);
   fd.append('nationalIdExpiryDate', isoDate);
   fd.append('nationalIdPhotoUrl', formData.idCardFile);

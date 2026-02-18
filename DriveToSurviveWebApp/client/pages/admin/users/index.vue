@@ -293,7 +293,7 @@ import { useToast } from '~/composables/useToast'
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 
 const { toast } = useToast()
 

@@ -1,8 +1,8 @@
 <template>
     <header class="fixed top-0 left-0 z-50 w-full ">
-        <div class="py-5">
-        <div class="pl-6 pr-3 mx-auto max-w-7xl bg-white backdrop-blur-md shadow-sm transition-all duration-200" :class="isMobileMenuOpen ? 'rounded-2xl' : 'rounded-full'">
-            <div class="flex items-center justify-between h-16 relative">
+        <div :class="isMobileMenuOpen ? 'pt-0' : 'py-5'">
+        <div class="transition-all duration-200" :class="isMobileMenuOpen ? 'bg-white w-full' : 'mx-auto max-w-7xl pl-6 pr-3 bg-white backdrop-blur-md rounded-full shadow-sm'">
+            <div class="flex items-center justify-between h-16 relative px-4">
                 <!-- Brand (Left) -->
                 <div class="flex items-center">
                     <NuxtLink to="/" class="flex items-center gap-1">
@@ -249,20 +249,20 @@
             </div>
 
             <!-- Mobile Menu Backdrop -->
-            <div v-show="isMobileMenuOpen" class="fixed inset-0 bg-black/30 z-40 md:hidden" @click="closeMobileMenu"></div>
+            <div v-show="isMobileMenuOpen" class="fixed inset-0 z-40 md:hidden" @click="closeMobileMenu"></div>
 
             <!-- Mobile Menu -->
-            <div v-show="isMobileMenuOpen" class="pb-4 border-t md:hidden border-slate-200 bg-white relative z-50">
+            <div v-show="isMobileMenuOpen" class="px-4 pb-4 md:hidden bg-white relative z-50">
                 <div class="pt-3 space-y-1">
                     <NuxtLink to="/findTrip"
-                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
+                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
                         :class="$route.path === '/findTrip' ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
                         ค้นหาเส้นทาง
                     </NuxtLink>
 
                     <NuxtLink v-if="user" to="/createTrip"
-                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer"
+                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
                         :class="$route.path === '/createTrip' ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
                         สร้างเส้นทาง
@@ -288,12 +288,12 @@
                         </div>
                     </div>
 
-                    <div v-if="!token" class="pt-3 mt-3 space-y-2 border-t border-slate-200">
+                    <div v-if="!token" class="pt-3 mt-3 space-y-2">
                         <NuxtLink to="/login" class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer text-slate-700 hover:bg-slate-50 hover:text-primary" @click="closeMobileMenu">เข้าสู่ระบบ</NuxtLink>
                         <NuxtLink to="/register" class="block px-3 py-2.5 text-sm font-semibold text-center text-white bg-cta rounded-lg cursor-pointer hover:bg-cta-hover" @click="closeMobileMenu">สมัครสมาชิก</NuxtLink>
                     </div>
 
-                    <div v-else class="pt-3 mt-3 border-t border-slate-200">
+                    <div v-else class="pt-3 mt-3">
                         <div class="flex items-center gap-3 px-3 py-2">
                             <div class="flex items-center justify-center w-8 h-8 rounded-full bg-cta-light">
                                 <svg class="w-4 h-4 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
