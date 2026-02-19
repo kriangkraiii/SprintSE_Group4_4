@@ -1,0 +1,6 @@
+.DS_Store
+log.html
+output.xml
+playwright-log.txt
+report.html
+test_execution_notes.txt

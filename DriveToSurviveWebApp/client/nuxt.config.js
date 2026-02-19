@@ -23,15 +23,15 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target: 'http://localhost:3001/api',
+        target: 'http://127.0.0.1:3001/api',
         changeOrigin: true,
       },
       '/documentation': {
-        target: 'http://localhost:3001/documentation',
+        target: 'http://127.0.0.1:3001/documentation',
         changeOrigin: true,
       },
       '/metrics': {
-        target: 'http://localhost:3001/metrics',
+        target: 'http://127.0.0.1:3001/metrics',
         changeOrigin: true,
       },
     },

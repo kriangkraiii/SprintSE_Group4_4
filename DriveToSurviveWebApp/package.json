@@ -13,6 +13,8 @@
     "lint": "cd client && npm run lint",
     "postinstall": "cd client && npm run postinstall"
   },
-  "concurrently": "^9.2.1",
-  "newman-reporter-htmlextra": "^1.23.1"
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
 }

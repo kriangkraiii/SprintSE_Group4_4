@@ -1,0 +1,234 @@
+{
+  "summary": {
+    "total": 28,
+    "pass": 1,
+    "fail": 0,
+    "not_run": 27
+  },
+  "details": [
+    {
+      "id": "TC-LOG-001",
+      "title": "Open System Log Page",
+      "steps": "1. เปิดหน้า Admin Dashboard ที่http://localhost:3000/admin\n2. คลิกเมนู \"System Logs\" ที่แถบด้านข้าง",
+      "expected_result": "แสดงหน้า System Log\nพร้อมตารางรายการ Log ที่มี userId, action, ipAddress, createdAt",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-002",
+      "title": "Filter Log by Date Range",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. เลือกวันที่เริ่มต้น = \"01/02/2026\"\n3. เลือกวันที่สิ้นสุด = \"28/02/2026\"\n4. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "แสดงเฉพาะ Log ที่อยู่ในช่วงวันที่ 1-28 ก.พ. 2026",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-003",
+      "title": "Filter Log by User ID",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. กรอก userId ในช่องค้นหา= cmlnzvlo00000174o041luyqu\n3. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "แสดงเฉพาะ Log ของ userId ที่ระบุ",
+      "status": "PASS",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-004",
+      "title": "Filter Log by Action",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. เลือก action = \"GET\" จาก dropdown\n3. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "แสดงเฉพาะ Log ที่มี action = GET",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-005",
+      "title": "Filter Log by IP Address",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. กรอก IP address = \"1\" ในช่องค้นหา\n3. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "แสดงเฉพาะ Log ที่มี IP address ตรงกับที่ค้นหา",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-006",
+      "title": "Pagination Log",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. ดูตารางหน้าแรก\n3. กดปุ่ม \"หน้าถัดไป\" หรือเลือกหมายเลขหน้า",
+      "expected_result": "แสดง Log หน้าถัดไป\nPagination อัปเดตถูกต้อง",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-007",
+      "title": "No Edit Button on Log",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. ตรวจสอบทุกแถวในตาราง\n3. มองหาปุ่ม \"แก้ไข\" หรือ \"Edit\"",
+      "expected_result": "ไม่มีปุ่มแก้ไข Log ปรากฏในทุกแถว",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-008",
+      "title": "No Delete Button on Log",
+      "steps": "1. เปิดหน้า System Loghttp://localhost:3000/admin/system-logs\n2. ตรวจสอบทุกแถวในตาราง\n3. มองหาปุ่ม \"ลบ\" หรือ \"Delete\"",
+      "expected_result": "ไม่มีปุ่มลบ Log ปรากฏในทุกแถว",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-009",
+      "title": "Non-Admin Cannot Access Log",
+      "steps": "1. เข้าสู่ระบบด้วยบัญชี Passenger\n2. พิมพ์ URL หน้า System Log ในเบราว์เซอร์โดยตรง http://localhost:3000/system-log",
+      "expected_result": "ถูก redirect ไปหน้าอื่น\nหรือแสดงข้อความ \"404\"",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-LOG-010",
+      "title": "Log Retained After User Deletion",
+      "steps": "1. Admin ลบบัญชีผู้ใช้ A จากหน้าจัดการผู้ใช้\n2. เปิดหน้า System Log\n3. กรอก userId ของผู้ใช้ A =cmlnzvlo00000174o041luyqu\n4. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "Log ของผู้ใช้ A ยังคงแสดงอยู่ในตาราง",
+      "status": "NOT RUN",
+      "sheet": "US1 - Log ตามกฎหมาย"
+    },
+    {
+      "id": "TC-BL-001",
+      "title": "Open Blacklist Page",
+      "steps": "1. เปิดหน้า Admin Dashboard        localhost:3000/admin\n2. คลิกเมนู \"Blacklist\" ที่แถบด้านข้าง",
+      "expected_result": "แสดงหน้า Blacklist\nพร้อมตารางรายชื่อที่ถูก blacklist",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-002",
+      "title": "Add to Blacklist",
+      "steps": "1. เปิดหน้าBlacklist http://localhost:3000/admin/blacklist\n2. กดปุ่ม \"เพิ่ม Blacklist\"\n3. กรอกเลขบัตรประชาชน = \"1234567890001\"\n4. กรอกเหตุผล = \"ฉ้อโกง\"\n5. กดปุ่ม \"ยืนยัน\"",
+      "expected_result": "เพิ่มสำเร็จ\nแสดงรายการใหม่ในตาราง",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-003",
+      "title": "Add Duplicate Blacklist",
+      "steps": "1. เปิดหน้า Blacklist http://localhost:3000/admin/blacklist\n2. กดปุ่ม \"เพิ่ม Blacklist\"\n3. กรอกเลขบัตร = \"1234567890001\" (เพิ่มไปแล้ว)\n4. กดปุ่ม \"ยืนยัน\"",
+      "expected_result": "แสดงข้อความ \"Conflict\"",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-004",
+      "title": "Remove from Blacklist",
+      "steps": "1. เปิดหน้า Blacklist. http://localhost:3000/admin/blacklist\n2. กดปุ่ม \"ลบ\" ที่รายการที่ต้องการ\n3. กดปุ่ม \"ยืนยันการลบ\"",
+      "expected_result": "ลบสำเร็จ\nรายการหายจากตาราง",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-005",
+      "title": "Blacklisted Passenger Cannot Register",
+      "steps": "1. Admin เพิ่มเลขบัตร 1 4687 00018 20 6 เข้า blacklist\n2. Logout\n3. เปิดหน้าสมัครสมาชิก\n4. ผู้ใช้ถ่ายบัตรประชาชน\n5. กดปุ่ม \"สมัคร\"",
+      "expected_result": "แสดงข้อความ \"เลขบัตรนี้ถูกระงับ ไม่สามารถสมัครได้\"",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-007",
+      "title": "Clean User Can Register",
+      "steps": "1. เปิดหน้าสมัครสมาชิก\n2. อัปโหลดรูปบัตร + selfie\n4. กดปุ่ม \"สมัคร\"",
+      "expected_result": "สมัครสำเร็จ\nredirect ไปหน้า login",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-008",
+      "title": "Filter Blacklist by Date",
+      "steps": "1. เปิดหน้า Blacklis http://localhost:3000/admin/blacklist\n2. เลือกวันที่เริ่มต้น = \"01/01/2026\"\n3. เลือกวันที่สิ้นสุด = \"31/12/2026\"\n4. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "แสดงเฉพาะรายการที่อยู่ในช่วงวันที่ที่เลือก",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-009",
+      "title": "Non-Admin Cannot Access Blacklist",
+      "steps": "1. เข้าสู่ระบบด้วยบัญชี Passenger\n2. เข้าhttp://localhost:3000/admin/blacklist",
+      "expected_result": "แต่งอยู่หน้าเดิม",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-BL-010",
+      "title": "Verify Hash Storage",
+      "steps": "1. Admin เพิ่มเลขบัตรเข้า blacklist\n2. เปิดหน้า Blacklist\n3. ตรวจสอบคอลัมน์ในตาราง — ไม่แสดงเลขบัตรดิบ",
+      "expected_result": "ไม่มีเลขบัตรประชาชน 13 หลักแสดงในตาราง\nแสดงเฉพาะ hash หรือ masked value",
+      "status": "NOT RUN",
+      "sheet": "US3 - Blacklist"
+    },
+    {
+      "id": "TC-DEL-001",
+      "title": "Open Delete Account Modal",
+      "steps": "1. เปิดหน้า Profile\n2. เลื่อนลงมาที่ส่วน \"ลบบัญชีผู้ใช้\"\n3. กดปุ่ม \"ลบบัญชีของฉัน\"",
+      "expected_result": "แสดง Modal ยืนยันการลบบัญชี",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-002",
+      "title": "Confirm Delete Account",
+      "steps": "1. พิมพ์ \"DELETE\" ในช่อง input\n2. กดปุ่มยืนยัน",
+      "expected_result": "บัญชีถูกลบ และ redirect ไปหน้า login",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-003",
+      "title": "Cancel Delete",
+      "steps": "1. กดปุ่ม \"ยกเลิก\" ใน Modal",
+      "expected_result": "Modal ปิด\nและยังอยู่ที่หน้า Profile",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-004",
+      "title": "Wrong Confirm Text",
+      "steps": "1. พิมพ์ \"delete\" (ตัวเล็ก) ในช่อง input",
+      "expected_result": "ปุ่มยืนยันถูก disable",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-005",
+      "title": "Deleted User Cannot Login",
+      "steps": "1. ลบบัญชีสำเร็จ (จาก TC-DEL-002)\n2. เปิดหน้า Login                 \n3. กรอก email และ password เดิม\n4. กดปุ่ม \"เข้าสู่ระบบ\"",
+      "expected_result": "เข้าสู่ระบบไม่ได้\nแสดงข้อความ \"ไม่พบบัญชีผู้ใช้\"",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-006",
+      "title": "PII Anonymized After Deletion",
+      "steps": "1. Admin เข้าสู่ระบบ\n2. เปิดหน้าจัดการผู้ใช้             http://localhost:3000/admin/users\n3. ค้นหาผู้ใช้ที่ถูกลบ\n4. ตรวจสอบข้อมูลที่แสดง",
+      "expected_result": "ชื่อ = \"Deleted User\"\nemail = \"deleted_xxx@removed.local\"\nเบอร์โทร = ว่าง\nรูปภาพ = ว่าง",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-007",
+      "title": "System Log Retained After Deletion",
+      "steps": "1. Admin เข้าสู่ระบบ\n2. เปิดหน้า System Logal               http://localhost:3000/admin/system-logs\n3. กรอก userId ของผู้ใช้ที่ถูกลบ\n4. กดปุ่ม \"ค้นหา\"",
+      "expected_result": "Log ของผู้ใช้ยังคงแสดงอยู่ในตาราง\nจำนวน Log ไม่เปลี่ยนแปลง",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-008",
+      "title": "Admin Delete User",
+      "steps": "1. เข้าสู่ระบบด้วย Admin\n2. เปิดหน้าจัดการผู้ใช้http://localhost:3000/admin/users\n3. ค้นหาผู้ใช้ที่ต้องการลบ\n4. กดปุ่ม \"ลบ\"\n5. กดปุ่ม \"ยืนยันการลบ\"",
+      "expected_result": "ลบสำเร็จ และบัญชีผู้ถูกลบหายออกจากหน้าแสดงผล\n",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    },
+    {
+      "id": "TC-DEL-010",
+      "title": "Non-Admin Cannot Delete Others",
+      "steps": "1. เข้าสู่ระบบด้วยบัญชี Passenger\n2. กดหน้าจัดการผู้ใช้http://localhost:3000/admin/users",
+      "expected_result": "อยู่หน้าเดิมไม่ไปหน้าจัดการแอดมิน",
+      "status": "NOT RUN",
+      "sheet": "US16 - ลบบัญชีผู้ใช้"
+    }
+  ]
+}
