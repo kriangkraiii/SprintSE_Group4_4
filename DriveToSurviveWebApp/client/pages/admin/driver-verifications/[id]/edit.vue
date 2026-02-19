@@ -250,7 +250,7 @@ import AdminHeader from '~/components/admin/AdminHeader.vue'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
 import { useToast } from '~/composables/useToast'
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 useHead({
   title: 'Edit Driver Verification • Admin',
   link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]

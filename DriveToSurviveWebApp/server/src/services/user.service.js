@@ -337,6 +337,18 @@ const resetPasswordWithOtp = async (email, otpCode, newPassword) => {
     return { success: true };
 };
 
+/**
+ * ตรวจสอบว่า username นี้ว่างหรือถูกใช้ไปแล้ว
+ * ใช้ตอนลงทะเบียน (real-time check ขณะพิมพ์)
+ */
+const checkUsernameAvailability = async (username) => {
+    const existing = await prisma.user.findUnique({
+        where: { username },
+        select: { id: true },
+    });
+    return { available: !existing };
+};
+
 module.exports = {
     searchUsers,
     getAllUsers,
@@ -354,4 +366,5 @@ module.exports = {
     saveOtp,
     verifyOtp,
     resetPasswordWithOtp,
+    checkUsernameAvailability,
 };

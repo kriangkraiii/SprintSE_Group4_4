@@ -220,7 +220,7 @@ import 'dayjs/locale/th'
 
 dayjs.locale('th')
 
-definePageMeta({ middleware: 'admin-auth' })
+definePageMeta({ middleware: 'admin-auth', layout: 'admin' })
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
