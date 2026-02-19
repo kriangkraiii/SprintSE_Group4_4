@@ -80,6 +80,12 @@ router.get(
     userController.getMyUser
 );
 
+// GET /api/users/check-username/:username (public, ไม่ต้อง auth)
+router.get(
+    '/check-username/:username',
+    userController.checkUsername
+);
+
 // GET /api/users/:id
 router.get(
     '/:id',
