@@ -272,6 +272,11 @@ const softDeleteUser = async (id) => {
             nationalIdNumber: null,
         },
     });
+
+    // Sprint 2: Anonymize reviews to "Anonymous Passenger" (PDPA + driver stats preserved)
+    const reviewService = require('./review.service');
+    await reviewService.anonymizeReviews(id);
+
     // SystemLog ไม่ถูกลบ — เก็บไว้ตาม พ.ร.บ.คอมพิวเตอร์ ม.26
     const { password, ...safeUser } = anonymized;
     return safeUser;

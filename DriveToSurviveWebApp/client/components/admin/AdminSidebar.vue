@@ -70,6 +70,7 @@ const mainMenus = [
 const complianceMenus = [
     { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
     { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
+    { to: '/admin/sprint2', label: 'Chat and Review', icon: 'fas fa-shield-halved' },
 ]
 
 function toggleSidebar() {

@@ -217,13 +217,24 @@ const adminUpdateBooking = async (id, patch) => {
 const createBooking = async (data, passengerId) => {
   return prisma.$transaction(async (tx) => {
 
-    // ตรวจสอบว่าผู้ใช้ยืนยันบัตรประชาชนแล้ว
+    // ตรวจสอบ role + ยืนยัน + suspension
     const user = await tx.user.findUnique({
       where: { id: passengerId },
-      select: { isVerified: true }
+      select: { isVerified: true, role: true, passengerSuspendedUntil: true }
     });
-    if (!user || !user.isVerified) {
+    if (!user) throw new ApiError(404, 'User not found');
+    if (!user.isVerified) {
       throw new ApiError(403, 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้');
+    }
+
+    // คนที่เป็น DRIVER จองเป็นผู้โดยสารไม่ได้
+    if (user.role === 'DRIVER') {
+      throw new ApiError(403, 'บัญชีคนขับไม่สามารถจองเส้นทางได้ กรุณาใช้บัญชีผู้โดยสาร');
+    }
+
+    // ตรวจ passenger suspension (role-based ban)
+    if (user.passengerSuspendedUntil && new Date(user.passengerSuspendedUntil) > new Date()) {
+      throw new ApiError(403, 'บัญชีผู้โดยสารของคุณถูกระงับชั่วคราว');
     }
 
     const route = await tx.route.findUnique({
