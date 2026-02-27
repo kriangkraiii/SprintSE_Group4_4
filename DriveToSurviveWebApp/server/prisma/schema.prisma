@@ -1,13 +1,428 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model User {
+  id                      String              @id @default(cuid())
+  username                String              @unique
+  email                   String              @unique
+  password                String
+  firstName               String?
+  lastName                String?
+  gender                  String?
+  phoneNumber             String?
+  profilePicture          String?
+  nationalIdNumber        String?             @unique
+  nationalIdPhotoUrl      String?             @unique @db.VarChar(500)
+  nationalIdExpiryDate    DateTime?
+  selfiePhotoUrl          String?             @db.VarChar(500)
+  role                    Role                @default(PASSENGER)
+  isVerified              Boolean             @default(false)
+  isActive                Boolean             @default(true)
+  otpCode                 String?
+  lastLogin               DateTime?
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @updatedAt
+  deletedAt               DateTime?
+  passengerSuspendedUntil DateTime?
+  driverSuspendedUntil    DateTime?
+  otpExpiry               DateTime?
+  nationalIdBackNumber    String?
+  nationalIdBackPhotoUrl  String?             @db.VarChar(500)
+  nationalIdOcrData       String?             @db.LongText
+  verifiedByOcr           Boolean             @default(false)
+  bookings                Booking[]           @relation("PassengerBookings")
+  sentMessages            ChatMessage[]       @relation("MessageSender")
+  chatReports             ChatReport[]        @relation("ChatReporter")
+  driverChatSessions      ChatSession[]       @relation("DriverChatSessions")
+  passengerChatSessions   ChatSession[]       @relation("PassengerChatSessions")
+  driverStats             DriverStats?
+  driverVerification      DriverVerification?
+  notification            Notification[]
+  recentSearches          RecentSearch[]
+  reviewDisputes          ReviewDispute[]
+  driverReviews           RideReview[]        @relation("ReviewDriver")
+  passengerReviews        RideReview[]        @relation("ReviewPassenger")
+  createdRoutes           Route[]             @relation("DriverRoutes")
+  savedPlaces             SavedPlace[]
+  vehicles                Vehicle[]
+
+  @@index([role])
+  @@index([isActive])
+  @@index([isVerified])
+  @@index([createdAt])
+  @@index([deletedAt])
 }
 
-// ─── Enums ───────────────────────────────────────────────
+model DriverVerification {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  licenseNumber      String             @unique
+  firstNameOnLicense String
+  lastNameOnLicense  String
+  licenseIssueDate   DateTime
+  licenseExpiryDate  DateTime
+  licensePhotoUrl    String             @db.VarChar(500)
+  selfiePhotoUrl     String             @db.VarChar(500)
+  typeOnLicense      LicenseType
+  status             VerificationStatus @default(PENDING)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  ocrData            String?            @db.LongText
+  verifiedByOcr      Boolean            @default(false)
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([licenseIssueDate])
+  @@index([licenseExpiryDate])
+}
+
+model Notification {
+  id              String           @id @default(cuid())
+  userId          String
+  type            NotificationType @default(SYSTEM)
+  title           String
+  body            String           @db.Text
+  link            String?
+  metadata        String?          @db.LongText
+  readAt          DateTime?
+  createdAt       DateTime         @default(now())
+  adminReviewedAt DateTime?
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, readAt])
+  @@index([adminReviewedAt])
+}
+
+model Vehicle {
+  id           String           @id @default(cuid())
+  userId       String
+  vehicleModel String
+  licensePlate String           @unique
+  vehicleType  String
+  color        String
+  seatCapacity Int
+  photos       String?          @db.LongText
+  isDefault    Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  routes       Route[]
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amenities    VehicleAmenity[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([vehicleType])
+  @@index([seatCapacity])
+}
+
+model VehicleAmenity {
+  id        Int     @id @default(autoincrement())
+  vehicleId String
+  name      String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model Route {
+  id              String      @id @default(cuid())
+  driverId        String
+  vehicleId       String
+  startLocation   String      @db.LongText
+  endLocation     String      @db.LongText
+  departureTime   DateTime
+  availableSeats  Int
+  pricePerSeat    Float
+  conditions      String?     @db.Text
+  status          RouteStatus @default(AVAILABLE)
+  cancelledAt     DateTime?
+  cancelledBy     String?
+  routePolyline   String?     @db.MediumText
+  distanceMeters  Int?
+  durationSeconds Int?
+  routeSummary    String?     @db.Text
+  distance        String?
+  duration        String?
+  waypoints       String?     @db.LongText
+  landmarks       String?     @db.LongText
+  steps           String?     @db.LongText
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  bookings        Booking[]
+  driver          User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
+  vehicle         Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([driverId])
+  @@index([vehicleId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([departureTime])
+}
+
+model Booking {
+  id                   String                @id @default(cuid())
+  routeId              String
+  passengerId          String
+  numberOfSeats        Int
+  status               BookingStatus         @default(PENDING)
+  cancelledAt          DateTime?
+  cancelledBy          String?
+  cancelReason         CancelReason?
+  pickupLocation       String                @db.LongText
+  dropoffLocation      String                @db.LongText
+  createdAt            DateTime              @default(now())
+  completedAt          DateTime?
+  noShowDeadline       DateTime?
+  arrivalNotifications ArrivalNotification[]
+  passenger            User                  @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
+  route                Route                 @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  chatSession          ChatSession?
+  reviews              RideReview[]
+
+  @@index([passengerId], map: "Booking_passengerId_fkey")
+  @@index([routeId], map: "Booking_routeId_fkey")
+}
+
+model ChatSession {
+  id                 String            @id @default(cuid())
+  bookingId          String            @unique
+  driverId           String
+  passengerId        String
+  status             ChatSessionStatus @default(ACTIVE)
+  createdAt          DateTime          @default(now())
+  endedAt            DateTime?
+  retentionExpiresAt DateTime
+  messages           ChatMessage[]
+  chatReports        ChatReport[]
+  booking            Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  driver             User              @relation("DriverChatSessions", fields: [driverId], references: [id], onDelete: Cascade)
+  passenger          User              @relation("PassengerChatSessions", fields: [passengerId], references: [id], onDelete: Cascade)
+  voiceCalls         VoiceCallLog[]
+
+  @@index([driverId])
+  @@index([passengerId])
+  @@index([status])
+  @@index([retentionExpiresAt])
+}
+
+model ChatMessage {
+  id              String       @id @default(cuid())
+  sessionId       String
+  senderId        String
+  type            MessageType  @default(TEXT)
+  content         String       @db.Text
+  originalContent String?      @db.Text
+  isFiltered      Boolean      @default(false)
+  isUnsent        Boolean      @default(false)
+  unsendDeadline  DateTime?
+  metadata        String?      @db.LongText
+  createdAt       DateTime     @default(now())
+  sender          User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  session         ChatSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  reports         ChatReport[]
+
+  @@index([sessionId, createdAt])
+  @@index([senderId])
+}
+
+model VoiceCallLog {
+  id                 String      @id @default(cuid())
+  sessionId          String
+  callerId           String
+  receiverId         String
+  duration           Int         @default(0)
+  status             String      @default("INITIATED")
+  createdAt          DateTime    @default(now())
+  endedAt            DateTime?
+  retentionExpiresAt DateTime
+  session            ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([retentionExpiresAt])
+}
+
+model ChatReport {
+  id         String       @id @default(cuid())
+  sessionId  String
+  messageId  String
+  reporterId String
+  reason     ReportReason
+  detail     String?      @db.Text
+  status     ReportStatus @default(PENDING)
+  adminNote  String?      @db.Text
+  createdAt  DateTime     @default(now())
+  message    ChatMessage  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  reporter   User         @relation("ChatReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  session    ChatSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, reporterId])
+  @@index([sessionId])
+  @@index([status])
+  @@index([reporterId], map: "ChatReport_reporterId_fkey")
+}
+
+model ArrivalNotification {
+  id          String     @id @default(cuid())
+  bookingId   String
+  driverId    String
+  passengerId String
+  radiusType  RadiusType
+  driverLat   Float?
+  driverLon   Float?
+  appStatus   String     @default("SENT")
+  emailStatus String     @default("SENT")
+  triggeredAt DateTime   @default(now())
+  booking     Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, radiusType])
+  @@index([bookingId])
+  @@index([driverId])
+}
+
+model NotificationLog {
+  id          Int      @id @default(autoincrement())
+  type        String   @db.VarChar(50)
+  channel     String   @db.VarChar(20)
+  recipientId String
+  bookingId   String?
+  payload     String?  @db.LongText
+  status      String   @db.VarChar(30)
+  createdAt   DateTime @default(now())
+
+  @@index([recipientId])
+  @@index([bookingId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model RideReview {
+  id              String          @id @default(cuid())
+  bookingId       String
+  passengerId     String
+  driverId        String
+  rating          Int
+  tags            String?         @db.LongText
+  comment         String?         @db.Text
+  privateFeedback String?         @db.Text
+  isAnonymous     Boolean         @default(false)
+  displayName     String          @default("")
+  status          ReviewStatus    @default(ACTIVE)
+  createdAt       DateTime        @default(now())
+  disputes        ReviewDispute[]
+  booking         Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  driver          User            @relation("ReviewDriver", fields: [driverId], references: [id], onDelete: Cascade)
+  passenger       User            @relation("ReviewPassenger", fields: [passengerId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, passengerId])
+  @@index([driverId])
+  @@index([passengerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ReviewDispute {
+  id         String        @id @default(cuid())
+  reviewId   String
+  driverId   String
+  reason     DisputeReason
+  detail     String        @db.Text
+  status     DisputeStatus @default(PENDING)
+  adminNote  String?       @db.Text
+  resolvedAt DateTime?
+  createdAt  DateTime      @default(now())
+  driver     User          @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  review     RideReview    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, driverId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([driverId], map: "ReviewDispute_driverId_fkey")
+}
+
+model DriverStats {
+  id           String   @id @default(cuid())
+  driverId     String   @unique
+  totalRides   Int      @default(0)
+  totalReviews Int      @default(0)
+  avgRating    Float    @default(0)
+  tagCounts    String?  @db.LongText
+  updatedAt    DateTime @updatedAt
+  driver       User     @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([avgRating])
+}
+
+model SavedPlace {
+  id        String   @id @default(cuid())
+  userId    String
+  label     String
+  name      String
+  address   String?  @db.Text
+  lat       Float
+  lng       Float
+  placeId   String?
+  icon      String?  @default("pin")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, label])
+  @@index([userId])
+}
+
+model RecentSearch {
+  id      String   @id @default(cuid())
+  userId  String
+  name    String
+  address String?  @db.Text
+  lat     Float
+  lng     Float
+  placeId String?
+  usedAt  DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, usedAt])
+}
+
+model SystemLog {
+  id          Int      @id @default(autoincrement())
+  userId      String?
+  ipAddress   String?  @db.VarChar(45)
+  action      String   @db.VarChar(50)
+  resource    String?  @db.Text
+  userAgent   String?  @db.Text
+  createdAt   DateTime @default(now())
+  detail      String?  @db.Text
+  entity      String?  @db.VarChar(50)
+  entityId    String?  @db.VarChar(100)
+  performedBy String?
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@index([ipAddress])
+  @@index([entity])
+}
+
+model Blacklist {
+  id               Int      @id @default(autoincrement())
+  nationalIdHash   String   @unique @db.VarChar(64)
+  reason           String?  @db.Text
+  createdByAdminId String
+  createdAt        DateTime @default(now())
+  bannedRole       String   @default("BOTH") @db.VarChar(10)
+
+  @@index([createdAt])
+}
 
 enum Role {
   PASSENGER
@@ -68,8 +483,6 @@ enum NotificationType {
   REVIEW
 }
 
-// ─── Sprint 2 Enums ─────────────────────────────────────
-
 enum ChatSessionStatus {
   ACTIVE
   ENDED
@@ -121,446 +534,4 @@ enum DisputeReason {
   INACCURATE
   OFFENSIVE
   OTHER
-}
-
-// ─── Models ──────────────────────────────────────────────
-
-model User {
-  id                      String    @id @default(cuid())
-  username                String    @unique
-  email                   String    @unique
-  password                String
-  firstName               String?
-  lastName                String?
-  gender                  String?
-  phoneNumber             String?
-  profilePicture          String?
-  nationalIdNumber        String?   @unique
-  nationalIdPhotoUrl      String?   @unique @db.VarChar(500)
-  nationalIdBackPhotoUrl  String?   @db.VarChar(500)
-  nationalIdBackNumber    String?
-  nationalIdExpiryDate    DateTime?
-  nationalIdOcrData       Json?
-  selfiePhotoUrl          String?   @db.VarChar(500)
-  role                    Role      @default(PASSENGER)
-  isVerified              Boolean   @default(false)
-  verifiedByOcr           Boolean   @default(false)
-  isActive                Boolean   @default(true)
-  otpCode                 String?
-  otpExpiry               DateTime?
-  lastLogin               DateTime?
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
-  deletedAt               DateTime? // PDPA ม.33 — Soft Delete
-  passengerSuspendedUntil DateTime?
-  driverSuspendedUntil    DateTime?
-
-  driverVerification DriverVerification?
-  vehicles           Vehicle[]
-  notification       Notification[]
-  createdRoutes      Route[]   @relation("DriverRoutes")
-  bookings           Booking[] @relation("PassengerBookings")
-
-  // Sprint 2 relations
-  driverChatSessions    ChatSession[]    @relation("DriverChatSessions")
-  passengerChatSessions ChatSession[]    @relation("PassengerChatSessions")
-  sentMessages          ChatMessage[]    @relation("MessageSender")
-  chatReports           ChatReport[]     @relation("ChatReporter")
-  passengerReviews      RideReview[]     @relation("ReviewPassenger")
-  driverReviews         RideReview[]     @relation("ReviewDriver")
-  driverStats           DriverStats?
-  reviewDisputes        ReviewDispute[]
-  savedPlaces           SavedPlace[]
-  recentSearches        RecentSearch[]
-
-  @@index([role])
-  @@index([isActive])
-  @@index([isVerified])
-  @@index([createdAt])
-  @@index([deletedAt])
-}
-
-model DriverVerification {
-  id                 String             @id @default(cuid())
-  userId             String             @unique
-  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  licenseNumber      String             @unique
-  firstNameOnLicense String
-  lastNameOnLicense  String
-  licenseIssueDate   DateTime
-  licenseExpiryDate  DateTime
-  licensePhotoUrl    String             @db.VarChar(500)
-  selfiePhotoUrl     String             @db.VarChar(500)
-  typeOnLicense      LicenseType
-  ocrData            Json?
-  verifiedByOcr      Boolean            @default(false)
-  status             VerificationStatus @default(PENDING)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-
-  @@index([status])
-  @@index([createdAt])
-  @@index([licenseIssueDate])
-  @@index([licenseExpiryDate])
-}
-
-model Notification {
-  id              String           @id @default(cuid())
-  userId          String
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type            NotificationType @default(SYSTEM)
-  title           String
-  body            String           @db.Text
-  link            String?
-  metadata        Json?
-
-  readAt          DateTime?
-  createdAt       DateTime         @default(now())
-  adminReviewedAt DateTime?
-
-  @@index([userId, createdAt])
-  @@index([userId, readAt])
-  @@index([adminReviewedAt])
-}
-
-model Vehicle {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  vehicleModel String
-  licensePlate String   @unique
-  vehicleType  String
-  color        String
-  seatCapacity Int
-  photos       Json?
-  isDefault    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  amenities VehicleAmenity[]
-  routes    Route[]
-
-  @@index([userId])
-  @@index([createdAt])
-  @@index([vehicleType])
-  @@index([seatCapacity])
-}
-
-// แทน String[] ที่ MySQL ไม่รองรับ
-model VehicleAmenity {
-  id        Int     @id @default(autoincrement())
-  vehicleId String
-  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  name      String
-
-  @@index([vehicleId])
-}
-
-model Route {
-  id             String      @id @default(cuid())
-  driverId       String
-  driver         User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
-  vehicleId      String
-  vehicle        Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  startLocation  Json
-  endLocation    Json
-  departureTime  DateTime
-  availableSeats Int
-  pricePerSeat   Float
-  conditions     String?     @db.Text
-  status         RouteStatus @default(AVAILABLE)
-  cancelledAt    DateTime?
-  cancelledBy    String?
-  routePolyline  String?     @db.MediumText
-  distanceMeters Int?
-  durationSeconds Int?
-  routeSummary   String?     @db.Text
-  distance       String?
-  duration       String?
-  waypoints      Json?
-  landmarks      Json?
-  steps          Json?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
-  bookings Booking[]
-
-  @@index([driverId])
-  @@index([vehicleId])
-  @@index([status])
-  @@index([createdAt])
-  @@index([departureTime])
-}
-
-model Booking {
-  id              String        @id @default(cuid())
-  routeId         String
-  route           Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
-  passengerId     String
-  passenger       User          @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
-  numberOfSeats   Int
-  status          BookingStatus @default(PENDING)
-  cancelledAt     DateTime?
-  cancelledBy     String?
-  cancelReason    CancelReason?
-  pickupLocation  Json
-  dropoffLocation Json
-  completedAt     DateTime? // Sprint 2: needed for 7-day review window
-  noShowDeadline  DateTime? // Sprint 2: No-Show countdown deadline
-  createdAt       DateTime      @default(now())
-
-  // Sprint 2 relations
-  chatSession          ChatSession?
-  arrivalNotifications ArrivalNotification[]
-  reviews              RideReview[]
-}
-
-// ─── Sprint 2: Chat & Messaging Models ───────────────────
-
-model ChatSession {
-  id                 String            @id @default(cuid())
-  bookingId          String            @unique
-  booking            Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  driverId           String
-  driver             User              @relation("DriverChatSessions", fields: [driverId], references: [id], onDelete: Cascade)
-  passengerId        String
-  passenger          User              @relation("PassengerChatSessions", fields: [passengerId], references: [id], onDelete: Cascade)
-  status             ChatSessionStatus @default(ACTIVE)
-  createdAt          DateTime          @default(now())
-  endedAt            DateTime?
-  retentionExpiresAt DateTime          // now + 90 days
-
-  messages    ChatMessage[]
-  voiceCalls  VoiceCallLog[]
-  chatReports ChatReport[]
-
-  @@index([driverId])
-  @@index([passengerId])
-  @@index([status])
-  @@index([retentionExpiresAt])
-}
-
-model ChatMessage {
-  id              String      @id @default(cuid())
-  sessionId       String
-  session         ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  senderId        String
-  sender          User        @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
-  type            MessageType @default(TEXT)
-  content         String      @db.Text
-  originalContent String?     @db.Text // เก็บเนื้อหาดั้งเดิมก่อน filter (สำหรับ audit)
-  isFiltered      Boolean     @default(false)
-  isUnsent        Boolean     @default(false)
-  unsendDeadline  DateTime? // created + 5 minutes
-  metadata        Json? // lat/lng for LOCATION, template key for QUICK_REPLY
-  createdAt       DateTime    @default(now())
-
-  reports ChatReport[]
-
-  @@index([sessionId, createdAt])
-  @@index([senderId])
-}
-
-model VoiceCallLog {
-  id                 String      @id @default(cuid())
-  sessionId          String
-  session            ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  callerId           String
-  receiverId         String
-  duration           Int         @default(0) // seconds
-  status             String      @default("INITIATED") // INITIATED, RINGING, CONNECTED, COMPLETED, MISSED
-  createdAt          DateTime    @default(now())
-  endedAt            DateTime?
-  retentionExpiresAt DateTime // now + 90 days
-
-  @@index([sessionId])
-  @@index([retentionExpiresAt])
-}
-
-model ChatReport {
-  id        String       @id @default(cuid())
-  sessionId String
-  session   ChatSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  messageId String
-  message   ChatMessage  @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  reporterId String
-  reporter   User        @relation("ChatReporter", fields: [reporterId], references: [id], onDelete: Cascade)
-  reason    ReportReason
-  detail    String?      @db.Text
-  status    ReportStatus @default(PENDING)
-  adminNote String?      @db.Text
-  createdAt DateTime     @default(now())
-
-  @@unique([messageId, reporterId]) // prevent duplicate reports
-  @@index([sessionId])
-  @@index([status])
-}
-
-// ─── Sprint 2: Arrival Notification Models ───────────────
-
-model ArrivalNotification {
-  id          String     @id @default(cuid())
-  bookingId   String
-  booking     Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  driverId    String
-  passengerId String
-  radiusType  RadiusType
-  driverLat   Float?
-  driverLon   Float?
-  appStatus   String     @default("SENT") // SENT, FAILED
-  emailStatus String     @default("SENT") // SENT, FAILED, PERMANENTLY_FAILED, INVALID_RECIPIENT
-  triggeredAt DateTime   @default(now())
-
-  @@unique([bookingId, radiusType]) // deduplication — 1 notification per radius per booking
-  @@index([bookingId])
-  @@index([driverId])
-}
-
-model NotificationLog {
-  id          Int      @id @default(autoincrement())
-  type        String   @db.VarChar(50) // ARRIVAL, CHAT, REVIEW, etc.
-  channel     String   @db.VarChar(20) // APP, EMAIL, APP+EMAIL
-  recipientId String
-  bookingId   String?
-  payload     Json? // additional context (coords, radius, etc.)
-  status      String   @db.VarChar(30) // SENT, FAILED, RETRYING
-  createdAt   DateTime @default(now())
-
-  @@index([recipientId])
-  @@index([bookingId])
-  @@index([type])
-  @@index([createdAt])
-}
-
-// ─── Sprint 2: Review & Rating Models ────────────────────
-
-model RideReview {
-  id              String       @id @default(cuid())
-  bookingId       String
-  booking         Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  passengerId     String
-  passenger       User         @relation("ReviewPassenger", fields: [passengerId], references: [id], onDelete: Cascade)
-  driverId        String
-  driver          User         @relation("ReviewDriver", fields: [driverId], references: [id], onDelete: Cascade)
-  rating          Int // 1-5
-  tags            Json? // array of tag strings
-  comment         String?      @db.Text
-  privateFeedback String?      @db.Text // visible to driver only
-  isAnonymous     Boolean      @default(false)
-  displayName     String       @default("") // ชื่อที่แสดง — will be "Anonymous Passenger" if anonymized
-  status          ReviewStatus @default(ACTIVE)
-  createdAt       DateTime     @default(now())
-
-  disputes ReviewDispute[]
-
-  @@unique([bookingId, passengerId]) // 1 review per booking per passenger
-  @@index([driverId])
-  @@index([passengerId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model ReviewDispute {
-  id        String        @id @default(cuid())
-  reviewId  String
-  review    RideReview    @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  driverId  String
-  driver    User          @relation(fields: [driverId], references: [id], onDelete: Cascade)
-  reason    DisputeReason
-  detail    String        @db.Text
-  status    DisputeStatus @default(PENDING)
-  adminNote String?       @db.Text
-  resolvedAt DateTime?
-  createdAt DateTime      @default(now())
-
-  @@unique([reviewId, driverId]) // 1 dispute per review per driver
-  @@index([status])
-  @@index([createdAt])
-}
-
-model DriverStats {
-  id           String   @id @default(cuid())
-  driverId     String   @unique
-  driver       User     @relation(fields: [driverId], references: [id], onDelete: Cascade)
-  totalRides   Int      @default(0)
-  totalReviews Int      @default(0)
-  avgRating    Float    @default(0)
-  tagCounts    Json?    // { "polite": 10, "safe_driving": 8, ... }
-  updatedAt    DateTime @updatedAt
-
-  @@index([avgRating])
-}
-
-// ─── Saved Places & Recent Searches ─────────────────────
-
-model SavedPlace {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  label     String   // "บ้าน", "ที่ทำงาน", custom
-  name      String
-  address   String?  @db.Text
-  lat       Float
-  lng       Float
-  placeId   String?
-  icon      String?  @default("pin") // home, work, star, pin
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, label])
-  @@index([userId])
-}
-
-model RecentSearch {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  address   String?  @db.Text
-  lat       Float
-  lng       Float
-  placeId   String?
-  usedAt    DateTime @default(now())
-
-  @@index([userId, usedAt])
-}
-
-
-
-// พ.ร.บ.คอมพิวเตอร์ พ.ศ. 2560 มาตรา 26
-// เก็บข้อมูลจราจรคอมพิวเตอร์ไม่น้อยกว่า 90 วัน
-// Immutable — ห้ามแก้ไข/ลบ
-model SystemLog {
-  id          Int      @id @default(autoincrement())
-  userId      String?
-  ipAddress   String?  @db.VarChar(45) // รองรับ IPv6
-  action      String   @db.VarChar(50) // HTTP Method or admin action
-  resource    String?  @db.Text        // Request URL
-  userAgent   String?  @db.Text
-  entity      String?  @db.VarChar(50) // e.g. User, Booking, ChatSession
-  entityId    String?  @db.VarChar(100)
-  performedBy String?  // Admin userId
-  detail      String?  @db.Text        // Human-readable detail
-  createdAt   DateTime @default(now())
-
-  @@index([userId])
-  @@index([createdAt])
-  @@index([action])
-  @@index([ipAddress])
-  @@index([entity])
-}
-
-// PDPA พ.ศ. 2562 มาตรา 22
-// เก็บเฉพาะ SHA-256 Hash ของเลขบัตรประชาชน
-// ไม่เก็บข้อมูลดิบเพื่อลด Privacy Risk
-model Blacklist {
-  id               Int      @id @default(autoincrement())
-  nationalIdHash   String   @unique @db.VarChar(64) // SHA-256 = 64 hex chars
-  reason           String?  @db.Text
-  bannedRole       String   @default("BOTH") @db.VarChar(10) // PASSENGER | DRIVER | BOTH
-  createdByAdminId String
-  createdAt        DateTime @default(now())
-
-  @@index([createdAt])
 }
