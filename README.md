@@ -239,3 +239,39 @@ Base URL: `/api`
 | `POST` | `/` | Add to blacklist | Admin |
 | `DELETE` | `/:id` | Remove from blacklist | Admin |
 | `POST` | `/check` | Check ID (Internal) | User |
+
+### 12. Chat (`/chat`) — Sprint 2
+| Method | Endpoint | Description | Guard |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/sessions/me` | List my chat sessions | User |
+| `POST` | `/sessions` | Create chat session (on booking confirm) | User |
+| `POST` | `/sessions/end` | End chat session (on trip end) | User |
+| `GET` | `/sessions/:bookingId` | Get session by booking | User |
+| `GET` | `/:sessionId/messages` | Get messages (paginated) | User |
+| `POST` | `/:sessionId/messages` | Send message (auto-filtered) | User |
+| `POST` | `/:sessionId/location` | Share live location | User |
+| `PATCH` | `/messages/:messageId/unsend` | Unsend message (5-min window) | User |
+| `POST` | `/reports` | Report a message | User |
+| `GET` | `/reports/admin` | List reports | Admin |
+| `PATCH` | `/reports/:id` | Update report status | Admin |
+
+### 13. Arrival Notifications (`/arrival-notifications`) — Sprint 2
+| Method | Endpoint | Description | Guard |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/check` | GPS position check (triggers 5km/1km/0km alerts) | User |
+| `POST` | `/manual` | Manual arrival trigger (GPS fallback) | User |
+| `GET` | `/:bookingId` | Notification history for booking | User |
+
+### 14. Reviews (`/reviews`) — Sprint 2
+| Method | Endpoint | Description | Guard |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/` | Create review (immutable, profanity-blocked) | User |
+| `GET` | `/me` | My submitted reviews | User |
+| `GET` | `/pending` | Bookings pending review (within 7 days) | User |
+| `GET` | `/check/:bookingId` | Check if already reviewed | User |
+| `GET` | `/booking/:bookingId` | Review for specific booking | User |
+| `GET` | `/driver/:driverId` | Public driver reviews | Public |
+| `GET` | `/driver/:driverId/stats` | Public driver stats (avg rating, tags) | Public |
+| `POST` | `/disputes` | Driver creates dispute | User |
+| `GET` | `/disputes/admin` | List disputes | Admin |
+| `PATCH` | `/disputes/:id` | Resolve dispute | Admin |

@@ -110,5 +110,9 @@ app.use((req, res, next) => {
 // --- Error Handling Middleware ---
 app.use(errorHandler);
 
+// Sprint 2: 90-day retention cron job (พ.ร.บ.คอมพิวเตอร์)
+const { startRetentionCron } = require('./jobs/retentionPurge');
+startRetentionCron();
+
 // Export app + bootstrap function
 module.exports = { app, ensureAdmin };
