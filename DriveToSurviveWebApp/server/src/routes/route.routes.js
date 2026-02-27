@@ -130,4 +130,13 @@ router.delete(
   routeController.deleteRoute
 );
 
+// POST /routes/:id/waypoints — เพิ่มจุดแวะระหว่างทาง
+router.post(
+  "/:id/waypoints",
+  protect,
+  requireDriverVerified,
+  validate({ params: idParamSchema }),
+  routeController.addWaypoint
+);
+
 module.exports = router;
