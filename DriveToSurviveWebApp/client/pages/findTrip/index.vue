@@ -70,6 +70,134 @@
                 </form>
             </div>
 
+            <!-- Location Suggestion Panel (ผู้โดยสาร, เฉพาะ login) -->
+            <div v-if="token" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-8 -mt-4">
+                <div class="flex gap-1 mb-3">
+                    <button type="button" v-for="tab in locationTabs" :key="tab.key"
+                        @click="activeLocationTab = tab.key"
+                        :class="['px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer',
+                            activeLocationTab === tab.key
+                                ? 'bg-emerald-500 text-white shadow-sm'
+                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200']">
+                        {{ tab.label }}
+                    </button>
+                </div>
+
+                <!-- ล่าสุด (Recent) -->
+                <div v-if="activeLocationTab === 'recent'">
+                    <div v-if="recentSearches.length === 0" class="text-center py-4 text-xs text-gray-400">
+                        ยังไม่มีรายการค้นหาล่าสุด
+                    </div>
+                    <div v-else>
+                        <div v-for="item in recentSearches" :key="item.id"
+                            @click="selectLocationSuggestion(item)"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition group">
+                            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate">{{ item.name }}</p>
+                                <p v-if="item.address" class="text-[10px] text-gray-400 truncate">{{ item.address }}</p>
+                            </div>
+                            <button type="button" @click.stop="saveFromRecentFT(item)"
+                                class="opacity-0 group-hover:opacity-100 p-1 rounded text-gray-300 hover:text-emerald-500 transition cursor-pointer"
+                                title="บันทึกสถานที่">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <button type="button" @click="handleClearRecentFT"
+                            class="mt-2 w-full text-center text-xs text-gray-400 hover:text-red-500 py-1 transition cursor-pointer">
+                            ล้างรายการล่าสุด
+                        </button>
+                    </div>
+                </div>
+
+                <!-- แนะนำ (Nearby Places) -->
+                <div v-if="activeLocationTab === 'suggest'">
+                    <div v-if="isFetchingSuggestions" class="text-center py-4">
+                        <svg class="w-6 h-6 mx-auto animate-spin text-amber-400" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        <p class="text-xs text-gray-400 mt-2">กำลังค้นหาสถานที่ใกล้เคียง...</p>
+                    </div>
+                    <div v-else-if="suggestedPlaces.length === 0" class="text-center py-4 text-xs text-gray-400">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-amber-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <p>ไม่พบสถานที่แนะนำ</p>
+                        <p class="mt-1 text-[10px]">กรุณาเปิด GPS เพื่อดูสถานที่ใกล้เคียง</p>
+                    </div>
+                    <div v-else>
+                        <div v-for="item in suggestedPlaces" :key="item.placeId"
+                            @click="selectLocationSuggestion(item)"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition">
+                            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate">{{ item.name }}</p>
+                                <p v-if="item.address" class="text-[10px] text-gray-400 truncate">{{ item.address }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ที่บันทึกไว้ (Saved) -->
+                <div v-if="activeLocationTab === 'saved'">
+                    <div v-if="savedPlaces.length === 0" class="text-center py-4 text-xs text-gray-400">
+                        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-emerald-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                            </svg>
+                        </div>
+                        <p>ยังไม่มีสถานที่ที่บันทึกไว้</p>
+                        <p class="mt-1 text-[10px]">กดไอคอน bookmark ที่รายการล่าสุดเพื่อบันทึก</p>
+                    </div>
+                    <div v-else>
+                        <div v-for="item in savedPlaces" :key="item.id"
+                            @click="selectLocationSuggestion(item)"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition group">
+                            <div :class="['w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                                item.icon === 'home' ? 'bg-green-50 text-green-500' :
+                                    item.icon === 'work' ? 'bg-blue-50 text-blue-500' :
+                                        'bg-red-50 text-red-500']">
+                                <svg v-if="item.icon === 'home'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                <svg v-else-if="item.icon === 'work'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800">{{ item.label }}</p>
+                                <p class="text-[10px] text-gray-400 truncate">{{ item.name }}</p>
+                            </div>
+                            <button type="button" @click.stop="handleDeleteSavedPlaceFT(item.id)"
+                                class="opacity-0 group-hover:opacity-100 p-1 rounded text-gray-300 hover:text-red-500 transition cursor-pointer"
+                                title="ลบสถานที่">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 <!-- Left: Results -->
                 <div class="lg:col-span-3 space-y-4">
@@ -142,10 +270,16 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </div>
-                                    <div class="flex items-center gap-1 text-xs text-gray-400">
+                                    <NuxtLink v-if="route.driver.rating > 0" :to="`/reviews/driver/${route.driver.id}`"
+                                        class="flex items-center gap-1 text-xs text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                                        @click.stop>
                                         <span class="text-yellow-400">★</span>
                                         <span>{{ route.driver.rating }}</span>
                                         <span>({{ route.driver.reviews }})</span>
+                                    </NuxtLink>
+                                    <div v-else class="flex items-center gap-1 text-xs text-gray-400">
+                                        <span class="text-gray-300">★</span>
+                                        <span>ยังไม่มีรีวิว</span>
                                     </div>
                                 </div>
                                 <div class="flex flex-wrap gap-1.5 items-center">
@@ -254,6 +388,26 @@
                     <div class="sticky top-4">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
                             <div ref="mapContainer" class="w-full h-[300px] sm:h-[500px]"></div>
+
+                            <!-- Locate Me FAB -->
+                            <button
+                                @click="handleLocateMe"
+                                :disabled="!geo.hasGps.value"
+                                :title="!geo.hasGps.value ? 'อุปกรณ์ไม่รองรับ GPS' : 'ตำแหน่งของฉัน'"
+                                class="absolute bottom-16 right-4 z-20 w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                                :class="geo.isActive.value
+                                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'">
+                                <svg v-if="geo.isLocating.value" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M12 2v4m0 12v4m-10-10h4m12 0h4" />
+                                </svg>
+                            </button>
+
                             <!-- Realtime location badge -->
                             <div v-if="userLocation.lat" class="absolute bottom-4 left-4 z-10">
                                 <div
@@ -331,9 +485,13 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </div>
-                                    <div class="flex items-center gap-1 text-xs text-gray-400">
+                                    <NuxtLink v-if="bookingRoute.driver.rating > 0" :to="`/reviews/driver/${bookingRoute.driver.id}`"
+                                        class="flex items-center gap-1 text-xs text-gray-400 hover:text-primary transition-colors cursor-pointer">
                                         <span class="text-yellow-400">★</span> {{ bookingRoute.driver.rating }} ({{
                                             bookingRoute.driver.reviews }} รีวิว)
+                                    </NuxtLink>
+                                    <div v-else class="flex items-center gap-1 text-xs text-gray-400">
+                                        <span class="text-gray-300">★</span> ยังไม่มีรีวิว
                                     </div>
                                 </div>
                             </div>
@@ -476,7 +634,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -494,7 +652,10 @@ dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+const geo = useGeolocation()
+let locationMarkerObj = null
 const { token, user: authUser } = useAuth()
+const { fetchSavedPlaces, savePlaceLabel, deleteSavedPlace, fetchRecentSearches, addRecentSearch, clearRecentSearches } = usePlace()
 const config = useRuntimeConfig()
 const GMAPS_CB = '__gmapsReady__'
 
@@ -565,6 +726,104 @@ let placesService = null
 const mapReady = ref(false)
 let stopMarkers = []
 
+// ==================== Location Panel State ====================
+const activeLocationTab = ref('recent')
+const recentSearches = ref([])
+const savedPlaces = ref([])
+const lastFocusedFieldFT = ref('origin') // which input user last focused
+const locationTabs = [
+    { key: 'recent', label: 'ล่าสุด' },
+    { key: 'suggest', label: 'แนะนำ' },
+    { key: 'saved', label: 'ที่บันทึกไว้' },
+]
+const suggestedPlaces = ref([])
+const isFetchingSuggestions = ref(false)
+
+function fetchSuggestedPlaces() {
+    if (suggestedPlaces.value.length > 0 || isFetchingSuggestions.value) return
+    if (!placesService || !userLocation.value.lat) return
+    isFetchingSuggestions.value = true
+    const request = {
+        location: new google.maps.LatLng(userLocation.value.lat, userLocation.value.lng),
+        radius: 5000,
+        type: ['transit_station', 'bus_station', 'university', 'shopping_mall', 'hospital', 'airport'],
+    }
+    placesService.nearbySearch(request, (results, status) => {
+        isFetchingSuggestions.value = false
+        if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+            suggestedPlaces.value = results.slice(0, 10).map(p => ({
+                name: p.name,
+                address: p.vicinity || '',
+                lat: p.geometry?.location?.lat?.() ?? null,
+                lng: p.geometry?.location?.lng?.() ?? null,
+                placeId: p.place_id || null,
+            }))
+        }
+    })
+}
+
+watch(activeLocationTab, (tab) => {
+    if (tab === 'suggest') fetchSuggestedPlaces()
+})
+
+async function loadLocationDataFT() {
+    if (!token.value) return
+    try { recentSearches.value = await fetchRecentSearches(10) || [] } catch { recentSearches.value = [] }
+    try { savedPlaces.value = await fetchSavedPlaces() || [] } catch { savedPlaces.value = [] }
+}
+
+function selectLocationSuggestion(item) {
+    const field = lastFocusedFieldFT.value
+    const meta = { placeId: item.placeId || null, fullAddress: item.address || item.name, lat: item.lat, lng: item.lng, province: null }
+    if (field === 'origin') {
+        searchForm.value.origin = item.name
+        searchForm.value._originMeta = meta
+    } else {
+        searchForm.value.destination = item.name
+        searchForm.value._destinationMeta = meta
+    }
+    if (gmap && item.lat && item.lng) {
+        gmap.panTo({ lat: item.lat, lng: item.lng })
+        gmap.setZoom(16)
+    }
+}
+
+async function autoSaveRecentFT(place) {
+    if (!token.value || !place?.name || place.lat == null) return
+    try {
+        await addRecentSearch({ name: place.name, address: place.address, lat: place.lat, lng: place.lng, placeId: place.placeId })
+        recentSearches.value = await fetchRecentSearches(10) || []
+    } catch { /* silent */ }
+}
+
+async function saveFromRecentFT(item) {
+    const label = prompt('ตั้งชื่อสถานที่ (เช่น "บ้าน", "ที่ทำงาน"):', item.name)
+    if (!label) return
+    try {
+        const icon = label === 'บ้าน' ? 'home' : label === 'ที่ทำงาน' ? 'work' : 'pin'
+        await savePlaceLabel({ label, name: item.name, address: item.address, lat: item.lat, lng: item.lng, placeId: item.placeId, icon })
+        savedPlaces.value = await fetchSavedPlaces() || []
+        toast.success('บันทึกแล้ว', `"${label}" ถูกบันทึกเรียบร้อย`)
+    } catch (e) {
+        toast.error('ไม่สามารถบันทึกได้', e?.statusMessage || '')
+    }
+}
+
+async function handleDeleteSavedPlaceFT(id) {
+    try {
+        await deleteSavedPlace(id)
+        savedPlaces.value = savedPlaces.value.filter(p => p.id !== id)
+        toast.success('ลบแล้ว', 'ลบสถานที่ที่บันทึกเรียบร้อย')
+    } catch { toast.error('ไม่สามารถลบได้') }
+}
+
+async function handleClearRecentFT() {
+    try {
+        await clearRecentSearches()
+        recentSearches.value = []
+        toast.success('ล้างแล้ว', 'ล้างรายการล่าสุดเรียบร้อย')
+    } catch { toast.error('ไม่สามารถล้างได้') }
+}
 const showModal = ref(false)
 const bookingRoute = ref(null)
 const bookingSeats = ref(1)
@@ -703,8 +962,8 @@ async function handleSearch() {
                     id: route.driver?.id,
                     name: `${route.driver?.firstName || ''} ${route.driver?.lastName || ''}`.trim() || 'ไม่ระบุชื่อ',
                     image: route.driver?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(route.driver?.firstName || 'U')}&background=random&size=64`,
-                    rating: 4.5,
-                    reviews: Math.floor(Math.random() * 50) + 5,
+                    rating: route.driver?.driverStats?.avgRating || 0,
+                    reviews: route.driver?.driverStats?.totalReviews || 0,
                     isVerified: !!route.driver?.isVerified,
                 },
                 carDetails: route.vehicle ? [`${route.vehicle.vehicleModel} (${route.vehicle.vehicleType})`, ...(route.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)] : ['ไม่มีข้อมูลรถ'],
@@ -800,18 +1059,35 @@ async function updateMapForRoute(route) {
 
     startMarker = new google.maps.Marker({
         position: { lat: route.start.lat, lng: route.start.lng }, map: gmap,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#10b981', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 3 },
+        icon: {
+            path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+            fillColor: '#10b981', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+            scale: 1.8, anchor: new google.maps.Point(12, 22), labelOrigin: new google.maps.Point(12, 10),
+        },
+        label: { text: 'A', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
+        title: 'จุดเริ่มต้น', zIndex: 10,
     })
     endMarker = new google.maps.Marker({
         position: { lat: route.end.lat, lng: route.end.lng }, map: gmap,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#ef4444', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 3 },
+        icon: {
+            path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+            fillColor: '#ef4444', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+            scale: 1.8, anchor: new google.maps.Point(12, 22), labelOrigin: new google.maps.Point(12, 10),
+        },
+        label: { text: 'B', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
+        title: 'จุดปลายทาง', zIndex: 10,
     })
 
     if (route.stopsCoords?.length) {
         stopMarkers = route.stopsCoords.map((s, idx) => new google.maps.Marker({
             position: { lat: s.lat, lng: s.lng }, map: gmap,
-            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 6, fillColor: '#f59e0b', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-            title: s.name || `จุดแวะ ${idx + 1}`,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE, scale: 9,
+                fillColor: '#f59e0b', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+                labelOrigin: new google.maps.Point(0, 0),
+            },
+            label: { text: String(idx + 1), color: '#ffffff', fontWeight: 'bold', fontSize: '10px' },
+            title: s.name || `จุดแวะ ${idx + 1}`, zIndex: 5,
         }))
     }
 
@@ -910,10 +1186,11 @@ async function confirmBooking() {
 // ==================== Map Init ====================
 const initializeMap = () => {
     if (!mapContainer.value || gmap) return
-    const center = userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
+    const center = userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 16.4720, lng: 102.8239 }
     gmap = new google.maps.Map(mapContainer.value, {
-        center, zoom: userLocation.value.lat ? 14 : 6,
+        center, zoom: userLocation.value.lat ? 16 : 14,
         mapTypeControl: false, streetViewControl: false, fullscreenControl: true,
+        gestureHandling: 'greedy',
         styles: [
             { featureType: 'poi', stylers: [{ visibility: 'simplified' }] },
             { featureType: 'transit', stylers: [{ visibility: 'off' }] },
@@ -925,12 +1202,36 @@ const initializeMap = () => {
     if (userLocation.value.lat) updateUserLocationOnMap(userLocation.value.lat, userLocation.value.lng)
 }
 
+// ==================== Locate Me ====================
+async function handleLocateMe() {
+    if (geo.isLocating.value || !geo.hasGps.value) return
+    toast.info('กำลังค้นหาตำแหน่ง', 'กรุณารอสักครู่...')
+    const result = await geo.locate()
+    if (result.isDefault) {
+        if (geo.permissionDenied.value) {
+            toast.warning('GPS ถูกปิดกั้น', 'กรุณาเปิด GPS หรือค้นหาที่อยู่ด้วยตนเอง')
+        } else {
+            toast.error('ไม่พบตำแหน่ง GPS', 'ไม่สามารถหาตำแหน่ง GPS ได้')
+        }
+        return
+    }
+    if (gmap) {
+        gmap.panTo({ lat: result.lat, lng: result.lng })
+        gmap.setZoom(18)
+        if (locationMarkerObj?.marker) locationMarkerObj.marker.setMap(null)
+        if (locationMarkerObj?.circle) locationMarkerObj.circle.setMap(null)
+        locationMarkerObj = geo.renderLocationMarker(gmap, result.lat, result.lng, result.accuracy)
+    }
+    toast.success('พบตำแหน่งแล้ว', `ความแม่นยำ: ~${Math.round(result.accuracy || 0)}m`)
+}
+
 function initAutocomplete() {
     if (!originInputEl.value || !destinationInputEl.value) return
     if (!window.google?.maps?.places) return
     const commonOpts = { fields: ['place_id', 'name', 'formatted_address', 'geometry'] }
 
     originAutocomplete = new google.maps.places.Autocomplete(originInputEl.value, { ...commonOpts, types: ['geocode', 'establishment'] })
+    originInputEl.value.addEventListener('focus', () => { lastFocusedFieldFT.value = 'origin' })
     originAutocomplete.addListener('place_changed', () => {
         const p = originAutocomplete.getPlace()
         if (!p) return
@@ -942,9 +1243,11 @@ function initAutocomplete() {
             lng: p.geometry?.location?.lng?.() ?? null,
             province: getProvinceFromPlace(p)
         }
+        autoSaveRecentFT({ name: p.name, address: p.formatted_address, lat: p.geometry?.location?.lat?.(), lng: p.geometry?.location?.lng?.(), placeId: p.place_id })
     })
 
     destinationAutocomplete = new google.maps.places.Autocomplete(destinationInputEl.value, { ...commonOpts, types: ['geocode', 'establishment'] })
+    destinationInputEl.value.addEventListener('focus', () => { lastFocusedFieldFT.value = 'destination' })
     destinationAutocomplete.addListener('place_changed', () => {
         const p = destinationAutocomplete.getPlace()
         if (!p) return
@@ -956,6 +1259,7 @@ function initAutocomplete() {
             lng: p.geometry?.location?.lng?.() ?? null,
             province: getProvinceFromPlace(p)
         }
+        autoSaveRecentFT({ name: p.name, address: p.formatted_address, lat: p.geometry?.location?.lat?.(), lng: p.geometry?.location?.lng?.(), placeId: p.place_id })
     })
 }
 
@@ -967,7 +1271,7 @@ function openPlacePicker(field) {
     nextTick(() => {
         const meta = field === 'origin' ? searchForm.value._originMeta : searchForm.value._destinationMeta
         const center = (meta?.lat && meta?.lng) ? { lat: meta.lat, lng: meta.lng } : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
-        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 14 : userLocation.value.lat ? 14 : 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
+        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 16 : userLocation.value.lat ? 16 : 14, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
         placePickerMap.addListener('click', (e) => { setPickerMarker(e.latLng); resolvePicked(e.latLng) })
     })
 }
@@ -1201,10 +1505,11 @@ onMounted(() => {
     if (route.query.seat) searchForm.value.seats = route.query.seat
 
     // 2. Initialize
-    if (window.google?.maps) { initAll(); return }
+    if (window.google?.maps) { initAll(); loadLocationDataFT(); return }
     window[GMAPS_CB] = () => {
         try { delete window[GMAPS_CB] } catch { }
         initAll()
+        loadLocationDataFT()
     }
 })
 

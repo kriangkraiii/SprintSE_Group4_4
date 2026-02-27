@@ -175,8 +175,54 @@
                                     </div>
                                 </div>
 
+                                <!-- Inline Add Waypoint Panel -->
+                                <transition name="modal-fade">
+                                    <div v-if="addingWaypointRouteId === route.id" class="mt-4 p-4 bg-amber-50/80 border border-amber-200 rounded-xl" @click.stop>
+                                        <div class="flex items-center justify-between mb-3">
+                                            <h5 class="text-sm font-semibold text-amber-800 flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                เพิ่มจุดแวะระหว่างทาง
+                                            </h5>
+                                            <button @click.stop="cancelAddWaypoint" class="p-1 rounded-lg hover:bg-amber-200/50 text-amber-600 cursor-pointer transition">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <div class="flex-1 relative">
+                                                <input ref="waypointInputRef" type="text" v-model="newWaypointText" placeholder="ค้นหาสถานที่..."
+                                                    class="w-full px-3 py-2.5 text-sm border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 bg-white placeholder:text-amber-400" />
+                                            </div>
+                                            <button @click.stop="submitWaypoint(route.id)" :disabled="!newWaypointMeta.lat || isSubmittingWaypoint"
+                                                class="px-4 py-2.5 text-sm font-medium text-white bg-amber-500 rounded-lg hover:bg-amber-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-sm transition cursor-pointer flex items-center gap-1.5">
+                                                <svg v-if="isSubmittingWaypoint" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                </svg>
+                                                <span>เพิ่ม</span>
+                                            </button>
+                                        </div>
+                                        <p v-if="newWaypointMeta.lat" class="text-[10px] text-amber-600 mt-1.5 flex items-center gap-1">
+                                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                            {{ newWaypointText || 'เลือกสถานที่แล้ว' }}
+                                        </p>
+                                    </div>
+                                </transition>
+
                                 <!-- ปุ่มขวาล่าง -->
-                                <div class="flex justify-end" :class="{ 'mt-4': selectedTripId !== route.id }">
+                                <div class="flex justify-end gap-2" :class="{ 'mt-4': selectedTripId !== route.id }">
+                                    <button v-if="route.status === 'available' && addingWaypointRouteId !== route.id"
+                                        @click.stop="startAddWaypoint(route.id)"
+                                        class="px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-300 rounded-md hover:bg-amber-100 transition cursor-pointer flex items-center gap-1.5">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        เพิ่มจุดแวะ
+                                    </button>
                                     <NuxtLink :to="`/myRoute/${route.id}/edit`"
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover"
                                         @click.stop>
@@ -399,7 +445,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -431,6 +477,74 @@ const mapReady = ref(false)
 const GMAPS_CB = '__gmapsReady__'
 // NEW: เก็บหมุดจุดแวะ
 let stopMarkers = []
+
+// ==================== Add Waypoint State ====================
+const addingWaypointRouteId = ref(null)
+const newWaypointText = ref('')
+const newWaypointMeta = reactive({ lat: null, lng: null, name: '', address: '' })
+const isSubmittingWaypoint = ref(false)
+const waypointInputRef = ref(null)
+let waypointAutocomplete = null
+
+function startAddWaypoint(routeId) {
+    addingWaypointRouteId.value = routeId
+    newWaypointText.value = ''
+    Object.assign(newWaypointMeta, { lat: null, lng: null, name: '', address: '' })
+
+    nextTick(() => {
+        if (!waypointInputRef.value || !window.google?.maps?.places) return
+        waypointAutocomplete = new google.maps.places.Autocomplete(waypointInputRef.value, {
+            componentRestrictions: { country: 'th' },
+            fields: ['geometry', 'name', 'formatted_address', 'place_id'],
+        })
+        waypointAutocomplete.addListener('place_changed', () => {
+            const place = waypointAutocomplete.getPlace()
+            if (!place?.geometry?.location) return
+            newWaypointMeta.lat = place.geometry.location.lat()
+            newWaypointMeta.lng = place.geometry.location.lng()
+            newWaypointMeta.name = place.name || ''
+            newWaypointMeta.address = place.formatted_address || ''
+            newWaypointText.value = place.name || place.formatted_address || ''
+        })
+        waypointInputRef.value.focus()
+    })
+}
+
+function cancelAddWaypoint() {
+    addingWaypointRouteId.value = null
+    newWaypointText.value = ''
+    Object.assign(newWaypointMeta, { lat: null, lng: null, name: '', address: '' })
+    if (waypointAutocomplete) {
+        google.maps.event.clearInstanceListeners(waypointAutocomplete)
+        waypointAutocomplete = null
+    }
+}
+
+async function submitWaypoint(routeId) {
+    if (!newWaypointMeta.lat || isSubmittingWaypoint.value) return
+
+    isSubmittingWaypoint.value = true
+    try {
+        await $api(`/routes/${routeId}/waypoints`, {
+            method: 'POST',
+            body: {
+                lat: newWaypointMeta.lat,
+                lng: newWaypointMeta.lng,
+                name: newWaypointMeta.name,
+                address: newWaypointMeta.address,
+            },
+        })
+        toast.success('เพิ่มจุดแวะสำเร็จ', newWaypointMeta.name || 'เพิ่มจุดแวะใหม่แล้ว')
+        cancelAddWaypoint()
+        // Refresh routes
+        await fetchMyRoutes()
+    } catch (err) {
+        toast.error('ไม่สามารถเพิ่มจุดแวะได้', err?.data?.message || 'กรุณาลองอีกครั้ง')
+    } finally {
+        isSubmittingWaypoint.value = false
+    }
+}
+
 
 const tabs = [
     { status: 'confirmed', label: 'ยืนยันแล้ว' },
@@ -724,16 +838,39 @@ async function updateMap(trip) {
     const start = { lat: Number(trip.coords[0][0]), lng: Number(trip.coords[0][1]) }
     const end = { lat: Number(trip.coords[1][0]), lng: Number(trip.coords[1][1]) }
 
-    startMarker = new google.maps.Marker({ position: start, map: gmap, label: 'A' })
-    endMarker = new google.maps.Marker({ position: end, map: gmap, label: 'B' })
+    startMarker = new google.maps.Marker({
+        position: start, map: gmap,
+        icon: {
+            path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+            fillColor: '#10b981', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+            scale: 1.8, anchor: new google.maps.Point(12, 22), labelOrigin: new google.maps.Point(12, 10),
+        },
+        label: { text: 'A', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
+        title: 'จุดเริ่มต้น', zIndex: 10,
+    })
+    endMarker = new google.maps.Marker({
+        position: end, map: gmap,
+        icon: {
+            path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+            fillColor: '#ef4444', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+            scale: 1.8, anchor: new google.maps.Point(12, 22), labelOrigin: new google.maps.Point(12, 10),
+        },
+        label: { text: 'B', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
+        title: 'จุดปลายทาง', zIndex: 10,
+    })
 
-    // หมุดจุดแวะ
+    // หมุดจุดแวะ (Premium)
     if (Array.isArray(trip.stopsCoords) && trip.stopsCoords.length) {
         stopMarkers = trip.stopsCoords.map((s, idx) => new google.maps.Marker({
             position: { lat: s.lat, lng: s.lng },
             map: gmap,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-            title: s.name || s.address || `จุดแวะ ${idx + 1}`
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE, scale: 9,
+                fillColor: '#f59e0b', fillOpacity: 1, strokeColor: '#ffffff', strokeWeight: 2,
+                labelOrigin: new google.maps.Point(0, 0),
+            },
+            label: { text: String(idx + 1), color: '#ffffff', fontWeight: 'bold', fontSize: '10px' },
+            title: s.name || s.address || `จุดแวะ ${idx + 1}`, zIndex: 5,
         }))
     }
 

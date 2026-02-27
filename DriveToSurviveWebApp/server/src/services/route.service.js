@@ -12,7 +12,13 @@ const baseInclude = {
       lastName: true,
       gender: true,
       profilePicture: true,
-      isVerified: true
+      isVerified: true,
+      driverStats: {
+        select: {
+          avgRating: true,
+          totalReviews: true,
+        }
+      }
     }
   },
   vehicle: {
@@ -391,6 +397,36 @@ const cancelRoute = async (routeId, driverId, opts = {}) => {
   return { id: routeId, status: RouteStatus.CANCELLED, cancelledBy: 'DRIVER', cancelledAt: now };
 };
 
+/**
+ * Add a waypoint to an existing route (driver only, AVAILABLE status)
+ */
+const addWaypointToRoute = async (routeId, driverId, waypointData) => {
+  const route = await prisma.route.findUnique({
+    where: { id: routeId },
+    select: { id: true, driverId: true, status: true, waypoints: true },
+  });
+
+  if (!route) throw new ApiError(404, 'Route not found');
+  if (route.driverId !== driverId) throw new ApiError(403, 'Not your route');
+  if (route.status !== 'AVAILABLE') throw new ApiError(400, 'Cannot modify a non-active route');
+
+  const { lat, lng, name, address } = waypointData;
+  if (lat == null || lng == null || !name) {
+    throw new ApiError(400, 'lat, lng, name are required for waypoint');
+  }
+
+  const currentWaypoints = Array.isArray(route.waypoints) ? route.waypoints : [];
+  currentWaypoints.push({ lat: Number(lat), lng: Number(lng), name, address: address || name });
+
+  const updated = await prisma.route.update({
+    where: { id: routeId },
+    data: { waypoints: currentWaypoints },
+    include: baseInclude,
+  });
+
+  return updated;
+};
+
 module.exports = {
   getAllRoutes,
   searchRoutes,
@@ -399,5 +435,6 @@ module.exports = {
   createRoute,
   updateRoute,
   deleteRoute,
-  cancelRoute
+  cancelRoute,
+  addWaypointToRoute,
 };
