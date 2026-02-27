@@ -6,10 +6,10 @@ const blacklistService = require('../services/blacklist.service');
  * PDPA ม.22: เก็บเฉพาะ Hash ไม่เก็บเลข 13 หลักดิบ
  */
 const addToBlacklist = asyncHandler(async (req, res) => {
-    const { nationalId, reason } = req.body;
+    const { nationalId, reason, bannedRole } = req.body;
     const adminId = req.user.sub;
 
-    const entry = await blacklistService.addToBlacklist(nationalId, reason, adminId);
+    const entry = await blacklistService.addToBlacklist(nationalId, reason, adminId, bannedRole);
 
     res.status(201).json({
         success: true,

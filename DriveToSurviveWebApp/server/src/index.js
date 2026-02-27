@@ -1,6 +1,15 @@
 const { app, ensureAdmin } = require('./app');
+const http = require('http');
+const { initSocketIO } = require('./socket');
 
 const PORT = process.env.PORT || 3001;
+
+// Create HTTP server wrapping Express (needed for Socket.IO)
+const server = http.createServer(app);
+const io = initSocketIO(server);
+
+// Share io globally for use in services
+app.set('io', io);
 
 (async () => {
   try {
@@ -14,9 +23,10 @@ const PORT = process.env.PORT || 3001;
     console.error('Admin bootstrap failed:', e);
   }
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Express API server running on http://localhost:${PORT}`);
+  server.listen(PORT, () => {
+    console.log(`🚀 Express API + Socket.IO server running on http://localhost:${PORT}`);
     console.log(`📖 Swagger docs: http://localhost:${PORT}/documentation`);
+    console.log(`🔌 WebSocket ready on ws://localhost:${PORT}`);
   });
 })();
 

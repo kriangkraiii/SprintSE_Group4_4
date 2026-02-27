@@ -154,6 +154,7 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
     sortOrder = 'desc',
     startProvince,
     endProvince,
+    excludeDriverId,
   } = opts;
 
   const offset = (page - 1) * limit;
@@ -170,6 +171,7 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
   const eLng = endNearLng ?? null;
   const sProv = startProvince || null;
   const eProv = endProvince || null;
+  const exDrv = excludeDriverId || null;
 
   // เลือกเฉพาะ id ก่อน เพื่อทำ include รอบสอง
   // ใช้ Haversine (เป็นเมตร) กับ lat/lng ที่ดึงจาก JSON
@@ -198,6 +200,7 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
         )
         AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
         AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
+        AND (${exDrv} IS NULL OR r.driverId != ${exDrv})
       ORDER BY ${Prisma.raw(`r.\`${sortField}\``)} ${Prisma.raw(sortDir)}
       LIMIT ${limit} OFFSET ${offset}
     `
@@ -229,6 +232,7 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
         )
         AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
         AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
+        AND (${exDrv} IS NULL OR r.driverId != ${exDrv})
     `
   );
   const total = Number(totalRows?.[0]?.cnt) || 0;

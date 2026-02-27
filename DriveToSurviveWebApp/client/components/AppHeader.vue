@@ -32,7 +32,7 @@
                     </NuxtLink>
 
                     <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                    <div v-if="user" class="relative dropdown-trigger">
+                    <div v-if="token" class="relative dropdown-trigger">
                         <button
                             class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
                             :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
@@ -58,6 +58,17 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 คำขอจองเส้นทางของฉัน
+                            </NuxtLink>
+                            <div class="my-1 border-t border-slate-100"></div>
+                            <NuxtLink to="/chat"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
+                                <span class="w-4 h-4 text-center">💬</span>
+                                ข้อความ
+                            </NuxtLink>
+                            <NuxtLink to="/reviews"
+                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
+                                <span class="w-4 h-4 text-center">⭐</span>
+                                รีวิวของฉัน
                             </NuxtLink>
                         </div>
                     </div>
@@ -261,7 +272,7 @@
                         ค้นหาเส้นทาง
                     </NuxtLink>
 
-                    <NuxtLink v-if="user" to="/createTrip"
+                    <NuxtLink v-if="token" to="/createTrip"
                         class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
                         :class="$route.path === '/createTrip' ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
@@ -269,7 +280,7 @@
                     </NuxtLink>
 
                     <!-- ทุกคนเห็น dropdown —  ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                    <div v-if="user">
+                    <div v-if="token">
                         <button @click="toggleMobileTripMenu"
                             class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-left rounded-lg cursor-pointer text-slate-700 hover:text-primary hover:bg-slate-50">
                             การเดินทางทั้งหมด
@@ -284,6 +295,12 @@
                             </NuxtLink>
                             <NuxtLink to="/myRoute" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
                                 คำขอจองเส้นทางของฉัน
+                            </NuxtLink>
+                            <NuxtLink to="/chat" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
+                                💬 ข้อความ
+                            </NuxtLink>
+                            <NuxtLink to="/reviews" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
+                                ⭐ รีวิวของฉัน
                             </NuxtLink>
                         </div>
                     </div>
