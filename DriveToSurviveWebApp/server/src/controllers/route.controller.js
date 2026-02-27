@@ -486,6 +486,17 @@ const cancelRoute = asyncHandler(async (req, res) => {
   });
 });
 
+const addWaypoint = asyncHandler(async (req, res) => {
+  const driverId = req.user.sub;
+  const { id } = req.params;
+  const updated = await routeService.addWaypointToRoute(id, driverId, req.body);
+  res.status(200).json({
+    success: true,
+    message: "Waypoint added successfully",
+    data: updated,
+  });
+});
+
 module.exports = {
   getAllRoutes,
   listRoutes,
@@ -500,4 +511,5 @@ module.exports = {
   adminDeleteRoute,
   adminGetRoutesByDriver,
   cancelRoute,
+  addWaypoint,
 };

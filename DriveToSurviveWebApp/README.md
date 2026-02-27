@@ -103,6 +103,11 @@ Initialize the database schema using Prisma (run from the `server` directory or 
 cd server
 npx prisma generate
 npx prisma db push
+
+
+ln -s ../.env .env
+npx prisma db push
+
 # OR
 npm run db:migrate
 ```
