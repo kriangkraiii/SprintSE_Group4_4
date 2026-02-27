@@ -234,7 +234,12 @@
                                 </div>
 
                                 <div class="flex justify-end">
-                                    <button @click.stop="openModal(route)" :disabled="route.availableSeats === 0"
+                                    <template v-if="route.isOwner">
+                                        <span class="px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 rounded-xl border border-amber-200">
+                                            🚗 คุณเป็นคนขับของเส้นทางนี้
+                                        </span>
+                                    </template>
+                                    <button v-else @click.stop="openModal(route)" :disabled="route.availableSeats === 0"
                                         class="px-6 py-2.5 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 transition cursor-pointer">
                                         จองที่นั่ง
                                     </button>
@@ -489,7 +494,7 @@ dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
-const { token } = useAuth()
+const { token, user: authUser } = useAuth()
 const config = useRuntimeConfig()
 const GMAPS_CB = '__gmapsReady__'
 
@@ -647,8 +652,24 @@ async function handleSearch() {
 
         if (usedRadius) q.radiusMeters = RADIUS_METERS
 
+        // ส่ง excludeDriverId เพื่อกรองเส้นทางของตัวเองออกที่ server
+        // ดึง userId จาก cookie user ก่อน, ถ้าไม่มีให้ decode JWT token เป็น fallback
+        let myId = authUser.value?.id ? String(authUser.value.id) : null
+        if (!myId && token.value && process.client) {
+            try {
+                const payload = JSON.parse(atob(token.value.split('.')[1]))
+                myId = payload.sub ? String(payload.sub) : null
+            } catch (_) { /* ignore decode error */ }
+        }
+        if (myId) q.excludeDriverId = myId
+
         const apiRes = await $api('/routes', { query: q })
-        const raw = (apiRes?.data || apiRes || []).filter(r => r.status === 'AVAILABLE')
+        const raw = (apiRes?.data || apiRes || []).filter(r => {
+            if (r.status !== 'AVAILABLE') return false
+            // กรองซ้ำฝั่ง client เป็น fallback
+            if (myId && (String(r.driverId) === myId || String(r.driver?.id) === myId)) return false
+            return true
+        })
 
         routes.value = raw.map(route => {
             const wp = route.waypoints || {}
@@ -679,6 +700,7 @@ async function handleSearch() {
                 originAddress: route.startLocation?.address ? cleanAddr(route.startLocation.address) : null,
                 destinationAddress: route.endLocation?.address ? cleanAddr(route.endLocation.address) : null,
                 driver: {
+                    id: route.driver?.id,
                     name: `${route.driver?.firstName || ''} ${route.driver?.lastName || ''}`.trim() || 'ไม่ระบุชื่อ',
                     image: route.driver?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(route.driver?.firstName || 'U')}&background=random&size=64`,
                     rating: 4.5,
@@ -691,6 +713,11 @@ async function handleSearch() {
                 durationText: formatDuration(route.duration) || route.duration || '-',
                 distanceText: formatDistance(route.distance) || route.distance || '-',
                 polyline: route.routePolyline || null,
+                driverId: route.driver?.id || route.driverId,
+                isOwner: (() => {
+                    const rdId = route.driver?.id || route.driverId
+                    return !!(myId && rdId && String(myId) === String(rdId))
+                })(),
                 stops,
                 stopsCoords,
             }
@@ -816,6 +843,12 @@ function getPlaceName(placeId) {
 // ==================== Booking ====================
 function openModal(route) {
     if (!token.value) return navigateTo('/login')
+    
+    // ป้องกันคนขับจองเส้นทางตัวเอง
+    if (route?.isOwner) {
+        toast('คุณเป็นคนขับของเส้นทางนี้ ไม่สามารถจองได้', 'error')
+        return
+    }
     if (route?.availableSeats > 0) {
         bookingRoute.value = route
         bookingSeats.value = 1

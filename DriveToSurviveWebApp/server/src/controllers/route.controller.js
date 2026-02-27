@@ -68,6 +68,16 @@ const createRoute = asyncHandler(async (req, res) => {
   const driverId = req.user.sub;
   const { vehicleId, optimizeWaypoints, ...routeFields } = req.body;
 
+  // ตรวจ driver suspension (role-based ban)
+  const prisma = require('../utils/prisma');
+  const driver = await prisma.user.findUnique({
+    where: { id: driverId },
+    select: { driverSuspendedUntil: true, role: true }
+  });
+  if (driver?.driverSuspendedUntil && new Date(driver.driverSuspendedUntil) > new Date()) {
+    throw new ApiError(403, 'บัญชีคนขับของคุณถูกระงับชั่วคราว ไม่สามารถสร้างเส้นทางได้');
+  }
+
   await vehicleService.getVehicleById(vehicleId, driverId);
 
   const payload = {

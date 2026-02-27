@@ -156,20 +156,29 @@
                                         ยกเลิกการจอง
                                     </button>
 
-                                    <!-- CONFIRMED: เพิ่มปุ่มยกเลิก + คงปุ่มแชท -->
-                                    <template v-else-if="trip.status === 'confirmed'">
+                                    <!-- CONFIRMED / IN_PROGRESS: ยกเลิก + แชท -->
+                                    <template v-else-if="['confirmed', 'in_progress'].includes(trip.status)">
                                         <button @click.stop="openCancelModal(trip)"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
                                         </button>
-                                        <button
+                                        <button @click.stop="openChat(trip)"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover">
-                                            แชทกับผู้ขับ
+                                            💬 แชทกับผู้ขับ
                                         </button>
                                     </template>
 
-                                    <!-- REJECTED / CANCELLED: ลบได้ -->
-                                    <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"
+                                    <!-- COMPLETED: รีวิว -->
+                                    <template v-else-if="trip.status === 'completed'">
+                                        <NuxtLink :to="`/reviews/create?bookingId=${trip.id}`"
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-amber-500 rounded-md hover:bg-amber-600"
+                                            @click.stop>
+                                            ⭐ เขียนรีวิว
+                                        </NuxtLink>
+                                    </template>
+
+                                    <!-- REJECTED / CANCELLED / NO_SHOW: ลบได้ -->
+                                    <button v-else-if="['rejected', 'cancelled', 'no_show'].includes(trip.status)"
                                         @click.stop="openConfirmModal(trip, 'delete')"
                                         class="px-4 py-2 text-sm text-slate-500 transition duration-200 border border-slate-200 rounded-md hover:bg-slate-50">
                                         ลบรายการ
@@ -240,6 +249,7 @@ import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
+import { useChat } from '~/composables/useChat'
 
 // Setup dayjs for Thai locale
 dayjs.locale('th')
@@ -247,6 +257,8 @@ dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+const { createSession: createChatSession } = useChat()
+const router = useRouter()
 
 // --- State Management ---
 const activeTab = ref('pending')
@@ -272,6 +284,8 @@ const GMAPS_CB = '__gmapsReady__'
 const tabs = [
     { status: 'pending', label: 'รอดำเนินการ' },
     { status: 'confirmed', label: 'ยืนยันแล้ว' },
+    { status: 'in_progress', label: 'กำลังเดินทาง' },
+    { status: 'completed', label: 'เสร็จสิ้น' },
     { status: 'rejected', label: 'ปฏิเสธ' },
     { status: 'cancelled', label: 'ยกเลิก' },
     { status: 'all', label: 'ทั้งหมด' }
@@ -682,6 +696,16 @@ async function submitCancel() {
         toast.error('เกิดข้อผิดพลาด', err?.data?.message || 'ไม่สามารถยกเลิกได้')
     } finally {
         isSubmittingCancel.value = false
+    }
+}
+
+async function openChat(trip) {
+    try {
+        const session = await createChatSession(trip.id)
+        router.push(`/chat/${session.id}`)
+    } catch (err) {
+        console.error('Open chat failed:', err)
+        toast.error('เปิดแชทไม่สำเร็จ', err?.statusMessage || 'กรุณาลองใหม่')
     }
 }
 

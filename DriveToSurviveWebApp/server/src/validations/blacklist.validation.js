@@ -6,6 +6,7 @@ const addBlacklistSchema = z.object({
         .length(13, 'National ID must be exactly 13 digits')
         .regex(/^\d{13}$/, 'National ID must contain only digits'),
     reason: z.string().max(500).optional(),
+    bannedRole: z.enum(['PASSENGER', 'DRIVER', 'BOTH']).optional().default('BOTH'),
 });
 
 const checkBlacklistSchema = z.object({
