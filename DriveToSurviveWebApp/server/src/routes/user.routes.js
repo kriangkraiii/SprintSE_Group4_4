@@ -5,6 +5,8 @@ const upload = require('../middlewares/upload.middleware');
 const { idParamSchema, createUserSchema, createAdminUserSchema, updateMyProfileSchema, updateUserByAdminSchema, updateUserStatusSchema, listUsersQuerySchema } = require('../validations/user.validation');
 const { protect, requireAdmin } = require('../middlewares/auth');
 
+const { authLimiter } = require('../middlewares/rateLimiter');
+
 const router = express.Router();
 
 // --- Admin Routes ---
@@ -96,6 +98,7 @@ router.get(
 // POST /api/users
 router.post(
     '/',
+    authLimiter,
     upload.fields([
         { name: 'nationalIdPhotoUrl', maxCount: 1 },
         { name: 'nationalIdBackPhotoUrl', maxCount: 1 },

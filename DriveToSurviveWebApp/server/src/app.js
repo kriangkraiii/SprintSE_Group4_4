@@ -6,7 +6,8 @@ require("dotenv").config({
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-// const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
+const { globalLimiter } = require('./middlewares/rateLimiter');
 const promClient = require('prom-client');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
@@ -47,16 +48,18 @@ app.use(cors(corsOptions));
 // Express 5: wildcard ต้องใช้ named parameter
 app.options('{*path}', cors(corsOptions));
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
-//Rate Limiting
-// const limiter = rateLimit({
-//     windowMs: 15 * 60 * 1000, // 15 minutes
-//     max: 100,
-//     standardHeaders: true,
-//     legacyHeaders: false,
-// });
-// app.use(limiter);
+// Rate Limiting — ป้องกัน brute-force ทุก API
+app.use('/api', globalLimiter);
+
+// X-Request-ID — traceability
+app.use((req, res, next) => {
+    req.requestId = req.headers['x-request-id'] || crypto.randomUUID();
+    res.setHeader('X-Request-ID', req.requestId);
+    next();
+});
 
 //Metrics Middleware
 app.use(metricsMiddleware);
