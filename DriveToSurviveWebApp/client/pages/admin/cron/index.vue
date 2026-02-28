@@ -169,9 +169,10 @@ const fetchCronStatus = async () => {
     loading.value = true
     try {
         const res = await $api('/admin/cron/status')
-        jobs.value = res.data || []
+        const data = Array.isArray(res) ? res : (res?.data || [])
+        jobs.value = data
         // Set current schedule in dropdowns
-        jobs.value.forEach(job => {
+        data.forEach(job => {
             if (job.currentSchedule) {
                 editSchedules[job.name] = job.currentSchedule
             } else {
