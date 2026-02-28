@@ -49,6 +49,7 @@ const createSession = async (bookingId) => {
 
 /**
  * End a chat session when trip ends
+ * Sets lifecycle timers: chatExpiresAt (+1 day), readOnlyExpiresAt (+8 days)
  */
 const endSession = async (bookingId) => {
     const session = await prisma.chatSession.findUnique({
@@ -58,11 +59,17 @@ const endSession = async (bookingId) => {
     if (!session) throw new ApiError(404, 'Chat session not found');
     if (session.status === 'ENDED') return session;
 
+    const now = new Date();
+    const chatExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // +1 day
+    const readOnlyExpiresAt = new Date(now.getTime() + 6 * 24 * 60 * 60 * 1000); // +6 days
+
     const updated = await prisma.chatSession.update({
         where: { id: session.id },
         data: {
             status: 'ENDED',
-            endedAt: new Date(),
+            endedAt: now,
+            chatExpiresAt,
+            readOnlyExpiresAt,
         },
     });
 
@@ -72,7 +79,7 @@ const endSession = async (bookingId) => {
             sessionId: session.id,
             senderId: session.driverId,
             type: 'SYSTEM',
-            content: '🔒 แชทนี้ถูกปิดแล้ว — This chat has been closed',
+            content: '🔒 การเดินทางจบแล้ว — ยังคุยต่อได้อีก 1 วัน หลังจากนั้นจะเป็นอ่านอย่างเดียว',
         },
     });
 
@@ -81,6 +88,7 @@ const endSession = async (bookingId) => {
 
 /**
  * Send a message with content filtering
+ * Lifecycle: ACTIVE = allowed, ENDED (within 1 day) = allowed, READ_ONLY/ARCHIVED = blocked
  */
 const sendMessage = async (sessionId, senderId, data) => {
     const session = await prisma.chatSession.findUnique({
@@ -88,8 +96,19 @@ const sendMessage = async (sessionId, senderId, data) => {
     });
 
     if (!session) throw new ApiError(404, 'Chat session not found');
+
+    // Lifecycle check
+    if (session.status === 'READ_ONLY') {
+        throw new ApiError(403, 'แชทนี้อ่านได้อย่างเดียว — Chat is read-only');
+    }
+    if (session.status === 'ARCHIVED') {
+        throw new ApiError(403, 'แชทนี้ถูกลบแล้ว — Chat has been archived');
+    }
     if (session.status === 'ENDED') {
-        throw new ApiError(403, 'Chat session has ended');
+        // Allow if within chatExpiresAt window
+        if (session.chatExpiresAt && new Date() > session.chatExpiresAt) {
+            throw new ApiError(403, 'หมดเวลาส่งข้อความแล้ว — Chat window expired');
+        }
     }
 
     // Verify sender is participant
@@ -98,7 +117,7 @@ const sendMessage = async (sessionId, senderId, data) => {
     }
 
     // Apply content filter
-    const { filtered, original, isFiltered, matches } = filterContent(data.content);
+    const { filtered, original, isFiltered, matches } = filterContent(data.content || '');
 
     const unsendDeadline = new Date();
     unsendDeadline.setMinutes(unsendDeadline.getMinutes() + UNSEND_WINDOW_MINUTES);
@@ -109,6 +128,7 @@ const sendMessage = async (sessionId, senderId, data) => {
             senderId,
             type: data.type || 'TEXT',
             content: filtered,
+            imageUrl: data.imageUrl || null,
             originalContent: isFiltered ? original : null,
             isFiltered,
             unsendDeadline,
@@ -120,6 +140,7 @@ const sendMessage = async (sessionId, senderId, data) => {
             senderId: true,
             type: true,
             content: true,
+            imageUrl: true,
             isFiltered: true,
             isUnsent: true,
             metadata: true,
