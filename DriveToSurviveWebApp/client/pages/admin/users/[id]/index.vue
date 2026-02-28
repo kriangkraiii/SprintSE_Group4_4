@@ -289,13 +289,20 @@
 
                                     <!-- รูปใบขับขี่ -->
                                     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-                                        <div v-if="licenseData.licensePhotoUrl || licenseData.selfiePhotoUrl">
+                                        <div v-if="hasRealLicensePhoto">
                                             <label class="block mb-1 text-xs font-medium text-slate-500">รูปใบขับขี่ / Selfie</label>
                                             <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md bg-slate-50">
-                                                <a :href="licenseData.licensePhotoUrl || licenseData.selfiePhotoUrl" target="_blank" class="block">
-                                                    <img :src="licenseData.licensePhotoUrl || licenseData.selfiePhotoUrl" alt="License Photo"
+                                                <a :href="realLicensePhoto" target="_blank" class="block">
+                                                    <img :src="realLicensePhoto" alt="License Photo"
                                                         class="rounded max-h-60 mx-auto" />
                                                 </a>
+                                            </div>
+                                        </div>
+                                        <div v-else-if="licenseData.status === 'APPROVED'">
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">รูปใบขับขี่ / Selfie</label>
+                                            <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md bg-slate-50 text-slate-400">
+                                                <i class="fas fa-check-circle text-2xl text-green-400 mb-1"></i>
+                                                <p class="text-sm">ไม่มีรูป — อนุมัติโดยแอดมิน</p>
                                             </div>
                                         </div>
                                     </div>
@@ -418,6 +425,7 @@ useHead({
 
 const route = useRoute()
 const { toast } = useToast()
+const { $api } = useNuxtApp()
 
 const isLoading = ref(true)
 const loadError = ref('')
@@ -600,6 +608,17 @@ function mapLicenseType(type) {
     return map[type] || type || '-'
 }
 
+const isRealUrl = (url) => url && url.startsWith('http')
+
+const realLicensePhoto = computed(() => {
+    if (!licenseData.value) return null
+    if (isRealUrl(licenseData.value.licensePhotoUrl)) return licenseData.value.licensePhotoUrl
+    if (isRealUrl(licenseData.value.selfiePhotoUrl)) return licenseData.value.selfiePhotoUrl
+    return null
+})
+
+const hasRealLicensePhoto = computed(() => !!realLicensePhoto.value)
+
 const licenseStatusClass = computed(() => {
     if (!licenseData.value) return ''
     switch (licenseData.value.status) {
@@ -649,15 +668,19 @@ async function onToggleLicense(checked) {
         const res = await $fetch('/driver-verifications/admin/quick-approve', {
             baseURL: config.public.apiBase,
             method: 'POST',
-            headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
             body: { userId: user.value.id, approve: checked }
         })
         licenseData.value = res?.data || licenseData.value
         if (licenseData.value) licenseData.value.status = checked ? 'APPROVED' : 'REJECTED'
         toast.success(checked ? '✅ อนุมัติใบขับขี่แล้ว' : '❌ ยกเลิกการอนุมัติใบขับขี่')
     } catch (err) {
-        console.error('Toggle license error:', err)
-        toast.error('เกิดข้อผิดพลาด', err?.data?.message || err?.message || '')
+        console.error('Toggle license error:', err, err?.data)
+        toast.error('เกิดข้อผิดพลาด', err?.data?.message || err?.statusMessage || err?.message || '')
         await fetchLicenseData()
     } finally {
         licenseToggling.value = false

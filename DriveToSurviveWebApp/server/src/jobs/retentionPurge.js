@@ -28,10 +28,10 @@ async function purgeExpiredData() {
         });
         const protectedSessionIds = new Set(activeDisputes.map(d => d.sessionId));
 
-        // 2. Delete expired ChatMessages (excluding protected sessions)
+        // 2. Delete expired ChatMessages (via session's retentionExpiresAt)
         const expiredMessages = await prisma.chatMessage.deleteMany({
             where: {
-                retentionExpiresAt: { lte: cutoff },
+                session: { retentionExpiresAt: { lte: cutoff } },
                 sessionId: { notIn: [...protectedSessionIds] },
             },
         });
