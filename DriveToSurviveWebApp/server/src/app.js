@@ -6,6 +6,7 @@ require("dotenv").config({
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const crypto = require('crypto');
 const { globalLimiter } = require('./middlewares/rateLimiter');
 const promClient = require('prom-client');
@@ -22,6 +23,7 @@ const app = express();
 promClient.collectDefaultMetrics();
 
 app.use(helmet());
+app.use(compression());
 
 const defaultAllowedOrigins = [
     'http://localhost:3000',
@@ -44,6 +46,7 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+app.set('trust proxy', 1);
 app.use(cors(corsOptions));
 // Express 5: wildcard ต้องใช้ named parameter
 app.options('{*path}', cors(corsOptions));
