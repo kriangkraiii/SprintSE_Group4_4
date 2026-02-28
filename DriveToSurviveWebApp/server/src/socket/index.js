@@ -90,6 +90,46 @@ function initSocketIO(httpServer) {
             socket.to(`chat:${sessionId}`).emit('user-stop-typing', { userId, sessionId });
         });
 
+        // ─── GPS Location Tracking (Route-level) ─────────
+        // Join a route room for location sharing (post-booking)
+        socket.on('join-route', (routeId) => {
+            socket.join(`route:${routeId}`);
+            console.log(`[WS] ${userId} joined route:${routeId} for GPS tracking`);
+        });
+
+        socket.on('leave-route', (routeId) => {
+            socket.leave(`route:${routeId}`);
+        });
+
+        // Join route preview (pre-booking — see driver only)
+        socket.on('join-route-preview', (routeId) => {
+            socket.join(`route-preview:${routeId}`);
+        });
+
+        socket.on('leave-route-preview', (routeId) => {
+            socket.leave(`route-preview:${routeId}`);
+        });
+
+        // Receive location update from any participant
+        socket.on('location-update', (data) => {
+            const { routeId, lat, lng, name } = data;
+            if (!routeId || lat == null || lng == null) return;
+            const payload = {
+                userId,
+                role: socket.userRole,
+                name: name || '',
+                lat,
+                lng,
+                timestamp: Date.now(),
+            };
+            // Broadcast to post-booking participants
+            socket.to(`route:${routeId}`).emit('participant-location', payload);
+            // If driver, also broadcast to preview viewers
+            if (socket.userRole === 'DRIVER') {
+                socket.to(`route-preview:${routeId}`).emit('driver-location-preview', payload);
+            }
+        });
+
         // Disconnect
         socket.on('disconnect', () => {
             console.log(`[WS] User disconnected: ${userId}`);

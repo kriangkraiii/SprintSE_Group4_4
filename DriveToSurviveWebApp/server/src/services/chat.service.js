@@ -6,41 +6,50 @@ const RETENTION_DAYS = 90;
 const UNSEND_WINDOW_MINUTES = 5;
 
 /**
- * Create a chat session when booking is confirmed
+ * Get or create a group chat session for a route
+ * Called when first booking is confirmed on a route
  */
-const createSession = async (bookingId) => {
+const createSession = async (routeId, userId) => {
     // Check if session already exists (idempotent)
     const existing = await prisma.chatSession.findUnique({
-        where: { bookingId },
+        where: { routeId },
+        include: { participants: { select: { userId: true } } },
     });
-    if (existing) return existing;
+    if (existing) {
+        // Auto-add participant if not already in
+        await addParticipant(existing.id, userId);
+        return existing;
+    }
 
-    const booking = await prisma.booking.findUnique({
-        where: { id: bookingId },
-        include: { route: { select: { driverId: true } } },
+    const route = await prisma.route.findUnique({
+        where: { id: routeId },
+        select: { driverId: true },
     });
-
-    if (!booking) throw new ApiError(404, 'Booking not found');
+    if (!route) throw new ApiError(404, 'Route not found');
 
     const retentionExpiresAt = new Date();
     retentionExpiresAt.setDate(retentionExpiresAt.getDate() + RETENTION_DAYS);
 
     const session = await prisma.chatSession.create({
         data: {
-            bookingId,
-            driverId: booking.route.driverId,
-            passengerId: booking.passengerId,
+            routeId,
+            driverId: route.driverId,
             retentionExpiresAt,
+            participants: {
+                create: [
+                    { userId: route.driverId },
+                    { userId },
+                ],
+            },
         },
     });
 
-    // Auto-send system welcome message
     await prisma.chatMessage.create({
         data: {
             sessionId: session.id,
-            senderId: booking.route.driverId, // system uses driver as sender context
+            senderId: route.driverId,
             type: 'SYSTEM',
-            content: '💬 แชทเริ่มต้นแล้ว คุณสามารถคุยกันได้อย่างปลอดภัย / Chat started. You can communicate safely.',
+            content: '💬 แชทกลุ่มเริ่มต้นแล้ว ผู้โดยสารและคนขับสามารถคุยกันได้อย่างปลอดภัย',
         },
     });
 
@@ -48,32 +57,45 @@ const createSession = async (bookingId) => {
 };
 
 /**
- * End a chat session when trip ends
- * Sets lifecycle timers: chatExpiresAt (+1 day), readOnlyExpiresAt (+8 days)
+ * Add a participant to an existing group chat session
  */
-const endSession = async (bookingId) => {
-    const session = await prisma.chatSession.findUnique({
-        where: { bookingId },
+const addParticipant = async (sessionId, userId) => {
+    // Upsert — skip if already exists
+    await prisma.chatSessionParticipant.upsert({
+        where: { sessionId_userId: { sessionId, userId } },
+        update: {},
+        create: { sessionId, userId },
     });
 
+    // System message
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { firstName: true } });
+    await prisma.chatMessage.create({
+        data: {
+            sessionId,
+            senderId: userId,
+            type: 'SYSTEM',
+            content: `👤 ${user?.firstName || 'ผู้โดยสาร'} เข้าร่วมห้องแชท`,
+        },
+    });
+};
+
+/**
+ * End a chat session when trip ends
+ */
+const endSession = async (routeId) => {
+    const session = await prisma.chatSession.findUnique({ where: { routeId } });
     if (!session) throw new ApiError(404, 'Chat session not found');
     if (session.status === 'ENDED') return session;
 
     const now = new Date();
-    const chatExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // +1 day
-    const readOnlyExpiresAt = new Date(now.getTime() + 6 * 24 * 60 * 60 * 1000); // +6 days
+    const chatExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const readOnlyExpiresAt = new Date(now.getTime() + 8 * 24 * 60 * 60 * 1000);
 
     const updated = await prisma.chatSession.update({
         where: { id: session.id },
-        data: {
-            status: 'ENDED',
-            endedAt: now,
-            chatExpiresAt,
-            readOnlyExpiresAt,
-        },
+        data: { status: 'ENDED', endedAt: now, chatExpiresAt, readOnlyExpiresAt },
     });
 
-    // Add system message
     await prisma.chatMessage.create({
         data: {
             sessionId: session.id,
@@ -87,42 +109,46 @@ const endSession = async (bookingId) => {
 };
 
 /**
- * Send a message with content filtering
- * Lifecycle: ACTIVE = allowed, ENDED (within 1 day) = allowed, READ_ONLY/ARCHIVED = blocked
+ * Check if user is a participant in the session
  */
-const sendMessage = async (sessionId, senderId, data) => {
+const isParticipant = async (sessionId, userId) => {
     const session = await prisma.chatSession.findUnique({
         where: { id: sessionId },
+        select: { driverId: true },
     });
+    if (!session) return false;
+    if (session.driverId === userId) return true;
 
+    const participant = await prisma.chatSessionParticipant.findUnique({
+        where: { sessionId_userId: { sessionId, userId } },
+    });
+    return !!participant;
+};
+
+/**
+ * Send a message with content filtering
+ */
+const sendMessage = async (sessionId, senderId, data) => {
+    const session = await prisma.chatSession.findUnique({ where: { id: sessionId } });
     if (!session) throw new ApiError(404, 'Chat session not found');
 
     // Lifecycle check
-    if (session.status === 'READ_ONLY') {
-        throw new ApiError(403, 'แชทนี้อ่านได้อย่างเดียว — Chat is read-only');
-    }
-    if (session.status === 'ARCHIVED') {
-        throw new ApiError(403, 'แชทนี้ถูกลบแล้ว — Chat has been archived');
-    }
-    if (session.status === 'ENDED') {
-        // Allow if within chatExpiresAt window
-        if (session.chatExpiresAt && new Date() > session.chatExpiresAt) {
-            throw new ApiError(403, 'หมดเวลาส่งข้อความแล้ว — Chat window expired');
-        }
+    if (session.status === 'READ_ONLY') throw new ApiError(403, 'แชทนี้อ่านได้อย่างเดียว');
+    if (session.status === 'ARCHIVED') throw new ApiError(403, 'แชทนี้ถูกลบแล้ว');
+    if (session.status === 'ENDED' && session.chatExpiresAt && new Date() > session.chatExpiresAt) {
+        throw new ApiError(403, 'หมดเวลาส่งข้อความแล้ว');
     }
 
     // Verify sender is participant
-    if (session.driverId !== senderId && session.passengerId !== senderId) {
+    if (!(await isParticipant(sessionId, senderId))) {
         throw new ApiError(403, 'You are not a participant in this chat');
     }
 
-    // Apply content filter
-    const { filtered, original, isFiltered, matches } = filterContent(data.content || '');
-
+    const { filtered, original, isFiltered } = filterContent(data.content || '');
     const unsendDeadline = new Date();
     unsendDeadline.setMinutes(unsendDeadline.getMinutes() + UNSEND_WINDOW_MINUTES);
 
-    const message = await prisma.chatMessage.create({
+    return prisma.chatMessage.create({
         data: {
             sessionId,
             senderId,
@@ -135,21 +161,11 @@ const sendMessage = async (sessionId, senderId, data) => {
             metadata: data.metadata || null,
         },
         select: {
-            id: true,
-            sessionId: true,
-            senderId: true,
-            type: true,
-            content: true,
-            imageUrl: true,
-            isFiltered: true,
-            isUnsent: true,
-            metadata: true,
-            createdAt: true,
+            id: true, sessionId: true, senderId: true, type: true, content: true,
+            imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
             sender: { select: { firstName: true, profilePicture: true } },
         },
     });
-
-    return message;
 };
 
 /**
@@ -158,19 +174,11 @@ const sendMessage = async (sessionId, senderId, data) => {
 const getMessages = async (sessionId, userId, opts = {}) => {
     const { page = 1, limit = 50 } = opts;
 
-    const session = await prisma.chatSession.findUnique({
-        where: { id: sessionId },
-    });
-
-    if (!session) throw new ApiError(404, 'Chat session not found');
-
-    // Verify participant
-    if (session.driverId !== userId && session.passengerId !== userId) {
+    if (!(await isParticipant(sessionId, userId))) {
         throw new ApiError(403, 'You are not a participant in this chat');
     }
 
     const skip = (page - 1) * limit;
-
     const [total, messages] = await prisma.$transaction([
         prisma.chatMessage.count({ where: { sessionId } }),
         prisma.chatMessage.findMany({
@@ -179,21 +187,15 @@ const getMessages = async (sessionId, userId, opts = {}) => {
             skip,
             take: Number(limit),
             select: {
-                id: true,
-                senderId: true,
-                type: true,
-                content: true,
-                isFiltered: true,
-                isUnsent: true,
-                metadata: true,
-                createdAt: true,
+                id: true, senderId: true, type: true, content: true,
+                imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
                 sender: { select: { firstName: true, profilePicture: true } },
             },
         }),
     ]);
 
     return {
-        data: messages.reverse(), // chronological order
+        data: messages.reverse(),
         pagination: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / limit) },
     };
 };
@@ -202,59 +204,61 @@ const getMessages = async (sessionId, userId, opts = {}) => {
  * Unsend a message within the time window
  */
 const unsendMessage = async (messageId, senderId) => {
-    const message = await prisma.chatMessage.findUnique({
-        where: { id: messageId },
-    });
-
+    const message = await prisma.chatMessage.findUnique({ where: { id: messageId } });
     if (!message) throw new ApiError(404, 'Message not found');
     if (message.senderId !== senderId) throw new ApiError(403, 'Not your message');
     if (message.isUnsent) throw new ApiError(400, 'Message already unsent');
     if (message.type === 'SYSTEM') throw new ApiError(400, 'Cannot unsend system messages');
-
-    // Check time window
     if (message.unsendDeadline && new Date() > message.unsendDeadline) {
         throw new ApiError(400, 'Unsend time expired (5 minutes)');
     }
 
-    // Mark as unsent — content replaced but original preserved in DB for audit (90-day retention)
     return prisma.chatMessage.update({
         where: { id: messageId },
-        data: {
-            content: 'ข้อความถูกลบ / Message unsent',
-            isUnsent: true,
-        },
-        select: {
-            id: true,
-            content: true,
-            isUnsent: true,
-        },
+        data: { content: 'ข้อความถูกลบ / Message unsent', isUnsent: true },
+        select: { id: true, content: true, isUnsent: true },
     });
 };
 
 /**
- * Get session by booking ID
+ * Get session by route ID
  */
-const getSession = async (bookingId, userId) => {
+const getSession = async (routeId, userId) => {
     const session = await prisma.chatSession.findUnique({
-        where: { bookingId },
+        where: { routeId },
         select: {
-            id: true,
-            bookingId: true,
-            status: true,
-            createdAt: true,
-            endedAt: true,
+            id: true, routeId: true, status: true, createdAt: true, endedAt: true,
+            chatExpiresAt: true, readOnlyExpiresAt: true,
             driver: { select: { id: true, firstName: true, profilePicture: true } },
-            passenger: { select: { id: true, firstName: true, profilePicture: true } },
+            participants: {
+                select: {
+                    user: { select: { id: true, firstName: true, profilePicture: true } },
+                    joinedAt: true,
+                },
+            },
         },
     });
 
     if (!session) throw new ApiError(404, 'Chat session not found');
 
-    if (session.driver.id !== userId && session.passenger.id !== userId) {
-        throw new ApiError(403, 'You are not a participant in this chat');
-    }
+    // Verify participant
+    const isDriver = session.driver.id === userId;
+    const isPassenger = session.participants.some(p => p.user.id === userId);
+    if (!isDriver && !isPassenger) throw new ApiError(403, 'You are not a participant in this chat');
 
     return session;
+};
+
+/**
+ * Get session by booking ID (compat helper — looks up route from booking)
+ */
+const getSessionByBooking = async (bookingId, userId) => {
+    const booking = await prisma.booking.findUnique({
+        where: { id: bookingId },
+        select: { routeId: true },
+    });
+    if (!booking) throw new ApiError(404, 'Booking not found');
+    return getSession(booking.routeId, userId);
 };
 
 /**
@@ -272,43 +276,55 @@ const shareLocation = async (sessionId, senderId, lat, lon) => {
  * Get sessions for a user (active + recent)
  */
 const getMySessions = async (userId) => {
-    const sessions = await prisma.chatSession.findMany({
-        where: {
-            OR: [
-                { driverId: userId },
-                { passengerId: userId },
-            ],
-        },
-        orderBy: { createdAt: 'desc' },
-        take: 20,
-        select: {
-            id: true,
-            bookingId: true,
-            status: true,
-            createdAt: true,
-            endedAt: true,
-            driver: { select: { id: true, firstName: true, profilePicture: true } },
-            passenger: { select: { id: true, firstName: true, profilePicture: true } },
-            messages: {
-                orderBy: { createdAt: 'desc' },
-                take: 1,
-                select: { content: true, createdAt: true },
+    // Sessions where user is driver OR a participant
+    const [driverSessions, participantRecords] = await Promise.all([
+        prisma.chatSession.findMany({
+            where: { driverId: userId },
+            orderBy: { createdAt: 'desc' },
+            take: 20,
+            select: {
+                id: true, routeId: true, status: true, createdAt: true, endedAt: true,
+                driver: { select: { id: true, firstName: true, profilePicture: true } },
+                participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
+                messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
             },
-        },
-    });
+        }),
+        prisma.chatSessionParticipant.findMany({
+            where: { userId },
+            orderBy: { joinedAt: 'desc' },
+            take: 20,
+            select: {
+                session: {
+                    select: {
+                        id: true, routeId: true, status: true, createdAt: true, endedAt: true,
+                        driver: { select: { id: true, firstName: true, profilePicture: true } },
+                        participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
+                        messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
+                    },
+                },
+            },
+        }),
+    ]);
 
-    return sessions;
+    const passengerSessions = participantRecords.map(p => p.session);
+    // Deduplicate by session id
+    const map = new Map();
+    [...driverSessions, ...passengerSessions].forEach(s => { if (!map.has(s.id)) map.set(s.id, s); });
+    return Array.from(map.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
 
 module.exports = {
     createSession,
+    addParticipant,
     endSession,
     sendMessage,
     getMessages,
     unsendMessage,
     getSession,
+    getSessionByBooking,
     shareLocation,
     getMySessions,
+    isParticipant,
     RETENTION_DAYS,
     UNSEND_WINDOW_MINUTES,
 };

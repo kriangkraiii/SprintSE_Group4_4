@@ -80,6 +80,10 @@ npm run dev
 npm run dev:client    # Nuxt → http://localhost:3000
 npm run dev:server    # Express → http://localhost:3001
 
+ln -s ../.env .env
+npx prisma db push
+
+prisma db push --force-reset
 # หรือใช้ shell script
 ./start-dev.sh
 ./stop-dev.sh

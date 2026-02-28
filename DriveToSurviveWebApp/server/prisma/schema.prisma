@@ -166,7 +166,7 @@ model User {
 
   // Sprint 2 relations
   driverChatSessions    ChatSession[]    @relation("DriverChatSessions")
-  passengerChatSessions ChatSession[]    @relation("PassengerChatSessions")
+  chatParticipations    ChatSessionParticipant[]
   sentMessages          ChatMessage[]    @relation("MessageSender")
   chatReports           ChatReport[]     @relation("ChatReporter")
   passengerReviews      RideReview[]     @relation("ReviewPassenger")
@@ -287,7 +287,8 @@ model Route {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  bookings Booking[]
+  bookings    Booking[]
+  chatSession ChatSession?
 
   @@index([driverId])
   @@index([vehicleId])
@@ -314,38 +315,48 @@ model Booking {
   createdAt       DateTime      @default(now())
 
   // Sprint 2 relations
-  chatSession          ChatSession?
   arrivalNotifications ArrivalNotification[]
   reviews              RideReview[]
 }
+
 
 // ─── Sprint 2: Chat & Messaging Models ───────────────────
 
 model ChatSession {
   id                 String            @id @default(cuid())
-  bookingId          String            @unique
-  booking            Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  routeId            String            @unique
+  route              Route             @relation(fields: [routeId], references: [id], onDelete: Cascade)
   driverId           String
   driver             User              @relation("DriverChatSessions", fields: [driverId], references: [id], onDelete: Cascade)
-  passengerId        String
-  passenger          User              @relation("PassengerChatSessions", fields: [passengerId], references: [id], onDelete: Cascade)
   status             ChatSessionStatus @default(ACTIVE)
   createdAt          DateTime          @default(now())
   endedAt            DateTime?
-  chatExpiresAt      DateTime?         // endedAt + 1 day → READ_ONLY
-  readOnlyExpiresAt  DateTime?         // endedAt + 8 days → ARCHIVED
-  retentionExpiresAt DateTime          // now + 90 days
+  chatExpiresAt      DateTime?
+  readOnlyExpiresAt  DateTime?
+  retentionExpiresAt DateTime
 
-  messages    ChatMessage[]
-  voiceCalls  VoiceCallLog[]
-  chatReports ChatReport[]
+  participants ChatSessionParticipant[]
+  messages     ChatMessage[]
+  voiceCalls   VoiceCallLog[]
+  chatReports  ChatReport[]
 
   @@index([driverId])
-  @@index([passengerId])
   @@index([status])
   @@index([retentionExpiresAt])
   @@index([chatExpiresAt])
   @@index([readOnlyExpiresAt])
+}
+
+model ChatSessionParticipant {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt  DateTime    @default(now())
+
+  @@unique([sessionId, userId])
+  @@index([userId])
 }
 
 model ChatMessage {
