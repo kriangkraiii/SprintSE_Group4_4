@@ -28,6 +28,8 @@ const createBooking = asyncHandler(async (req, res) => {
   };
 
   const booking = await bookingService.createBooking(payload, passengerId);
+
+  // postBookingActions (chat + email) จะถูกเรียกตอนคนขับ confirm แทน
   res.status(201).json({ success: true, data: booking });
 });
 

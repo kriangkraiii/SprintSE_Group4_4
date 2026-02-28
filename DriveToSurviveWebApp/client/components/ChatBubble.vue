@@ -33,11 +33,53 @@
 
       <!-- Location message -->
       <template v-else-if="message.type === 'LOCATION'">
-        <div class="px-4 py-2.5 flex items-center gap-2">
+        <a
+          v-if="locationCoords"
+          :href="`https://www.google.com/maps?q=${locationCoords.lat},${locationCoords.lng}`"
+          target="_blank"
+          rel="noopener"
+          class="block overflow-hidden rounded-2xl no-underline"
+        >
+          <!-- Map preview card -->
+          <div class="w-[260px] h-[140px] relative overflow-hidden"
+            :style="`background: linear-gradient(135deg, ${isOwn ? '#3b82f6' : '#e2e8f0'} 0%, ${isOwn ? '#1d4ed8' : '#cbd5e1'} 100%)`"
+          >
+            <!-- Grid pattern to mimic map -->
+            <div class="absolute inset-0 opacity-10"
+              :style="`background-image: linear-gradient(${isOwn ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.1)'} 1px, transparent 1px), linear-gradient(90deg, ${isOwn ? 'rgba(255,255,255,.3)' : 'rgba(0,0,0,.1)'} 1px, transparent 1px); background-size: 20px 20px;`"
+            />
+            <!-- Center pin -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="flex flex-col items-center">
+                <svg class="w-10 h-10 drop-shadow-lg" :class="isOwn ? 'text-white' : 'text-red-500'" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <div class="mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium shadow-sm"
+                  :class="isOwn ? 'bg-white/20 text-white' : 'bg-white text-slate-600'"
+                >
+                  {{ locationCoords.lat.toFixed(4) }}, {{ locationCoords.lng.toFixed(4) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Bottom bar -->
+          <div class="px-3 py-2 flex items-center gap-2" :class="isOwn ? 'bg-blue-700' : 'bg-slate-100'">
+            <span class="text-sm">📍</span>
+            <span class="text-xs flex-1 font-medium" :class="isOwn ? 'text-white' : 'text-slate-600'">
+              เปิดใน Google Maps
+            </span>
+            <svg class="w-3.5 h-3.5" :class="isOwn ? 'text-white/60' : 'text-slate-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+            <span class="text-[10px]" :class="isOwn ? 'text-white/50' : 'text-slate-400'">{{ formatTime(message.createdAt) }}</span>
+          </div>
+        </a>
+        <!-- Fallback if no coords -->
+        <div v-else class="px-4 py-2.5 flex items-center gap-2">
           <span class="text-lg">📍</span>
           <span class="text-sm">แชร์ตำแหน่ง</span>
         </div>
-        <div class="px-4 pb-1.5">
+        <div v-if="!locationCoords" class="px-4 pb-1.5">
           <span class="text-[10px] opacity-50">{{ formatTime(message.createdAt) }}</span>
         </div>
       </template>
@@ -120,6 +162,15 @@ const props = defineProps({
 defineEmits(['unsend', 'report'])
 
 const showLightbox = ref(false)
+
+const locationCoords = computed(() => {
+  const meta = props.message.metadata
+  if (!meta) return null
+  const lat = Number(meta.lat ?? meta.latitude)
+  const lng = Number(meta.lng ?? meta.lon ?? meta.longitude)
+  if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return null
+  return { lat, lng }
+})
 
 const bubbleClass = computed(() => {
   if (props.message.type === 'SYSTEM') {

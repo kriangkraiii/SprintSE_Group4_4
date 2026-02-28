@@ -1,11 +1,12 @@
 const Joi = require('joi');
 
 const createSessionSchema = Joi.object({
-    bookingId: Joi.string().required(),
-});
+    routeId: Joi.string().optional(),
+    bookingId: Joi.string().optional(),
+}).or('routeId', 'bookingId');
 
 const endSessionSchema = Joi.object({
-    bookingId: Joi.string().required(),
+    routeId: Joi.string().required(),
 });
 
 const sendMessageSchema = Joi.object({

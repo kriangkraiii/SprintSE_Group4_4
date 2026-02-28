@@ -407,10 +407,16 @@
                                         </button>
                                     </template>
 
-                                    <button v-else-if="trip.status === 'confirmed'"
-                                        class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover">
-                                        แชทกับผู้โดยสาร
-                                    </button>
+                                    <template v-else-if="trip.status === 'confirmed'">
+                                        <NuxtLink :to="`/tracking/${trip.routeId}`" @click.stop
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">
+                                            📍 ติดตามตำแหน่ง
+                                        </NuxtLink>
+                                        <button @click.stop="openChat(trip)"
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover cursor-pointer">
+                                            💬 แชทกลุ่ม
+                                        </button>
+                                    </template>
 
                                     <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"
                                         @click.stop="openConfirmModal(trip, 'delete')"
@@ -451,12 +457,15 @@ import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
+import { useChat } from '~/composables/useChat'
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+const { createSession: createChatSession } = useChat()
+const router = useRouter()
 
 // --- State Management ---
 const activeTab = ref('confirmed')
@@ -651,6 +660,7 @@ async function fetchMyRoutes() {
             for (const b of (r.bookings || [])) {
                 formatted.push({
                     id: b.id,
+                    routeId: r.id,
                     status: (b.status || '').toLowerCase(),
                     origin: start?.name || `(${Number(start.lat).toFixed(2)}, ${Number(start.lng).toFixed(2)})`,
                     destination: end?.name || `(${Number(end.lat).toFixed(2)}, ${Number(end.lng).toFixed(2)})`,
@@ -666,8 +676,8 @@ async function fetchMyRoutes() {
                         image: b.passenger?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(b.passenger?.firstName || 'P')}&background=random&size=64`,
                         email: b.passenger?.email || '',
                         isVerified: !!b.passenger?.isVerified,
-                        rating: 4.5,
-                        reviews: Math.floor(Math.random() * 50) + 5,
+                        rating: b.passenger?.driverStats?.avgRating || 0,
+                        reviews: b.passenger?.driverStats?.totalReviews || 0,
                     },
                     coords,
                     polyline: r.routePolyline || null,
@@ -716,8 +726,8 @@ async function fetchMyRoutes() {
                     image: b.passenger?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(b.passenger?.firstName || 'P')}&background=random&size=64`,
                     email: b.passenger?.email || '',
                     isVerified: !!b.passenger?.isVerified,
-                    rating: 4.5,
-                    reviews: Math.floor(Math.random() * 50) + 5,
+                    rating: b.passenger?.driverStats?.avgRating || 0,
+                    reviews: b.passenger?.driverStats?.totalReviews || 0,
                 })),
                 durationText: (typeof r.duration === 'string' ? formatDuration(r.duration) : r.duration) || (r.durationSeconds ? `${Math.round(r.durationSeconds / 60)} นาที` : '-'),
                 distanceText: (typeof r.distance === 'string' ? formatDistance(r.distance) : r.distance) || (r.distanceMeters ? `${(r.distanceMeters / 1000).toFixed(1)} กม.` : '-'),
@@ -939,6 +949,16 @@ const openConfirmModal = (trip, action) => {
 const closeConfirmModal = () => {
     isModalVisible.value = false
     tripToAction.value = null
+}
+
+async function openChat(trip) {
+    try {
+        const session = await createChatSession(trip.routeId, true)
+        router.push(`/chat/${session.id}`)
+    } catch (err) {
+        console.error('Open chat failed:', err)
+        toast.error('เปิดแชทไม่สำเร็จ', err?.statusMessage || 'กรุณาลองใหม่')
+    }
 }
 
 const handleConfirmAction = async () => {

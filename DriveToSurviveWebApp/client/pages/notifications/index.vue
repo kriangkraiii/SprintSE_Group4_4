@@ -73,12 +73,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/th'
 import { useToast } from '~/composables/useToast'
 import { useAuth } from '~/composables/useAuth'
+import { useChat } from '~/composables/useChat'
 
 dayjs.extend(relativeTime)
 dayjs.locale('th')
@@ -89,6 +90,7 @@ const { $api } = useNuxtApp()
 const { toast } = useToast()
 const { token } = useAuth()
 const config = useRuntimeConfig()
+const { connectChatSocket, onNewNotification, offNewNotification } = useChat()
 
 const notifications = ref([])
 const loading = ref(true)
@@ -172,5 +174,23 @@ async function deleteNotif(id) {
     }
 }
 
-onMounted(fetchNotifications)
+// Real-time notification handler
+function handleNewNotification(notif) {
+    // Avoid duplicates
+    if (notifications.value.some(n => n.id === notif.id)) return
+    notifications.value.unshift(notif)
+}
+
+onMounted(() => {
+    fetchNotifications()
+    // Connect Socket.IO for real-time push notifications
+    if (token.value) {
+        connectChatSocket(token.value)
+        onNewNotification(handleNewNotification)
+    }
+})
+
+onUnmounted(() => {
+    offNewNotification(handleNewNotification)
+})
 </script>
