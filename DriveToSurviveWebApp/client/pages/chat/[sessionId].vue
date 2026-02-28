@@ -16,19 +16,27 @@
         <div class="flex-1 min-w-0">
           <h3 class="text-sm font-medium text-primary truncate">{{ otherUser.firstName || 'ผู้ใช้' }}</h3>
           <p class="text-xs text-slate-400">
-            {{ session.status === 'ACTIVE' ? '🟢 ออนไลน์' : '🔴 จบแล้ว' }}
+            <template v-if="session.status === 'ACTIVE'">🟢 ออนไลน์</template>
+            <template v-else-if="session.status === 'ENDED'">🟡 จบทริปแล้ว</template>
+            <template v-else-if="session.status === 'READ_ONLY'">🔴 อ่านอย่างเดียว</template>
+            <template v-else>🔒 ถูกลบแล้ว</template>
           </p>
         </div>
       </template>
 
       <!-- Location share button -->
-      <button v-if="session?.status === 'ACTIVE'"
+      <button v-if="canSend"
         @click="handleShareLocation"
-        class="p-2 rounded-lg hover:bg-slate-100 text-primary transition-colors"
+        class="p-2 rounded-lg hover:bg-slate-100 text-primary transition-colors cursor-pointer"
         title="แชร์ตำแหน่ง"
       >
         📍
       </button>
+    </div>
+
+    <!-- Lifecycle Banner -->
+    <div v-if="lifecycleBanner" class="px-4 py-2 text-center text-xs font-medium" :class="lifecycleBanner.class">
+      {{ lifecycleBanner.text }}
     </div>
 
     <!-- Messages Area -->
@@ -49,20 +57,45 @@
       </template>
     </div>
 
+    <!-- Image Preview -->
+    <div v-if="imagePreview" class="px-4 py-2 border-t border-slate-100 bg-slate-50">
+      <div class="relative inline-block">
+        <img :src="imagePreview" class="h-20 rounded-lg object-cover" />
+        <button @click="cancelImage" class="absolute -top-1 -right-1 p-0.5 bg-red-500 text-white rounded-full cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <!-- Quick Reply Panel -->
     <QuickReply
-      :show="showQuickReply && session?.status === 'ACTIVE'"
+      :show="showQuickReply && canSend"
       :type="userRole"
       @select="handleQuickReply"
     />
 
-    <!-- Input Area -->
-    <div v-if="session?.status === 'ACTIVE'"
+    <!-- Input Area (Messenger-like) -->
+    <div v-if="canSend"
       class="px-4 py-3 bg-white border-t border-slate-200">
       <div class="flex items-end gap-2">
+        <!-- Image upload -->
+        <button
+          @click="$refs.imageInput.click()"
+          class="p-2.5 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer"
+          title="ส่งรูปภาพ"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+        <input ref="imageInput" type="file" accept="image/jpeg,image/png" class="hidden" @change="onImageSelected" />
+
+        <!-- Quick reply toggle -->
         <button
           @click="showQuickReply = !showQuickReply"
-          class="p-2.5 rounded-full transition-colors"
+          class="p-2.5 rounded-full transition-colors cursor-pointer"
           :class="showQuickReply ? 'bg-blue-100 text-primary' : 'text-slate-400 hover:text-primary hover:bg-slate-100'"
           title="ตอบกลับด่วน"
         >
@@ -70,6 +103,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </button>
+
+        <!-- Text input -->
         <textarea
           v-model="newMessage"
           @keydown.enter.exact.prevent="handleSend"
@@ -79,10 +114,12 @@
           placeholder="พิมพ์ข้อความ..."
           :disabled="isSending"
         ></textarea>
+
+        <!-- Send button -->
         <button
           @click="handleSend"
-          :disabled="!newMessage.trim() || isSending"
-          class="p-2.5 bg-cta text-white rounded-full hover:bg-cta-hover transition-colors disabled:opacity-40"
+          :disabled="(!newMessage.trim() && !selectedImage) || isSending"
+          class="p-2.5 bg-cta text-white rounded-full hover:bg-cta-hover transition-colors disabled:opacity-40 cursor-pointer"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
@@ -91,10 +128,10 @@
       </div>
     </div>
 
-    <!-- Ended notice -->
-    <div v-else-if="session?.status === 'ENDED'"
+    <!-- Read-only / Ended notices -->
+    <div v-else-if="session?.status === 'READ_ONLY' || session?.status === 'ARCHIVED'"
       class="px-4 py-3 bg-slate-50 border-t border-slate-200 text-center">
-      <p class="text-sm text-slate-500">🔒 แชทนี้ถูกปิดแล้ว — อ่านอย่างเดียว</p>
+      <p class="text-sm text-slate-500">🔒 แชทนี้อ่านอย่างเดียว</p>
     </div>
 
     <!-- Report Modal -->
@@ -117,9 +154,9 @@
 
         <div class="flex justify-end gap-2 mt-4">
           <button @click="showReportModal = false"
-            class="px-4 py-2 text-sm text-primary bg-slate-100 rounded-md hover:bg-slate-200">ยกเลิก</button>
+            class="px-4 py-2 text-sm text-primary bg-slate-100 rounded-md hover:bg-slate-200 cursor-pointer">ยกเลิก</button>
           <button @click="submitReport" :disabled="!reportReason"
-            class="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50">
+            class="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50 cursor-pointer">
             ส่งรายงาน
           </button>
         </div>
@@ -129,7 +166,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChat } from '~/composables/useChat'
 import { useAuth } from '~/composables/useAuth'
@@ -139,7 +176,7 @@ definePageMeta({ middleware: 'auth', layout: false })
 useHead({ title: 'แชท — Ride' })
 
 const route = useRoute()
-const { fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage } = useChat()
+const { fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage } = useChat()
 const { user } = useAuth()
 const { toast } = useToast()
 
@@ -154,9 +191,45 @@ const isSending = ref(false)
 const messagesContainer = ref(null)
 const showQuickReply = ref(false)
 
+// Image upload
+const selectedImage = ref(null)
+const imagePreview = ref(null)
+
 const userRole = computed(() => {
   if (!session.value || !userId.value) return 'passenger'
   return session.value.driver?.id === userId.value ? 'driver' : 'passenger'
+})
+
+// Can user send messages?
+const canSend = computed(() => {
+  if (!session.value) return false
+  if (session.value.status === 'ACTIVE') return true
+  if (session.value.status === 'ENDED') {
+    if (!session.value.chatExpiresAt) return true
+    return new Date() < new Date(session.value.chatExpiresAt)
+  }
+  return false
+})
+
+// Lifecycle banner
+const lifecycleBanner = computed(() => {
+  if (!session.value) return null
+  if (session.value.status === 'ENDED' && session.value.chatExpiresAt) {
+    const remaining = new Date(session.value.chatExpiresAt) - new Date()
+    if (remaining > 0) {
+      const hours = Math.ceil(remaining / (1000 * 60 * 60))
+      return { text: `🕐 ยังคุยต่อได้อีก ${hours} ชั่วโมง — หลังจากนั้นจะเป็นอ่านอย่างเดียว`, class: 'bg-amber-50 text-amber-700' }
+    }
+    return { text: '🔒 หมดเวลาส่งข้อความแล้ว — อ่านอย่างเดียว', class: 'bg-red-50 text-red-600' }
+  }
+  if (session.value.status === 'READ_ONLY' && session.value.readOnlyExpiresAt) {
+    const remaining = new Date(session.value.readOnlyExpiresAt) - new Date()
+    if (remaining > 0) {
+      const days = Math.ceil(remaining / (1000 * 60 * 60 * 24))
+      return { text: `📖 อ่านอย่างเดียว — อีก ${days} วันจะถูกลบอัตโนมัติ`, class: 'bg-slate-100 text-slate-600' }
+    }
+  }
+  return null
 })
 
 // Report
@@ -193,7 +266,6 @@ async function loadMessages() {
   try {
     const result = await fetchMessages(sessionId.value)
     messages.value = result?.data || result || []
-    // Extract session from response or fetch separately
     session.value = result?.session || { status: 'ACTIVE', driver: {}, passenger: {} }
   } catch (err) {
     console.error('Failed to load messages:', err)
@@ -203,16 +275,49 @@ async function loadMessages() {
   }
 }
 
-async function handleSend() {
-  if (!newMessage.value.trim() || isSending.value) return
+function onImageSelected(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  if (file.size > 5 * 1024 * 1024) {
+    toast.error('ไฟล์ใหญ่เกินไป', 'สูงสุด 5 MB')
+    return
+  }
+  selectedImage.value = file
+  imagePreview.value = URL.createObjectURL(file)
+}
 
+function cancelImage() {
+  selectedImage.value = null
+  imagePreview.value = null
+}
+
+async function handleSend() {
+  // Send image if selected
+  if (selectedImage.value) {
+    isSending.value = true
+    try {
+      const msg = await sendImage(sessionId.value, selectedImage.value)
+      const msgData = msg?.data || msg
+      messages.value.push(msgData)
+      cancelImage()
+      scrollToBottom()
+    } catch (err) {
+      toast.error('ส่งรูปไม่สำเร็จ', err?.statusMessage || '')
+    } finally {
+      isSending.value = false
+    }
+    return
+  }
+
+  // Send text
+  if (!newMessage.value.trim() || isSending.value) return
   isSending.value = true
   const content = newMessage.value
   newMessage.value = ''
-
   try {
     const msg = await sendMessage(sessionId.value, { content })
-    messages.value.push(msg)
+    const msgData = msg?.data || msg
+    messages.value.push(msgData)
     scrollToBottom()
   } catch (err) {
     toast.error('ส่งข้อความล้มเหลว', err?.statusMessage || '')
@@ -251,7 +356,8 @@ async function handleShareLocation() {
     async (pos) => {
       try {
         const msg = await shareLocation(sessionId.value, pos.coords.latitude, pos.coords.longitude)
-        messages.value.push(msg)
+        const msgData = msg?.data || msg
+        messages.value.push(msgData)
         scrollToBottom()
         toast.success('แชร์ตำแหน่งแล้ว')
       } catch (err) {
@@ -285,19 +391,17 @@ async function submitReport() {
   }
 }
 
-// Polling for new messages (every 5 seconds when active)
+// Polling for new messages (every 5 seconds)
 let pollInterval = null
 onMounted(() => {
   loadMessages()
   pollInterval = setInterval(() => {
-    if (session.value?.status === 'ACTIVE') {
+    if (session.value?.status === 'ACTIVE' || session.value?.status === 'ENDED') {
       loadMessages()
     }
   }, 5000)
 })
 
-// Cleanup on unmount
-import { onUnmounted } from 'vue'
 onUnmounted(() => {
   if (pollInterval) clearInterval(pollInterval)
 })

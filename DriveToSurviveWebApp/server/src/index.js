@@ -27,6 +27,11 @@ app.set('io', io);
     console.log(`🚀 Express API + Socket.IO server running on http://localhost:${PORT}`);
     console.log(`📖 Swagger docs: http://localhost:${PORT}/documentation`);
     console.log(`🔌 WebSocket ready on ws://localhost:${PORT}`);
+
+    // Chat lifecycle CRON — runs every hour
+    const { runLifecycleCron } = require('./services/chatLifecycle.service');
+    setInterval(() => runLifecycleCron().catch(e => console.error('[CRON] Lifecycle error:', e)), 60 * 60 * 1000);
+    console.log('⏰ Chat lifecycle CRON scheduled (hourly)');
   });
 })();
 
