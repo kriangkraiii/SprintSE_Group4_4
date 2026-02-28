@@ -61,11 +61,18 @@ router.post(
     chatController.endSession
 );
 
-// GET /chat/sessions/:bookingId — get session by booking
+// GET /chat/sessions/:routeId — get session by route
 router.get(
-    '/sessions/:bookingId',
+    '/sessions/:routeId',
     protect,
     chatController.getSession
+);
+
+// GET /chat/sessions/booking/:bookingId — backward compat
+router.get(
+    '/sessions/booking/:bookingId',
+    protect,
+    chatController.getSessionByBooking
 );
 
 // ─── Message Endpoints ───────────────────────────────────

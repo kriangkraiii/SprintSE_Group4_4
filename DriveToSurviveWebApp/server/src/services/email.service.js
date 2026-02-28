@@ -85,5 +85,66 @@ const sendArrivalEmail = async (to, radiusType, info) => {
 
     return transporter.sendMail(mailOptions);
 };
+/**
+ * Send booking notification email to driver
+ */
+const sendBookingEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `🎉 มีผู้โดยสารจองเส้นทางของคุณ — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.driverName || 'คนขับ'},</p>
+                    <div style="text-align:center;background:#ecfdf5;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">🎉</span>
+                        <h2 style="color:#059669;font-size:18px;margin:8px 0;">มีผู้โดยสารจองเส้นทางของคุณ!</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">ผู้โดยสาร: <strong>${info.passengerName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">จำนวนที่นั่ง: <strong>${info.seats || 1} ที่นั่ง</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">กรุณาเข้าไปยืนยันหรือปฏิเสธการจองในแอปพลิเคชัน</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
 
-module.exports = { sendOtpEmail, sendArrivalEmail };
+/**
+ * Send review reminder email to passenger after trip completion
+ */
+const sendReviewReminderEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `⭐ รีวิวการเดินทางของคุณ — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.passengerName || 'ผู้โดยสาร'},</p>
+                    <div style="text-align:center;background:#fffbeb;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">⭐</span>
+                        <h2 style="color:#b45309;font-size:18px;margin:8px 0;">รีวิวการเดินทางของคุณ</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">เส้นทาง: <strong>${info.routeName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">คนขับ: <strong>${info.driverName || '-'}</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">กรุณาเข้าไปเขียนรีวิวในแอปเพื่อช่วยพัฒนาบริการ</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendOtpEmail, sendArrivalEmail, sendBookingEmail, sendReviewReminderEmail };

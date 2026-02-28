@@ -39,6 +39,11 @@
       {{ lifecycleBanner.text }}
     </div>
 
+    <!-- Typing Indicator -->
+    <div v-if="typingUsers.length" class="px-4 py-1 text-xs text-slate-400 animate-pulse">
+      {{ typingUsers.join(', ') }} กำลังพิมพ์...
+    </div>
+
     <!-- Messages Area -->
     <div ref="messagesContainer" class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
       <div v-if="isLoadingMessages" class="text-center py-8 text-slate-400">
@@ -166,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useChat } from '~/composables/useChat'
 import { useAuth } from '~/composables/useAuth'
@@ -176,8 +181,13 @@ definePageMeta({ middleware: 'auth', layout: false })
 useHead({ title: 'แชท — Ride' })
 
 const route = useRoute()
-const { fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage } = useChat()
-const { user } = useAuth()
+const {
+  fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage,
+  connectChatSocket, joinSession, leaveSession, onNewMessage, offNewMessage,
+  emitNewMessage, emitTyping, emitStopTyping, onTyping, onStopTyping, offTyping, offStopTyping,
+  disconnectSocket,
+} = useChat()
+const { user, token } = useAuth()
 const { toast } = useToast()
 
 const sessionId = computed(() => route.params.sessionId)
@@ -190,6 +200,8 @@ const isLoadingMessages = ref(false)
 const isSending = ref(false)
 const messagesContainer = ref(null)
 const showQuickReply = ref(false)
+const typingUsers = ref([])
+let typingTimer = null
 
 // Image upload
 const selectedImage = ref(null)
@@ -314,10 +326,13 @@ async function handleSend() {
   isSending.value = true
   const content = newMessage.value
   newMessage.value = ''
+  emitStopTyping(sessionId.value)
   try {
     const msg = await sendMessage(sessionId.value, { content })
     const msgData = msg?.data || msg
     messages.value.push(msgData)
+    // Broadcast to other participants via Socket.IO
+    emitNewMessage(sessionId.value, msgData)
     scrollToBottom()
   } catch (err) {
     toast.error('ส่งข้อความล้มเหลว', err?.statusMessage || '')
@@ -391,18 +406,52 @@ async function submitReport() {
   }
 }
 
-// Polling for new messages (every 5 seconds)
-let pollInterval = null
+// ─── Socket.IO Real-time Chat ─────────────────────────
+function handleIncomingMessage(msg) {
+  // Avoid duplicates
+  if (messages.value.some(m => m.id === msg.id)) return
+  messages.value.push(msg)
+  scrollToBottom()
+}
+
+function handleTyping({ userId: typingUserId }) {
+  if (typingUserId === userId.value) return
+  const name = otherUser.value?.firstName || 'ผู้ใช้'
+  if (!typingUsers.value.includes(name)) typingUsers.value.push(name)
+  clearTimeout(typingTimer)
+  typingTimer = setTimeout(() => { typingUsers.value = [] }, 3000)
+}
+
+function handleStopTyping() {
+  typingUsers.value = []
+}
+
+// Emit typing when user types
+watch(newMessage, (val) => {
+  if (val.trim()) {
+    emitTyping(sessionId.value)
+  } else {
+    emitStopTyping(sessionId.value)
+  }
+})
+
 onMounted(() => {
   loadMessages()
-  pollInterval = setInterval(() => {
-    if (session.value?.status === 'ACTIVE' || session.value?.status === 'ENDED') {
-      loadMessages()
-    }
-  }, 5000)
+  // Connect Socket.IO for real-time chat
+  if (token.value) {
+    connectChatSocket(token.value)
+    joinSession(sessionId.value)
+    onNewMessage(handleIncomingMessage)
+    onTyping(handleTyping)
+    onStopTyping(handleStopTyping)
+  }
 })
 
 onUnmounted(() => {
-  if (pollInterval) clearInterval(pollInterval)
+  leaveSession(sessionId.value)
+  offNewMessage(handleIncomingMessage)
+  offTyping(handleTyping)
+  offStopTyping(handleStopTyping)
+  // Don't disconnect socket entirely — shared across pages
 })
 </script>

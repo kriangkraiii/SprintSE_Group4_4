@@ -5,21 +5,38 @@ const chatReportService = require('../services/chatReport.service');
 // ─── Session Endpoints ───────────────────────────────────
 
 const createSession = asyncHandler(async (req, res) => {
-    const { bookingId } = req.body;
-    const session = await chatService.createSession(bookingId);
+    const { routeId, bookingId } = req.body;
+    const userId = req.user.sub;
+    // Support both: routeId directly or look up from bookingId
+    let targetRouteId = routeId;
+    if (!targetRouteId && bookingId) {
+        const prisma = require('../utils/prisma');
+        const booking = await prisma.booking.findUnique({ where: { id: bookingId }, select: { routeId: true } });
+        if (booking) targetRouteId = booking.routeId;
+    }
+    if (!targetRouteId) return res.status(400).json({ success: false, message: 'routeId or bookingId required' });
+    const session = await chatService.createSession(targetRouteId, userId);
     res.status(201).json({ success: true, data: session });
 });
 
 const endSession = asyncHandler(async (req, res) => {
-    const { bookingId } = req.body;
-    const session = await chatService.endSession(bookingId);
+    const { routeId } = req.body;
+    const session = await chatService.endSession(routeId);
     res.status(200).json({ success: true, data: session });
 });
 
 const getSession = asyncHandler(async (req, res) => {
+    const { routeId } = req.params;
+    const userId = req.user.sub;
+    const session = await chatService.getSession(routeId, userId);
+    res.status(200).json({ success: true, data: session });
+});
+
+// Backward compat: get session by booking ID
+const getSessionByBooking = asyncHandler(async (req, res) => {
     const { bookingId } = req.params;
     const userId = req.user.sub;
-    const session = await chatService.getSession(bookingId, userId);
+    const session = await chatService.getSessionByBooking(bookingId, userId);
     res.status(200).json({ success: true, data: session });
 });
 
@@ -149,6 +166,7 @@ module.exports = {
     createSession,
     endSession,
     getSession,
+    getSessionByBooking,
     getMySessions,
     sendMessage,
     getMessages,
