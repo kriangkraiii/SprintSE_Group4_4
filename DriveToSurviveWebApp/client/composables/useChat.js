@@ -28,6 +28,26 @@ export function useChat() {
     const reportMessage = (data) =>
         $api('/chat/reports', { method: 'POST', body: data })
 
+    // Image upload
+    const sendImage = async (sessionId, file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        return $api(`/chat/${sessionId}/image`, { method: 'POST', body: formData })
+    }
+
+    // Quick Reply Shortcuts
+    const fetchShortcuts = () =>
+        $api('/chat/shortcuts/me')
+
+    const createShortcutApi = (text) =>
+        $api('/chat/shortcuts', { method: 'POST', body: { text } })
+
+    const updateShortcutApi = (id, text) =>
+        $api(`/chat/shortcuts/${id}`, { method: 'PATCH', body: { text } })
+
+    const deleteShortcutApi = (id) =>
+        $api(`/chat/shortcuts/${id}`, { method: 'DELETE' })
+
     return {
         fetchSessions,
         fetchSession,
@@ -38,5 +58,10 @@ export function useChat() {
         unsendMessage,
         shareLocation,
         reportMessage,
+        sendImage,
+        fetchShortcuts,
+        createShortcutApi,
+        updateShortcutApi,
+        deleteShortcutApi,
     }
 }

@@ -73,10 +73,13 @@ enum NotificationType {
 enum ChatSessionStatus {
   ACTIVE
   ENDED
+  READ_ONLY
+  ARCHIVED
 }
 
 enum MessageType {
   TEXT
+  IMAGE
   LOCATION
   QUICK_REPLY
   SYSTEM
@@ -172,6 +175,7 @@ model User {
   reviewDisputes        ReviewDispute[]
   savedPlaces           SavedPlace[]
   recentSearches        RecentSearch[]
+  quickReplyShortcuts   QuickReplyShortcut[]
 
   @@index([role])
   @@index([isActive])
@@ -328,6 +332,8 @@ model ChatSession {
   status             ChatSessionStatus @default(ACTIVE)
   createdAt          DateTime          @default(now())
   endedAt            DateTime?
+  chatExpiresAt      DateTime?         // endedAt + 1 day → READ_ONLY
+  readOnlyExpiresAt  DateTime?         // endedAt + 8 days → ARCHIVED
   retentionExpiresAt DateTime          // now + 90 days
 
   messages    ChatMessage[]
@@ -338,6 +344,8 @@ model ChatSession {
   @@index([passengerId])
   @@index([status])
   @@index([retentionExpiresAt])
+  @@index([chatExpiresAt])
+  @@index([readOnlyExpiresAt])
 }
 
 model ChatMessage {
@@ -348,11 +356,12 @@ model ChatMessage {
   sender          User        @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
   type            MessageType @default(TEXT)
   content         String      @db.Text
-  originalContent String?     @db.Text // เก็บเนื้อหาดั้งเดิมก่อน filter (สำหรับ audit)
+  imageUrl        String?     @db.VarChar(500) // Cloudinary URL for IMAGE type
+  originalContent String?     @db.Text
   isFiltered      Boolean     @default(false)
   isUnsent        Boolean     @default(false)
-  unsendDeadline  DateTime? // created + 5 minutes
-  metadata        Json? // lat/lng for LOCATION, template key for QUICK_REPLY
+  unsendDeadline  DateTime?
+  metadata        Json?
   createdAt       DateTime    @default(now())
 
   reports ChatReport[]
@@ -563,4 +572,32 @@ model Blacklist {
   createdAt        DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// ─── Chat Quick Reply Shortcuts ──────────────────────────
+model QuickReplyShortcut {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String   @db.VarChar(200)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Chat Log Archive (Admin) ────────────────────────────
+model ChatLog {
+  id              String   @id @default(cuid())
+  sessionId       String
+  driverId        String
+  passengerId     String
+  messages        Json     @db.Json // snapshot of all messages
+  archivedAt      DateTime @default(now())
+  originalEndedAt DateTime?
+
+  @@index([sessionId])
+  @@index([driverId])
+  @@index([passengerId])
+  @@index([archivedAt])
 }

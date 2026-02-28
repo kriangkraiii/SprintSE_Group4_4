@@ -1,6 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validate');
 const { protect, requireAdmin } = require('../middlewares/auth');
+const upload = require('../middlewares/upload.middleware');
 const chatController = require('../controllers/chat.controller');
 const {
     createSessionSchema,
@@ -109,5 +110,28 @@ router.post(
     validate({ body: createReportSchema }),
     chatController.createReport
 );
+
+// ─── Image Upload ────────────────────────────────────────
+
+// POST /chat/:sessionId/image — send image message
+router.post(
+    '/:sessionId/image',
+    protect,
+    upload.single('image'),
+    chatController.sendImageMessage
+);
+
+// ─── Quick Reply Shortcuts ───────────────────────────────
+
+router.get('/shortcuts/me', protect, chatController.getMyShortcuts);
+router.post('/shortcuts', protect, chatController.createShortcut);
+router.patch('/shortcuts/:id', protect, chatController.updateShortcut);
+router.delete('/shortcuts/:id', protect, chatController.deleteShortcut);
+
+// ─── Admin: Chat Viewer ──────────────────────────────────
+
+router.get('/admin/sessions', protect, requireAdmin, chatController.adminGetSessions);
+router.get('/admin/sessions/:id/messages', protect, requireAdmin, chatController.adminGetMessages);
+router.get('/admin/logs', protect, requireAdmin, chatController.adminGetLogs);
 
 module.exports = router;
