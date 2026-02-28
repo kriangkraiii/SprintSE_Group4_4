@@ -287,7 +287,7 @@
                                         'px-2 py-0.5 rounded-full text-[10px] font-medium',
                                         route.availableSeats > 2 ? 'bg-emerald-50 text-emerald-700' : route.availableSeats > 0 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'
                                     ]">
-                                        {{ route.availableSeats > 0 ? `${route.availableSeats} ที่นั่ง` : 'เต็ม' }}
+                                        {{ route.availableSeats > 0 ? `${route.totalSeats - route.availableSeats}/${route.totalSeats} ที่นั่ง` : 'เต็ม' }}
                                     </span>
                                 </div>
                             </div>
@@ -367,7 +367,11 @@
                                         class="w-full aspect-video object-cover rounded-xl border border-gray-100" />
                                 </div>
 
-                                <div class="flex justify-end">
+                                <div class="flex justify-end gap-2">
+                                    <NuxtLink :to="`/tracking/${route.id}?preview=1`" @click.stop
+                                        class="px-4 py-2.5 text-sm font-medium text-primary bg-blue-50 rounded-xl hover:bg-blue-100 border border-blue-200 transition cursor-pointer">
+                                        📍 ดูตำแหน่งคนขับ
+                                    </NuxtLink>
                                     <template v-if="route.isOwner">
                                         <span class="px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 rounded-xl border border-amber-200">
                                             🚗 คุณเป็นคนขับของเส้นทางนี้
@@ -375,7 +379,7 @@
                                     </template>
                                     <button v-else @click.stop="openModal(route)" :disabled="route.availableSeats === 0"
                                         class="px-6 py-2.5 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-green-500/20 transition cursor-pointer">
-                                        จองที่นั่ง
+                                        จองที่นั่ง ({{ route.totalSeats - route.availableSeats }}/{{ route.totalSeats }})
                                     </button>
                                 </div>
                             </div>
@@ -741,24 +745,68 @@ const isFetchingSuggestions = ref(false)
 
 function fetchSuggestedPlaces() {
     if (suggestedPlaces.value.length > 0 || isFetchingSuggestions.value) return
+
+    // Auto-detect location if not yet available
+    if (!userLocation.value.lat && navigator.geolocation) {
+        isFetchingSuggestions.value = true
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                userLocation.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+                doNearbySearch()
+            },
+            () => {
+                isFetchingSuggestions.value = false
+            },
+            { timeout: 8000 }
+        )
+        return
+    }
+
     if (!placesService || !userLocation.value.lat) return
     isFetchingSuggestions.value = true
-    const request = {
-        location: new google.maps.LatLng(userLocation.value.lat, userLocation.value.lng),
-        radius: 5000,
-        type: ['transit_station', 'bus_station', 'university', 'shopping_mall', 'hospital', 'airport'],
-    }
-    placesService.nearbySearch(request, (results, status) => {
+    doNearbySearch()
+}
+
+function doNearbySearch() {
+    if (!placesService || !userLocation.value.lat) {
         isFetchingSuggestions.value = false
-        if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
-            suggestedPlaces.value = results.slice(0, 10).map(p => ({
-                name: p.name,
-                address: p.vicinity || '',
-                lat: p.geometry?.location?.lat?.() ?? null,
-                lng: p.geometry?.location?.lng?.() ?? null,
-                placeId: p.place_id || null,
-            }))
-        }
+        return
+    }
+
+    const location = new google.maps.LatLng(userLocation.value.lat, userLocation.value.lng)
+    const types = ['transit_station', 'university', 'shopping_mall']
+    const allResults = []
+    let pending = types.length
+
+    types.forEach(type => {
+        placesService.nearbySearch(
+            { location, radius: 5000, type },
+            (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+                    allResults.push(...results.slice(0, 5))
+                }
+                pending--
+                if (pending <= 0) {
+                    isFetchingSuggestions.value = false
+                    // Deduplicate by place_id and sort by distance
+                    const seen = new Set()
+                    suggestedPlaces.value = allResults
+                        .filter(p => {
+                            if (seen.has(p.place_id)) return false
+                            seen.add(p.place_id)
+                            return true
+                        })
+                        .slice(0, 12)
+                        .map(p => ({
+                            name: p.name,
+                            address: p.vicinity || '',
+                            lat: p.geometry?.location?.lat?.() ?? null,
+                            lng: p.geometry?.location?.lng?.() ?? null,
+                            placeId: p.place_id || null,
+                        }))
+                }
+            }
+        )
     })
 }
 
@@ -949,6 +997,7 @@ async function handleSearch() {
             return {
                 id: route.id,
                 availableSeats: route.availableSeats,
+                totalSeats: route.vehicle?.seatCapacity || route.availableSeats,
                 price: route.pricePerSeat,
                 departureTime: dayjs(route.departureTime).format('HH:mm น.'),
                 date: dayjs(route.departureTime).format('D MMMM BBBB'),

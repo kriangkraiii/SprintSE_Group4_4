@@ -29,4 +29,14 @@ router.get('/export/logs', controller.exportSystemLogs);
 // GET /admin/export/chat/:sessionId — full chat export for police
 router.get('/export/chat/:sessionId', controller.exportChatSession);
 
+// ─── CRON Management ─────────────────────────────────────
+// GET /admin/cron/status — list all CRON jobs and their status
+router.get('/cron/status', controller.getCronStatus);
+
+// POST /admin/cron/:jobName/trigger — manually trigger a CRON job
+router.post('/cron/:jobName/trigger', controller.triggerCronJob);
+
+// PUT /admin/cron/:jobName/schedule — update a CRON job schedule
+router.put('/cron/:jobName/schedule', controller.updateCronSchedule);
+
 module.exports = router;

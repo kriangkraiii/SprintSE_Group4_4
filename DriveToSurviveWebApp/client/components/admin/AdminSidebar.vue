@@ -69,8 +69,11 @@ const mainMenus = [
 
 const complianceMenus = [
     { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
+    { to: '/admin/cron', label: 'CRON Jobs', icon: 'fas fa-clock' },
     { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
     { to: '/admin/sprint2', label: 'Chat and Review', icon: 'fas fa-shield-halved' },
+    { to: '/admin/chat-logs', label: 'Chat Logs', icon: 'fas fa-comments' },
+    { to: '/admin/reviews', label: 'Reviews', icon: 'fas fa-star' },
 ]
 
 function toggleSidebar() {

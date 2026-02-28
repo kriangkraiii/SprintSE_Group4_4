@@ -156,15 +156,19 @@
                                         ยกเลิกการจอง
                                     </button>
 
-                                    <!-- CONFIRMED / IN_PROGRESS: ยกเลิก + แชท -->
+                                    <!-- CONFIRMED / IN_PROGRESS: ยกเลิก + ติดตาม + แชทกลุ่ม -->
                                     <template v-else-if="['confirmed', 'in_progress'].includes(trip.status)">
                                         <button @click.stop="openCancelModal(trip)"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
                                         </button>
+                                        <NuxtLink :to="`/tracking/${trip.routeId}`" @click.stop
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">
+                                            📍 ติดตามตำแหน่ง
+                                        </NuxtLink>
                                         <button @click.stop="openChat(trip)"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover">
-                                            💬 แชทกับผู้ขับ
+                                            💬 แชทกลุ่ม
                                         </button>
                                     </template>
 
@@ -341,8 +345,8 @@ async function fetchMyTrips() {
                 image:
                     b.route.driver.profilePicture ||
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(b.route.driver.firstName || 'U')}&background=random&size=64`,
-                rating: 4.5,
-                reviews: Math.floor(Math.random() * 50) + 5
+                rating: b.route.driver.driverStats?.avgRating || 0,
+                reviews: b.route.driver.driverStats?.totalReviews || 0
             }
 
             const carDetails = []
@@ -387,6 +391,7 @@ async function fetchMyTrips() {
 
             return {
                 id: b.id,
+                routeId: b.routeId || b.route?.id,
                 status: String(b.status || '').toLowerCase(),
                 origin: start?.name || `(${Number(start.lat).toFixed(2)}, ${Number(start.lng).toFixed(2)})`,
                 destination: end?.name || `(${Number(end.lat).toFixed(2)}, ${Number(end.lng).toFixed(2)})`,
@@ -701,7 +706,7 @@ async function submitCancel() {
 
 async function openChat(trip) {
     try {
-        const session = await createChatSession(trip.id)
+        const session = await createChatSession(trip.routeId, true)
         router.push(`/chat/${session.id}`)
     } catch (err) {
         console.error('Open chat failed:', err)

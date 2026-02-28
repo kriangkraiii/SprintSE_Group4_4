@@ -1,6 +1,7 @@
 const { app, ensureAdmin } = require('./app');
 const http = require('http');
 const { initSocketIO } = require('./socket');
+const { setIO } = require('./socket/emitter');
 
 const PORT = process.env.PORT || 3001;
 
@@ -10,6 +11,7 @@ const io = initSocketIO(server);
 
 // Share io globally for use in services
 app.set('io', io);
+setIO(io);  // Make io available to socket/emitter helper
 
 (async () => {
   try {
