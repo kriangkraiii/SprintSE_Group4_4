@@ -48,14 +48,9 @@
                                             <h4 class="text-lg font-semibold text-primary">
                                                 {{ trip.origin }} → {{ trip.destination }}
                                             </h4>
-                                            <span v-if="trip.status === 'pending'"
-                                                class="status-badge status-pending">รอดำเนินการ</span>
-                                            <span v-else-if="trip.status === 'confirmed'"
-                                                class="status-badge status-confirmed">ยืนยันแล้ว</span>
-                                            <span v-else-if="trip.status === 'rejected'"
-                                                class="status-badge status-rejected">ปฏิเสธ</span>
-                                            <span v-else-if="trip.status === 'cancelled'"
-                                                class="status-badge status-cancelled">ยกเลิก</span>
+                                            <span class="status-badge" :class="getStatusBadge(trip.status).class">
+                                                {{ getStatusBadge(trip.status).label }}
+                                            </span>
                                         </div>
                                         <p class="mt-1 text-sm text-slate-500">จุดนัดพบ: {{ trip.pickupPoint }}</p>
                                         <p class="text-sm text-slate-500">
@@ -72,7 +67,8 @@
 
                                 <div class="flex items-center mb-4 space-x-4">
                                     <img :src="trip.driver.image" :alt="trip.driver.name"
-                                        class="object-cover w-12 h-12 rounded-full" />
+                                        class="object-cover w-12 h-12 rounded-full"
+                                        @error="(e) => e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(trip.driver.name || 'U')}&background=random&size=64`" />
                                     <div class="flex-1">
                                         <h5 class="font-medium text-primary">{{ trip.driver.name }}</h5>
                                         <div class="flex items-center">
@@ -166,9 +162,9 @@
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">
                                             📍 ติดตามตำแหน่ง
                                         </NuxtLink>
-                                        <button @click.stop="openChat(trip)"
-                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover">
-                                            💬 แชทกลุ่ม
+                                        <button @click.stop="openChat(trip)" :disabled="isChatLoading"
+                                            class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover disabled:opacity-50">
+                                            {{ isChatLoading ? '⏳ กำลังเปิด...' : '💬 แชทกลุ่ม' }}
                                         </button>
                                     </template>
 
@@ -198,7 +194,7 @@
                         <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
                             <h3 class="text-lg font-semibold text-[#383838]">แผนที่เส้นทาง</h3>
                               <p class="mt-1 text-sm text-slate-500">
-                                {{ selectedLabel ? selectedLabel : 'คลิกที่รายการเพื่อดูเส้นทาง' }}
+                                {{ selectedTrip ? `${selectedTrip.origin} → ${selectedTrip.destination}` : 'คลิกที่รายการเพื่อดูเส้นทาง' }}
                             </p>
                         </div>
                         <div ref="mapContainer" id="map" class="h-96"></div>
@@ -254,6 +250,10 @@ import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
 import { useChat } from '~/composables/useChat'
+import {
+    useRouteMap, cleanAddr, formatDistance, formatDuration,
+    getStatusBadge, CANCEL_REASONS
+} from '~/composables/useRouteMap'
 
 // Setup dayjs for Thai locale
 dayjs.locale('th')
@@ -263,25 +263,14 @@ const { $api } = useNuxtApp()
 const { toast } = useToast()
 const { createSession: createChatSession } = useChat()
 const router = useRouter()
+const { initializeMap, waitMapReady, reverseGeocode, extractNameParts, updateMap, mapReady } = useRouteMap()
 
 // --- State Management ---
 const activeTab = ref('pending')
 const selectedTripId = ref(null)
 const isLoading = ref(false)
 const mapContainer = ref(null)
-let map = null
-let currentPolyline = null
-let currentMarkers = []
 const allTrips = ref([])
-
-let gmap = null // Google Map instance
-let activePolyline = null
-let startMarker = null
-let endMarker = null
-let geocoder = null
-let placesService = null
-const mapReady = ref(false)
-let stopMarkers = []
 
 const GMAPS_CB = '__gmapsReady__'
 
@@ -297,17 +286,7 @@ const tabs = [
 
 definePageMeta({ middleware: 'auth' })
 
-const cancelReasonOptions = [
-    { value: 'CHANGE_OF_PLAN', label: 'เปลี่ยนแผน/มีธุระกะทันหัน' },
-    { value: 'FOUND_ALTERNATIVE', label: 'พบวิธีเดินทางอื่นแล้ว' },
-    { value: 'DRIVER_DELAY', label: 'คนขับล่าช้าหรือเลื่อนเวลา' },
-    { value: 'PRICE_ISSUE', label: 'ราคาหรือค่าใช้จ่ายไม่เหมาะสม' },
-    { value: 'WRONG_LOCATION', label: 'เลือกจุดรับ–ส่งผิด' },
-    { value: 'DUPLICATE_OR_WRONG_DATE', label: 'จองซ้ำหรือจองผิดวัน' },
-    { value: 'SAFETY_CONCERN', label: 'กังวลด้านความปลอดภัย' },
-    { value: 'WEATHER_OR_FORCE_MAJEURE', label: 'สภาพอากาศ/เหตุสุดวิสัย' },
-    { value: 'COMMUNICATION_ISSUE', label: 'สื่อสารไม่สะดวก/ติดต่อไม่ได้' }
-]
+const cancelReasonOptions = CANCEL_REASONS
 
 const isCancelModalVisible = ref(false)
 const isSubmittingCancel = ref(false)
@@ -325,12 +304,6 @@ const selectedTrip = computed(() => {
     return allTrips.value.find((trip) => trip.id === selectedTripId.value) || null
 })
 
-function cleanAddr(a) {
-    return (a || '')
-        .replace(/,?\s*(Thailand|ไทย|ประเทศ)\s*$/i, '')
-        .replace(/\s{2,}/g, ' ')
-        .trim()
-}
 
 // --- Methods ---
 async function fetchMyTrips() {
@@ -409,7 +382,7 @@ async function fetchMyTrips() {
                     [start.lat, start.lng],
                     [end.lat, end.lng]
                 ],
-                polyline: b.route.routePolyline || null, // ใช้เมื่อมี
+                polyline: b.route.routePolyline || null,
                 stops,
                 stopsCoords,
                 carDetails,
@@ -451,70 +424,7 @@ async function fetchMyTrips() {
     }
 }
 
-function waitMapReady() {
-    return new Promise((resolve) => {
-        if (mapReady.value) return resolve(true)
-        const t = setInterval(() => {
-            if (mapReady.value) {
-                clearInterval(t)
-                resolve(true)
-            }
-        }, 50)
-    })
-}
 
-function reverseGeocode(lat, lng) {
-    return new Promise((resolve) => {
-        if (!geocoder) return resolve(null)
-        geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-            if (status !== 'OK' || !results?.length) return resolve(null)
-            resolve(results[0])
-        })
-    })
-}
-
-async function extractNameParts(geocodeResult) {
-    if (!geocodeResult) return { name: null, area: null }
-
-    const comps = geocodeResult.address_components || []
-    const byType = (t) => comps.find((c) => c.types.includes(t))?.long_name
-    const byTypeShort = (t) => comps.find((c) => c.types.includes(t))?.short_name
-
-    const types = geocodeResult.types || []
-    const isPoi = types.includes('point_of_interest') || types.includes('establishment') || types.includes('premise')
-
-    let name = null
-    if (isPoi && geocodeResult.place_id) {
-        const poiName = await getPlaceName(geocodeResult.place_id)
-        if (poiName) name = poiName
-    }
-    if (!name) {
-        const streetNumber = byType('street_number')
-        const route = byType('route')
-        name = streetNumber && route ? `${streetNumber} ${route}` : route || geocodeResult.formatted_address || null
-    }
-
-    const sublocality =
-        byType('sublocality') || byType('neighborhood') || byType('locality') || byType('administrative_area_level_2')
-    const province = byType('administrative_area_level_1') || byTypeShort('administrative_area_level_1')
-
-    let area = null
-    if (sublocality && province) area = `${sublocality}, ${province}`
-    else if (province) area = province
-
-    if (name) name = name.replace(/,?\s*(Thailand|ไทย)\s*$/i, '')
-    return { name, area }
-}
-
-function getPlaceName(placeId) {
-    return new Promise((resolve) => {
-        if (!placesService || !placeId) return resolve(null)
-        placesService.getDetails({ placeId, fields: ['name'] }, (place, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK && place?.name) resolve(place.name)
-            else resolve(null)
-        })
-    })
-}
 
 const getTripCount = (status) => {
     if (status === 'all') return allTrips.value.length
@@ -534,77 +444,7 @@ const toggleTripDetails = (tripId) => {
     }
 }
 
-async function updateMap(trip) {
-    if (!trip) return
-    await waitMapReady()
-    if (!gmap) return
-
-    // cleanup ของเดิม
-    if (activePolyline) {
-        activePolyline.setMap(null)
-        activePolyline = null
-    }
-    if (startMarker) {
-        startMarker.setMap(null)
-        startMarker = null
-    }
-    if (endMarker) {
-        endMarker.setMap(null)
-        endMarker = null
-    }
-    if (stopMarkers.length) {
-        stopMarkers.forEach((m) => m.setMap(null))
-        stopMarkers = []
-    }
-
-    const start = { lat: Number(trip.coords[0][0]), lng: Number(trip.coords[0][1]) }
-    const end = { lat: Number(trip.coords[1][0]), lng: Number(trip.coords[1][1]) }
-
-    // หมุด A/B
-    startMarker = new google.maps.Marker({ position: start, map: gmap, label: 'A' })
-    endMarker = new google.maps.Marker({ position: end, map: gmap, label: 'B' })
-
-    if (Array.isArray(trip.stopsCoords) && trip.stopsCoords.length) {
-        stopMarkers = trip.stopsCoords.map(
-            (s, idx) =>
-                new google.maps.Marker({
-                    position: { lat: s.lat, lng: s.lng },
-                    map: gmap,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                    title: s.name || s.address || `จุดแวะ ${idx + 1}`
-                })
-        )
-    }
-
-    // เส้นทางจาก polyline ถ้ามี
-    if (trip.polyline && google.maps.geometry?.encoding) {
-        const path = google.maps.geometry.encoding.decodePath(trip.polyline)
-        activePolyline = new google.maps.Polyline({
-            path,
-            map: gmap,
-            strokeColor: '#2563eb',
-            strokeOpacity: 0.9,
-            strokeWeight: 5
-        })
-        const bounds = new google.maps.LatLngBounds()
-        path.forEach((p) => bounds.extend(p))
-
-        if (trip.stopsCoords?.length) {
-            trip.stopsCoords.forEach((s) => bounds.extend(new google.maps.LatLng(s.lat, s.lng)))
-        }
-
-        gmap.fitBounds(bounds)
-    } else {
-        // ไม่มี polyline → fit จากจุด A-B + จุดแวะ
-        const bounds = new google.maps.LatLngBounds()
-        bounds.extend(start)
-        bounds.extend(end)
-        if (trip.stopsCoords?.length) {
-            trip.stopsCoords.forEach((s) => bounds.extend(new google.maps.LatLng(s.lat, s.lng)))
-        }
-        gmap.fitBounds(bounds)
-    }
-}
+// updateMap is from useRouteMap composable
 
 // --- Modal Logic ---
 const isModalVisible = ref(false)
@@ -704,54 +544,27 @@ async function submitCancel() {
     }
 }
 
+const isChatLoading = ref(false)
+
 async function openChat(trip) {
+    if (isChatLoading.value) return
+    isChatLoading.value = true
     try {
         const session = await createChatSession(trip.routeId, true)
-        router.push(`/chat/${session.id}`)
+        if (session?.id) {
+            router.push(`/chat/${session.id}`)
+        } else {
+            toast.error('เปิดแชทไม่สำเร็จ', 'ไม่พบ session ID')
+        }
     } catch (err) {
         console.error('Open chat failed:', err)
-        toast.error('เปิดแชทไม่สำเร็จ', err?.statusMessage || 'กรุณาลองใหม่')
+        toast.error('เปิดแชทไม่สำเร็จ', err?.statusMessage || err?.data?.message || 'กรุณาลองใหม่')
+    } finally {
+        isChatLoading.value = false
     }
 }
 
-function formatDistance(input) {
-    if (typeof input !== 'string') return input
-    const parts = input.split('+')
-    if (parts.length <= 1) return input
-
-    let meters = 0
-    for (const seg of parts) {
-        const n = parseFloat(seg.replace(/[^\d.]/g, ''))
-        if (Number.isNaN(n)) continue
-        if (/กม/.test(seg)) meters += n * 1000
-        else if (/เมตร|ม\./.test(seg)) meters += n
-        else meters += n // สมมติเป็นเมตรถ้าไม่พบหน่วย
-    }
-
-    if (meters >= 1000) {
-        const km = Math.round((meters / 1000) * 10) / 10 // ปัดทศนิยม 1 ตำแหน่ง
-        return `${(km % 1 === 0 ? km.toFixed(0) : km)} กม.`
-    }
-    return `${Math.round(meters)} ม.`
-}
-
-function formatDuration(input) {
-    if (typeof input !== 'string') return input
-    const parts = input.split('+')
-    if (parts.length <= 1) return input
-
-    let minutes = 0
-    for (const seg of parts) {
-        const n = parseFloat(seg.replace(/[^\d.]/g, ''))
-        if (Number.isNaN(n)) continue
-        if (/ชม/.test(seg)) minutes += n * 60
-        else minutes += n // นาที
-    }
-
-    const h = Math.floor(minutes / 60)
-    const m = Math.round(minutes % 60)
-    return h ? (m ? `${h} ชม. ${m} นาที` : `${h} ชม.`) : `${m} นาที`
-}
+// formatDistance and formatDuration imported from useRouteMap
 
 // --- Lifecycle and Watchers ---
 useHead({
@@ -770,119 +583,24 @@ useHead({
 })
 
 onMounted(() => {
-    // ถ้า script โหลดแล้ว
+    // Map initialization (google maps ready or waiting)
     if (window.google?.maps) {
-        initializeMap()
+        initializeMap(mapContainer.value)
         fetchMyTrips().then(() => {
-            // ถ้ามีข้อมูลแล้วและยังไม่ได้เลือก ให้โชว์แผนที่ของรายการแรกในแท็บปัจจุบัน
             if (filteredTrips.value.length) updateMap(filteredTrips.value[0])
         })
         return
     }
-
-    // ยังไม่โหลดเสร็จ: ตั้ง callback
     window[GMAPS_CB] = () => {
-        try {
-            delete window[GMAPS_CB]
-        } catch { }
-        initializeMap()
+        try { delete window[GMAPS_CB] } catch { }
+        initializeMap(mapContainer.value)
         fetchMyTrips().then(() => {
             if (filteredTrips.value.length) updateMap(filteredTrips.value[0])
         })
     }
 })
-
-function initializeMap() {
-    if (!mapContainer.value || gmap) return
-    gmap = new google.maps.Map(mapContainer.value, {
-        center: { lat: 13.7563, lng: 100.5018 },
-        zoom: 6,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: true
-    })
-    geocoder = new google.maps.Geocoder()
-    placesService = new google.maps.places.PlacesService(gmap)
-    mapReady.value = true
-}
 </script>
 
-<style scoped>
-.trip-card {
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.trip-card:hover {
-    /* transform: translateY(-2px); */
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
-}
-
-.tab-button {
-    transition: all 0.3s ease;
-}
-
-.tab-button.active {
-    background-color: #3b82f6;
-    color: white;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
-}
-
-.tab-button:not(.active) {
-    background-color: white;
-    color: #6b7280;
-    border: 1px solid #d1d5db;
-}
-
-.tab-button:not(.active):hover {
-    background-color: #f9fafb;
-    color: #374151;
-}
-
-#map {
-    height: 100%;
-    min-height: 600px;
-    border-radius: 0 0 0.5rem 0.5rem;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.status-pending,
-.status-confirmed,
-.status-rejected,
-.status-cancelled {
-    background-color: #137FEC;
-    color: white;
-}
-
-@keyframes slide-in-from-top {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-in {
-    animation-fill-mode: both;
-}
-
-.slide-in-from-top {
-    animation-name: slide-in-from-top;
-}
-
-.duration-300 {
-    animation-duration: 300ms;
-}
+<style>
+@import '~/assets/css/trip-shared.css';
 </style>

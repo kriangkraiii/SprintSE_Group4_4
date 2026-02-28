@@ -19,7 +19,7 @@
  */
 
 const { Server } = require('socket.io');
-const jwt = require('jsonwebtoken');
+const { verifyToken } = require('../utils/jwt');
 
 // Online users: Map<userId, { socketId, lastSeen }>
 const onlineUsers = new Map();
@@ -39,13 +39,13 @@ function initSocketIO(httpServer) {
         pingTimeout: 10000,
     });
 
-    // Auth middleware — verify JWT from handshake
+    // Auth middleware — verify JWT from handshake (uses bootEpoch check)
     io.use((socket, next) => {
         const token = socket.handshake.auth?.token || socket.handshake.query?.token;
         if (!token) return next(new Error('Authentication required'));
 
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = verifyToken(token);
             socket.userId = decoded.sub || decoded.id;
             socket.userRole = decoded.role;
             next();
@@ -91,6 +91,10 @@ function initSocketIO(httpServer) {
         });
 
         // ─── GPS Location Tracking (Route-level) ─────────
+        // Throttle map: userId → last emit timestamp
+        const locationThrottle = new Map();
+        const THROTTLE_MS = 2000; // max 1 emit / 2 วินาที
+
         // Join a route room for location sharing (post-booking)
         socket.on('join-route', (routeId) => {
             socket.join(`route:${routeId}`);
@@ -110,17 +114,25 @@ function initSocketIO(httpServer) {
             socket.leave(`route-preview:${routeId}`);
         });
 
-        // Receive location update from any participant
+        // Receive location update from any participant (throttled)
         socket.on('location-update', (data) => {
             const { routeId, lat, lng, name } = data;
             if (!routeId || lat == null || lng == null) return;
+
+            // Throttle: skip ถ้ายังไม่ถึงเวลา
+            const now = Date.now();
+            const key = `${userId}:${routeId}`;
+            const lastEmit = locationThrottle.get(key) || 0;
+            if (now - lastEmit < THROTTLE_MS) return;
+            locationThrottle.set(key, now);
+
             const payload = {
                 userId,
                 role: socket.userRole,
                 name: name || '',
                 lat,
                 lng,
-                timestamp: Date.now(),
+                timestamp: now,
             };
             // Broadcast to post-booking participants
             socket.to(`route:${routeId}`).emit('participant-location', payload);

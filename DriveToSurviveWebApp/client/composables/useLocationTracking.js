@@ -16,7 +16,7 @@ import { io } from 'socket.io-client'
 
 const ANIMATION_DURATION = 1000
 const OUTLIER_THRESHOLD_KM = 50
-const SIGNAL_LOSS_TIMEOUT = 30000
+const SIGNAL_LOSS_TIMEOUT = 15000
 
 // ─── Geo Math ─────────────────────────────────────────────
 
@@ -68,6 +68,7 @@ export function useLocationTracking() {
     let cancelAnimations = new Map() // userId → cancel fn
     let previousPositions = new Map() // userId → {lat,lng}
     let signalLossTimer = null
+    let reemitInterval = null
     let participantMarkers = new Map() // userId → google.maps.Marker
 
     function resetSignalLossTimer() {
@@ -113,8 +114,16 @@ export function useLocationTracking() {
                     sock.emit('location-update', { routeId, lat, lng, name: myName || '' })
                 },
                 (err) => console.warn('[GPS] error:', err.message),
-                { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+                { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
             )
+
+            // ส่งตำแหน่งล่าสุดซ้ำทุก 3 วินาที — ป้องกันกรณี GPS ไม่อัปเดตบ่อย (desktop)
+            reemitInterval = setInterval(() => {
+                const pos = myPosition.value
+                if (pos.lat && sock.connected) {
+                    sock.emit('location-update', { routeId, lat: pos.lat, lng: pos.lng, name: myName || '' })
+                }
+            }, 3000)
         }
 
         resetSignalLossTimer()
@@ -189,6 +198,7 @@ export function useLocationTracking() {
 
     function stopTracking() {
         if (watchId != null) { navigator.geolocation.clearWatch(watchId); watchId = null }
+        if (reemitInterval) { clearInterval(reemitInterval); reemitInterval = null }
         cancelAnimations.forEach(fn => fn())
         cancelAnimations.clear()
         if (signalLossTimer) { clearTimeout(signalLossTimer); signalLossTimer = null }
