@@ -17,9 +17,6 @@ const globalLimiter = rateLimit({
         success: false,
         message: 'คำขอมากเกินไป กรุณารอสักครู่แล้วลองใหม่',
     },
-    keyGenerator: (req) => {
-        return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-    },
 });
 
 const authLimiter = rateLimit({
@@ -31,9 +28,6 @@ const authLimiter = rateLimit({
         success: false,
         message: 'พยายามเข้าสู่ระบบมากเกินไป กรุณารอ 15 นาทีแล้วลองใหม่',
     },
-    keyGenerator: (req) => {
-        return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-    },
 });
 
 const strictLimiter = rateLimit({
@@ -44,9 +38,6 @@ const strictLimiter = rateLimit({
     message: {
         success: false,
         message: 'คำขอมากเกินไปสำหรับการดำเนินการนี้ กรุณารอ 15 นาที',
-    },
-    keyGenerator: (req) => {
-        return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
     },
 });
 
