@@ -9,12 +9,14 @@ const {
     resetPasswordSchema,
 } = require('../validations/auth.validation');
 const { protect } = require('../middlewares/auth');
+const { authLimiter, strictLimiter } = require('../middlewares/rateLimiter');
 
 const router = express.Router();
 
 // POST /api/auth/login
 router.post(
     '/login',
+    authLimiter,
     validate({ body: loginSchema }),
     authController.login
 );
@@ -30,6 +32,7 @@ router.put(
 // POST /api/auth/forgot-password
 router.post(
     '/forgot-password',
+    authLimiter,
     validate({ body: forgotPasswordSchema }),
     authController.forgotPassword
 );
@@ -37,6 +40,7 @@ router.post(
 // POST /api/auth/verify-otp
 router.post(
     '/verify-otp',
+    strictLimiter,
     validate({ body: verifyOtpSchema }),
     authController.verifyOtp
 );
@@ -44,6 +48,7 @@ router.post(
 // POST /api/auth/reset-password
 router.post(
     '/reset-password',
+    strictLimiter,
     validate({ body: resetPasswordSchema }),
     authController.resetPassword
 );

@@ -30,16 +30,19 @@ const createSession = async (routeId, userId) => {
     const retentionExpiresAt = new Date();
     retentionExpiresAt.setDate(retentionExpiresAt.getDate() + RETENTION_DAYS);
 
+    // สร้าง participant list — ป้องกัน duplicate เมื่อ driver === userId
+    const participantCreates = [{ userId: route.driverId }];
+    if (userId !== route.driverId) {
+        participantCreates.push({ userId });
+    }
+
     const session = await prisma.chatSession.create({
         data: {
             routeId,
             driverId: route.driverId,
             retentionExpiresAt,
             participants: {
-                create: [
-                    { userId: route.driverId },
-                    { userId },
-                ],
+                create: participantCreates,
             },
         },
     });
