@@ -153,7 +153,7 @@ const listSuspendedUsers = async (opts = {}) => {
  * Export system logs as JSON (for law enforcement)
  */
 const exportSystemLogs = async (filters = {}) => {
-    const { from, to, userId, action } = filters;
+    const { from, to, userId, action, ipAddress } = filters;
 
     const where = {};
     if (from || to) {
@@ -163,6 +163,7 @@ const exportSystemLogs = async (filters = {}) => {
     }
     if (userId) where.userId = userId;
     if (action) where.action = action;
+    if (ipAddress) where.ipAddress = { contains: ipAddress };
 
     const logs = await prisma.systemLog.findMany({
         where,

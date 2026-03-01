@@ -40,24 +40,28 @@
                                     <div>
                                         <label class="block mb-1 text-xs font-medium text-slate-500">อีเมล *</label>
                                         <input v-model.trim="form.email" type="email" placeholder="example@email.com"
+                                            autocomplete="off"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
                                         <label class="block mb-1 text-xs font-medium text-slate-500">ชื่อผู้ใช้
                                             (username) *</label>
                                         <input v-model.trim="form.username" type="text" placeholder="user_001"
+                                            autocomplete="off"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
                                         <label class="block mb-1 text-xs font-medium text-slate-500">รหัสผ่าน *</label>
                                         <input v-model="form.password" type="password"
                                             placeholder="อย่างน้อย 8 ตัวอักษร"
+                                            autocomplete="new-password"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
                                         <label class="block mb-1 text-xs font-medium text-slate-500">เบอร์โทรศัพท์
                                             *</label>
                                         <input v-model.trim="form.phoneNumber" type="tel" placeholder="0891234567"
+                                            autocomplete="off"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                 </div>
@@ -279,7 +283,25 @@ function cleanupGlobalScripts() {
     delete window.__adminResizeHandler__
 }
 
+function resetForm() {
+    form.email = ''
+    form.username = ''
+    form.password = ''
+    form.firstName = ''
+    form.lastName = ''
+    form.phoneNumber = ''
+    form.gender = ''
+    form.role = 'ADMIN'
+    form.nationalIdNumber = ''
+    form.nationalIdExpiryDate = ''
+    form.nationalIdPhotoUrl = null
+    form.selfiePhotoUrl = null
+    idPreview.value = null
+    selfiePreview.value = null
+}
+
 onMounted(() => {
+    resetForm()
     defineGlobalScripts()
     if (typeof window.__adminResizeHandler__ === 'function') window.__adminResizeHandler__()
 })

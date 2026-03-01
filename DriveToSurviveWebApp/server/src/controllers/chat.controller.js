@@ -5,21 +5,38 @@ const chatReportService = require('../services/chatReport.service');
 // ─── Session Endpoints ───────────────────────────────────
 
 const createSession = asyncHandler(async (req, res) => {
-    const { bookingId } = req.body;
-    const session = await chatService.createSession(bookingId);
+    const { routeId, bookingId } = req.body;
+    const userId = req.user.sub;
+    // Support both: routeId directly or look up from bookingId
+    let targetRouteId = routeId;
+    if (!targetRouteId && bookingId) {
+        const prisma = require('../utils/prisma');
+        const booking = await prisma.booking.findUnique({ where: { id: bookingId }, select: { routeId: true } });
+        if (booking) targetRouteId = booking.routeId;
+    }
+    if (!targetRouteId) return res.status(400).json({ success: false, message: 'routeId or bookingId required' });
+    const session = await chatService.createSession(targetRouteId, userId);
     res.status(201).json({ success: true, data: session });
 });
 
 const endSession = asyncHandler(async (req, res) => {
-    const { bookingId } = req.body;
-    const session = await chatService.endSession(bookingId);
+    const { routeId } = req.body;
+    const session = await chatService.endSession(routeId);
     res.status(200).json({ success: true, data: session });
 });
 
 const getSession = asyncHandler(async (req, res) => {
+    const { routeId } = req.params;
+    const userId = req.user.sub;
+    const session = await chatService.getSession(routeId, userId);
+    res.status(200).json({ success: true, data: session });
+});
+
+// Backward compat: get session by booking ID
+const getSessionByBooking = asyncHandler(async (req, res) => {
     const { bookingId } = req.params;
     const userId = req.user.sub;
-    const session = await chatService.getSession(bookingId, userId);
+    const session = await chatService.getSessionByBooking(bookingId, userId);
     res.status(200).json({ success: true, data: session });
 });
 
@@ -81,10 +98,75 @@ const updateReportAdmin = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: result });
 });
 
+// ─── Image Upload ────────────────────────────────────────
+
+const { uploadToCloudinary } = require('../utils/cloudinary');
+
+const sendImageMessage = asyncHandler(async (req, res) => {
+    const userId = req.user.sub;
+    const { sessionId } = req.params;
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'กรุณาเลือกรูปภาพ' });
+    }
+    const { url } = await uploadToCloudinary(req.file.buffer, 'chat-images');
+    const message = await chatService.sendMessage(sessionId, userId, {
+        type: 'IMAGE',
+        content: '📷 รูปภาพ',
+        imageUrl: url,
+    });
+    res.status(201).json({ success: true, data: message });
+});
+
+// ─── Quick Reply Shortcuts ───────────────────────────────
+
+const quickReplyService = require('../services/quickReply.service');
+
+const getMyShortcuts = asyncHandler(async (req, res) => {
+    const data = await quickReplyService.getMyShortcuts(req.user.sub);
+    res.status(200).json({ success: true, data });
+});
+
+const createShortcut = asyncHandler(async (req, res) => {
+    const { text } = req.body;
+    const data = await quickReplyService.createShortcut(req.user.sub, text);
+    res.status(201).json({ success: true, data });
+});
+
+const updateShortcut = asyncHandler(async (req, res) => {
+    const { text } = req.body;
+    const data = await quickReplyService.updateShortcut(req.params.id, req.user.sub, text);
+    res.status(200).json({ success: true, data });
+});
+
+const deleteShortcut = asyncHandler(async (req, res) => {
+    await quickReplyService.deleteShortcut(req.params.id, req.user.sub);
+    res.status(200).json({ success: true, message: 'ลบคีย์ลัดแล้ว' });
+});
+
+// ─── Admin: Chat Viewer ──────────────────────────────────
+
+const chatAdminService = require('../services/chatAdmin.service');
+
+const adminGetSessions = asyncHandler(async (req, res) => {
+    const data = await chatAdminService.getAllSessions(req.query);
+    res.status(200).json({ success: true, data });
+});
+
+const adminGetMessages = asyncHandler(async (req, res) => {
+    const data = await chatAdminService.getSessionMessages(req.params.id);
+    res.status(200).json({ success: true, data });
+});
+
+const adminGetLogs = asyncHandler(async (req, res) => {
+    const data = await chatAdminService.getArchivedLogs(req.query);
+    res.status(200).json({ success: true, data });
+});
+
 module.exports = {
     createSession,
     endSession,
     getSession,
+    getSessionByBooking,
     getMySessions,
     sendMessage,
     getMessages,
@@ -93,4 +175,12 @@ module.exports = {
     createReport,
     listReportsAdmin,
     updateReportAdmin,
+    sendImageMessage,
+    getMyShortcuts,
+    createShortcut,
+    updateShortcut,
+    deleteShortcut,
+    adminGetSessions,
+    adminGetMessages,
+    adminGetLogs,
 };
