@@ -401,3 +401,117 @@ test('Scenario 4 : delete quick reply', async ({ browser }) => {
     await contextA.close();
     await contextB.close();
 });
+
+test('Scenario 5 : add image (.jpg, .png rejecting .pdf)', async ({ browser }) => {
+    test.setTimeout(120000);
+    // 1. Setup Contexts
+    const contextA = await browser.newContext();
+    const contextB = await browser.newContext();
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // 2. Login User A & B
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // 3. เข้าสู่เมนูแชท
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageB.click(chatRoomQuery, { force: true });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    // นับจำนวนรูปที่มีอยู่ตั้งแต่แรกเพื่อดูว่ามันอัปโหลดเพิ่มไหม
+    const initialImagesA = await pageA.locator('.flex-1.overflow-y-auto img.max-h-64').count();
+
+    // ==========================================
+    // 4. Test PNG upload (Should Fail)
+    // ==========================================
+    const fileInput = pageA.locator('input[type="file"]');
+    await fileInput.setInputFiles('sprint2/img/image.png');
+    await expect(pageA.locator('text="ไฟล์ไม่รองรับ"').first()).toBeVisible({ timeout: 5000 });
+    await expect(pageA.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .pdf เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
+
+    // รอ Toast แจ้งเตือนมันหายหรือรอนิดนึง
+    await pageA.waitForTimeout(3000);
+
+    // ==========================================
+    // 5. Test JPG upload (Should Pass)
+    // ==========================================
+    await fileInput.setInputFiles('sprint2/img/image.jpg');
+    // ต้องมีพรีวิวขึ้นในช่องแชท
+    const previewImage = pageA.locator('img.h-20.rounded-lg.object-cover');
+    await expect(previewImage).toBeVisible({ timeout: 5000 });
+
+    // กดปุ่มส่งข้อความ
+    await pageA.locator('button.bg-cta').click();
+    // รอระบบอัปโหลดและส่งรูปภาพสักพักนึง
+    await pageA.waitForTimeout(4000);
+
+    // รูปในแชทฝั่ง A ต้องเพิ่มขึ้น 1
+    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 1, { timeout: 30000 });
+    // ฝั่ง B ต้องได้รับรูปใหม่ด้วย
+    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 1, { timeout: 30000 });
+
+    // ==========================================
+    // 6. Test PDF upload + PNG/JPG testing for User B
+    // ==========================================
+    const fileInputB = pageB.locator('input[type="file"]');
+
+    // 6.1 User B Test PNG upload (Should Fail)
+    await fileInputB.setInputFiles('sprint2/img/image.png');
+    await expect(pageB.locator('text="ไฟล์ไม่รองรับ"').first()).toBeVisible({ timeout: 5000 });
+    await expect(pageB.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .pdf เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
+    await pageB.waitForTimeout(3000);
+
+    // 6.2 User B Test JPG upload (Should Pass)
+    await fileInputB.setInputFiles('sprint2/img/image.jpg');
+    const previewImageB_jpg = pageB.locator('img.h-20.rounded-lg.object-cover');
+    await expect(previewImageB_jpg).toBeVisible({ timeout: 5000 });
+    await pageB.locator('button.bg-cta').click();
+    await pageB.waitForTimeout(4000);
+    // รูปแชทฝั่งคู่สนทนาจะเพิ่มขึ้นอีก 1
+    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 2, { timeout: 30000 });
+    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 2, { timeout: 30000 });
+
+    // 6.3 User B Test PDF upload (Should Pass)
+    await fileInputB.setInputFiles('sprint2/img/image.pdf');
+
+    const previewImageB = pageB.locator('img.h-20.rounded-lg.object-cover');
+    await expect(previewImageB).toBeVisible({ timeout: 5000 });
+
+    await pageB.locator('button.bg-cta').click();
+
+    // รอระบบอัปโหลด PDF สักพักนึง
+    await pageB.waitForTimeout(4000);
+
+    // รูป (หรือ preview PDF) ในแชทของทั้งคู่น่าจะเพิ่มเป็น +3
+    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 3, { timeout: 30000 });
+    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 3, { timeout: 30000 });
+
+    await pageA.waitForTimeout(2000);
+
+    await contextA.close();
+    await contextB.close();
+});
