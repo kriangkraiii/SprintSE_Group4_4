@@ -288,40 +288,114 @@ test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     await pageA.waitForTimeout(3000);
 
     // ==========================================
-    // 6. Delete Quick Replies
+    // จบ Scenario 3 (ทิ้งข้อความไว้ให้ Scenario 4 ลบ)
     // ==========================================
-    // Delete A
+    await contextA.close();
+    await contextB.close();
+});
+
+test('Scenario 4 : delete quick reply', async ({ browser }) => {
+    test.setTimeout(90000);
+    // 1. Setup Contexts
+    const contextA = await browser.newContext();
+    const contextB = await browser.newContext();
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // 2. Login User A & B
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // 3. เข้าสู่เมนูแชท
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageB.click(chatRoomQuery, { force: true });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    const newSnippetTextA = `A สร้าง quick reply นี้`;
+    const newSnippetTextB = `B เห็น quick reply แล้ว และตอบกลับด้วยการสร้าง quick reply นี้เช่นกัน`;
+
+    // ==========================================
+    // 4. Delete A's Quick Reply
+    // ==========================================
+    const openManageBtnA = pageA.locator('button[title="จัดการคีย์ลัด"]');
     if (!(await openManageBtnA.isVisible())) {
         await pageA.click('button[title="ตอบกลับด่วน"]');
         await openManageBtnA.waitFor({ state: 'visible', timeout: 5000 });
     }
     await openManageBtnA.click();
 
-    const deleteBtnA = pageA.locator('button[title="ลบ"]').filter({ has: pageA.locator(`:text("${newSnippetTextA}")`) }).first();
-    // ถ้า filter ข้างต้นไม่ได้ผล ใช้ XPath กวาดหาปุ่มลบอันแรกที่มี text นี้อยู่ในกล่องเดียวกัน
-    const fallbackDelA = pageA.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextA}")]//button[@title="ลบ"]`).first();
-    await fallbackDelA.waitFor({ state: 'visible', timeout: 5000 });
-    await fallbackDelA.click();
+    // ลบทุกอันที่มีชื่อซ้ำกันเพื่อเคลียร์ขยะจากการรันซ้ำ
+    let deleteBtnA = pageA.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextA}")]//button[@title="ลบ"]`).first();
+    while (await deleteBtnA.isVisible()) {
+        await deleteBtnA.click();
+        await expect(pageA.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
+        await pageA.waitForTimeout(500);
+        // เช็คซ้ำว่ายังมีอีกไหม
+        deleteBtnA = pageA.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextA}")]//button[@title="ลบ"]`).first();
+    }
 
-    await expect(pageA.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
+    const closeBtnA = pageA.locator('h3:has-text("จัดการคีย์ลัดด่วน")').locator('..').locator('button');
     await closeBtnA.click();
     await pageA.waitForTimeout(500);
 
-    // Delete B
+    // ✅ VERIFY: A Cannot use it anymore
+    if (!(await openManageBtnA.isVisible())) {
+        await pageA.click('button[title="ตอบกลับด่วน"]');
+        await openManageBtnA.waitFor({ state: 'visible', timeout: 5000 });
+    }
+    // ใช้ expect(...).not.toBeVisible() เพื่อยืนยันว่าปุ่มหายไปแล้วจริงๆ
+    await expect(pageA.locator('button.bg-blue-50').filter({ hasText: newSnippetTextA })).not.toBeVisible();
+
+    // ==========================================
+    // 5. Delete B's Quick Reply
+    // ==========================================
+    const openManageBtnB = pageB.locator('button[title="จัดการคีย์ลัด"]');
     if (!(await openManageBtnB.isVisible())) {
         await pageB.click('button[title="ตอบกลับด่วน"]');
         await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
     }
     await openManageBtnB.click();
 
-    const deleteBtnB = pageB.locator('button[title="ลบ"]').filter({ has: pageB.locator(`:text("${newSnippetTextB}")`) }).first();
-    const fallbackDelB = pageB.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextB}")]//button[@title="ลบ"]`).first();
-    await fallbackDelB.waitFor({ state: 'visible', timeout: 5000 });
-    await fallbackDelB.click();
+    let deleteBtnB = pageB.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextB}")]//button[@title="ลบ"]`).first();
+    while (await deleteBtnB.isVisible()) {
+        await deleteBtnB.click();
+        await expect(pageB.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
+        await pageB.waitForTimeout(500);
+        deleteBtnB = pageB.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextB}")]//button[@title="ลบ"]`).first();
+    }
 
-    await expect(pageB.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
+    const closeBtnB = pageB.locator('h3:has-text("จัดการคีย์ลัดด่วน")').locator('..').locator('button');
     await closeBtnB.click();
     await pageB.waitForTimeout(500);
+
+    if (!(await openManageBtnB.isVisible())) {
+        await pageB.click('button[title="ตอบกลับด่วน"]');
+        await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
+    }
+    await expect(pageB.locator('button.bg-blue-50').filter({ hasText: newSnippetTextB })).not.toBeVisible();
 
     // ปิดหน้าต่างทีละเบราว์เซอร์
     await contextA.close();
