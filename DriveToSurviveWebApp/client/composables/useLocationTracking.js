@@ -30,7 +30,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 function animateMarker(marker, from, to, duration = ANIMATION_DURATION) {
-    if (!marker) return () => {}
+    if (!marker) return () => { }
     const startTime = performance.now()
     let animId = null
 
@@ -62,6 +62,7 @@ export function useLocationTracking() {
     const isConnected = ref(false)
     const signalLost = ref(false)
     const driverPosition = ref(null) // For preview mode
+    const arrivalAlerts = ref([]) // Real-time arrival notifications
 
     let socket = null
     let watchId = null
@@ -70,6 +71,8 @@ export function useLocationTracking() {
     let signalLossTimer = null
     let reemitInterval = null
     let participantMarkers = new Map() // userId → google.maps.Marker
+    let pickupMarkers = [] // Green pickup location markers
+    let directionsRenderer = null // Google Directions route line
 
     function resetSignalLossTimer() {
         if (signalLossTimer) clearTimeout(signalLossTimer)
@@ -127,6 +130,11 @@ export function useLocationTracking() {
         }
 
         resetSignalLossTimer()
+
+        // Listen for real-time arrival alerts
+        sock.on('arrival-alert', (data) => {
+            arrivalAlerts.value = [...arrivalAlerts.value, data]
+        })
     }
 
     /**
@@ -204,9 +212,65 @@ export function useLocationTracking() {
         if (signalLossTimer) { clearTimeout(signalLossTimer); signalLossTimer = null }
         participantMarkers.forEach(m => m.setMap(null))
         participantMarkers.clear()
+        pickupMarkers.forEach(m => m.setMap(null))
+        pickupMarkers = []
+        if (directionsRenderer) { directionsRenderer.setMap(null); directionsRenderer = null }
         previousPositions.clear()
         if (socket) { socket.disconnect(); socket = null }
         isConnected.value = false
+    }
+
+    /**
+     * Add a green pickup marker on the map for a passenger's pickup location
+     * Uses Google Maps standard green pin with "A" label (like Google Maps directions)
+     */
+    function addPickupMarker(map, lat, lng, label) {
+        if (!map || !window.google?.maps) return null
+        const marker = new google.maps.Marker({
+            map,
+            position: { lat, lng },
+            icon: {
+                url: 'https://maps.google.com/mapfiles/marker_greenA.png',
+            },
+            zIndex: 1002,
+            title: label || 'จุดรับผู้โดยสาร',
+        })
+        pickupMarkers.push(marker)
+        return marker
+    }
+
+    /**
+     * Draw/update a green route polyline from driver to pickup using Google Directions API
+     */
+    function drawRouteToPickup(map, driverPos, pickupPos) {
+        if (!map || !window.google?.maps || !driverPos || !pickupPos) return
+
+        const directionsService = new google.maps.DirectionsService()
+
+        if (!directionsRenderer) {
+            directionsRenderer = new google.maps.DirectionsRenderer({
+                map,
+                suppressMarkers: true,
+                polylineOptions: {
+                    strokeColor: '#22c55e',
+                    strokeOpacity: 0.85,
+                    strokeWeight: 5,
+                },
+            })
+        }
+
+        directionsService.route(
+            {
+                origin: new google.maps.LatLng(driverPos.lat, driverPos.lng),
+                destination: new google.maps.LatLng(pickupPos.lat, pickupPos.lng),
+                travelMode: google.maps.TravelMode.DRIVING,
+            },
+            (result, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result)
+                }
+            }
+        )
     }
 
     /**
@@ -237,10 +301,13 @@ export function useLocationTracking() {
         driverPosition,
         isConnected,
         signalLost,
+        arrivalAlerts,
         startTracking,
         startPreview,
         stopTracking,
         createMyMarker,
+        addPickupMarker,
+        drawRouteToPickup,
         haversineDistance,
     }
 }

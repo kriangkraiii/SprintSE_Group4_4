@@ -72,6 +72,13 @@ router.get(
   bookingController.getMyBookings
 );
 
+// GET /bookings/route/:routeId — get all bookings for a route (pickup locations)
+router.get(
+  '/route/:routeId',
+  protect,
+  bookingController.getBookingsByRouteId
+);
+
 // GET /bookings/:id
 router.get(
   '/:id',
