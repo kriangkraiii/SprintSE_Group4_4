@@ -69,8 +69,19 @@
                             </h3>
                         </div>
 
-                        <div v-if="isLoading" class="p-12 text-center text-slate-400">
-                            <p>กำลังโหลดข้อมูล...</p>
+                        <div v-if="isLoading" class="divide-y divide-slate-100">
+                            <div v-for="i in 3" :key="i" class="p-6 animate-pulse">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="h-5 bg-slate-200 rounded w-2/3"></div>
+                                    <div class="h-5 bg-slate-100 rounded-full w-20 ml-auto"></div>
+                                </div>
+                                <div class="h-3 bg-slate-100 rounded w-1/2 mb-2"></div>
+                                <div class="h-3 bg-slate-100 rounded w-1/3 mb-3"></div>
+                                <div class="flex gap-2">
+                                    <div class="h-8 bg-slate-100 rounded-lg w-20"></div>
+                                    <div class="h-8 bg-slate-100 rounded-lg w-24"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Driver: My Routes Section -->

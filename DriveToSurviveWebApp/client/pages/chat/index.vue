@@ -14,9 +14,16 @@
           <h3 class="text-lg font-semibold text-[#383838]">รายการแชท</h3>
         </div>
 
-        <!-- Loading -->
-        <div v-if="isLoading" class="p-12 text-center text-slate-400">
-          <p>กำลังโหลด...</p>
+        <!-- Loading Skeleton -->
+        <div v-if="isLoading" class="divide-y divide-slate-100">
+          <div v-for="i in 3" :key="i" class="flex items-center gap-4 p-4 animate-pulse">
+            <div class="w-12 h-12 rounded-full bg-slate-200 flex-shrink-0"></div>
+            <div class="flex-1 space-y-2">
+              <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+              <div class="h-3 bg-slate-100 rounded w-1/2"></div>
+              <div class="h-3 bg-slate-100 rounded w-5/6"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Empty -->

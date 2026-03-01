@@ -207,12 +207,32 @@
                         </h3>
                     </div>
 
-                    <div v-if="isLoading" class="flex items-center justify-center py-16">
-                        <svg class="animate-spin w-8 h-8 text-emerald-500" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
+                    <div v-if="isLoading" class="space-y-4">
+                        <div v-for="i in 3" :key="i" class="bg-white rounded-2xl border border-gray-100 p-5 animate-pulse">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="flex items-center gap-2 flex-1">
+                                    <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                                    <div class="h-4 bg-slate-200 rounded w-24"></div>
+                                    <div class="w-4 h-4 bg-slate-100 rounded"></div>
+                                    <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                                    <div class="h-4 bg-slate-200 rounded w-28"></div>
+                                </div>
+                                <div class="h-6 bg-slate-200 rounded w-16"></div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+                                <div class="flex-1 space-y-1.5">
+                                    <div class="h-3 bg-slate-200 rounded w-1/3"></div>
+                                    <div class="h-2 bg-slate-100 rounded w-1/4"></div>
+                                </div>
+                                <div class="h-5 bg-slate-100 rounded-full w-16"></div>
+                            </div>
+                            <div class="flex gap-4 mt-3 pt-3 border-t border-gray-50">
+                                <div class="h-3 bg-slate-100 rounded w-20"></div>
+                                <div class="h-3 bg-slate-100 rounded w-16"></div>
+                                <div class="h-3 bg-slate-100 rounded w-12"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div v-else-if="routes.length === 0"
