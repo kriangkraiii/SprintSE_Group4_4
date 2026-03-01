@@ -99,6 +99,8 @@ test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
     // Login A
     // =========================
     await pageA.goto('http://localhost:3003/login');
+    await pageA.locator('#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
     await pageA.fill('#identifier', 'bow1234');
     await pageA.fill('#password', 'Thanchanok1234');
     await pageA.click('button[type="submit"]');
@@ -108,6 +110,8 @@ test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
     // Login B
     // =========================
     await pageB.goto('http://localhost:3003/login');
+    await pageB.locator('#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
     await pageB.fill('#identifier', 'kiangnz25464');
     await pageB.fill('#password', 'Thanchanok1234');
     await pageB.click('button[type="submit"]');
@@ -132,6 +136,7 @@ test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
     // STEP 1: A ส่ง Quick Reply ไปหา B
     // ==========================================
     await pageA.click('button[title="ตอบกลับด่วน"]');
+    await pageA.waitForTimeout(1000);
 
     // เลือกว่าจะกดปุ่มที่มีข้อความ 'รอข้างล่างแล้ว'
     const quickReplyBtnA = pageA.locator('button.bg-blue-50').filter({ hasText: 'รอข้างล่างแล้ว' }).first();
@@ -147,6 +152,7 @@ test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
     // STEP 2: B ส่ง Quick Reply กลับหา A
     // ==========================================
     await pageB.click('button[title="ตอบกลับด่วน"]');
+    await pageB.waitForTimeout(1000);
 
     // ฝั่ง B (คนขับ/ผู้โดยสารอีกคน) เลือกว่าจะกดปุ่ม 'กำลังลงไป'
     const quickReplyBtnB = pageB.locator('button.bg-blue-50').filter({ hasText: 'กำลังลงไป' }).first();
@@ -168,7 +174,7 @@ test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
 
 
 
-test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser }) => {
+test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     test.setTimeout(90000);
     // 1. Setup Contexts
     const contextA = await browser.newContext();
@@ -220,7 +226,7 @@ test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser })
     await openManageBtnA.click();
     await pageA.waitForSelector('h3:has-text("จัดการคีย์ลัดด่วน")', { timeout: 5000 });
 
-    const newSnippetTextA = `(A) เพิ่งสร้างด่วนๆ: ${Date.now()}`;
+    const newSnippetTextA = `A สร้าง quick reply นี้`;
     await pageA.fill('input[placeholder="พิมพ์คีย์ลัดใหม่..."]', newSnippetTextA);
     await pageA.click('button:has-text("เพิ่ม")');
 
@@ -245,10 +251,46 @@ test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser })
 
     // ฝั่ง B ต้องได้รับข้อความนี้
     await expect(pageB.locator(`text="${newSnippetTextA}"`).first()).toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(3000);
 
     // ==========================================
-    // 5. Delete Quick Reply (User A)
+    // 5. Create & Send New Quick Reply (User B ส่งหา User A)
     // ==========================================
+    const openManageBtnB = pageB.locator('button[title="จัดการคีย์ลัด"]');
+    if (!(await openManageBtnB.isVisible())) {
+        await pageB.click('button[title="ตอบกลับด่วน"]');
+        await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
+    }
+    await openManageBtnB.click();
+    await pageB.waitForSelector('h3:has-text("จัดการคีย์ลัดด่วน")', { timeout: 5000 });
+
+    const newSnippetTextB = `B เห็น quick reply แล้ว และตอบกลับด้วยการสร้าง quick reply นี้เช่นกัน`;
+    await pageB.fill('input[placeholder="พิมพ์คีย์ลัดใหม่..."]', newSnippetTextB);
+    await pageB.click('button:has-text("เพิ่ม")');
+
+    await expect(pageB.locator('text="เพิ่มคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
+
+    // ปิด Modal
+    const closeBtnB = pageB.locator('h3:has-text("จัดการคีย์ลัดด่วน")').locator('..').locator('button');
+    await closeBtnB.click();
+    await pageB.waitForTimeout(500);
+
+    if (!(await openManageBtnB.isVisible())) {
+        await pageB.click('button[title="ตอบกลับด่วน"]');
+        await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
+    }
+
+    const newQuickReplyBtnB = pageB.locator('button.bg-blue-50').filter({ hasText: newSnippetTextB }).first();
+    await newQuickReplyBtnB.waitFor({ state: 'visible', timeout: 5000 });
+    await newQuickReplyBtnB.click();
+
+    await expect(pageA.locator(`text="${newSnippetTextB}"`).first()).toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(3000);
+
+    // ==========================================
+    // 6. Delete Quick Replies
+    // ==========================================
+    // Delete A
     if (!(await openManageBtnA.isVisible())) {
         await pageA.click('button[title="ตอบกลับด่วน"]');
         await openManageBtnA.waitFor({ state: 'visible', timeout: 5000 });
@@ -265,41 +307,7 @@ test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser })
     await closeBtnA.click();
     await pageA.waitForTimeout(500);
 
-    // ==========================================
-    // 6. Create & Send New Quick Reply (User B ส่งหา User A)
-    // ==========================================
-    const openManageBtnB = pageB.locator('button[title="จัดการคีย์ลัด"]');
-    if (!(await openManageBtnB.isVisible())) {
-        await pageB.click('button[title="ตอบกลับด่วน"]');
-        await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
-    }
-    await openManageBtnB.click();
-    await pageB.waitForSelector('h3:has-text("จัดการคีย์ลัดด่วน")', { timeout: 5000 });
-
-    const newSnippetTextB = `(B) รีบลงมาด่วนๆ: ${Date.now()}`;
-    await pageB.fill('input[placeholder="พิมพ์คีย์ลัดใหม่..."]', newSnippetTextB);
-    await pageB.click('button:has-text("เพิ่ม")');
-
-    await expect(pageB.locator('text="เพิ่มคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
-
-    const closeBtnB = pageB.locator('h3:has-text("จัดการคีย์ลัดด่วน")').locator('..').locator('button');
-    await closeBtnB.click();
-    await pageB.waitForTimeout(500);
-
-    if (!(await openManageBtnB.isVisible())) {
-        await pageB.click('button[title="ตอบกลับด่วน"]');
-        await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
-    }
-
-    const newQuickReplyBtnB = pageB.locator('button.bg-blue-50').filter({ hasText: newSnippetTextB }).first();
-    await newQuickReplyBtnB.waitFor({ state: 'visible', timeout: 5000 });
-    await newQuickReplyBtnB.click();
-
-    await expect(pageA.locator(`text="${newSnippetTextB}"`).first()).toBeVisible({ timeout: 15000 });
-
-    // ==========================================
-    // 7. Delete Quick Reply (User B)
-    // ==========================================
+    // Delete B
     if (!(await openManageBtnB.isVisible())) {
         await pageB.click('button[title="ตอบกลับด่วน"]');
         await openManageBtnB.waitFor({ state: 'visible', timeout: 5000 });
@@ -314,9 +322,7 @@ test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser })
 
     await expect(pageB.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
     await closeBtnB.click();
-
-    // รอดูผลลัพธ์การลบฝั่ง B แปปนึง
-    await pageB.waitForTimeout(3000);
+    await pageB.waitForTimeout(500);
 
     // ปิดหน้าต่างทีละเบราว์เซอร์
     await contextA.close();
