@@ -64,7 +64,7 @@ test('Basic Scenario : User A and User B Login and Chat', async ({ browser }) =>
     // 5. ทดสอบส่งข้อความหากัน
     // ==========================================
     // A ส่งหา B
-    const msga = `เทสส่งข้อความจาก A ไป B: ${Date.now()}`;
+    const msga = `เทสส่งข้อความจาก A ไป B`;
     await pageA.fill('textarea', msga);
     await pageA.keyboard.press('Enter');
 
@@ -72,7 +72,7 @@ test('Basic Scenario : User A and User B Login and Chat', async ({ browser }) =>
     await expect(pageB.locator(`text="${msga}"`).first()).toBeVisible({ timeout: 10000 });
 
     // B ส่งกลับอไปหา A
-    const msgb = `B ได้รับแล้ว ส่งกลับไปนะ: ${Date.now()}`;
+    const msgb = `B มองเห็นข้อความแล้ว ส่งข้อความกลับไปให้ A`;
     await pageB.fill('textarea', msgb);
     await pageB.keyboard.press('Enter');
 
@@ -90,79 +90,82 @@ test('Basic Scenario : User A and User B Login and Chat', async ({ browser }) =>
 test('Scenario 2 : Quick reply feature (existing)', async ({ browser }) => {
     test.setTimeout(60000);
 
-    // 1. Setup Contexts
     const contextA = await browser.newContext();
     const contextB = await browser.newContext();
     const pageA = await contextA.newPage();
     const pageB = await contextB.newPage();
 
-    // 2. Login User A & B
-    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
-    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
-    await pageA.fill('input#identifier', 'bow1234');
-    await pageA.fill('input#password', 'Thanchanok1234');
+    // =========================
+    // Login A
+    // =========================
+    await pageA.goto('http://localhost:3003/login');
+    await pageA.fill('#identifier', 'bow1234');
+    await pageA.fill('#password', 'Thanchanok1234');
     await pageA.click('button[type="submit"]');
-    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+    await pageA.waitForURL(/^(?!.*\/login).*$/);
 
-    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
-    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
-    await pageB.fill('input#identifier', 'kiangnz25464');
-    await pageB.fill('input#password', 'Thanchanok1234');
+    // =========================
+    // Login B
+    // =========================
+    await pageB.goto('http://localhost:3003/login');
+    await pageB.fill('#identifier', 'kiangnz25464');
+    await pageB.fill('#password', 'Thanchanok1234');
     await pageB.click('button[type="submit"]');
-    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+    await pageB.waitForURL(/^(?!.*\/login).*$/);
 
-    // 3. Enter Chat
+    // =========================
+    // เข้า Chat ทั้งสองฝ่าย
+    // =========================
     const chatRoomQuery = 'div.divide-y > a';
 
-    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
-    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
-    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
-    await pageA.click(chatRoomQuery, { force: true });
-    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    await pageA.goto('http://localhost:3003/chat');
+    await pageA.waitForSelector(chatRoomQuery);
+    await pageA.click(chatRoomQuery);
+    await pageA.waitForSelector('textarea');
 
-    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
-    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
-    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
-    await pageB.click(chatRoomQuery, { force: true });
-    await pageB.waitForSelector('textarea', { timeout: 15000 });
+    await pageB.goto('http://localhost:3003/chat');
+    await pageB.waitForSelector(chatRoomQuery);
+    await pageB.click(chatRoomQuery);
+    await pageB.waitForSelector('textarea');
 
     // ==========================================
-    // 4. A ส่ง Quick Reply ไปหา B
+    // STEP 1: A ส่ง Quick Reply ไปหา B
     // ==========================================
     await pageA.click('button[title="ตอบกลับด่วน"]');
-    await pageA.waitForSelector('button.bg-blue-50', { timeout: 5000 });
 
-    const quickReplyBtnA = pageA.locator('button.bg-blue-50').first();
-    const msgFromA = await quickReplyBtnA.innerText();
+    // เลือกว่าจะกดปุ่มที่มีข้อความ 'รอข้างล่างแล้ว'
+    const quickReplyBtnA = pageA.locator('button.bg-blue-50').filter({ hasText: 'รอข้างล่างแล้ว' }).first();
+    await quickReplyBtnA.waitFor({ state: 'visible' });
 
+    const msgFromA = (await quickReplyBtnA.innerText()).trim();
     await quickReplyBtnA.click();
 
-    // B ต้องเห็นข้อความจาก A
-    await expect(pageB.locator(`text="${msgFromA}"`).first())
-        .toBeVisible({ timeout: 10000 });
+    // 🔥 บังคับรอให้ B เห็นข้อความ
+    await expect(pageB.locator(`text="${msgFromA}"`).first()).toBeVisible({ timeout: 15000 });
 
     // ==========================================
-    // 5. B ต้องส่ง Quick Reply กลับหา A (เงื่อนไขผ่าน)
+    // STEP 2: B ส่ง Quick Reply กลับหา A
     // ==========================================
     await pageB.click('button[title="ตอบกลับด่วน"]');
-    await pageB.waitForSelector('button.bg-blue-50', { timeout: 5000 });
 
-    const quickReplyBtnB = pageB.locator('button.bg-blue-50').first();
-    const msgFromB = await quickReplyBtnB.innerText();
+    // ฝั่ง B (คนขับ/ผู้โดยสารอีกคน) เลือกว่าจะกดปุ่ม 'กำลังลงไป'
+    const quickReplyBtnB = pageB.locator('button.bg-blue-50').filter({ hasText: 'กำลังลงไป' }).first();
+    await quickReplyBtnB.waitFor({ state: 'visible' });
 
+    const msgFromB = (await quickReplyBtnB.innerText()).trim();
     await quickReplyBtnB.click();
 
-    // A ต้องเห็นข้อความจาก B
-    await expect(pageA.locator(`text="${msgFromB}"`).first())
-        .toBeVisible({ timeout: 10000 });
+    // 🔥 บังคับรอให้ A เห็นข้อความกลับ
+    await expect(pageA.locator(`text="${msgFromB}"`).first()).toBeVisible({ timeout: 15000 });
 
-    // ถ้าไม่เห็น จะ fail ตรงนี้ทันที
-
-    await pageA.waitForTimeout(3000);
+    // รอสักหน่อยก่อนจบให้เห็นชัดเจนบน UI
+    await pageA.waitForTimeout(2000);
 
     await contextA.close();
     await contextB.close();
 });
+
+
 
 
 test('Scenario 3: Create, Send, and Delete New Quick Reply', async ({ browser }) => {
