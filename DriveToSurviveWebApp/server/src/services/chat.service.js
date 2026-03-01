@@ -185,6 +185,22 @@ const getMessages = async (sessionId, userId, opts = {}) => {
         throw new ApiError(403, 'You are not a participant in this chat');
     }
 
+    // Fetch session with route info for chat header
+    const sessionInfo = await prisma.chatSession.findUnique({
+        where: { id: sessionId },
+        select: {
+            id: true, routeId: true, status: true, createdAt: true, endedAt: true,
+            chatExpiresAt: true, readOnlyExpiresAt: true,
+            driver: { select: { id: true, firstName: true, profilePicture: true } },
+            route: { select: { startLocation: true, endLocation: true } },
+            participants: {
+                select: {
+                    user: { select: { id: true, firstName: true, profilePicture: true } },
+                },
+            },
+        },
+    });
+
     const skip = (page - 1) * limit;
     const [total, messages] = await prisma.$transaction([
         prisma.chatMessage.count({ where: { sessionId } }),
@@ -203,6 +219,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
 
     return {
         data: messages.reverse(),
+        session: sessionInfo,
         pagination: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / limit) },
     };
 };
@@ -237,6 +254,7 @@ const getSession = async (routeId, userId) => {
             id: true, routeId: true, status: true, createdAt: true, endedAt: true,
             chatExpiresAt: true, readOnlyExpiresAt: true,
             driver: { select: { id: true, firstName: true, profilePicture: true } },
+            route: { select: { startLocation: true, endLocation: true } },
             participants: {
                 select: {
                     user: { select: { id: true, firstName: true, profilePicture: true } },
@@ -292,6 +310,7 @@ const getMySessions = async (userId) => {
             select: {
                 id: true, routeId: true, status: true, createdAt: true, endedAt: true,
                 driver: { select: { id: true, firstName: true, profilePicture: true } },
+                route: { select: { startLocation: true, endLocation: true } },
                 participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
                 messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
             },
@@ -305,6 +324,7 @@ const getMySessions = async (userId) => {
                     select: {
                         id: true, routeId: true, status: true, createdAt: true, endedAt: true,
                         driver: { select: { id: true, firstName: true, profilePicture: true } },
+                        route: { select: { startLocation: true, endLocation: true } },
                         participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
                         messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
                     },
