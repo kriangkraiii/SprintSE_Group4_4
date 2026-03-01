@@ -31,47 +31,22 @@
                         สร้างเส้นทาง
                     </NuxtLink>
 
-                    <!-- ทุกคนเห็น dropdown — ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                    <div v-if="token" class="relative dropdown-trigger">
-                        <button
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            การเดินทางทั้งหมด
-                            <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div class="absolute left-0 w-56 py-2 mt-2 bg-white border rounded-xl shadow-xl dropdown-menu top-full border-slate-200">
-                            <NuxtLink to="/myTrip"
-                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                การเดินทางของฉัน
-                            </NuxtLink>
-                            <NuxtLink to="/myRoute"
-                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                คำขอจองเส้นทางของฉัน
-                            </NuxtLink>
-                            <div class="my-1 border-t border-slate-100"></div>
-                            <NuxtLink to="/chat"
-                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
-                                <span class="w-4 h-4 text-center">💬</span>
-                                ข้อความ
-                            </NuxtLink>
-                            <NuxtLink to="/reviews"
-                                class="flex items-center gap-3 px-4 py-2.5 text-sm cursor-pointer text-third hover:bg-slate-50 hover:text-primary transition-colors">
-                                <span class="w-4 h-4 text-center">⭐</span>
-                                รีวิวของฉัน
-                            </NuxtLink>
-                        </div>
-                    </div>
+                    <!-- การเดินทาง (unified page) -->
+                    <NuxtLink v-if="token" to="/myTrips"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
+                        :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        การเดินทางของฉัน
+                    </NuxtLink>
+
+                    <NuxtLink v-if="token" to="/chat"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
+                        :class="$route.path.startsWith('/chat') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                        ข้อความ
+                    </NuxtLink>
                 </nav>
                 <nav class="items-center hidden gap-1 md:flex">
                     
@@ -279,31 +254,27 @@
                         สร้างเส้นทาง
                     </NuxtLink>
 
-                    <!-- ทุกคนเห็น dropdown —  ผู้ใช้สามารถเป็นทั้ง passenger และ driver ได้ -->
-                    <div v-if="token">
-                        <button @click="toggleMobileTripMenu"
-                            class="flex items-center justify-between w-full px-3 py-2 text-sm font-medium text-left rounded-lg cursor-pointer text-slate-700 hover:text-primary hover:bg-slate-50">
-                            การเดินทางทั้งหมด
-                            <svg class="w-4 h-4 transition-transform duration-200"
-                                :class="{ 'rotate-180': isMobileTripMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div v-show="isMobileTripMenuOpen" class="mt-1 ml-4 space-y-1">
-                            <NuxtLink to="/myTrip" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
-                                การเดินทางของฉัน
-                            </NuxtLink>
-                            <NuxtLink to="/myRoute" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
-                                คำขอจองเส้นทางของฉัน
-                            </NuxtLink>
-                            <NuxtLink to="/chat" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
-                                💬 ข้อความ
-                            </NuxtLink>
-                            <NuxtLink to="/reviews" class="block px-3 py-2 text-sm rounded-lg cursor-pointer text-slate-500 hover:text-primary hover:bg-slate-50" @click="closeMobileMenu">
-                                ⭐ รีวิวของฉัน
-                            </NuxtLink>
-                        </div>
-                    </div>
+                    <!-- การเดินทาง (unified) -->
+                    <NuxtLink v-if="token" to="/myTrips"
+                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
+                        :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
+                        @click="closeMobileMenu">
+                        การเดินทางของฉัน
+                    </NuxtLink>
+
+                    <NuxtLink v-if="token" to="/chat"
+                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
+                        :class="$route.path.startsWith('/chat') ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
+                        @click="closeMobileMenu">
+                        ข้อความ
+                    </NuxtLink>
+
+                    <NuxtLink v-if="token" to="/reviews"
+                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
+                        :class="$route.path.startsWith('/reviews') ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
+                        @click="closeMobileMenu">
+                        รีวิวของฉัน
+                    </NuxtLink>
 
                     <div v-if="!token" class="pt-3 mt-3 space-y-2">
                         <NuxtLink to="/login" class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer text-slate-700 hover:bg-slate-50 hover:text-primary" @click="closeMobileMenu">เข้าสู่ระบบ</NuxtLink>
