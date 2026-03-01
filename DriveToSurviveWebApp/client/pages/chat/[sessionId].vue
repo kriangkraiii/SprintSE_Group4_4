@@ -24,6 +24,35 @@
         </div>
       </template>
 
+      <!-- Notification bell -->
+      <div class="relative ml-auto">
+        <button @click="showNotifPanel = !showNotifPanel"
+          class="p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer relative">
+          <svg class="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M15 17h5l-1.405-1.405C18.21 14.79 18 13.918 18 13V9a6 6 0 10-12 0v4c0 .918-.21 1.79-.595 2.595L4 17h5m6 0a3 3 0 11-6 0h6z" />
+          </svg>
+          <span v-if="unreadNotifs > 0"
+            class="absolute w-2 h-2 rounded-full -top-0 -right-0 bg-red-500 ring-2 ring-white"></span>
+        </button>
+        <div v-if="showNotifPanel"
+          class="absolute right-0 top-full mt-2 w-[300px] max-h-[50vh] bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+            <h3 class="text-sm font-semibold text-primary">การแจ้งเตือน</h3>
+            <button class="p-1 rounded-md cursor-pointer text-slate-400 hover:text-slate-600" @click="showNotifPanel = false">✕</button>
+          </div>
+          <div class="max-h-[40vh] overflow-y-auto">
+            <div v-if="notifications.length === 0" class="px-4 py-6 text-sm text-center text-slate-400">ไม่มีการแจ้งเตือน</div>
+            <div v-for="n in notifications" :key="n.id"
+              class="px-4 py-3 hover:bg-slate-50 border-b border-slate-50 last:border-0">
+              <p class="text-sm font-medium text-primary truncate">{{ n.title }}</p>
+              <p class="text-xs text-slate-500 line-clamp-2">{{ n.body }}</p>
+              <p class="text-xs text-slate-400 mt-1">{{ timeAgo(n.createdAt) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Location share button -->
       <button v-if="canSend"
         @click="handleShareLocation"
@@ -202,6 +231,39 @@ const messagesContainer = ref(null)
 const showQuickReply = ref(false)
 const typingUsers = ref([])
 let typingTimer = null
+
+// Notifications
+const showNotifPanel = ref(false)
+const notifications = ref([])
+const unreadNotifs = computed(() => notifications.value.filter(n => !n.readAt).length)
+
+function timeAgo(ts) {
+  const ms = Date.now() - new Date(ts).getTime()
+  const m = Math.floor(ms / 60000)
+  if (m < 1) return 'เมื่อสักครู่'
+  if (m < 60) return `${m} นาทีที่แล้ว`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `${h} ชม.ที่แล้ว`
+  return `${Math.floor(h / 24)} วันที่แล้ว`
+}
+
+async function fetchNotifications() {
+  try {
+    if (!token.value) return
+    const config = useRuntimeConfig()
+    const apiBase = config.public.apiBase || 'http://localhost:3001/api'
+    const res = await $fetch('/notifications', {
+      baseURL: apiBase,
+      headers: { Accept: 'application/json', Authorization: `Bearer ${token.value}` },
+      query: { page: 1, limit: 10 }
+    })
+    const raw = Array.isArray(res?.data) ? res.data : []
+    notifications.value = raw.map(it => ({
+      id: it.id, title: it.title || '-', body: it.body || '',
+      createdAt: it.createdAt || Date.now(), readAt: it.readAt || null
+    }))
+  } catch { /* silent */ }
+}
 
 // Image upload
 const selectedImage = ref(null)
@@ -437,6 +499,7 @@ watch(newMessage, (val) => {
 
 onMounted(() => {
   loadMessages()
+  fetchNotifications()
   // Connect Socket.IO for real-time chat
   if (token.value) {
     connectChatSocket(token.value)
