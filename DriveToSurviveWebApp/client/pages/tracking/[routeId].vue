@@ -138,16 +138,20 @@ let routeUpdateThrottle = 0
 // Toast system for arrival alerts
 const visibleAlerts = ref([])
 let alertTimers = []
+let _lastAlertLen = 0
 
-watch(arrivalAlerts, (alerts) => {
-  if (alerts.length === 0) return
-  const latest = alerts[alerts.length - 1]
-  visibleAlerts.value.push(latest)
-
-  const timer = setTimeout(() => {
-    visibleAlerts.value = visibleAlerts.value.filter(a => a !== latest)
-  }, 8000)
-  alertTimers.push(timer)
+// track by length — reliably fires even when the array ref is replaced wholesale
+watch(() => arrivalAlerts.value.length, (newLen) => {
+  if (newLen <= _lastAlertLen) return
+  for (let i = _lastAlertLen; i < newLen; i++) {
+    const alert = arrivalAlerts.value[i]
+    visibleAlerts.value.push(alert)
+    const timer = setTimeout(() => {
+      visibleAlerts.value = visibleAlerts.value.filter(a => a !== alert)
+    }, 8000)
+    alertTimers.push(timer)
+  }
+  _lastAlertLen = newLen
 })
 
 function dismissAlert(idx) {
