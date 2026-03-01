@@ -16,7 +16,7 @@ import { io } from 'socket.io-client'
 
 const ANIMATION_DURATION = 1000
 const OUTLIER_THRESHOLD_KM = 50
-const SIGNAL_LOSS_TIMEOUT = 15000
+const SIGNAL_LOSS_TIMEOUT = 30000 // 30s — realistic for mobile GPS gaps
 
 // ─── Geo Math ─────────────────────────────────────────────
 
@@ -120,13 +120,19 @@ export function useLocationTracking() {
                 { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
             )
 
-            // ส่งตำแหน่งล่าสุดซ้ำทุก 3 วินาที — ป้องกันกรณี GPS ไม่อัปเดตบ่อย (desktop)
+            // Re-emit position periodically — but only if GPS hasn't updated (fallback for desktop)
+            let lastEmittedPos = { lat: null, lng: null }
             reemitInterval = setInterval(() => {
                 const pos = myPosition.value
                 if (pos.lat && sock.connected) {
-                    sock.emit('location-update', { routeId, lat: pos.lat, lng: pos.lng, name: myName || '' })
+                    // Only re-emit if position is same as last (GPS stuck) to keep alive
+                    // If GPS is updating normally, watchPosition already emits
+                    if (pos.lat === lastEmittedPos.lat && pos.lng === lastEmittedPos.lng) {
+                        sock.emit('location-update', { routeId, lat: pos.lat, lng: pos.lng, name: myName || '' })
+                    }
+                    lastEmittedPos = { lat: pos.lat, lng: pos.lng }
                 }
-            }, 3000)
+            }, 5000)
         }
 
         resetSignalLossTimer()
