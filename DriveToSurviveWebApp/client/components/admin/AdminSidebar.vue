@@ -60,6 +60,7 @@ import { useAuth } from '~/composables/useAuth'
 const { logout } = useAuth()
 
 const mainMenus = [
+    { to: '/admin/dashboard', label: 'Dashboard', icon: 'fas fa-chart-line' },
     { to: '/admin/users', label: 'User Management', icon: 'fas fa-user' },
     { to: '/admin/vehicles', label: 'Vehicle Management', icon: 'fas fa-car-side' },
     { to: '/admin/routes', label: 'Route Management', icon: 'fas fa-route' },
