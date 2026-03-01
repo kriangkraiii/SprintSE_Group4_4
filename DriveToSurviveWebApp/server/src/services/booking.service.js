@@ -397,8 +397,10 @@ const getMyBookings = async (passengerId) => {
             }
           }
         }
+      },
+      reviews: {
+        where: { passengerId }
       }
-
     },
     orderBy: { createdAt: 'desc' },
   });
