@@ -22,7 +22,7 @@ async function main() {
     await prisma.vehicle.deleteMany({});
     await prisma.driverVerification.deleteMany({});
     await prisma.user.deleteMany({
-        where: { email: { in: ['epic2_driver@test.com', 'epic2_passenger@test.com', 'conan17970@gmail.com'] } }
+        where: { email: { in: ['epic2_driver@test.com', 'epic2_passenger@test.com', 'conan17970@gmail.com', 'thanatcha.k@kkumail.com'] } }
     });
 
     const hashedPassword = await bcrypt.hash('password123', 10);
@@ -74,7 +74,7 @@ async function main() {
     const passenger = await prisma.user.create({
         data: {
             username: 'epic2passenger',
-            email: 'conan17970@gmail.com',
+            email: 'thanatcha.k@kkumail.com',
             password: hashedPassword,
             firstName: 'Passenger',
             lastName: 'Epic2',
@@ -91,16 +91,16 @@ async function main() {
             driverId: driver.id,
             vehicleId: vehicle.id,
             startLocation: {
+                address: 'SC09 อาคารวิทยวิภาส คณะวิทยาศาสตร์',
+                name: 'มหาวิทยาลัยขอนแก่น (SC09)',
+                lat: 16.4735,
+                lng: 102.8226
+            },
+            endLocation: {
                 address: 'เซ็นทรัล ขอนแก่น',
                 name: 'เซ็นทรัล ขอนแก่น',
                 lat: 16.4322,
                 lng: 102.8236
-            },
-            endLocation: {
-                address: 'มหาวิทยาลัยขอนแก่น',
-                name: 'มหาวิทยาลัยขอนแก่น',
-                lat: 16.4725,
-                lng: 102.8240
             },
             departureTime: new Date(new Date().getTime() + 86400000), // tomorrow
             availableSeats: 3,
@@ -118,12 +118,12 @@ async function main() {
             passengerId: passenger.id,
             status: 'CONFIRMED',
             pickupLocation: {
-                address: 'หอพักหน้ามอ',
-                lat: 16.4725,
-                lng: 102.8240
+                address: 'SC09 อาคารวิทยวิภาส คณะวิทยาศาสตร์ มหาวิทยาลัยขอนแก่น',
+                lat: 16.4735,
+                lng: 102.8226
             },
             dropoffLocation: {
-                address: 'ตึกคอม',
+                address: 'เซ็นทรัล ขอนแก่น',
                 lat: 16.4322,
                 lng: 102.8236
             },
@@ -135,14 +135,21 @@ async function main() {
     // 5. Create Chat Session
     const chatSession = await prisma.chatSession.create({
         data: {
-            bookingId: booking.id,
+            routeId: route.id,
             driverId: driver.id,
-            passengerId: passenger.id,
             status: 'ACTIVE',
             retentionExpiresAt: new Date(new Date().getTime() + (30 * 24 * 60 * 60 * 1000))
         }
     });
-    console.log('✅ Chat session created');
+
+    // Add passenger as a participant
+    await prisma.chatSessionParticipant.create({
+        data: {
+            sessionId: chatSession.id,
+            userId: passenger.id
+        }
+    });
+    console.log('✅ Chat session & participant created');
 
     const driverToken = generateToken(driver.id, 'DRIVER');
     const passengerToken = generateToken(passenger.id, 'PASSENGER');
