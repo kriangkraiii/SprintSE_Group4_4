@@ -250,7 +250,7 @@ test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     await newQuickReplyBtnA.click();
 
     // ฝั่ง B ต้องได้รับข้อความนี้
-    await expect(pageB.locator(`text="${newSnippetTextA}"`).first()).toBeVisible({ timeout: 15000 });
+    await expect(pageB.getByText(newSnippetTextA).first()).toBeVisible({ timeout: 15000 });
     await pageA.waitForTimeout(3000);
 
     // ==========================================
@@ -284,7 +284,7 @@ test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     await newQuickReplyBtnB.waitFor({ state: 'visible', timeout: 5000 });
     await newQuickReplyBtnB.click();
 
-    await expect(pageA.locator(`text="${newSnippetTextB}"`).first()).toBeVisible({ timeout: 15000 });
+    await expect(pageA.getByText(newSnippetTextB).first()).toBeVisible({ timeout: 15000 });
     await pageA.waitForTimeout(3000);
 
     // ==========================================
@@ -297,11 +297,11 @@ test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     }
     await openManageBtnA.click();
 
-    const listItemTextA = pageA.locator(`text="${newSnippetTextA}"`);
-    await listItemTextA.waitFor({ state: 'visible', timeout: 5000 });
-
-    const listItemA = pageA.locator('.flex.items-center').filter({ hasText: newSnippetTextA });
-    await listItemA.locator('button[title="ลบ"]').click();
+    const deleteBtnA = pageA.locator('button[title="ลบ"]').filter({ has: pageA.locator(`:text("${newSnippetTextA}")`) }).first();
+    // ถ้า filter ข้างต้นไม่ได้ผล ใช้ XPath กวาดหาปุ่มลบอันแรกที่มี text นี้อยู่ในกล่องเดียวกัน
+    const fallbackDelA = pageA.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextA}")]//button[@title="ลบ"]`).first();
+    await fallbackDelA.waitFor({ state: 'visible', timeout: 5000 });
+    await fallbackDelA.click();
 
     await expect(pageA.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
     await closeBtnA.click();
@@ -314,11 +314,10 @@ test('Scenario 3 : create new quick reply and send', async ({ browser }) => {
     }
     await openManageBtnB.click();
 
-    const listItemTextB = pageB.locator(`text="${newSnippetTextB}"`);
-    await listItemTextB.waitFor({ state: 'visible', timeout: 5000 });
-
-    const listItemB = pageB.locator('.flex.items-center').filter({ hasText: newSnippetTextB });
-    await listItemB.locator('button[title="ลบ"]').click();
+    const deleteBtnB = pageB.locator('button[title="ลบ"]').filter({ has: pageB.locator(`:text("${newSnippetTextB}")`) }).first();
+    const fallbackDelB = pageB.locator(`xpath=//div[contains(@class, 'flex') and contains(., "${newSnippetTextB}")]//button[@title="ลบ"]`).first();
+    await fallbackDelB.waitFor({ state: 'visible', timeout: 5000 });
+    await fallbackDelB.click();
 
     await expect(pageB.locator('text="ลบคีย์ลัดแล้ว"').first()).toBeVisible({ timeout: 10000 });
     await closeBtnB.click();
