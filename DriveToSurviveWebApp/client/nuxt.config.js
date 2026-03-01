@@ -57,6 +57,11 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1, maximum-scale=1",
       link: [
         {
+          rel: 'icon',
+          type: 'image/png',
+          href: '/favicon.png'
+        },
+        {
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap'
         }

@@ -106,7 +106,7 @@
               </div>
 
               <div v-if="r.status === 'PENDING'" class="flex gap-2">
-                <button @click="resolveReport(r.id, 'RESOLVED')"
+                <button @click="resolveReport(r.id, 'REVIEWED')"
                   class="px-3 py-1.5 text-xs text-white bg-green-600 rounded-md hover:bg-green-700">
                   ✅ แก้ไขแล้ว
                 </button>
