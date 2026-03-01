@@ -63,14 +63,18 @@ const createSession = async (routeId, userId) => {
  * Add a participant to an existing group chat session
  */
 const addParticipant = async (sessionId, userId) => {
-    // Upsert — skip if already exists
-    await prisma.chatSessionParticipant.upsert({
+    // Check if already a participant — skip system message if so
+    const existing = await prisma.chatSessionParticipant.findUnique({
         where: { sessionId_userId: { sessionId, userId } },
-        update: {},
-        create: { sessionId, userId },
+    });
+    if (existing) return; // Already in — no need to notify again
+
+    // Actually add new participant
+    await prisma.chatSessionParticipant.create({
+        data: { sessionId, userId },
     });
 
-    // System message
+    // System message only for genuinely new participants
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { firstName: true } });
     await prisma.chatMessage.create({
         data: {

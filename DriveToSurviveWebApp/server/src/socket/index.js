@@ -93,7 +93,7 @@ function initSocketIO(httpServer) {
         // ─── GPS Location Tracking (Route-level) ─────────
         // Throttle map: userId → last emit timestamp
         const locationThrottle = new Map();
-        const THROTTLE_MS = 2000; // max 1 emit / 2 วินาที
+        const THROTTLE_MS = 1000; // max 1 emit / 1 sec — fast real-time
 
         // Join a route room for location sharing (post-booking)
         socket.on('join-route', (routeId) => {
