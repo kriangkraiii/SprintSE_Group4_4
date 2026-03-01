@@ -22,6 +22,9 @@ const protect = asyncHandler(async (req, res, next) => {
 
             next();
         } catch (error) {
+            if (error.name === 'ServerRestartError') {
+                throw new ApiError(401, 'เซิร์ฟเวอร์ถูกรีสตาร์ท กรุณาเข้าสู่ระบบใหม่');
+            }
             console.error(error);
             throw new ApiError(401, 'Not authorized, token failed');
         }

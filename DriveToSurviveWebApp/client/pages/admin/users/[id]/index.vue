@@ -222,6 +222,99 @@
                                 </div>
                             </section>
 
+                            <!-- ใบขับขี่ -->
+                            <section>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-sm font-semibold text-primary">ยืนยันใบขับขี่</h3>
+                                        <span v-if="licenseData"
+                                            class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full"
+                                            :class="licenseStatusClass"
+                                        >
+                                            {{ licenseStatusLabel }}
+                                        </span>
+                                        <span v-if="licenseData?.verifiedByOcr"
+                                            class="inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold bg-indigo-100 text-indigo-700 rounded-full"
+                                        >
+                                            🤖 OCR
+                                        </span>
+                                    </div>
+                                    <!-- Toggle switch -->
+                                    <div class="flex items-center gap-2">
+                                        <label class="inline-flex items-center cursor-pointer select-none switch">
+                                            <input type="checkbox" class="switch-input"
+                                                :checked="licenseData?.status === 'APPROVED'"
+                                                :disabled="licenseToggling || licenseLoading"
+                                                @change="onToggleLicense($event.target.checked)" />
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                        <span class="text-sm font-medium"
+                                            :class="licenseData?.status === 'APPROVED' ? 'text-green-700' : 'text-slate-400'">
+                                            {{ licenseData?.status === 'APPROVED' ? 'อนุมัติแล้ว' : 'ยังไม่อนุมัติ' }}
+                                        </span>
+                                        <span v-if="licenseToggling" class="text-xs text-slate-400">
+                                            <i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังอัปเดต...
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- License details (if exists) -->
+                                <template v-if="licenseData">
+                                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div>
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">เลขที่ใบขับขี่</label>
+                                            <div class="w-full px-3 py-2.5 border border-slate-200 rounded-md bg-slate-50 text-primary">
+                                                {{ licenseData.licenseNumber || '-' }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">ชื่อ-นามสกุลบนใบขับขี่</label>
+                                            <div class="w-full px-3 py-2.5 border border-slate-200 rounded-md bg-slate-50 text-primary">
+                                                {{ (licenseData.firstNameOnLicense || '-') + ' ' + (licenseData.lastNameOnLicense || '') }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">ชนิดใบขับขี่</label>
+                                            <div class="w-full px-3 py-2.5 border border-slate-200 rounded-md bg-slate-50 text-primary">
+                                                {{ mapLicenseType(licenseData.typeOnLicense) }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">วันที่ส่งคำขอ</label>
+                                            <div class="w-full px-3 py-2.5 border border-slate-200 rounded-md bg-slate-50 text-primary">
+                                                {{ formatDate(licenseData.createdAt, true) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- รูปใบขับขี่ -->
+                                    <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+                                        <div v-if="hasRealLicensePhoto">
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">รูปใบขับขี่ / Selfie</label>
+                                            <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md bg-slate-50">
+                                                <a :href="realLicensePhoto" target="_blank" class="block">
+                                                    <img :src="realLicensePhoto" alt="License Photo"
+                                                        class="rounded max-h-60 mx-auto" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div v-else-if="licenseData.status === 'APPROVED'">
+                                            <label class="block mb-1 text-xs font-medium text-slate-500">รูปใบขับขี่ / Selfie</label>
+                                            <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md bg-slate-50 text-slate-400">
+                                                <i class="fas fa-check-circle text-2xl text-green-400 mb-1"></i>
+                                                <p class="text-sm">ไม่มีรูป — อนุมัติโดยแอดมิน</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <!-- No license data yet -->
+                                <div v-else-if="!licenseLoading" class="px-4 py-4 text-center text-slate-400 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+                                    <i class="fa-solid fa-id-card text-2xl mb-1"></i>
+                                    <p class="text-sm">ยังไม่มีข้อมูลใบขับขี่ — เปิดสวิตช์ด้านบนเพื่ออนุมัติโดยตรง</p>
+                                </div>
+                            </section>
+
                             <!-- ระบบ -->
                             <section>
                                 <h3 class="mb-3 text-sm font-semibold text-primary">ระบบ</h3>
@@ -332,10 +425,14 @@ useHead({
 
 const route = useRoute()
 const { toast } = useToast()
+const { $api } = useNuxtApp()
 
 const isLoading = ref(true)
 const loadError = ref('')
 const toggling = ref(false)
+const licenseData = ref(null)
+const licenseLoading = ref(false)
+const licenseToggling = ref(false)
 const user = ref(null)
 
 const FIXED_TYPE = 'VERIFICATION'
@@ -500,6 +597,96 @@ async function onToggleVerify(next) {
     }
 }
 
+/* ---------- License helpers ---------- */
+function mapLicenseType(type) {
+    const map = {
+        PRIVATE_CAR_TEMPORARY: 'รถยนต์ส่วนบุคคลชั่วคราว (2 ปี)',
+        PRIVATE_CAR: 'รถยนต์ส่วนบุคคล (5 ปี)',
+        PUBLIC_CAR: 'รถยนต์สาธารณะ',
+        LIFETIME: 'ตลอดชีพ'
+    }
+    return map[type] || type || '-'
+}
+
+const isRealUrl = (url) => url && url.startsWith('http')
+
+const realLicensePhoto = computed(() => {
+    if (!licenseData.value) return null
+    if (isRealUrl(licenseData.value.licensePhotoUrl)) return licenseData.value.licensePhotoUrl
+    if (isRealUrl(licenseData.value.selfiePhotoUrl)) return licenseData.value.selfiePhotoUrl
+    return null
+})
+
+const hasRealLicensePhoto = computed(() => !!realLicensePhoto.value)
+
+const licenseStatusClass = computed(() => {
+    if (!licenseData.value) return ''
+    switch (licenseData.value.status) {
+        case 'APPROVED': return 'bg-green-100 text-green-700 ring-1 ring-inset ring-green-200'
+        case 'REJECTED': return 'bg-red-100 text-red-700 ring-1 ring-inset ring-red-200'
+        default: return 'bg-amber-100 text-amber-700 ring-1 ring-inset ring-amber-200'
+    }
+})
+
+const licenseStatusLabel = computed(() => {
+    if (!licenseData.value) return ''
+    switch (licenseData.value.status) {
+        case 'APPROVED': return '✅ อนุมัติแล้ว'
+        case 'REJECTED': return '❌ ปฏิเสธ'
+        default: return '⏳ รอดำเนินการ'
+    }
+})
+
+async function fetchLicenseData() {
+    licenseLoading.value = true
+    try {
+        const config = useRuntimeConfig()
+        const token = useCookie('token')?.value || (process.client ? localStorage.getItem('token') : '')
+        const res = await $fetch('/driver-verifications/admin', {
+            baseURL: config.public.apiBase,
+            headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            query: { q: user.value?.username || user.value?.email || '', limit: 10 }
+        })
+        const rows = res?.data || []
+        // Find the one belonging to this user
+        const userId = route.params.id
+        licenseData.value = rows.find(r => r.userId === userId || r.user?.id === userId) || null
+    } catch (err) {
+        console.error('Fetch license data error:', err)
+        licenseData.value = null
+    } finally {
+        licenseLoading.value = false
+    }
+}
+
+async function onToggleLicense(checked) {
+    if (!user.value) return
+    licenseToggling.value = true
+    try {
+        const config = useRuntimeConfig()
+        const token = useCookie('token')?.value || (process.client ? localStorage.getItem('token') : '')
+        const res = await $fetch('/driver-verifications/admin/quick-approve', {
+            baseURL: config.public.apiBase,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
+            body: { userId: user.value.id, approve: checked }
+        })
+        licenseData.value = res?.data || licenseData.value
+        if (licenseData.value) licenseData.value.status = checked ? 'APPROVED' : 'REJECTED'
+        toast.success(checked ? '✅ อนุมัติใบขับขี่แล้ว' : '❌ ยกเลิกการอนุมัติใบขับขี่')
+    } catch (err) {
+        console.error('Toggle license error:', err, err?.data)
+        toast.error('เกิดข้อผิดพลาด', err?.data?.message || err?.statusMessage || err?.message || '')
+        await fetchLicenseData()
+    } finally {
+        licenseToggling.value = false
+    }
+}
+
 /* ---------- layout helpers ---------- */
 function closeMobileSidebar() {
     const sidebar = document.getElementById('sidebar')
@@ -532,6 +719,7 @@ onMounted(async () => {
     defineGlobalScripts()
     if (typeof window.__adminResizeHandler__ === 'function') window.__adminResizeHandler__()
     await fetchUser()
+    await fetchLicenseData()
 })
 onUnmounted(() => cleanupGlobalScripts())
 </script>

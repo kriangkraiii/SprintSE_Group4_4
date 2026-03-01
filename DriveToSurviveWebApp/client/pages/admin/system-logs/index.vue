@@ -75,8 +75,20 @@
                 <!-- Export Section -->
                 <div class="mb-4 p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div class="text-sm font-medium text-slate-600">
-                            <i class="mr-1 fas fa-download"></i>ส่งออกข้อมูล (พ.ร.บ.คอมพิวเตอร์)
+                        <div>
+                            <div class="text-sm font-medium text-slate-600">
+                                <i class="mr-1 fas fa-download"></i>ส่งออกข้อมูล (พ.ร.บ.คอมพิวเตอร์)
+                            </div>
+                            <div v-if="filters.userId || filters.ipAddress || filters.action || filters.createdFrom || filters.createdTo"
+                                class="mt-1 flex flex-wrap gap-1.5">
+                                <span class="text-[10px] text-slate-400"><i class="fas fa-filter mr-0.5"></i>กรอง:</span>
+                                <span v-if="filters.userId" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">User ID: {{ filters.userId.slice(0, 12) }}...</span>
+                                <span v-if="filters.ipAddress" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">IP: {{ filters.ipAddress }}</span>
+                                <span v-if="filters.action" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">{{ filters.action }}</span>
+                                <span v-if="filters.createdFrom" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">ตั้งแต่: {{ filters.createdFrom }}</span>
+                                <span v-if="filters.createdTo" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">ถึง: {{ filters.createdTo }}</span>
+                            </div>
+                            <div v-else class="mt-0.5 text-[10px] text-slate-400">ส่งออกทั้งหมด (ไม่มีตัวกรอง)</div>
                         </div>
                         <div class="flex flex-wrap gap-2">
                             <button @click="exportLogs('json')" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">
@@ -462,6 +474,8 @@ const exportLogs = async (format) => {
         if (filters.createdFrom) params.set('from', new Date(filters.createdFrom).toISOString())
         if (filters.createdTo) params.set('to', new Date(filters.createdTo).toISOString())
         if (filters.userId) params.set('userId', filters.userId)
+        if (filters.ipAddress) params.set('ipAddress', filters.ipAddress)
+        if (filters.action) params.set('action', filters.action)
 
         const res = await $api(`/admin/export/logs?${params.toString()}`, { responseType: format === 'csv' ? 'text' : 'json' })
 

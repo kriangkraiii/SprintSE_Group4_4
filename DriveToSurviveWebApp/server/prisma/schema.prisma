@@ -73,10 +73,13 @@ enum NotificationType {
 enum ChatSessionStatus {
   ACTIVE
   ENDED
+  READ_ONLY
+  ARCHIVED
 }
 
 enum MessageType {
   TEXT
+  IMAGE
   LOCATION
   QUICK_REPLY
   SYSTEM
@@ -163,7 +166,7 @@ model User {
 
   // Sprint 2 relations
   driverChatSessions    ChatSession[]    @relation("DriverChatSessions")
-  passengerChatSessions ChatSession[]    @relation("PassengerChatSessions")
+  chatParticipations    ChatSessionParticipant[]
   sentMessages          ChatMessage[]    @relation("MessageSender")
   chatReports           ChatReport[]     @relation("ChatReporter")
   passengerReviews      RideReview[]     @relation("ReviewPassenger")
@@ -172,6 +175,7 @@ model User {
   reviewDisputes        ReviewDispute[]
   savedPlaces           SavedPlace[]
   recentSearches        RecentSearch[]
+  quickReplyShortcuts   QuickReplyShortcut[]
 
   @@index([role])
   @@index([isActive])
@@ -283,7 +287,8 @@ model Route {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  bookings Booking[]
+  bookings    Booking[]
+  chatSession ChatSession?
 
   @@index([driverId])
   @@index([vehicleId])
@@ -310,34 +315,48 @@ model Booking {
   createdAt       DateTime      @default(now())
 
   // Sprint 2 relations
-  chatSession          ChatSession?
   arrivalNotifications ArrivalNotification[]
   reviews              RideReview[]
 }
+
 
 // ─── Sprint 2: Chat & Messaging Models ───────────────────
 
 model ChatSession {
   id                 String            @id @default(cuid())
-  bookingId          String            @unique
-  booking            Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  routeId            String            @unique
+  route              Route             @relation(fields: [routeId], references: [id], onDelete: Cascade)
   driverId           String
   driver             User              @relation("DriverChatSessions", fields: [driverId], references: [id], onDelete: Cascade)
-  passengerId        String
-  passenger          User              @relation("PassengerChatSessions", fields: [passengerId], references: [id], onDelete: Cascade)
   status             ChatSessionStatus @default(ACTIVE)
   createdAt          DateTime          @default(now())
   endedAt            DateTime?
-  retentionExpiresAt DateTime          // now + 90 days
+  chatExpiresAt      DateTime?
+  readOnlyExpiresAt  DateTime?
+  retentionExpiresAt DateTime
 
-  messages    ChatMessage[]
-  voiceCalls  VoiceCallLog[]
-  chatReports ChatReport[]
+  participants ChatSessionParticipant[]
+  messages     ChatMessage[]
+  voiceCalls   VoiceCallLog[]
+  chatReports  ChatReport[]
 
   @@index([driverId])
-  @@index([passengerId])
   @@index([status])
   @@index([retentionExpiresAt])
+  @@index([chatExpiresAt])
+  @@index([readOnlyExpiresAt])
+}
+
+model ChatSessionParticipant {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt  DateTime    @default(now())
+
+  @@unique([sessionId, userId])
+  @@index([userId])
 }
 
 model ChatMessage {
@@ -348,11 +367,12 @@ model ChatMessage {
   sender          User        @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
   type            MessageType @default(TEXT)
   content         String      @db.Text
-  originalContent String?     @db.Text // เก็บเนื้อหาดั้งเดิมก่อน filter (สำหรับ audit)
+  imageUrl        String?     @db.VarChar(500) // Cloudinary URL for IMAGE type
+  originalContent String?     @db.Text
   isFiltered      Boolean     @default(false)
   isUnsent        Boolean     @default(false)
-  unsendDeadline  DateTime? // created + 5 minutes
-  metadata        Json? // lat/lng for LOCATION, template key for QUICK_REPLY
+  unsendDeadline  DateTime?
+  metadata        Json?
   createdAt       DateTime    @default(now())
 
   reports ChatReport[]
@@ -563,4 +583,32 @@ model Blacklist {
   createdAt        DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// ─── Chat Quick Reply Shortcuts ──────────────────────────
+model QuickReplyShortcut {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String   @db.VarChar(200)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Chat Log Archive (Admin) ────────────────────────────
+model ChatLog {
+  id              String   @id @default(cuid())
+  sessionId       String
+  driverId        String
+  passengerId     String
+  messages        Json     @db.Json // snapshot of all messages
+  archivedAt      DateTime @default(now())
+  originalEndedAt DateTime?
+
+  @@index([sessionId])
+  @@index([driverId])
+  @@index([passengerId])
+  @@index([archivedAt])
 }
