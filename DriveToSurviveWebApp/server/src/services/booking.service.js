@@ -404,6 +404,20 @@ const getMyBookings = async (passengerId) => {
   });
 };
 
+const getBookingsByRouteId = async (routeId) => {
+  return prisma.booking.findMany({
+    where: { routeId, status: { in: ['CONFIRMED', 'IN_PROGRESS', 'PENDING'] } },
+    select: {
+      id: true,
+      pickupLocation: true,
+      dropoffLocation: true,
+      status: true,
+      passenger: { select: { id: true, firstName: true, lastName: true } },
+    },
+    orderBy: { createdAt: 'asc' },
+  });
+};
+
 const getBookingById = async (id) => {
   return prisma.booking.findUnique({
     where: { id },
@@ -595,6 +609,7 @@ module.exports = {
   adminUpdateBooking,
   getMyBookings,
   getBookingById,
+  getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
   deleteBooking,

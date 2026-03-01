@@ -99,11 +99,18 @@ const adminDeleteBooking = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: result });
 });
 
+const getBookingsByRouteId = asyncHandler(async (req, res) => {
+  const { routeId } = req.params;
+  const bookings = await bookingService.getBookingsByRouteId(routeId);
+  res.status(200).json({ success: true, data: bookings });
+});
+
 module.exports = {
   adminListBookings,
   createBooking,
   getMyBookings,
   getBookingById,
+  getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
   deleteBooking,

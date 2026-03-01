@@ -3,6 +3,7 @@ const ApiError = require('../utils/ApiError');
 const { haversineDistance, getCrossedRadii } = require('../utils/gpsUtils');
 const { sendArrivalEmail } = require('./email.service');
 const { startNoShowCountdown } = require('./noShow.service');
+const { emitToRoute, emitNotification } = require('../socket/emitter');
 
 const MANUAL_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -144,6 +145,28 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
             payload: { radiusType, driverLat, driverLon, appStatus, emailStatus },
             status: appStatus === 'SENT' ? 'SENT' : 'PARTIAL',
         },
+    });
+
+    // Broadcast real-time arrival alert to everyone on the tracking page
+    const routeId = booking.routeId || booking.route?.id;
+    if (routeId) {
+        emitToRoute(routeId, 'arrival-alert', {
+            bookingId: booking.id,
+            radiusType,
+            title: msg.title,
+            body: msg.body,
+            driverLat,
+            driverLon,
+            timestamp: Date.now(),
+        });
+    }
+
+    // Also push to passenger's personal notification feed
+    emitNotification(passenger.id, {
+        type: 'ARRIVAL',
+        title: msg.title,
+        body: msg.body,
+        metadata: { bookingId: booking.id, radiusType },
     });
 
     return notification;
