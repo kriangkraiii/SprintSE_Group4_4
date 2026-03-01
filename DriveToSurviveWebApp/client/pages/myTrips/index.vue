@@ -278,6 +278,22 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div v-if="item.hasReviewed && item.reviewData" class="pt-2">
+                                            <h5 class="mb-2 font-medium text-emerald-700">รีวิวที่คุณเขียน</h5>
+                                            <div class="p-4 bg-emerald-50 rounded-lg border border-emerald-100">
+                                                <div class="flex items-center gap-2 mb-2">
+                                                    <div class="flex text-yellow-500 text-lg">
+                                                        <span>{{ '★'.repeat(item.reviewData.rating || 0) }}{{ '☆'.repeat(5 - (item.reviewData.rating || 0)) }}</span>
+                                                    </div>
+                                                </div>
+                                                <div v-if="Array.isArray(item.reviewData.tags) && item.reviewData.tags.length" class="flex flex-wrap gap-1.5 mb-2">
+                                                    <span v-for="tag in item.reviewData.tags" :key="tag" class="px-2.5 py-1 text-xs font-medium bg-white text-emerald-700 border border-emerald-200 rounded-full">
+                                                        {{ tag }}
+                                                    </span>
+                                                </div>
+                                                <p v-if="item.reviewData.comment" class="text-sm text-emerald-800 mt-2">{{ item.reviewData.comment }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -293,7 +309,13 @@
                                             <button @click.stop="openChat(item)" :disabled="isChatLoading" class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover disabled:opacity-50 cursor-pointer">{{ isChatLoading ? '⏳ กำลังเปิด...' : '💬 แชทกลุ่ม' }}</button>
                                         </template>
                                         <template v-else-if="item.status === 'completed'">
-                                            <NuxtLink :to="`/reviews/create?bookingId=${item.id}`" class="px-4 py-2 text-sm text-white transition duration-200 bg-amber-500 rounded-md hover:bg-amber-600" @click.stop>⭐ เขียนรีวิว</NuxtLink>
+                                            <template v-if="item.hasReviewed">
+                                                <span class="px-4 py-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-md cursor-default flex items-center gap-1.5">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                    รีวิวแล้ว
+                                                </span>
+                                            </template>
+                                            <NuxtLink v-else :to="`/reviews/create?bookingId=${item.id}`" class="px-4 py-2 text-sm text-white transition duration-200 bg-amber-500 rounded-md hover:bg-amber-600" @click.stop>⭐ เขียนรีวิว</NuxtLink>
                                         </template>
                                         <button v-else-if="['rejected', 'cancelled', 'no_show'].includes(item.status)" @click.stop="openConfirmModal(item, 'delete')"
                                             class="px-4 py-2 text-sm text-slate-500 transition duration-200 border border-slate-200 rounded-md hover:bg-slate-50 cursor-pointer">ลบรายการ</button>
@@ -523,6 +545,8 @@ async function fetchPassengerTrips() {
                 carDetails: buildCarDetails(b.route.vehicle),
                 conditions: b.route.conditions,
                 photos: b.route.vehicle?.photos || [],
+                hasReviewed: Array.isArray(b.reviews) && b.reviews.length > 0,
+                reviewData: (Array.isArray(b.reviews) && b.reviews[0]) ? b.reviews[0] : null,
                 durationText: fmtDuration(b.route), distanceText: fmtDistance(b.route)
             }
         })
