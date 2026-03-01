@@ -29,7 +29,7 @@ if (!DRIVER_TOKEN || !BOOKING_ID) {
 //  จุดรับผู้โดยสาร = มหาวิทยาลัยขอนแก่น (ประตู 1 / หอพักหน้ามอ)
 //  ⚠️ ต้องตรงกับ pickupLocation ใน seed-epic2-test.js
 // ──────────────────────────────────────────────────────────────
-const PICKUP = { lat: 16.4725, lon: 102.8240 };
+const PICKUP = { lat: 16.4735, lon: 102.8226 };
 
 // ──────────────────────────────────────────────────────────────
 //  25 จุด GPS ตามถนนจริง: เซ็นทรัลขอนแก่น → ถ.มิตรภาพ → มข.
@@ -70,13 +70,14 @@ const WAYPOINTS = [
     { lat: 16.4700, lon: 102.8246 },  // 22. ถนนหลักใน มข.
     { lat: 16.4705, lon: 102.8245 },  // 23. เลี้ยวเข้าหอพัก
     { lat: 16.4710, lon: 102.8244 },  // 24. ใกล้หอพัก  
-    { lat: 16.4714, lon: 102.8243 },  // 25. เห็นจุดรับ
-    { lat: 16.4717, lon: 102.8242 },  // 26. เกือบถึง ~90m 🔔 ZERO_KM
-    { lat: 16.4719, lon: 102.8241 },  // 27. ใกล้มาก ~65m
-    { lat: 16.4721, lon: 102.8241 },  // 28. ~45m
-    { lat: 16.4723, lon: 102.8240 },  // 29. ~22m
-    { lat: 16.4725, lon: 102.8240 },  // 30. ✅ ถึงจุดรับพอดี! 0.00 กม.
+    { lat: 16.4714, lon: 102.8240 },
+    { lat: 16.4717, lon: 102.8236 },
+    { lat: 16.4719, lon: 102.8234 },
+    { lat: 16.4721, lon: 102.8232 },
+    { lat: 16.4723, lon: 102.8229 },
+    { lat: 16.4735, lon: 102.8226 },
 ];
+
 
 const TOTAL_POINTS = WAYPOINTS.length;
 const INTERVAL_MS = 1500; // 1.5 วินาทีต่อจุด
@@ -133,9 +134,12 @@ async function runWithSocket() {
         io = require('socket.io-client');
     }
 
+    let tokenStr = DRIVER_TOKEN;
+    if (tokenStr.startsWith('Bearer ')) tokenStr = tokenStr.replace('Bearer ', '');
+
     const serverUrl = BASE_URL.replace('/api', '');
     const socket = io(serverUrl, {
-        auth: { token: DRIVER_TOKEN.replace('Bearer ', '') },
+        auth: { token: tokenStr },
         transports: ['websocket', 'polling'],
     });
 
@@ -157,7 +161,7 @@ async function runWithSocket() {
 
 async function main() {
     console.log('🚗 คนขับเริ่มขับจาก เซ็นทรัล ขอนแก่น → มหาวิทยาลัยขอนแก่น');
-    console.log(`📌 จุดรับ: lat=${PICKUP.lat}, lon=${PICKUP.lon}  (หอพักหน้ามอ / มข.)`);
+    console.log(`📌 จุดรับ: lat=${PICKUP.lat}, lon=${PICKUP.lon}  (SC09 อาคารวิทยวิภาส)`);
     console.log(`📊 ${TOTAL_POINTS} จุด × ${INTERVAL_MS / 1000}s = ~${Math.round(TOTAL_POINTS * INTERVAL_MS / 1000)}s`);
     if (SOCKET_MODE && ROUTE_ID) {
         console.log(`🔌 Socket mode: route=${ROUTE_ID} (Real-Time Map)`);
@@ -189,7 +193,7 @@ async function main() {
     }
 
     console.log('─────────────────────────────────────────────────');
-    console.log('✅ คนขับถึงจุดรับแล้ว — หอพักหน้ามอ มข. 🎓');
+    console.log('✅ คนขับถึงจุดรับแล้ว — SC09 อาคารวิทยวิภาส 🎓');
 
     if (socket) socket.disconnect();
     process.exit(0);
