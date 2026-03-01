@@ -12,7 +12,7 @@ function generateToken(id, role) {
 
 async function main() {
     console.log('🚀 Starting Epic 2 Test Data Seeding...');
-    
+
     // Clear old test data
     await prisma.arrivalNotification.deleteMany({});
     await prisma.chatMessage.deleteMany({});
@@ -22,7 +22,7 @@ async function main() {
     await prisma.vehicle.deleteMany({});
     await prisma.driverVerification.deleteMany({});
     await prisma.user.deleteMany({
-        where: { email: { in: ['epic2_driver@test.com', 'epic2_passenger@test.com'] } }
+        where: { email: { in: ['epic2_driver@test.com', 'epic2_passenger@test.com', 'conan17970@gmail.com'] } }
     });
 
     const hashedPassword = await bcrypt.hash('password123', 10);
@@ -74,7 +74,7 @@ async function main() {
     const passenger = await prisma.user.create({
         data: {
             username: 'epic2passenger',
-            email: 'epic2_passenger@test.com',
+            email: 'conan17970@gmail.com',
             password: hashedPassword,
             firstName: 'Passenger',
             lastName: 'Epic2',
@@ -148,7 +148,7 @@ async function main() {
     const passengerToken = generateToken(passenger.id, 'PASSENGER');
 
     const robotPath = path.join(__dirname, '../../../sprint2/test/epic2_arrival_notification.robot');
-    
+
     if (fs.existsSync(robotPath)) {
         let robotScript = fs.readFileSync(robotPath, 'utf8');
         robotScript = robotScript.replace(/\$\{DRIVER_TOKEN\}.*/, `\${DRIVER_TOKEN}       Bearer ${driverToken}`);
