@@ -667,43 +667,59 @@ test('Scenario 7 : Stop Shared Direction', async ({ browser }) => {
     await pageB.waitForTimeout(1500);
 
     // ==========================================
-    // STEP 1: A ยืนยันว่ามองเห็น Google Maps link ของตัวเอง
-    //         แล้วกดปุ่ม หยุดแชร์ตำแหน่ง ใน card นั้น
+    // STEP 1: A กดปุ่ม หยุดแชร์ตำแหน่ง ใน location card ของตัวเอง
     // ==========================================
-    // หา location card ล่าสุดของ A (ที่ A เองเห็นปุ่มหยุดแชร์ใน card)
     const stopBtnInCardA = pageA.locator('[data-testid="stop-share-in-card"]').last();
     await expect(stopBtnInCardA).toBeVisible({ timeout: 10000 });
-
-    // B ต้องเห็น Google Maps link ของ A ก่อนกดหยุด
-    const mapsLinkOnB = pageB.locator('a[href*="google.com/maps"]').last();
-    await expect(mapsLinkOnB).toBeVisible({ timeout: 10000 });
-
-    // A กดหยุดแชร์ใน card
     await stopBtnInCardA.click();
 
-    // B ต้องไม่เห็น Google Maps link ของ A อีกต่อไป
-    await expect(mapsLinkOnB).not.toBeVisible({ timeout: 10000 });
+    // ==========================================
+    // STEP 2: B เห็น revoked card แล้วคลิก → ต้องขึ้น toast แจ้งเตือน
+    // ==========================================
+    const revokedCardOnB = pageB.locator('[data-testid="revoked-location-card"]').last();
+    await expect(revokedCardOnB).toBeVisible({ timeout: 10000 });
+
+    // B คลิก revoked card ของ A
+    await revokedCardOnB.click();
+
+    // ตรวจสอบ toast แจ้งว่า A หยุดแชร์แล้ว
+    await expect(
+        pageB.locator('text="ผู้ใช้ได้ทำการหยุดแชร์ตำแหน่งแล้ว"').first()
+    ).toBeVisible({ timeout: 5000 });
+    await expect(
+        pageB.locator('text="ไม่สามารถเข้าถึงตำแหน่งของผู้ใช้ได้"').first()
+    ).toBeVisible({ timeout: 5000 });
+
+    // รอ toast หายก่อน
+    await pageB.waitForTimeout(3500);
 
     // ==========================================
-    // STEP 2: B ยืนยันว่ามองเห็น Google Maps link ของตัวเอง
-    //         แล้วกดปุ่ม หยุดแชร์ตำแหน่ง ใน card นั้น
+    // STEP 3: B กดปุ่ม หยุดแชร์ตำแหน่ง ใน location card ของตัวเอง
     // ==========================================
-    // หา in-card stop button ล่าสุดของ B
     const stopBtnInCardB = pageB.locator('[data-testid="stop-share-in-card"]').last();
     await expect(stopBtnInCardB).toBeVisible({ timeout: 10000 });
-
-    // A ต้องเห็น Google Maps link ของ B ก่อนกดหยุด
-    const mapsLinkOnA = pageA.locator('a[href*="google.com/maps"]').last();
-    await expect(mapsLinkOnA).toBeVisible({ timeout: 10000 });
-
-    // B กดหยุดแชร์ใน card
     await stopBtnInCardB.click();
 
-    // A ต้องไม่เห็น Google Maps link ของ B อีกต่อไป
-    await expect(mapsLinkOnA).not.toBeVisible({ timeout: 10000 });
+    // ==========================================
+    // STEP 4: A เห็น revoked card แล้วคลิก → ต้องขึ้น toast แจ้งเตือน
+    // ==========================================
+    const revokedCardOnA = pageA.locator('[data-testid="revoked-location-card"]').last();
+    await expect(revokedCardOnA).toBeVisible({ timeout: 10000 });
+
+    // A คลิก revoked card ของ B
+    await revokedCardOnA.click();
+
+    // ตรวจสอบ toast แจ้งว่า B หยุดแชร์แล้ว
+    await expect(
+        pageA.locator('text="ผู้ใช้ได้ทำการหยุดแชร์ตำแหน่งแล้ว"').first()
+    ).toBeVisible({ timeout: 5000 });
+    await expect(
+        pageA.locator('text="ไม่สามารถเข้าถึงตำแหน่งของผู้ใช้ได้"').first()
+    ).toBeVisible({ timeout: 5000 });
 
     await pageA.waitForTimeout(500);
 
     await contextA.close();
     await contextB.close();
 });
+
