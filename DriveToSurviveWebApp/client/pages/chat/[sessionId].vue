@@ -383,7 +383,11 @@ async function handleSend() {
   }
 
   // Send text
-  if (!newMessage.value.trim() || isSending.value) return
+  if (!newMessage.value.trim()) {
+    toast.error('ไม่สามารถส่งข้อความว่างเปล่าได้', 'กรุณาพิมพ์ข้อความก่อนส่ง')
+    return
+  }
+  if (isSending.value) return
   isSending.value = true
   const content = newMessage.value
   newMessage.value = ''
