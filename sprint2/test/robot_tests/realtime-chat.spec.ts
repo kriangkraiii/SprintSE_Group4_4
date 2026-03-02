@@ -444,71 +444,68 @@ test('Scenario 5 : add image (.jpg, .png rejecting .pdf)', async ({ browser }) =
 
     // นับจำนวนรูปที่มีอยู่ตั้งแต่แรกเพื่อดูว่ามันอัปโหลดเพิ่มไหม
     const initialImagesA = await pageA.locator('.flex-1.overflow-y-auto img.max-h-64').count();
+    const initialImagesB = await pageB.locator('.flex-1.overflow-y-auto img.max-h-64').count();
 
     // ==========================================
-    // 4. Test PNG upload (Should Fail)
+    // STEP 1: User A ส่ง PDF → ต้องส่งไม่ได้ (Fail)
     // ==========================================
-    const fileInput = pageA.locator('input[type="file"]');
-    await fileInput.setInputFiles('sprint2/img/image.png');
+    const fileInputA = pageA.locator('input[type="file"]');
+    await fileInputA.setInputFiles('sprint2/img/image.pdf');
+    // รอ preview ไฟล์โหลดนิดนึง
+    await pageA.waitForTimeout(500);
+    // กดส่ง — toast จะขึ้นตอนนี้
+    await pageA.locator('button.bg-cta').click();
     await expect(pageA.locator('text="ไฟล์ไม่รองรับ"').first()).toBeVisible({ timeout: 5000 });
-    await expect(pageA.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .pdf เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
+    await expect(pageA.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .png เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
 
-    // รอ Toast แจ้งเตือนมันหายหรือรอนิดนึง
+    // รอ Toast หายก่อนทำขั้นตอนต่อไป
     await pageA.waitForTimeout(3000);
 
     // ==========================================
-    // 5. Test JPG upload (Should Pass)
+    // STEP 2: User A ส่ง JPG → ต้องส่งได้ (Pass)
     // ==========================================
-    await fileInput.setInputFiles('sprint2/img/image.jpg');
-    // ต้องมีพรีวิวขึ้นในช่องแชท
-    const previewImage = pageA.locator('img.h-20.rounded-lg.object-cover');
-    await expect(previewImage).toBeVisible({ timeout: 5000 });
+    await fileInputA.setInputFiles('sprint2/img/image.jpg');
+    // ต้องมีพรีวิวรูปขึ้นในช่องแชท
+    const previewImageA = pageA.locator('img.h-20.rounded-lg.object-cover');
+    await expect(previewImageA).toBeVisible({ timeout: 5000 });
 
-    // กดปุ่มส่งข้อความ
+    // กดปุ่มส่ง
     await pageA.locator('button.bg-cta').click();
-    // รอระบบอัปโหลดและส่งรูปภาพสักพักนึง
     await pageA.waitForTimeout(4000);
 
     // รูปในแชทฝั่ง A ต้องเพิ่มขึ้น 1
     await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 1, { timeout: 30000 });
-    // ฝั่ง B ต้องได้รับรูปใหม่ด้วย
-    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 1, { timeout: 30000 });
+    // B ต้องมองเห็นรูปที่ A ส่งมาด้วย
+    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesB + 1, { timeout: 30000 });
 
     // ==========================================
-    // 6. Test PDF upload + PNG/JPG testing for User B
+    // STEP 3: User B ส่ง PDF → ต้องส่งไม่ได้ (Fail)
     // ==========================================
     const fileInputB = pageB.locator('input[type="file"]');
-
-    // 6.1 User B Test PNG upload (Should Fail)
-    await fileInputB.setInputFiles('sprint2/img/image.png');
+    await fileInputB.setInputFiles('sprint2/img/image.pdf');
+    // รอ preview ไฟล์โหลดนิดนึง
+    await pageB.waitForTimeout(500);
+    // กดส่ง — toast จะขึ้นตอนนี้
+    await pageB.locator('button.bg-cta').click();
     await expect(pageB.locator('text="ไฟล์ไม่รองรับ"').first()).toBeVisible({ timeout: 5000 });
-    await expect(pageB.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .pdf เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
+    await expect(pageB.locator('text="กรุณาอัปโหลดเฉพาะไฟล์ .jpg และ .png เท่านั้น"').first()).toBeVisible({ timeout: 5000 });
     await pageB.waitForTimeout(3000);
 
-    // 6.2 User B Test JPG upload (Should Pass)
-    await fileInputB.setInputFiles('sprint2/img/image.jpg');
-    const previewImageB_jpg = pageB.locator('img.h-20.rounded-lg.object-cover');
-    await expect(previewImageB_jpg).toBeVisible({ timeout: 5000 });
-    await pageB.locator('button.bg-cta').click();
-    await pageB.waitForTimeout(4000);
-    // รูปแชทฝั่งคู่สนทนาจะเพิ่มขึ้นอีก 1
-    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 2, { timeout: 30000 });
-    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 2, { timeout: 30000 });
-
-    // 6.3 User B Test PDF upload (Should Pass)
-    await fileInputB.setInputFiles('sprint2/img/image.pdf');
+    // ==========================================
+    // STEP 4: User B ส่ง PNG → ต้องส่งได้ และ A ต้องเห็น (Pass)
+    // ==========================================
+    await fileInputB.setInputFiles('sprint2/img/image.png');
 
     const previewImageB = pageB.locator('img.h-20.rounded-lg.object-cover');
     await expect(previewImageB).toBeVisible({ timeout: 5000 });
 
     await pageB.locator('button.bg-cta').click();
-
-    // รอระบบอัปโหลด PDF สักพักนึง
     await pageB.waitForTimeout(4000);
 
-    // รูป (หรือ preview PDF) ในแชทของทั้งคู่น่าจะเพิ่มเป็น +3
-    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 3, { timeout: 30000 });
-    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 3, { timeout: 30000 });
+    // รูปในแชทของทั้งคู่น่าจะเพิ่มเป็น +2
+    await expect(pageB.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesB + 2, { timeout: 30000 });
+    // A ต้องเห็นรูป PNG ที่ B ส่งมาด้วย
+    await expect(pageA.locator('.flex-1.overflow-y-auto img.max-h-64')).toHaveCount(initialImagesA + 2, { timeout: 30000 });
 
     await pageA.waitForTimeout(2000);
 

@@ -38,6 +38,18 @@ export function useChat() {
         _socket?.emit('send-message', { sessionId, message })
     }
 
+    function emitRevokeLocation(sessionId, messageId) {
+        _socket?.emit('revoke-location', { sessionId, messageId })
+    }
+
+    function onLocationRevoked(callback) {
+        _socket?.on('location-revoked', callback)
+    }
+
+    function offLocationRevoked(callback) {
+        _socket?.off('location-revoked', callback)
+    }
+
     function emitTyping(sessionId) {
         _socket?.emit('typing', sessionId)
     }
@@ -154,6 +166,9 @@ export function useChat() {
         onNewMessage,
         offNewMessage,
         emitNewMessage,
+        emitRevokeLocation,
+        onLocationRevoked,
+        offLocationRevoked,
         emitTyping,
         emitStopTyping,
         onTyping,
