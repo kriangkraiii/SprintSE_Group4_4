@@ -9,14 +9,13 @@
       </NuxtLink>
 
       <template v-if="session">
-        <img
-          :src="otherUser.profilePicture || `https://ui-avatars.com/api/?name=${otherUser.firstName || 'U'}&background=random&size=40`"
-          class="w-10 h-10 rounded-full object-cover"
-        />
+        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-lg">
+          🚗
+        </div>
         <div class="flex-1 min-w-0">
-          <h3 class="text-sm font-medium text-primary truncate">{{ otherUser.firstName || 'ผู้ใช้' }}</h3>
+          <h3 class="text-sm font-medium text-primary truncate">{{ routeTitle }}</h3>
           <p class="text-xs text-slate-400">
-            <template v-if="session.status === 'ACTIVE'">🟢 ออนไลน์</template>
+            <template v-if="session.status === 'ACTIVE'">🟢 {{ memberCount }} คนในห้อง</template>
             <template v-else-if="session.status === 'ENDED'">🟡 จบทริปแล้ว</template>
             <template v-else-if="session.status === 'READ_ONLY'">🔴 อ่านอย่างเดียว</template>
             <template v-else>🔒 ถูกลบแล้ว</template>
@@ -69,8 +68,13 @@
     </div>
 
     <!-- Typing Indicator -->
-    <div v-if="typingUsers.length" class="px-4 py-1 text-xs text-slate-400 animate-pulse">
-      {{ typingUsers.join(', ') }} กำลังพิมพ์...
+    <div v-if="typingUsers.length" class="px-4 py-1.5 flex items-center gap-2">
+      <div class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-2xl">
+        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+      </div>
+      <span class="text-xs text-slate-400">{{ typingUsers.join(', ') }} กำลังพิมพ์</span>
     </div>
 
     <!-- Messages Area -->
@@ -321,6 +325,18 @@ const otherUser = computed(() => {
   return session.value.driver?.id === userId.value
     ? session.value.passenger || {}
     : session.value.driver || {}
+})
+
+const routeTitle = computed(() => {
+  if (!session.value?.route) return 'แชทกลุ่ม'
+  const start = session.value.route.startLocation?.name || session.value.route.startLocation?.label || 'ต้นทาง'
+  const end = session.value.route.endLocation?.name || session.value.route.endLocation?.label || 'ปลายทาง'
+  return `🚗 ${start} → ${end}`
+})
+
+const memberCount = computed(() => {
+  if (!session.value?.participants) return 0
+  return session.value.participants.length + 1 // +1 for driver
 })
 
 function scrollToBottom() {

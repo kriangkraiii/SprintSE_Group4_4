@@ -12,19 +12,19 @@
                 </div>
 
                 <!-- Desktop Nav (Center) -->
-                <nav class="absolute left-1/2 transform -translate-x-1/2 items-center hidden gap-1 md:flex">
+                <nav class="items-center hidden gap-0.5 lg:flex flex-1 justify-center">
                     <NuxtLink to="/findTrip"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                        :class="$route.path === '/findTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
+                        :class="$route.path === '/findTrip' ? 'text-primary bg-primary/10 font-semibold' : 'text-slate-700 hover:text-primary'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                         ค้นหาเส้นทาง
                     </NuxtLink>
 
-                    <NuxtLink  to="/createTrip"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                        :class="$route.path === '/createTrip' ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                    <NuxtLink to="/createTrip"
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
+                        :class="$route.path === '/createTrip' ? 'text-primary bg-primary/10 font-semibold' : 'text-slate-700 hover:text-primary'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>
@@ -33,8 +33,8 @@
 
                     <!-- การเดินทาง (unified page) -->
                     <NuxtLink v-if="token" to="/myTrips"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                        :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
+                        :class="$route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') ? 'text-primary bg-primary/10 font-semibold' : 'text-slate-700 hover:text-primary'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
@@ -42,28 +42,19 @@
                     </NuxtLink>
 
                     <NuxtLink v-if="token" to="/chat"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                        :class="$route.path.startsWith('/chat') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
+                        :class="$route.path.startsWith('/chat') ? 'text-primary bg-primary/10 font-semibold' : 'text-slate-700 hover:text-primary'">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                         ข้อความ
                     </NuxtLink>
-
-                    <NuxtLink v-if="token" to="/reviews"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                        :class="$route.path.startsWith('/reviews') ? 'text-cta bg-white/10' : 'text-black hover:text-[#236993]'">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
-                        รีวิวของฉัน
-                    </NuxtLink>
                 </nav>
-                <nav class="items-center hidden gap-1 md:flex">
+                <nav class="items-center hidden gap-1 lg:flex">
                     
 
 
                     <!-- Auth buttons -->
                     <div v-if="!token" class="flex items-center gap-2">
-                        <NuxtLink to="/login" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-black hover:text-[#236993] transition-colors rounded-lg hover:bg-white/10">
+                        <NuxtLink to="/login" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-primary transition-colors rounded-lg hover:bg-slate-100">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                             </svg>
@@ -77,11 +68,23 @@
                         </NuxtLink>
                     </div>
 
+                    <!-- Dark Mode Toggle -->
+                    <button @click="toggleDarkMode"
+                        class="p-2 ml-1 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-slate-100 text-slate-600 hover:text-primary"
+                        :title="isDarkMode ? 'Light Mode' : 'Dark Mode'">
+                        <svg v-if="isDarkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+
                     <!-- Bell -->
                     <div v-if="token" class="relative ml-2">
                         <button ref="bellBtn"
-                            class="relative p-2 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-white/10"
-                            :class="openNotif ? 'text-[#236993] bg-white/10' : 'text-black hover:text-[#236993]'"
+                            class="relative p-2 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
+                            :class="openNotif ? 'text-primary bg-primary/10' : 'text-slate-700 hover:text-primary'"
                             @click="onBellClick" aria-haspopup="true" :aria-expanded="openNotif ? 'true' : 'false'">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -232,7 +235,7 @@
                 </nav>
 
                 <!-- Mobile hamburger -->
-                <div class="md:hidden">
+                <div class="lg:hidden">
                     <button @click="toggleMobileMenu" type="button"
                         class="p-2 transition-colors duration-200 rounded-lg cursor-pointer text-slate-600 hover:text-primary hover:bg-slate-100">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -244,10 +247,10 @@
             </div>
 
             <!-- Mobile Menu Backdrop -->
-            <div v-show="isMobileMenuOpen" class="fixed inset-0 z-40 md:hidden" @click="closeMobileMenu"></div>
+            <div v-show="isMobileMenuOpen" class="fixed inset-0 z-40 lg:hidden" @click="closeMobileMenu"></div>
 
             <!-- Mobile Menu -->
-            <div v-show="isMobileMenuOpen" class="px-4 pb-4 md:hidden bg-white relative z-50">
+            <div v-show="isMobileMenuOpen" class="px-4 pb-4 lg:hidden bg-white relative z-50">
                 <div class="pt-3 space-y-1">
                     <NuxtLink to="/findTrip"
                         class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
@@ -276,13 +279,6 @@
                         :class="$route.path.startsWith('/chat') ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
                         @click="closeMobileMenu">
                         ข้อความ
-                    </NuxtLink>
-
-                    <NuxtLink v-if="token" to="/reviews"
-                        class="block px-3 py-2 text-sm font-medium rounded-lg cursor-pointer outline-none" style="-webkit-tap-highlight-color: transparent;"
-                        :class="$route.path.startsWith('/reviews') ? 'text-cta bg-cta/10' : 'text-slate-700 hover:text-primary hover:bg-slate-50'"
-                        @click="closeMobileMenu">
-                        รีวิวของฉัน
                     </NuxtLink>
 
                     <div v-if="!token" class="pt-3 mt-3 space-y-2">
@@ -317,9 +313,13 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import { useDriverStatus } from '~/composables/useDriverStatus'
+import { useChat } from '~/composables/useChat'
+import { useDarkMode } from '~/composables/useDarkMode'
 
 const { token, user, logout } = useAuth()
 const { isDriverVerified, fetchDriverStatus } = useDriverStatus()
+const { connectChatSocket, onNewNotification, offNewNotification } = useChat()
+const { isDarkMode, toggle: toggleDarkMode } = useDarkMode()
 
 const isMobileMenuOpen = ref(false)
 const isMobileTripMenuOpen = ref(false)
@@ -336,7 +336,7 @@ const toggleMobileTripMenu = () => {
     isMobileTripMenuOpen.value = !isMobileTripMenuOpen.value
 }
 const handleResize = () => {
-    if (window.innerWidth >= 768) {
+    if (window.innerWidth >= 1024) {
         isMobileMenuOpen.value = false
         isMobileTripMenuOpen.value = false
     }
@@ -450,6 +450,18 @@ function timeAgo(ts) {
     return `${d} วันที่แล้ว`
 }
 
+// Real-time notification handler
+function handleNewNotification(notif) {
+    if (notifications.value.some(n => n.id === notif.id)) return
+    notifications.value.unshift({
+        id: notif.id,
+        title: notif.title || '-',
+        body: notif.body || '',
+        createdAt: notif.createdAt || Date.now(),
+        readAt: notif.readAt || null
+    })
+}
+
 onMounted(() => {
     window.addEventListener('resize', handleResize)
     document.addEventListener('click', onClickOutside)
@@ -457,6 +469,9 @@ onMounted(() => {
     if (token.value) {
         fetchUserNotifications()
         fetchDriverStatus()
+        // Connect Socket.IO for real-time notifications across all pages
+        connectChatSocket(token.value)
+        onNewNotification(handleNewNotification)
     }
 })
 
@@ -464,5 +479,6 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
     document.removeEventListener('click', onClickOutside)
     document.removeEventListener('keydown', onKey)
+    offNewNotification(handleNewNotification)
 })
 </script>
