@@ -124,6 +124,7 @@
 
         <!-- Text input -->
         <textarea
+          ref="messageInput"
           v-model="newMessage"
           @keydown.enter.exact.prevent="handleSend"
           rows="1"
@@ -210,6 +211,7 @@ const userId = computed(() => user.value?.id)
 const session = ref(null)
 const messages = ref([])
 const newMessage = ref('')
+const messageInput = ref(null)
 const isLoadingMessages = ref(false)
 const isSending = ref(false)
 const messagesContainer = ref(null)
@@ -427,6 +429,9 @@ async function handleSend() {
     newMessage.value = content
   } finally {
     isSending.value = false
+    nextTick(() => {
+      messageInput.value?.focus()
+    })
   }
 }
 
