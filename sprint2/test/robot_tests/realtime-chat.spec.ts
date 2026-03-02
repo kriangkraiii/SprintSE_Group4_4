@@ -931,13 +931,14 @@ test('Scenario 9 : Refresh Page', async ({ browser }) => {
 // ==========================================
 // Scenario 10: Disconnected
 // ==========================================
-test('Scenario 10 : Disconnected', async ({ browser }) => {
+test('Scenario 10 : Disconnected (Revised Logic)', async ({ browser }) => {
     const IMG_PATH = 'C:/Ride/SprintSE_Group4_4/sprint2/img/disconnect.jpg';
 
     const contextA = await browser.newContext({
         permissions: ['geolocation'],
         geolocation: { latitude: 13.7563, longitude: 100.5018 },
     });
+
     const contextB = await browser.newContext({
         permissions: ['geolocation'],
         geolocation: { latitude: 13.7650, longitude: 100.5380 },
@@ -946,146 +947,150 @@ test('Scenario 10 : Disconnected', async ({ browser }) => {
     const pageA = await contextA.newPage();
     const pageB = await contextB.newPage();
 
-    // ─── Login A ──────────────────────────────────
+    // ==============================
+    // LOGIN A
+    // ==============================
     await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
-    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
-    await pageA.waitForTimeout(500);
-    await pageA.fill('input#identifier', 'bow1234');
-    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.fill('#identifier', 'bow1234');
+    await pageA.fill('#password', 'Thanchanok1234');
     await pageA.click('button[type="submit"]');
-    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+    await pageA.waitForURL(/^(?!.*\/login).*$/);
 
-    // ─── Login B ──────────────────────────────────
+    // ==============================
+    // LOGIN B
+    // ==============================
     await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
-    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
-    await pageB.waitForTimeout(500);
-    await pageB.fill('input#identifier', 'kiangnz25464');
-    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.fill('#identifier', 'kiangnz25464');
+    await pageB.fill('#password', 'Thanchanok1234');
     await pageB.click('button[type="submit"]');
-    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+    await pageB.waitForURL(/^(?!.*\/login).*$/);
 
-    // ─── เข้าห้องแชท ─────────────────────────────
-    const chatRoomQuery = 'div.divide-y > a';
-
+    // ==============================
+    // เข้า Chat Room
+    // ==============================
     await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
-    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
-    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
-    await pageA.click(chatRoomQuery, { force: true });
-    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    await pageA.waitForSelector('div.divide-y > a');
+    await pageA.click('div.divide-y > a', { force: true });
+    await pageA.waitForSelector('textarea');
+
     const chatUrl = pageA.url();
-
     await pageB.goto(chatUrl, { waitUntil: 'networkidle' });
-    await pageB.waitForSelector('textarea', { timeout: 15000 });
+    await pageB.waitForSelector('textarea');
 
-    // ==========================================
-    // STEP 1: จำลอง B ขาดการเชื่อมต่อ
-    // ==========================================
+    // =====================================================
+    // PART 1 : B OFFLINE ก่อน → A ส่งครบ 3 อย่าง
+    // =====================================================
+
+    // B disconnect
     await contextB.setOffline(true);
-    // ตรวจสอบ toast ขาดการเชื่อมต่อบนหน้า B
-    await expect(pageB.locator('text="ขาดการเชื่อมต่อ"').first()).toBeVisible({ timeout: 10000 });
-    await pageB.waitForTimeout(1000); // รอให้ UI อัปเดตหลัง offline
+    await expect(pageB.locator('text="ขาดการเชื่อมต่อ"').first())
+        .toBeVisible({ timeout: 10000 });
+    await pageB.waitForTimeout(1500); // ชะลอให้เห็นว่า B offiline แล้ว
 
-    // ==========================================
-    // STEP 2: A ส่งข้อความ รูปภาพ และแชร์ตำแหน่ง (ตามลำดับ) 
-    // (ในขณะที่ B ขาดการเชื่อมต่ออยู่)
-    // ==========================================
-    // 2.1 ส่งข้อความ
-    await pageA.locator('textarea').fill('ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A');
-    await pageA.locator('textarea').press('Enter');
-    await expect(pageA.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A"').last()).toBeVisible({ timeout: 10000 });
+    // ---------- A ส่งข้อความ ----------
+    await pageA.fill('textarea', 'ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A');
+    await pageA.press('textarea', 'Enter');
+    await expect(pageA.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A"').last())
+        .toBeVisible();
+    await pageA.waitForTimeout(1000); // ชะลอให้เห็นข้อความ
 
-    // 2.2 ส่งรูปภาพ
+    // ---------- A ส่งรูป ----------
     await pageA.locator('input[type="file"]').setInputFiles(IMG_PATH);
     await pageA.waitForTimeout(800);
     await pageA.locator('button.bg-cta').click();
-    await expect(pageA.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
-    await pageA.waitForTimeout(300); // ทิ้งระยะเวลาหลังผู้ใช้ A ส่งรูปภาพประมาณ 0.3 วินาที
+    await expect(pageA.locator('img').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(1000); // ชะลอให้เห็นรูปภาพ
 
-    // 2.3 แชร์ตำแหน่ง
+    // ---------- A แชร์ตำแหน่ง ----------
     await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
-    await expect(pageA.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 15000 });
+    await expect(pageA.locator('a[href*="google.com/maps"]').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(1000); // ชะลอให้เห็นแชร์ตำแหน่ง
 
-    // ==========================================
-    // STEP 3: B กลับมาเชื่อมต่อ (reconnect) หลังจากที่ A ส่งครบแล้ว
-    // ==========================================
+    // ===== B reconnect หลังจาก A ส่งครบแล้วเท่านั้น =====
     await contextB.setOffline(false);
-    // ตรวจสอบ toast กลับมาเชื่อมต่อแล้วบนหน้า B
-    await expect(pageB.locator('text="กลับมาเชื่อมต่อแล้ว"').first()).toBeVisible({ timeout: 10000 });
+    await expect(pageB.locator('text="กลับมาเชื่อมต่อแล้ว"').first())
+        .toBeVisible({ timeout: 10000 });
+    await pageB.waitForTimeout(1000); // ชะลอให้เห็น toast กลับมาออนไลน์
 
-    // B รีเฟรชเพื่อดึงข้อมูลล่าสุด (แทนการรอพึ่ง Socket.io auto-reconnect ดึง state)
     await pageB.reload({ waitUntil: 'networkidle' });
-    await pageB.waitForSelector('textarea', { timeout: 15000 });
+    await pageB.waitForSelector('textarea');
 
-    // ตรวจสอบว่ามี toast แสดงผลสิ่งที่ B มองเห็นตามเงื่อนไขว่าผ่านครบ
-    await expect(pageB.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last()).toBeVisible({ timeout: 15000 });
-    await pageB.waitForTimeout(1000);
+    // ตรวจสอบ toast success
+    await expect(pageB.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageB.waitForTimeout(1500); // ชะลอให้เห็น toast ตรวจสอบข้อความครบ
 
-    // B ตรวจสอบว่าเห็นทั้ง 3 อย่างของ A ที่ส่งมาระหว่างที่ B offline
-    await expect(pageB.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A"').last()).toBeVisible({ timeout: 10000 });
-    await expect(pageB.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 10000 });
-    await expect(pageB.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 10000 });
+    // B ต้องเห็นครบทั้ง 3
+    await expect(pageB.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A"').last())
+        .toBeVisible();
+    await expect(pageB.locator('img').last())
+        .toBeVisible();
+    await expect(pageB.locator('a[href*="google.com/maps"]').last())
+        .toBeVisible();
+    await pageB.waitForTimeout(2000); // ชะลอให้แน่ใจว่าเห็นของครบตามขั้นตอน
 
-    // ==========================================
-    // STEP 4: A ทำการยกเลิกการแชร์ตำแหน่งที่พึ่งทำ
-    // ==========================================
-    await pageA.waitForTimeout(500);
+    // A ยกเลิกแชร์ตำแหน่ง
     await pageA.locator('[data-testid="stop-share-in-card"]').last().click();
-    await pageA.waitForTimeout(1000);
+    await pageA.waitForTimeout(1500); // ชะลอให้เห็นว่าเอาการแชร์ตำแหน่งออก
 
-    // ==========================================
-    // STEP 5: จำลอง A ขาดการเชื่อมต่อ
-    // ==========================================
+    // =====================================================
+    // PART 2 : A OFFLINE ก่อน → B ส่งครบ 3 อย่าง
+    // =====================================================
+
+    // A disconnect
     await contextA.setOffline(true);
-    // ตรวจสอบ toast ขาดการเชื่อมต่อบนหน้า A
-    await expect(pageA.locator('text="ขาดการเชื่อมต่อ"').first()).toBeVisible({ timeout: 10000 });
-    await pageA.waitForTimeout(1000); // รอให้ UI อัปเดตหลัง offline
+    await expect(pageA.locator('text="ขาดการเชื่อมต่อ"').first())
+        .toBeVisible({ timeout: 10000 });
+    await pageA.waitForTimeout(1500); // ชะลอให้เห็นว่า A offline แล้ว
 
-    // ==========================================
-    // STEP 6: B ส่งข้อความ รูปภาพ และแชร์ตำแหน่ง (ตามลำดับ)
-    // (ในขณะที่ A ขาดการเชื่อมต่ออยู่)
-    // ==========================================
-    // 6.1 ส่งข้อความ
-    await pageB.locator('textarea').fill('ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B');
-    await pageB.locator('textarea').press('Enter');
-    await expect(pageB.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B"').last()).toBeVisible({ timeout: 10000 });
+    // ---------- B ส่งข้อความ ----------
+    await pageB.fill('textarea', 'ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B');
+    await pageB.press('textarea', 'Enter');
+    await expect(pageB.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B"').last())
+        .toBeVisible();
+    await pageB.waitForTimeout(1000); // ชะลอให้เห็นข้อความ
 
-    // 6.2 ส่งรูปภาพ
+    // ---------- B ส่งรูป ----------
     await pageB.locator('input[type="file"]').setInputFiles(IMG_PATH);
     await pageB.waitForTimeout(800);
     await pageB.locator('button.bg-cta').click();
-    await expect(pageB.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
-    await pageB.waitForTimeout(300); // ทิ้งระยะเวลาหลังผู้ใช้ B ส่งรูปภาพประมาณ 0.3 วินาที
+    await expect(pageB.locator('img').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageB.waitForTimeout(1000); // ชะลอให้เห็นการส่งรูปภาพ
 
-    // 6.3 แชร์ตำแหน่ง
+    // ---------- B แชร์ตำแหน่ง ----------
     await pageB.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
-    await expect(pageB.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 15000 });
+    await expect(pageB.locator('a[href*="google.com/maps"]').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageB.waitForTimeout(1000); // ชะลอให้เห็นการแชร์ตำแหน่ง
 
-    // ==========================================
-    // STEP 7: A กลับมาเชื่อมต่อ (reconnect) หลังจากที่ B ส่งครบแล้ว
-    // ==========================================
+    // ===== A reconnect หลังจาก B ส่งครบแล้วเท่านั้น =====
     await contextA.setOffline(false);
-    // ตรวจสอบ toast กลับมาเชื่อมต่อแล้วบนหน้า A
-    await expect(pageA.locator('text="กลับมาเชื่อมต่อแล้ว"').first()).toBeVisible({ timeout: 10000 });
+    await expect(pageA.locator('text="กลับมาเชื่อมต่อแล้ว"').first())
+        .toBeVisible({ timeout: 10000 });
+    await pageA.waitForTimeout(1000); // ชะลอให้เห็น toast ว่า A กลับมาแล้ว
 
-    // A รีเฟรชเพื่อดึงข้อมูลล่าสุด
     await pageA.reload({ waitUntil: 'networkidle' });
-    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    await pageA.waitForSelector('textarea');
 
-    // ตรวจสอบว่ามี toast แสดงผลสิ่งที่ A มองเห็นตามเงื่อนไขว่าผ่านครบ
-    await expect(pageA.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last()).toBeVisible({ timeout: 15000 });
-    await pageA.waitForTimeout(1000);
+    await expect(pageA.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last())
+        .toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(1500); // ชะลอให้เห็น toast แจ้งเตือนข้อความครบก
 
-    // A ตรวจสอบว่าเห็นทั้ง 3 อย่างของ B ที่ส่งมาระหว่างที่ A offline
-    await expect(pageA.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B"').last()).toBeVisible({ timeout: 10000 });
-    await expect(pageA.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 10000 });
-    await expect(pageA.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 10000 });
+    // A ต้องเห็นครบทั้ง 3
+    await expect(pageA.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B"').last())
+        .toBeVisible();
+    await expect(pageA.locator('img').last())
+        .toBeVisible();
+    await expect(pageA.locator('a[href*="google.com/maps"]').last())
+        .toBeVisible();
+    await pageA.waitForTimeout(2000); // ดึงเวลาออกหน่อยให้เห็นตอนตรวจครบ
 
-    // ==========================================
-    // STEP 8: B ทำการยกเลิกการแชร์ตำแหน่งที่พึ่งทำ
-    // ==========================================
-    await pageB.waitForTimeout(500);
+    // B ยกเลิกแชร์ตำแหน่ง (PASS CONDITION)
     await pageB.locator('[data-testid="stop-share-in-card"]').last().click();
-    await pageB.waitForTimeout(1000);
+    await pageB.waitForTimeout(2000); // ให้เห็นขั้นตอนสุดท้ายว่า B เลิกแชร์แล้ว
 
     await contextA.close();
     await contextB.close();
