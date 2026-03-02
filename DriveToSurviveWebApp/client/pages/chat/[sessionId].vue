@@ -573,8 +573,18 @@ watch(newMessage, (val) => {
     emitStopTyping(sessionId.value)
   }
 })
+const handleOffline = () => {
+  toast.error('ขาดการเชื่อมต่อ', 'กำลังรอเครือข่าย...')
+}
+
+const handleOnline = () => {
+  toast.success('กลับมาเชื่อมต่อแล้ว', 'ระบบออนไลน์ปกติ')
+}
 
 onMounted(() => {
+  window.addEventListener('offline', handleOffline)
+  window.addEventListener('online', handleOnline)
+
   // Load persisted revoked location IDs from localStorage
   revokedLocationIds.value = loadRevokedFromStorage()
   loadMessages()
@@ -588,8 +598,10 @@ onMounted(() => {
     onLocationRevoked(handleLocationRevoked)
   }
 })
-
 onUnmounted(() => {
+  window.removeEventListener('offline', handleOffline)
+  window.removeEventListener('online', handleOnline)
+
   // Stop location watch if still active
   if (locationWatchId !== null) {
     navigator.geolocation?.clearWatch(locationWatchId)
