@@ -46,6 +46,12 @@ const getPendingReviews = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: bookings });
 });
 
+const getMyReceivedReviews = asyncHandler(async (req, res) => {
+    const driverId = req.user.sub;
+    const result = await reviewService.getReviewsForDriver(driverId, req.query);
+    res.status(200).json({ success: true, ...result });
+});
+
 const hasReviewed = asyncHandler(async (req, res) => {
     const passengerId = req.user.sub;
     const { bookingId } = req.params;
@@ -78,6 +84,7 @@ module.exports = {
     getDriverReviews,
     getDriverStats,
     getMyReviews,
+    getMyReceivedReviews,
     getReviewByBooking,
     getPendingReviews,
     hasReviewed,

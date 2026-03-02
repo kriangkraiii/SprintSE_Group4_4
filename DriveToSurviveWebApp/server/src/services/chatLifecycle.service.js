@@ -26,18 +26,6 @@ const transitionEndedToReadOnly = async () => {
         data: { status: 'READ_ONLY' },
     });
 
-    // Add system message to each
-    await Promise.all(sessions.map(s =>
-        prisma.chatMessage.create({
-            data: {
-                sessionId: s.id,
-                senderId: 'SYSTEM',
-                type: 'SYSTEM',
-                content: '🔒 แชทนี้เปลี่ยนเป็นอ่านอย่างเดียว — อีก 7 วันจะถูกลบอัตโนมัติ',
-            },
-        }).catch(() => { /* senderId may not exist as user, skip */ })
-    ));
-
     return sessions.length;
 };
 

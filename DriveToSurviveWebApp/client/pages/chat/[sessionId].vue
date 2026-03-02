@@ -163,9 +163,13 @@
     </div>
 
     <!-- Read-only / Ended notices -->
-    <div v-else-if="session?.status === 'READ_ONLY' || session?.status === 'ARCHIVED'"
-      class="px-4 py-3 bg-slate-50 border-t border-slate-200 text-center">
-      <p class="text-sm text-slate-500">🔒 แชทนี้อ่านอย่างเดียว</p>
+    <div v-else
+      class="px-4 py-8 bg-slate-50 border-t border-slate-200 text-center">
+      <p class="text-[15px] font-medium text-slate-500">จบการสนทนา</p>
+      <p class="text-[15px] font-medium text-slate-500 mt-0.5">
+        ดูรายละเอียดเพิ่มเติมได้ที่
+        <NuxtLink to="/help" class="text-[#0066cc] cursor-pointer hover:underline">ศูนย์ช่วยเหลือ</NuxtLink>
+      </p>
     </div>
 
     <!-- Report Modal -->
@@ -288,14 +292,6 @@ const canSend = computed(() => {
 // Lifecycle banner
 const lifecycleBanner = computed(() => {
   if (!session.value) return null
-  if (session.value.status === 'ENDED' && session.value.chatExpiresAt) {
-    const remaining = new Date(session.value.chatExpiresAt) - new Date()
-    if (remaining > 0) {
-      const hours = Math.ceil(remaining / (1000 * 60 * 60))
-      return { text: `🕐 ยังคุยต่อได้อีก ${hours} ชั่วโมง — หลังจากนั้นจะเป็นอ่านอย่างเดียว`, class: 'bg-amber-50 text-amber-700' }
-    }
-    return { text: '🔒 หมดเวลาส่งข้อความแล้ว — อ่านอย่างเดียว', class: 'bg-red-50 text-red-600' }
-  }
   if (session.value.status === 'READ_ONLY' && session.value.readOnlyExpiresAt) {
     const remaining = new Date(session.value.readOnlyExpiresAt) - new Date()
     if (remaining > 0) {
@@ -340,7 +336,7 @@ async function loadMessages() {
   try {
     const result = await fetchMessages(sessionId.value)
     messages.value = result?.data || result || []
-    session.value = result?.session || { status: 'ACTIVE', driver: {}, passenger: {} }
+    session.value = result?.session || null
   } catch (err) {
     console.error('Failed to load messages:', err)
   } finally {

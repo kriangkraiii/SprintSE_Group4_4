@@ -11,7 +11,7 @@ Suite Teardown    Close All Browsers
 
 *** Variables ***
 ${BASE_URL}          http://localhost:3001
-${WEB_URL}           http://localhost:3003
+${WEB_URL}           http://localhost:3000
 ${DRIVER_EMAIL}      epic2_driver@test.com
 ${PASSENGER_EMAIL}   thanatcha.k@kkumail.com
 ${PASS}              password123
@@ -19,8 +19,8 @@ ${BOOKING_ID}        cmm673eqa0001vr9ax7xh0trd
 ${ROUTE_ID}          ${EMPTY}
 ${SCRIPT_DIR}        ${CURDIR}
 
-${DRIVER_TOKEN}       Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW03b2c3a28wMDAwdnJmMWlxbWN3eTEzIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3MjM2NTE1MSwiZXhwIjoxNzcyOTY5OTUxfQ.hiYtgH2FQEADvQOS-62KMVmdX6R_wp4NzZvDA6yZIm0
-${PASSENGER_TOKEN}    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW03b2c3bGYwMDA1dnJmMWViaWRod2JjIiwicm9sZSI6IlBBU1NFTkdFUiIsImlhdCI6MTc3MjM2NTE1MSwiZXhwIjoxNzcyOTY5OTUxfQ.hy1Lw7wgdjxoKw6BSmC1vaJklHyYTa4uHFNolWPuIbA
+${DRIVER_TOKEN}       Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW05anNjbG4wMDAwdnJzbXdvdGp3aHllIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3MjQ3ODI1MiwiZXhwIjoxNzczMDgzMDUyfQ.R-96fXGbjYygU225wFNSSRsyYMbqoiIj26ZRSXBHfvM
+${PASSENGER_TOKEN}    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW05anNjbTcwMDA1dnJzbXNqeHcyOHlxIiwicm9sZSI6IlBBU1NFTkdFUiIsImlhdCI6MTc3MjQ3ODI1MiwiZXhwIjoxNzczMDgzMDUyfQ.r9mJpOYpHUgk7iyjHj6b9nYjV2dVYNLQlNJPv9dRuMs
 ${DRIVER_RAW}        ${EMPTY}
 ${PASSENGER_RAW}     ${EMPTY}
 

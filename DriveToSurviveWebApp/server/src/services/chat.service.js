@@ -103,15 +103,6 @@ const endSession = async (routeId) => {
         data: { status: 'ENDED', endedAt: now, chatExpiresAt, readOnlyExpiresAt },
     });
 
-    await prisma.chatMessage.create({
-        data: {
-            sessionId: session.id,
-            senderId: session.driverId,
-            type: 'SYSTEM',
-            content: '🔒 การเดินทางจบแล้ว — ยังคุยต่อได้อีก 1 วัน หลังจากนั้นจะเป็นอ่านอย่างเดียว',
-        },
-    });
-
     return updated;
 };
 
@@ -186,7 +177,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
     }
 
     const skip = (page - 1) * limit;
-    const [total, messages] = await prisma.$transaction([
+    const [total, messages, session] = await prisma.$transaction([
         prisma.chatMessage.count({ where: { sessionId } }),
         prisma.chatMessage.findMany({
             where: { sessionId },
@@ -199,9 +190,29 @@ const getMessages = async (sessionId, userId, opts = {}) => {
                 sender: { select: { firstName: true, profilePicture: true } },
             },
         }),
+        prisma.chatSession.findUnique({
+            where: { id: sessionId },
+            include: {
+                driver: { select: { id: true, firstName: true, profilePicture: true } }
+            }
+        })
     ]);
 
+    // Format passenger info for UI compatibility
+    const participants = await prisma.chatSessionParticipant.findMany({
+        where: { sessionId },
+        include: { user: { select: { id: true, firstName: true, profilePicture: true } } }
+    });
+
+    if (session) {
+        const passengerParticipant = participants.find(p => p.userId !== session.driverId);
+        if (passengerParticipant) {
+            session.passenger = passengerParticipant.user;
+        }
+    }
+
     return {
+        session,
         data: messages.reverse(),
         pagination: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / limit) },
     };
@@ -317,7 +328,15 @@ const getMySessions = async (userId) => {
     // Deduplicate by session id
     const map = new Map();
     [...driverSessions, ...passengerSessions].forEach(s => { if (!map.has(s.id)) map.set(s.id, s); });
-    return Array.from(map.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const sessions = Array.from(map.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Attach passenger for easy frontend access
+    sessions.forEach(s => {
+        const passengerP = s.participants?.find(p => p.user.id !== s.driver?.id);
+        s.passenger = passengerP?.user || null;
+    });
+
+    return sessions;
 };
 
 module.exports = {
