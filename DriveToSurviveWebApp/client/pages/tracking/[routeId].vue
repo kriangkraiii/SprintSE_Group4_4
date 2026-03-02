@@ -62,7 +62,7 @@
             📍 ดูทั้งหมด
           </button>
         </div>
-        <div class="space-y-2 max-h-40 overflow-y-auto">
+        <div class="space-y-2 max-h-48 overflow-y-auto">
           <div v-for="[id, p] in participants" :key="id"
             class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
             <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm"
@@ -74,8 +74,15 @@
               <p class="text-xs text-slate-400">{{ p.role === 'DRIVER' ? 'คนขับ' : 'ผู้โดยสาร' }}
                 <span v-if="myPosition.lat && p.lat"> — {{ formatDistance(haversineDistance(myPosition.lat, myPosition.lng, p.lat, p.lng)) }}</span>
               </p>
+              <p v-if="p.lat" class="text-xs text-slate-400 font-mono">📍 {{ p.lat.toFixed(6) }}, {{ p.lng.toFixed(6) }}</p>
             </div>
-            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            <div class="flex items-center gap-1">
+              <a v-if="p.lat" :href="`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`" target="_blank" rel="noopener"
+                class="px-2 py-1 text-xs font-medium bg-green-500 text-white rounded-lg hover:bg-green-600 transition" @click.stop>
+                🗺️ นำทาง
+              </a>
+              <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            </div>
           </div>
           <p v-if="participants.size === 0" class="text-xs text-slate-400 text-center py-2">รอผู้ร่วมทริปออนไลน์...</p>
         </div>
@@ -86,10 +93,41 @@
           <div class="flex-1 min-w-0">
             <p class="text-xs font-medium text-green-700">จุดรับผู้โดยสาร</p>
             <p class="text-xs text-slate-500 truncate">{{ pickupInfo.name || pickupInfo.address || 'ตำแหน่งปักหมุด' }}</p>
+            <p v-if="pickupInfo.lat" class="text-xs text-slate-400 font-mono">📍 {{ pickupInfo.lat.toFixed(6) }}, {{ pickupInfo.lng.toFixed(6) }}</p>
           </div>
-          <div v-if="etaText" class="px-2 py-1 bg-green-50 rounded-lg">
-            <p class="text-xs font-bold text-green-700">{{ etaText }}</p>
+          <div class="flex items-center gap-2">
+            <div v-if="etaText" class="px-2 py-1 bg-green-50 rounded-lg">
+              <p class="text-xs font-bold text-green-700">{{ etaText }}</p>
+            </div>
+            <a v-if="pickupInfo.lat" :href="`https://www.google.com/maps/dir/?api=1&destination=${pickupInfo.lat},${pickupInfo.lng}`" target="_blank" rel="noopener"
+              class="px-2 py-1 text-xs font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" @click.stop>
+              🗺️ นำทาง
+            </a>
           </div>
+        </div>
+
+        <!-- Route start/end & Google Maps direction -->
+        <div v-if="routeInfo" class="mt-3 pt-3 border-t border-slate-100">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">🚗</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-blue-700">เส้นทาง</p>
+              <p class="text-xs text-slate-500 truncate">
+                {{ routeInfo.startName }} → {{ routeInfo.endName }}
+              </p>
+              <p class="text-xs text-slate-400 font-mono">
+                ต้นทาง: {{ routeInfo.startLat.toFixed(6) }}, {{ routeInfo.startLng.toFixed(6) }}
+              </p>
+              <p class="text-xs text-slate-400 font-mono">
+                ปลายทาง: {{ routeInfo.endLat.toFixed(6) }}, {{ routeInfo.endLng.toFixed(6) }}
+              </p>
+            </div>
+          </div>
+          <a :href="`https://www.google.com/maps/dir/?api=1&origin=${routeInfo.startLat},${routeInfo.startLng}&destination=${routeInfo.endLat},${routeInfo.endLng}`"
+            target="_blank" rel="noopener"
+            class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition">
+            🗺️ เปิดเส้นทางใน Google Maps
+          </a>
         </div>
       </div>
     </div>
@@ -133,6 +171,7 @@ let myMarker = null
 const pickupInfo = ref(null)
 const pickupLatLng = ref(null)
 const etaText = ref('')
+const routeInfo = ref(null)
 let routeUpdateThrottle = 0
 
 // Toast system for arrival alerts
@@ -207,6 +246,37 @@ async function fetchPickupLocation() {
     }
   } catch (err) {
     console.warn('[Tracking] Failed to fetch pickup location:', err.message)
+  }
+}
+
+// Fetch route details to get start/end coordinates
+async function fetchRouteInfo() {
+  try {
+    const apiBase = config.public.apiBase || '/api'
+    const url = apiBase.startsWith('http')
+      ? `${apiBase}/routes/${routeId.value}`
+      : `/api/routes/${routeId.value}`
+
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token.value}` },
+    })
+    if (!res.ok) return
+
+    const json = await res.json()
+    const data = json.data || json
+
+    if (data.startLocation && data.endLocation) {
+      routeInfo.value = {
+        startName: data.startLocation.name || data.startLocation.label || 'ต้นทาง',
+        endName: data.endLocation.name || data.endLocation.label || 'ปลายทาง',
+        startLat: data.startLocation.lat,
+        startLng: data.startLocation.lng,
+        endLat: data.endLocation.lat,
+        endLng: data.endLocation.lng,
+      }
+    }
+  } catch (err) {
+    console.warn('[Tracking] Failed to fetch route info:', err.message)
   }
 }
 
@@ -300,6 +370,9 @@ function initMap() {
       setTimeout(() => fitAllMarkers(), 2000)
     }
   })
+
+  // Fetch route info for coordinates display
+  fetchRouteInfo()
 }
 
 onMounted(() => {

@@ -12,7 +12,39 @@ export function useRouteMap() {
     let geocoder = null
     let placesService = null
     let stopMarkers = []
+    let provinceLayer = null
+    let provinceTooltip = null
     const mapReady = ref(false)
+
+    // Province EN→TH name mapping for overlay labels
+    const PROV_TH = {
+        'Amnat Charoen':'อำนาจเจริญ','Ang Thong':'อ่างทอง','Bangkok Metropolis':'กรุงเทพฯ',
+        'Bueng Kan':'บึงกาฬ','Buri Ram':'บุรีรัมย์','Chachoengsao':'ฉะเชิงเทรา',
+        'Chai Nat':'ชัยนาท','Chaiyaphum':'ชัยภูมิ','Chanthaburi':'จันทบุรี',
+        'Chiang Mai':'เชียงใหม่','Chiang Rai':'เชียงราย','Chon Buri':'ชลบุรี',
+        'Chumphon':'ชุมพร','Kalasin':'กาฬสินธุ์','Kamphaeng Phet':'กำแพงเพชร',
+        'Kanchanaburi':'กาญจนบุรี','Khon Kaen':'ขอนแก่น','Krabi':'กระบี่',
+        'Lampang':'ลำปาง','Lamphun':'ลำพูน','Loei':'เลย','Lop Buri':'ลพบุรี',
+        'Mae Hong Son':'แม่ฮ่องสอน','Maha Sarakham':'มหาสารคาม','Mukdahan':'มุกดาหาร',
+        'Nakhon Nayok':'นครนายก','Nakhon Pathom':'นครปฐม','Nakhon Phanom':'นครพนม',
+        'Nakhon Ratchasima':'นครราชสีมา','Nakhon Sawan':'นครสวรรค์',
+        'Nakhon Si Thammarat':'นครศรีธรรมราช','Nan':'น่าน','Narathiwat':'นราธิวาส',
+        'Nong Bua Lam Phu':'หนองบัวลำภู','Nong Khai':'หนองคาย','Nonthaburi':'นนทบุรี',
+        'Pathum Thani':'ปทุมธานี','Pattani':'ปัตตานี','Phangnga':'พังงา',
+        'Phatthalung':'พัทลุง','Phayao':'พะเยา','Phetchabun':'เพชรบูรณ์',
+        'Phetchaburi':'เพชรบุรี','Phichit':'พิจิตร','Phitsanulok':'พิษณุโลก',
+        'Phra Nakhon Si Ayutthaya':'อยุธยา','Phrae':'แพร่','Phuket':'ภูเก็ต',
+        'Prachin Buri':'ปราจีนบุรี','Prachuap Khiri Khan':'ประจวบฯ',
+        'Ranong':'ระนอง','Ratchaburi':'ราชบุรี','Rayong':'ระยอง','Roi Et':'ร้อยเอ็ด',
+        'Sa Kaeo':'สระแก้ว','Sakon Nakhon':'สกลนคร','Samut Prakan':'สมุทรปราการ',
+        'Samut Sakhon':'สมุทรสาคร','Samut Songkhram':'สมุทรสงคราม','Saraburi':'สระบุรี',
+        'Satun':'สตูล','Si Sa Ket':'ศรีสะเกษ','Sing Buri':'สิงห์บุรี',
+        'Songkhla':'สงขลา','Sukhothai':'สุโขทัย','Suphan Buri':'สุพรรณบุรี',
+        'Surat Thani':'สุราษฎร์ธานี','Surin':'สุรินทร์','Tak':'ตาก',
+        'Trang':'ตรัง','Trat':'ตราด','Ubon Ratchathani':'อุบลราชธานี',
+        'Udon Thani':'อุดรธานี','Uthai Thani':'อุทัยธานี','Uttaradit':'อุตรดิตถ์',
+        'Yala':'ยะลา','Yasothon':'ยโสธร'
+    }
 
     function initializeMap(container) {
         if (!container || gmap) return
@@ -26,6 +58,73 @@ export function useRouteMap() {
         geocoder = new google.maps.Geocoder()
         placesService = new google.maps.places.PlacesService(gmap)
         mapReady.value = true
+
+        // Load province overlay (lazy, non-blocking)
+        loadProvinceOverlay()
+    }
+
+    async function loadProvinceOverlay() {
+        if (provinceLayer || !gmap) return
+        try {
+            const res = await fetch('/data/thailand-provinces.json')
+            if (!res.ok) return
+            const geojson = await res.json()
+
+            provinceLayer = new google.maps.Data({ map: gmap })
+            provinceLayer.addGeoJson(geojson)
+
+            // Default style — subtle boundaries
+            provinceLayer.setStyle({
+                fillColor: '#3b82f6',
+                fillOpacity: 0.03,
+                strokeColor: '#2563eb',
+                strokeWeight: 1,
+                strokeOpacity: 0.25,
+            })
+
+            // Tooltip element
+            provinceTooltip = document.createElement('div')
+            Object.assign(provinceTooltip.style, {
+                position: 'absolute', padding: '6px 12px',
+                background: 'rgba(0,0,0,0.8)', color: '#fff',
+                borderRadius: '6px', fontSize: '13px', fontWeight: '500',
+                pointerEvents: 'none', display: 'none', zIndex: '999',
+                whiteSpace: 'nowrap', fontFamily: 'Inter, sans-serif',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            })
+            gmap.getDiv().appendChild(provinceTooltip)
+
+            // Hover highlight
+            provinceLayer.addListener('mouseover', (e) => {
+                provinceLayer.overrideStyle(e.feature, {
+                    fillOpacity: 0.12,
+                    strokeWeight: 2,
+                    strokeOpacity: 0.6,
+                })
+                const name = e.feature.getProperty('name')
+                const thName = PROV_TH[name] || name
+                provinceTooltip.textContent = `📍 ${thName}`
+                provinceTooltip.style.display = 'block'
+            })
+
+            provinceLayer.addListener('mousemove', (e) => {
+                if (!provinceTooltip) return
+                const mapDiv = gmap.getDiv()
+                const rect = mapDiv.getBoundingClientRect()
+                const point = e.domEvent || e
+                if (point.clientX !== undefined) {
+                    provinceTooltip.style.left = (point.clientX - rect.left + 12) + 'px'
+                    provinceTooltip.style.top = (point.clientY - rect.top - 30) + 'px'
+                }
+            })
+
+            provinceLayer.addListener('mouseout', () => {
+                provinceLayer.revertStyle()
+                if (provinceTooltip) provinceTooltip.style.display = 'none'
+            })
+        } catch (err) {
+            console.warn('[ProvinceOverlay] Failed to load:', err.message)
+        }
     }
 
     function waitMapReady() {
@@ -47,7 +146,7 @@ export function useRouteMap() {
         })
     }
 
-    async function extractNameParts(geocodeResult) {
+    async function extractNameParts(geocodeResult, serverLocation) {
         if (!geocodeResult) return { name: null, area: null }
         const comps = geocodeResult.address_components || []
         const byType = (t) => comps.find(c => c.types.includes(t))?.long_name
@@ -67,8 +166,10 @@ export function useRouteMap() {
             name = streetNumber && route ? `${streetNumber} ${route}` : route || geocodeResult.formatted_address || null
         }
 
+        // Prefer province data from server (ThailandGISMap) over Google
+        const serverProvince = serverLocation?.province
         const sublocality = byType('sublocality') || byType('neighborhood') || byType('locality') || byType('administrative_area_level_2')
-        const province = byType('administrative_area_level_1') || byTypeShort('administrative_area_level_1')
+        const province = serverProvince || byType('administrative_area_level_1') || byTypeShort('administrative_area_level_1')
 
         let area = null
         if (sublocality && province) area = `${sublocality}, ${province}`

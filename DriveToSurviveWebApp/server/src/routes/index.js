@@ -17,6 +17,8 @@ const chatRoutes = require('./chat.routes');
 const noShowRoutes = require('./noShow.routes');
 const adminSprint2Routes = require('./adminSprint2.routes');
 const placeRoutes = require('./place.routes');
+const geoRoutes = require('./geo.routes');
+const dashboardRoutes = require('./dashboard.routes');
 const router = express.Router();
 
 router.use('/auth', authRoutes);
@@ -37,6 +39,8 @@ router.use('/chat', chatRoutes);
 router.use('/no-show', noShowRoutes);
 router.use('/admin', adminSprint2Routes);
 router.use('/places', placeRoutes);
+router.use('/geo', geoRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 
 module.exports = router;

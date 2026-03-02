@@ -33,16 +33,28 @@
                     <div class="relative flex-1 min-w-[200px] max-w-xs">
                         <select v-model="statusFilter"
                             class="w-full appearance-none px-4 py-2.5 pr-10 bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 cursor-pointer focus:ring-2 focus:ring-primary/30 focus:border-primary transition">
-                            <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
+                            <option v-for="opt in statusOptions.filter(o => o.value !== 'reviews')" :key="opt.value" :value="opt.value">
                                 {{ opt.label }} ({{ getCount(opt.value) }})
                             </option>
                         </select>
                         <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </div>
 
+                    <!-- Reviews Button -->
+                    <button @click="statusFilter = 'reviews'"
+                        :class="['px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap',
+                            statusFilter === 'reviews' ? 'bg-amber-500 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-amber-50 hover:text-amber-600 border border-slate-200']">
+                        ⭐ รีวิวของฉัน
+                        <span v-if="getCount('reviews') > 0"
+                            :class="['text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center',
+                                statusFilter === 'reviews' ? 'bg-white/30 text-white' : 'bg-amber-100 text-amber-700']">
+                            {{ getCount('reviews') }}
+                        </span>
+                    </button>
+
                     <!-- Count Badge -->
                     <span class="ml-auto text-sm text-slate-500">
-                        {{ displayedItems.length }} รายการ
+                        {{ statusFilter === 'reviews' ? (myReviews.length + pendingBookings.length) + ' รีวิว' : displayedItems.length + ' รายการ' }}
                     </span>
                 </div>
             </div>
@@ -53,12 +65,23 @@
                     <div class="overflow-hidden bg-white border border-slate-200 rounded-xl shadow-sm">
                         <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
                             <h3 class="text-lg font-semibold text-[#383838]">
-                                {{ role === 'passenger' ? 'รายการเดินทาง' : (statusFilter === 'myRoutes' ? 'เส้นทางของฉัน' : 'รายการคำขอจอง') }}
+                                {{ statusFilter === 'reviews' ? '⭐ รีวิวของฉัน' : role === 'passenger' ? 'รายการเดินทาง' : (statusFilter === 'myRoutes' ? 'เส้นทางของฉัน' : 'รายการคำขอจอง') }}
                             </h3>
                         </div>
 
-                        <div v-if="isLoading" class="p-12 text-center text-slate-400">
-                            <p>กำลังโหลดข้อมูล...</p>
+                        <div v-if="isLoading" class="divide-y divide-slate-100">
+                            <div v-for="i in 3" :key="i" class="p-6 animate-pulse">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="h-5 bg-slate-200 rounded w-2/3"></div>
+                                    <div class="h-5 bg-slate-100 rounded-full w-20 ml-auto"></div>
+                                </div>
+                                <div class="h-3 bg-slate-100 rounded w-1/2 mb-2"></div>
+                                <div class="h-3 bg-slate-100 rounded w-1/3 mb-3"></div>
+                                <div class="flex gap-2">
+                                    <div class="h-8 bg-slate-100 rounded-lg w-20"></div>
+                                    <div class="h-8 bg-slate-100 rounded-lg w-24"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Driver: My Routes Section -->
@@ -174,17 +197,101 @@
                                 </transition>
 
                                 <!-- Route Actions -->
-                                <div class="flex justify-end gap-2" :class="{ 'mt-4': selectedId !== route.id }">
+                                <div class="flex flex-wrap justify-end gap-2" :class="{ 'mt-4': selectedId !== route.id }">
                                     <button v-if="route.status === 'available' && addingWaypointRouteId !== route.id"
                                         @click.stop="startAddWaypoint(route.id)"
                                         class="px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-300 rounded-md hover:bg-amber-100 transition cursor-pointer flex items-center gap-1.5">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                                         เพิ่มจุดแวะ
                                     </button>
+                                    <a v-if="route.rawStart" :href="getGoogleMapsNavUrl(route.rawStart, route.rawEnd)" target="_blank" @click.stop
+                                        class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
+                                        🗺️ นำทาง Google Maps
+                                    </a>
+                                    <button v-if="route.passengers && route.passengers.length" @click.stop="openChatForRoute(route)" :disabled="isChatLoading"
+                                        class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover cursor-pointer disabled:opacity-50">
+                                        {{ isChatLoading ? '⏳ กำลังเปิด...' : '💬 แชทกลุ่ม' }}
+                                    </button>
+                                    <NuxtLink :to="`/tracking/${route.id}`" @click.stop
+                                        class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">
+                                        📍 ติดตามตำแหน่ง
+                                    </NuxtLink>
                                     <NuxtLink :to="`/myRoute/${route.id}/edit`"
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover" @click.stop>
                                         แก้ไขเส้นทาง
                                     </NuxtLink>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reviews Section -->
+                        <div v-else-if="statusFilter === 'reviews'" class="p-6">
+                            <!-- Pending Reviews -->
+                            <div v-if="pendingBookings.length" class="p-4 mb-6 bg-amber-50 border border-amber-200 rounded-xl">
+                                <h4 class="text-base font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    รอเขียนรีวิว ({{ pendingBookings.length }})
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div v-for="booking in pendingBookings" :key="booking.id"
+                                        class="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-100">
+                                        <div>
+                                            <p class="text-sm font-medium text-primary">
+                                                {{ booking.route?.startLocation?.name || 'ต้นทาง' }} → {{ booking.route?.endLocation?.name || 'ปลายทาง' }}
+                                            </p>
+                                            <p class="text-xs text-slate-500 mt-0.5">
+                                                คนขับ: {{ booking.route?.driver?.firstName || 'ไม่ระบุ' }}
+                                            </p>
+                                        </div>
+                                        <NuxtLink :to="`/reviews/create?bookingId=${booking.id}`"
+                                            class="px-3 py-1.5 text-sm text-white bg-cta rounded-lg hover:bg-cta-hover transition-colors whitespace-nowrap">
+                                            เขียนรีวิว
+                                        </NuxtLink>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Sub-tabs -->
+                            <div class="flex gap-2 mb-6">
+                                <button @click="reviewTab = 'my'"
+                                    :class="['flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
+                                        reviewTab === 'my' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
+                                    รีวิวที่เขียน ({{ myReviews.length }})
+                                </button>
+                                <button @click="reviewTab = 'received'"
+                                    :class="['flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
+                                        reviewTab === 'received' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
+                                    รีวิวที่ได้รับ
+                                </button>
+                            </div>
+
+                            <!-- Written Reviews -->
+                            <div v-if="reviewTab === 'my'">
+                                <div v-if="isReviewLoading" class="p-12 text-center text-slate-400">
+                                    <p>กำลังโหลดรีวิว...</p>
+                                </div>
+                                <div v-else-if="myReviews.length === 0" class="p-12 text-center">
+                                    <svg class="w-16 h-16 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                    <p class="text-slate-500">ยังไม่ได้เขียนรีวิว</p>
+                                </div>
+                                <div v-else class="space-y-4">
+                                    <ReviewCard v-for="review in myReviews" :key="review.id" :review="review" />
+                                </div>
+                            </div>
+
+                            <!-- Received Reviews -->
+                            <div v-if="reviewTab === 'received'">
+                                <div class="p-6 bg-white border border-slate-200 rounded-xl text-center">
+                                    <div v-if="driverStats" class="mb-6">
+                                        <StarRating :modelValue="driverStats.avgRating" :readonly="true" size="lg" :showValue="true" />
+                                        <p class="text-sm text-slate-500 mt-2">{{ driverStats.totalReviews }} รีวิว</p>
+                                    </div>
+                                    <div v-if="driverReviewsList.length === 0" class="text-slate-400">
+                                        <p>ยังไม่มีรีวิว</p>
+                                    </div>
+                                    <div v-else class="space-y-4 text-left">
+                                        <ReviewCard v-for="review in driverReviewsList" :key="review.id" :review="review" :showPrivate="true" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -305,6 +412,10 @@
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
                                         <template v-else-if="['confirmed', 'in_progress'].includes(item.status)">
                                             <button @click.stop="openCancelModal(item)" class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
+                                            <a v-if="item.rawStart" :href="getGoogleMapsNavUrl(item.rawStart, item.rawEnd)" target="_blank" @click.stop
+                                                class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
+                                                🗺️ นำทาง
+                                            </a>
                                             <NuxtLink :to="`/tracking/${item.routeId}`" @click.stop class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">📍 ติดตามตำแหน่ง</NuxtLink>
                                             <button @click.stop="openChat(item)" :disabled="isChatLoading" class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover disabled:opacity-50 cursor-pointer">{{ isChatLoading ? '⏳ กำลังเปิด...' : '💬 แชทกลุ่ม' }}</button>
                                         </template>
@@ -326,7 +437,11 @@
                                             <button @click.stop="openConfirmModal(item, 'confirm')" class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover cursor-pointer">ยืนยันคำขอ</button>
                                             <button @click.stop="openConfirmModal(item, 'reject')" class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ปฏิเสธ</button>
                                         </template>
-                                        <template v-else-if="item.status === 'confirmed'">
+                                        <template v-else-if="['confirmed', 'in_progress'].includes(item.status)">
+                                            <a v-if="item.rawStart" :href="getGoogleMapsNavUrl(item.rawStart, item.rawEnd)" target="_blank" @click.stop
+                                                class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
+                                                🗺️ นำทาง
+                                            </a>
                                             <NuxtLink :to="`/tracking/${item.routeId}`" @click.stop class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">📍 ติดตามตำแหน่ง</NuxtLink>
                                             <button @click.stop="openChat(item)" :disabled="isChatLoading" class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover cursor-pointer disabled:opacity-50">{{ isChatLoading ? '⏳ กำลังเปิด...' : '💬 แชทกลุ่ม' }}</button>
                                         </template>
@@ -385,8 +500,12 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
+import ReviewCard from '~/components/ReviewCard.vue'
+import StarRating from '~/components/StarRating.vue'
 import { useToast } from '~/composables/useToast'
 import { useChat } from '~/composables/useChat'
+import { useReview } from '~/composables/useReview'
+import { useAuth } from '~/composables/useAuth'
 import {
     useRouteMap, cleanAddr, formatDistance, formatDuration,
     getStatusBadge, CANCEL_REASONS, reasonLabel
@@ -398,6 +517,8 @@ dayjs.extend(buddhistEra)
 const { $api } = useNuxtApp()
 const { toast } = useToast()
 const { createSession: createChatSession } = useChat()
+const { fetchMyReviews, fetchPendingReviews, fetchDriverReviews: fetchDriverReviewsAPI, fetchDriverStats: fetchDriverStatsAPI } = useReview()
+const { user } = useAuth()
 const router = useRouter()
 const { initializeMap, waitMapReady, reverseGeocode, extractNameParts, updateMap, mapReady } = useRouteMap()
 
@@ -426,6 +547,7 @@ const passengerStatuses = [
     { value: 'completed', label: 'เสร็จสิ้น' },
     { value: 'rejected', label: 'ปฏิเสธ' },
     { value: 'cancelled', label: 'ยกเลิก' },
+    { value: 'reviews', label: '⭐ รีวิว' },
 ]
 
 const driverStatuses = [
@@ -435,6 +557,7 @@ const driverStatuses = [
     { value: 'rejected', label: 'ปฏิเสธ' },
     { value: 'cancelled', label: 'ยกเลิก' },
     { value: 'myRoutes', label: 'เส้นทางของฉัน' },
+    { value: 'reviews', label: '⭐ รีวิว' },
 ]
 
 const statusOptions = computed(() => role.value === 'passenger' ? passengerStatuses : driverStatuses)
@@ -458,6 +581,7 @@ const mapLabel = computed(() => {
 })
 
 function getCount(status) {
+    if (status === 'reviews') return myReviews.value.length + pendingBookings.value.length
     if (role.value === 'driver' && status === 'myRoutes') return myRoutes.value.length
     if (status === 'all') return currentTrips.value.length
     return currentTrips.value.filter(t => t.status === status).length
@@ -547,7 +671,8 @@ async function fetchPassengerTrips() {
                 photos: b.route.vehicle?.photos || [],
                 hasReviewed: Array.isArray(b.reviews) && b.reviews.length > 0,
                 reviewData: (Array.isArray(b.reviews) && b.reviews[0]) ? b.reviews[0] : null,
-                durationText: fmtDuration(b.route), distanceText: fmtDistance(b.route)
+                durationText: fmtDuration(b.route), distanceText: fmtDistance(b.route),
+                rawStart: start, rawEnd: end
             }
         })
         await waitMapReady()
@@ -606,7 +731,8 @@ async function fetchDriverRoutes() {
                     photos: r.vehicle?.photos || [],
                     originAddress: start?.address ? cleanAddr(start.address) : null,
                     destinationAddress: end?.address ? cleanAddr(end.address) : null,
-                    durationText: fmtDuration(r), distanceText: fmtDistance(r)
+                    durationText: fmtDuration(r), distanceText: fmtDistance(r),
+                    rawStart: start, rawEnd: end
                 })
             }
 
@@ -631,7 +757,8 @@ async function fetchDriverRoutes() {
                     rating: b.passenger?.driverStats?.avgRating || 0,
                     reviews: b.passenger?.driverStats?.totalReviews || 0
                 })),
-                durationText: fmtDuration(r), distanceText: fmtDistance(r)
+                durationText: fmtDuration(r), distanceText: fmtDistance(r),
+                rawStart: start, rawEnd: end
             })
         }
         driverBookings.value = formatted
@@ -805,6 +932,57 @@ async function openChat(item) {
     } finally { isChatLoading.value = false }
 }
 
+async function openChatForRoute(route) {
+    if (isChatLoading.value) return
+    isChatLoading.value = true
+    try {
+        const session = await createChatSession(route.id, true)
+        if (session?.id) router.push(`/chat/${session.id}`)
+        else toast.error('เปิดแชทไม่สำเร็จ', 'ไม่พบ session ID')
+    } catch (err) {
+        console.error('Open chat for route failed:', err)
+        toast.error('เปิดแชทไม่สำเร็จ', err?.statusMessage || err?.data?.message || 'กรุณาลองใหม่')
+    } finally { isChatLoading.value = false }
+}
+
+function getGoogleMapsNavUrl(start, end) {
+    if (!start?.lat || !end?.lat) return '#'
+    return `https://www.google.com/maps/dir/?api=1&origin=${start.lat},${start.lng}&destination=${end.lat},${end.lng}&travelmode=driving`
+}
+
+// --- Reviews ---
+const reviewTab = ref('my')
+const isReviewLoading = ref(false)
+const myReviews = ref([])
+const pendingBookings = ref([])
+const driverReviewsList = ref([])
+const driverStats = ref(null)
+
+async function loadMyReviews() {
+    isReviewLoading.value = true
+    try {
+        const result = await fetchMyReviews()
+        myReviews.value = result?.data || result || []
+    } catch (err) {
+        console.error('Failed to load reviews:', err)
+    } finally { isReviewLoading.value = false }
+}
+
+async function loadPendingReviews() {
+    try {
+        pendingBookings.value = await fetchPendingReviews() || []
+    } catch { pendingBookings.value = [] }
+}
+
+async function loadDriverReviewsData() {
+    if (!user.value?.id) return
+    try {
+        const result = await fetchDriverReviewsAPI(user.value.id)
+        driverReviewsList.value = result?.data || result || []
+        driverStats.value = await fetchDriverStatsAPI(user.value.id)
+    } catch { driverReviewsList.value = [] }
+}
+
 const copyEmail = async (email) => {
     try { await navigator.clipboard.writeText(email); toast.success('คัดลอกแล้ว', email) }
     catch { toast.error('คัดลอกไม่สำเร็จ', 'ลองใหม่อีกครั้ง') }
@@ -834,11 +1012,21 @@ onMounted(() => {
     }
 })
 
-watch([role, statusFilter], () => {
+watch([role, statusFilter], ([, newFilter]) => {
     selectedId.value = null
+    if (newFilter === 'reviews') {
+        loadMyReviews()
+        loadPendingReviews()
+    }
     nextTick(() => {
         if (displayedItems.value.length > 0) updateMap(displayedItems.value[0])
     })
+})
+
+watch(reviewTab, (tab) => {
+    if (tab === 'received' && driverReviewsList.value.length === 0) {
+        loadDriverReviewsData()
+    }
 })
 </script>
 
