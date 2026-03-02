@@ -516,59 +516,147 @@ test('Scenario 5 : add image (.jpg, .png rejecting .pdf)', async ({ browser }) =
 // ==========================================
 // Scenario 6: Location Permission Deny
 // ==========================================
-test('Scenario 6 : Location Permission Deny', async ({ browser }) => {
-    test.setTimeout(90000);
-    // เซ็ต permission geolocation เป็นปฏิเสธ (denied)
-    const contextA = await browser.newContext({
-        permissions: [], // ไม่ให้ permission อะไรเลย (หรือให้แบบบล็อคถ้าทำได้)
-    });
-    // จริงๆ Playwright ไม่สามารถ set "denied" ตรงๆผ่าน permissions array ได้ง่ายนัก 
-    // ถ้าเราชี้ชัดๆ แบบนี้มันคือ default (prompt) หรือถ้าเรา override clearPermissions() ก็คือ return error 
-    // วิธีทดสอบให้ถูกปฏิเสธชัวร์ๆ คือ clear geolocation permission
-    await contextA.clearPermissions();
+test('Scenario 6 : Location Permission Deny (Final Flow)', async ({ browser }) => {
+    test.setTimeout(150000);
+
+    const contextA = await browser.newContext();
+    const contextB = await browser.newContext();
 
     const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
 
-    // ─── Login A ──────────────────────────────────
-    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
-    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
-    await pageA.waitForTimeout(500);
-    await pageA.fill('input#identifier', 'bow1234');
-    await pageA.fill('input#password', 'Thanchanok1234');
+    // ================= LOGIN =================
+    await pageA.goto('http://localhost:3003/login');
+    await pageA.fill('#identifier', 'bow1234');
+    await pageA.fill('#password', 'Thanchanok1234');
     await pageA.click('button[type="submit"]');
-    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+    await pageA.waitForURL(/^(?!.*login)/);
 
-    // ─── เข้าห้องแชท ────────────────
-    const chatRoomQuery = 'div.divide-y > a';
-    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
-    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
-    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
-    await pageA.click(chatRoomQuery, { force: true });
-    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    await pageB.goto('http://localhost:3003/login');
+    await pageB.fill('#identifier', 'kiangnz25464');
+    await pageB.fill('#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*login)/);
 
-    // ─── ทดสอบกดปุ่มแชร์ตำแหน่ง ────────────────
-    // ในเมื่อไม่ได้ให้ permission หรือให้ Playwright mock การปฏิเสธ
-    // เมื่อกดปุ่มแชร์ตำแหน่ง ควรจะเกิด error
-    // แต่ Playwright browser context ในโหมดปกติถ้าไม่ระบุ permission มันจะเปิดให้แบบ silent หรือบล็อค ขึ้นอยู่กับเบราว์เซอร์
-    // เพื่อให้มั่นใจว่าถูกบล็อค เราสามารถ override navigator.geolocation.getCurrentPosition ให้ throw error เลย:
+    // ================= CHAT =================
+    await pageA.goto('http://localhost:3003/chat');
+    await pageA.click('div.divide-y > a', { force: true });
+    await pageA.waitForSelector('textarea');
+
+    const chatUrl = pageA.url();
+    await pageB.goto(chatUrl);
+    await pageB.waitForSelector('textarea');
+
+    // =================================================
+    // PHASE A : deny -> warning -> allow -> share
+    // =================================================
     await pageA.evaluate(() => {
+        let step = 0;
+
         navigator.geolocation.getCurrentPosition = (success, error) => {
-            if (error) {
-                // จำลอง error PERMISSION_DENIED (code: 1)
-                error({ code: 1, message: 'User denied Geolocation' } as GeolocationPositionError);
+            step++;
+
+            if (step === 1) {
+                error?.({ code: 1, message: 'User denied' } as GeolocationPositionError);
+            }
+            else if (step === 2) {
+                error?.({ code: 1, message: 'Still denied' } as GeolocationPositionError);
+            }
+            else {
+                success?.({
+                    coords: { latitude: 13.7563, longitude: 100.5018, accuracy: 10 },
+                } as GeolocationPosition);
             }
         };
     });
 
-    await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+    // --- deny ครั้งแรก ---
+    await pageA.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    await expect(pageA.locator('text="ไม่สามารถแชร์ตำแหน่งได้"')).toBeVisible();
 
-    // --- ตรวจสอบ Toast Error ---
-    await expect(pageA.locator('text="ไม่สามารถแชร์ตำแหน่งได้"').first()).toBeVisible({ timeout: 10000 });
-    await expect(pageA.locator('text="ไม่ได้รับอนุญาตให้ใช้ตำแหน่งของคุณ"').first()).toBeVisible({ timeout: 10000 });
+    // --- กดซ้ำ warning ---
+    await pageA.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    await expect(pageA.locator('text="ต้องอนุญาตการแชร์ตำแหน่งก่อนจึงจะสามารถแชร์ตำแหน่งได้"'))
+        .toBeVisible();
 
-    await pageA.waitForTimeout(2000);
+    // --- allow ---
+    await pageA.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    const mapA = pageA.locator('a[href*="google.com/maps"]').last();
+    await expect(mapA).toBeVisible();
+
+    // ===== B เห็น =====
+    const mapSeenByB = pageB.locator('a[href*="google.com/maps"]').last();
+    await expect(mapSeenByB).toBeVisible({ timeout: 15000 });
+
+    // ===== B กดเข้า =====
+    const [newTab] = await Promise.all([
+        contextB.waitForEvent('page'),
+        mapSeenByB.click()
+    ]);
+
+    await newTab.waitForLoadState();
+    await expect(newTab).toHaveURL(/google.com\/maps/);
+
+    // ===== A stop =====
+    await pageA.locator('[data-testid="stop-share-in-card"]').last().click();
+
+    // =================================================
+    // PHASE B : ทำเหมือนกัน
+    // =================================================
+    await pageB.evaluate(() => {
+        let step = 0;
+
+        navigator.geolocation.getCurrentPosition = (success, error) => {
+            step++;
+
+            if (step === 1) {
+                error?.({ code: 1, message: 'User denied' } as GeolocationPositionError);
+            }
+            else if (step === 2) {
+                error?.({ code: 1, message: 'Still denied' } as GeolocationPositionError);
+            }
+            else {
+                success?.({
+                    coords: { latitude: 13.7650, longitude: 100.5380, accuracy: 10 },
+                } as GeolocationPosition);
+            }
+        };
+    });
+
+    // deny
+    await pageB.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    await expect(pageB.locator('text="ไม่สามารถแชร์ตำแหน่งได้"')).toBeVisible();
+
+    // warning
+    await pageB.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    await expect(pageB.locator('text="ต้องอนุญาตการแชร์ตำแหน่งก่อนจึงจะสามารถแชร์ตำแหน่งได้"'))
+        .toBeVisible();
+
+    // allow
+    await pageB.click('button[title="แชร์ตำแหน่งแบบ Real-time"]');
+    const mapB = pageB.locator('a[href*="google.com/maps"]').last();
+    await expect(mapB).toBeVisible();
+
+    // ===== A เห็น =====
+    const mapSeenByA = pageA.locator('a[href*="google.com/maps"]').last();
+    await expect(mapSeenByA).toBeVisible({ timeout: 15000 });
+
+    // ===== A กดเข้า =====
+    const [newTab2] = await Promise.all([
+        contextA.waitForEvent('page'),
+        mapSeenByA.click()
+    ]);
+
+    await newTab2.waitForLoadState();
+    await expect(newTab2).toHaveURL(/google.com\/maps/);
+
+    // ===== B stop =====
+    await pageB.locator('[data-testid="stop-share-in-card"]').last().click();
+
     await contextA.close();
+    await contextB.close();
 });
+
 
 // ==========================================
 // Scenario 7: Shared Direction
