@@ -90,6 +90,7 @@
           :message="msg"
           :isOwn="msg.senderId === userId"
           @unsend="handleUnsend"
+          @edit="handleEdit"
           @report="openReportModal"
         />
       </template>
@@ -117,6 +118,16 @@
     <!-- Input Area (Messenger-like) -->
     <div v-if="canSend"
       class="px-4 py-3 bg-white border-t border-slate-200">
+      
+      <!-- Editing Indicator -->
+      <div v-if="editingMessageId" class="flex items-center justify-between mb-2">
+         <span class="text-xs text-primary font-medium flex items-center gap-1">
+           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+           กำลังแก้ไขข้อความ
+         </span>
+         <button @click="cancelEdit" class="text-xs text-slate-400 hover:text-red-500 cursor-pointer">✕ ยกเลิก</button>
+      </div>
+
       <div class="flex items-end gap-2">
         <!-- Image upload -->
         <button
@@ -219,9 +230,10 @@ useHead({ title: 'แชท — Ride' })
 
 const route = useRoute()
 const {
-  fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage,
+  fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage, editMessage,
   connectChatSocket, joinSession, leaveSession, onNewMessage, offNewMessage,
-  emitNewMessage, emitTyping, emitStopTyping, onTyping, onStopTyping, offTyping, offStopTyping,
+  emitNewMessage, emitEditMessage, emitUnsendMessage, onMessageEdited, offMessageEdited, onMessageUnsent, offMessageUnsent,
+  emitTyping, emitStopTyping, onTyping, onStopTyping, offTyping, offStopTyping,
   disconnectSocket,
 } = useChat()
 const { user, token } = useAuth()
@@ -238,6 +250,7 @@ const isSending = ref(false)
 const messagesContainer = ref(null)
 const showQuickReply = ref(false)
 const typingUsers = ref([])
+const editingMessageId = ref(null)
 let typingTimer = null
 
 // Notifications
@@ -378,6 +391,28 @@ function cancelImage() {
 }
 
 async function handleSend() {
+  if (editingMessageId.value) {
+    // Edit message flow
+    if (!newMessage.value.trim() || isSending.value) return
+    isSending.value = true
+    const content = newMessage.value
+    const msgId = editingMessageId.value
+    try {
+      const msg = await editMessage(msgId, { content })
+      const msgData = msg.data || msg
+      const idx = messages.value.findIndex(m => m.id === msgId)
+      if (idx !== -1) messages.value[idx] = msgData
+      emitEditMessage(sessionId.value, msgData)
+      cancelEdit()
+      toast.success('แก้ไขข้อความสำเร็จ')
+    } catch (err) {
+      toast.error('แก้ไขล้มเหลว', err?.statusMessage || '')
+    } finally {
+      isSending.value = false
+    }
+    return
+  }
+
   // Send image if selected
   if (selectedImage.value) {
     isSending.value = true
@@ -422,6 +457,16 @@ async function handleQuickReply(text) {
   await handleSend()
 }
 
+function handleEdit(message) {
+  editingMessageId.value = message.id
+  newMessage.value = message.content
+}
+
+function cancelEdit() {
+  editingMessageId.value = null
+  newMessage.value = ''
+}
+
 async function handleUnsend(messageId) {
   try {
     await unsendMessage(messageId)
@@ -430,6 +475,7 @@ async function handleUnsend(messageId) {
       messages.value[idx].content = 'ข้อความถูกลบ / Message unsent'
       messages.value[idx].isUnsent = true
     }
+    emitUnsendMessage(sessionId.value, messageId)
     toast.success('ลบข้อความแล้ว')
   } catch (err) {
     toast.error('ลบข้อความไม่สำเร็จ', err?.statusMessage || '')
@@ -488,6 +534,25 @@ function handleIncomingMessage(msg) {
   scrollToBottom()
 }
 
+function handleMessageEdited(msg) {
+  const targetId = msg.id || msg.messageId;
+  const idx = messages.value.findIndex(m => m.id === targetId)
+  if (idx !== -1) {
+    if (msg.content) messages.value[idx].content = msg.content
+    if (msg.isUnsent !== undefined) messages.value[idx].isUnsent = msg.isUnsent
+    if (msg.metadata) messages.value[idx].metadata = msg.metadata
+  }
+}
+
+function handleMessageUnsent(data) {
+  const targetId = data.messageId || data.id;
+  const idx = messages.value.findIndex(m => m.id === targetId)
+  if (idx !== -1) {
+    messages.value[idx].content = 'ข้อความถูกลบ / Message unsent'
+    messages.value[idx].isUnsent = true
+  }
+}
+
 function handleTyping({ userId: typingUserId }) {
   if (typingUserId === userId.value) return
   const name = otherUser.value?.firstName || 'ผู้ใช้'
@@ -517,6 +582,8 @@ onMounted(() => {
     connectChatSocket(token.value)
     joinSession(sessionId.value)
     onNewMessage(handleIncomingMessage)
+    onMessageEdited(handleMessageEdited)
+    onMessageUnsent(handleMessageUnsent)
     onTyping(handleTyping)
     onStopTyping(handleStopTyping)
   }
@@ -525,6 +592,8 @@ onMounted(() => {
 onUnmounted(() => {
   leaveSession(sessionId.value)
   offNewMessage(handleIncomingMessage)
+  offMessageEdited(handleMessageEdited)
+  offMessageUnsent(handleMessageUnsent)
   offTyping(handleTyping)
   offStopTyping(handleStopTyping)
   // Don't disconnect socket entirely — shared across pages

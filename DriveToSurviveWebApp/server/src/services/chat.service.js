@@ -160,7 +160,7 @@ const sendMessage = async (sessionId, senderId, data) => {
         },
         select: {
             id: true, sessionId: true, senderId: true, type: true, content: true,
-            imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
+            imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
             sender: { select: { firstName: true, profilePicture: true } },
         },
     });
@@ -202,7 +202,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
             take: Number(limit),
             select: {
                 id: true, senderId: true, type: true, content: true,
-                imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
+                imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
                 sender: { select: { firstName: true, profilePicture: true } },
             },
         }),
@@ -251,7 +251,43 @@ const unsendMessage = async (messageId, senderId) => {
     return prisma.chatMessage.update({
         where: { id: messageId },
         data: { content: 'ข้อความถูกลบ / Message unsent', isUnsent: true },
-        select: { id: true, content: true, isUnsent: true },
+        select: { id: true, content: true, isUnsent: true, sessionId: true },
+    });
+};
+
+/**
+ * Edit a message within the time window
+ */
+const editMessage = async (messageId, senderId, content) => {
+    const message = await prisma.chatMessage.findUnique({ where: { id: messageId } });
+    if (!message) throw new ApiError(404, 'Message not found');
+    if (message.senderId !== senderId) throw new ApiError(403, 'Not your message');
+    if (message.isUnsent) throw new ApiError(400, 'Cannot edit unsent message');
+    if (message.type !== 'TEXT') throw new ApiError(400, 'Only text messages can be edited');
+    if (message.unsendDeadline && new Date() > message.unsendDeadline) {
+        throw new ApiError(400, 'Edit time expired (5 minutes)');
+    }
+
+    const { filtered, original, isFiltered } = filterContent(content || '');
+
+    // Initialize metadata if empty, or append to it
+    const metadata = (message.metadata && typeof message.metadata === 'object') ? { ...message.metadata } : {};
+    metadata.isEdited = true;
+    metadata.editedAt = new Date().toISOString();
+
+    return prisma.chatMessage.update({
+        where: { id: messageId },
+        data: {
+            content: filtered,
+            originalContent: isFiltered ? original : message.originalContent,
+            isFiltered: isFiltered || message.isFiltered,
+            metadata: metadata,
+        },
+        select: {
+            id: true, sessionId: true, senderId: true, type: true, content: true,
+            imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
+            sender: { select: { firstName: true, profilePicture: true } },
+        },
     });
 };
 
@@ -366,6 +402,7 @@ module.exports = {
     sendMessage,
     getMessages,
     unsendMessage,
+    editMessage,
     getSession,
     getSessionByBooking,
     shareLocation,

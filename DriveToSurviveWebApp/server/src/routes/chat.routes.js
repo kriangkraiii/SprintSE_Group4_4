@@ -111,6 +111,15 @@ router.patch(
     chatController.unsendMessage
 );
 
+// PATCH /chat/messages/:messageId/edit — edit a message
+router.patch(
+    '/messages/:messageId/edit',
+    protect,
+    authLimiter,
+    validate({ body: require('../validations/chat.validation').editMessageSchema }),
+    chatController.editMessage
+);
+
 // ─── Report Endpoints ────────────────────────────────────
 
 // POST /chat/reports — create report

@@ -5,6 +5,10 @@ const createSessionSchema = Joi.object({
     bookingId: Joi.string().optional(),
 }).or('routeId', 'bookingId');
 
+const editMessageSchema = Joi.object({
+    content: Joi.string().max(2000).required(),
+});
+
 const endSessionSchema = Joi.object({
     routeId: Joi.string().required(),
 });
@@ -47,6 +51,7 @@ module.exports = {
     createSessionSchema,
     endSessionSchema,
     sendMessageSchema,
+    editMessageSchema,
     shareLocationSchema,
     createReportSchema,
     updateReportSchema,
