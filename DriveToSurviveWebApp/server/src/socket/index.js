@@ -81,6 +81,14 @@ function initSocketIO(httpServer) {
             }
         });
 
+        // Broadcast location revocation to all participants in the room
+        socket.on('revoke-location', (data) => {
+            const { sessionId, messageId } = data;
+            if (sessionId && messageId) {
+                socket.to(`chat:${sessionId}`).emit('location-revoked', { messageId });
+            }
+        });
+
         // Typing indicators
         socket.on('typing', (sessionId) => {
             socket.to(`chat:${sessionId}`).emit('user-typing', { userId, sessionId });
