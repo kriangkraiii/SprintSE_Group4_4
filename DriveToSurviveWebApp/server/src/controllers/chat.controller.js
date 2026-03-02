@@ -69,6 +69,14 @@ const unsendMessage = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, data: result });
 });
 
+const editMessage = asyncHandler(async (req, res) => {
+    const userId = req.user.sub;
+    const { messageId } = req.params;
+    const { content } = req.body;
+    const result = await chatService.editMessage(messageId, userId, content);
+    res.status(200).json({ success: true, data: result });
+});
+
 const shareLocation = asyncHandler(async (req, res) => {
     const userId = req.user.sub;
     const { sessionId } = req.params;
@@ -171,6 +179,7 @@ module.exports = {
     sendMessage,
     getMessages,
     unsendMessage,
+    editMessage,
     shareLocation,
     createReport,
     listReportsAdmin,
