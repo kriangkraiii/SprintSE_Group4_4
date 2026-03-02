@@ -999,6 +999,7 @@ test('Scenario 10 : Disconnected', async ({ browser }) => {
     await pageA.waitForTimeout(800);
     await pageA.locator('button.bg-cta').click();
     await expect(pageA.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(300); // ทิ้งระยะเวลาหลังผู้ใช้ A ส่งรูปภาพประมาณ 0.3 วินาที
 
     // 2.3 แชร์ตำแหน่ง
     await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
@@ -1014,7 +1015,10 @@ test('Scenario 10 : Disconnected', async ({ browser }) => {
     // B รีเฟรชเพื่อดึงข้อมูลล่าสุด (แทนการรอพึ่ง Socket.io auto-reconnect ดึง state)
     await pageB.reload({ waitUntil: 'networkidle' });
     await pageB.waitForSelector('textarea', { timeout: 15000 });
-    await pageB.waitForTimeout(1500); // รอโหลดข้อความและ toast ตรวจสอบ (จาก Scenario 9)
+
+    // ตรวจสอบว่ามี toast แสดงผลสิ่งที่ B มองเห็นตามเงื่อนไขว่าผ่านครบ
+    await expect(pageB.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last()).toBeVisible({ timeout: 15000 });
+    await pageB.waitForTimeout(1000);
 
     // B ตรวจสอบว่าเห็นทั้ง 3 อย่างของ A ที่ส่งมาระหว่างที่ B offline
     await expect(pageB.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ A"').last()).toBeVisible({ timeout: 10000 });
@@ -1050,6 +1054,7 @@ test('Scenario 10 : Disconnected', async ({ browser }) => {
     await pageB.waitForTimeout(800);
     await pageB.locator('button.bg-cta').click();
     await expect(pageB.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
+    await pageB.waitForTimeout(300); // ทิ้งระยะเวลาหลังผู้ใช้ B ส่งรูปภาพประมาณ 0.3 วินาที
 
     // 6.3 แชร์ตำแหน่ง
     await pageB.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
@@ -1065,7 +1070,10 @@ test('Scenario 10 : Disconnected', async ({ browser }) => {
     // A รีเฟรชเพื่อดึงข้อมูลล่าสุด
     await pageA.reload({ waitUntil: 'networkidle' });
     await pageA.waitForSelector('textarea', { timeout: 15000 });
-    await pageA.waitForTimeout(1500);
+
+    // ตรวจสอบว่ามี toast แสดงผลสิ่งที่ A มองเห็นตามเงื่อนไขว่าผ่านครบ
+    await expect(pageA.locator('text="สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ"').last()).toBeVisible({ timeout: 15000 });
+    await pageA.waitForTimeout(1000);
 
     // A ตรวจสอบว่าเห็นทั้ง 3 อย่างของ B ที่ส่งมาระหว่างที่ A offline
     await expect(pageA.locator('text="ทดสอบการขาดการเชื่อมต่อจากผู้ใช้ B"').last()).toBeVisible({ timeout: 10000 });
