@@ -723,3 +723,80 @@ test('Scenario 7 : Stop Shared Direction', async ({ browser }) => {
     await contextB.close();
 });
 
+// ==========================================
+// Scenario 8: Empty Message
+// ==========================================
+test('Scenario 8 : Empty Message', async ({ browser }) => {
+    const contextA = await browser.newContext();
+    const contextB = await browser.newContext();
+
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // ─── Login A ──────────────────────────────────
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── Login B ──────────────────────────────────
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── เข้าห้องแชท ─────────────────────────────
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageB.click(chatRoomQuery, { force: true });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    // ==========================================
+    // STEP 1: User A พิมพ์ช่องว่าง (spaces) แล้วพยายามส่ง
+    // ==========================================
+    // กด space bar หลายครั้ง
+    await pageA.locator('textarea').fill('     ');
+    // กดปุ่มส่ง (ส่งผ่าน Enter key เพื่อ trigger handleSend)
+    await pageA.locator('textarea').press('Enter');
+
+    // ตรวจสอบ toast ขึ้นว่า ไม่สามารถส่งข้อความว่างเปล่าได้
+    await expect(
+        pageA.locator('text="ไม่สามารถส่งข้อความว่างเปล่าได้"').first()
+    ).toBeVisible({ timeout: 5000 });
+
+    // รอ toast หายก่อนไปทดสอบ B
+    await pageA.waitForTimeout(3000);
+
+    // ==========================================
+    // STEP 2: User B พิมพ์ช่องว่าง (spaces) แล้วพยายามส่ง
+    // ==========================================
+    await pageB.locator('textarea').fill('     ');
+    await pageB.locator('textarea').press('Enter');
+
+    // ตรวจสอบ toast ขึ้นว่า ไม่สามารถส่งข้อความว่างเปล่าได้
+    await expect(
+        pageB.locator('text="ไม่สามารถส่งข้อความว่างเปล่าได้"').first()
+    ).toBeVisible({ timeout: 5000 });
+
+    await pageB.waitForTimeout(1000);
+
+    await contextA.close();
+    await contextB.close();
+});
+
+
