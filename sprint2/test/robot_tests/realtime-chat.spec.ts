@@ -514,9 +514,66 @@ test('Scenario 5 : add image (.jpg, .png rejecting .pdf)', async ({ browser }) =
 });
 
 // ==========================================
-// Scenario 6: Shared Direction
+// Scenario 6: Location Permission Deny
 // ==========================================
-test('Scenario 6 : Shared Direction', async ({ browser }) => {
+test('Scenario 6 : Location Permission Deny', async ({ browser }) => {
+    test.setTimeout(90000);
+    // เซ็ต permission geolocation เป็นปฏิเสธ (denied)
+    const contextA = await browser.newContext({
+        permissions: [], // ไม่ให้ permission อะไรเลย (หรือให้แบบบล็อคถ้าทำได้)
+    });
+    // จริงๆ Playwright ไม่สามารถ set "denied" ตรงๆผ่าน permissions array ได้ง่ายนัก 
+    // ถ้าเราชี้ชัดๆ แบบนี้มันคือ default (prompt) หรือถ้าเรา override clearPermissions() ก็คือ return error 
+    // วิธีทดสอบให้ถูกปฏิเสธชัวร์ๆ คือ clear geolocation permission
+    await contextA.clearPermissions();
+
+    const pageA = await contextA.newPage();
+
+    // ─── Login A ──────────────────────────────────
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── เข้าห้องแชท ────────────────
+    const chatRoomQuery = 'div.divide-y > a';
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    // ─── ทดสอบกดปุ่มแชร์ตำแหน่ง ────────────────
+    // ในเมื่อไม่ได้ให้ permission หรือให้ Playwright mock การปฏิเสธ
+    // เมื่อกดปุ่มแชร์ตำแหน่ง ควรจะเกิด error
+    // แต่ Playwright browser context ในโหมดปกติถ้าไม่ระบุ permission มันจะเปิดให้แบบ silent หรือบล็อค ขึ้นอยู่กับเบราว์เซอร์
+    // เพื่อให้มั่นใจว่าถูกบล็อค เราสามารถ override navigator.geolocation.getCurrentPosition ให้ throw error เลย:
+    await pageA.evaluate(() => {
+        navigator.geolocation.getCurrentPosition = (success, error) => {
+            if (error) {
+                // จำลอง error PERMISSION_DENIED (code: 1)
+                error({ code: 1, message: 'User denied Geolocation' } as GeolocationPositionError);
+            }
+        };
+    });
+
+    await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+
+    // --- ตรวจสอบ Toast Error ---
+    await expect(pageA.locator('text="ไม่สามารถแชร์ตำแหน่งได้"').first()).toBeVisible({ timeout: 10000 });
+    await expect(pageA.locator('text="ไม่ได้รับอนุญาตให้ใช้ตำแหน่งของคุณ"').first()).toBeVisible({ timeout: 10000 });
+
+    await pageA.waitForTimeout(2000);
+    await contextA.close();
+});
+
+// ==========================================
+// Scenario 7: Shared Direction
+// ==========================================
+test('Scenario 7 : Shared Direction', async ({ browser }) => {
     const contextA = await browser.newContext({
         permissions: ['geolocation'],
         geolocation: { latitude: 13.7563, longitude: 100.5018 },
@@ -619,9 +676,9 @@ test('Scenario 6 : Shared Direction', async ({ browser }) => {
 });
 
 // ==========================================
-// Scenario 7: Stop Shared Direction
+// Scenario 8: Stop Shared Direction
 // ==========================================
-test('Scenario 7 : Stop Shared Direction', async ({ browser }) => {
+test('Scenario 8 : Stop Shared Direction', async ({ browser }) => {
     // ไม่ต้อง grant geolocation — Scenario 7 ไม่แชร์ตำแหน่งใหม่
     const contextA = await browser.newContext();
     const contextB = await browser.newContext();
@@ -724,9 +781,9 @@ test('Scenario 7 : Stop Shared Direction', async ({ browser }) => {
 });
 
 // ==========================================
-// Scenario 8: Empty Message
+// Scenario 9: Empty Message
 // ==========================================
-test('Scenario 8 : Empty Message', async ({ browser }) => {
+test('Scenario 9 : Empty Message', async ({ browser }) => {
     const contextA = await browser.newContext();
     const contextB = await browser.newContext();
 
@@ -800,9 +857,9 @@ test('Scenario 8 : Empty Message', async ({ browser }) => {
 });
 
 // ==========================================
-// Scenario 9: Refresh Page
+// Scenario 10: Refresh Page
 // ==========================================
-test('Scenario 9 : Refresh Page', async ({ browser }) => {
+test('Scenario 10 : Refresh Page', async ({ browser }) => {
     const IMG_PATH = 'C:/Ride/SprintSE_Group4_4/sprint2/img/refreshpage.jpg';
 
     const contextA = await browser.newContext({
@@ -929,9 +986,9 @@ test('Scenario 9 : Refresh Page', async ({ browser }) => {
 });
 
 // ==========================================
-// Scenario 10: Disconnected
+// Scenario 11: Disconnected
 // ==========================================
-test('Scenario 10 : Disconnected (Revised Logic)', async ({ browser }) => {
+test('Scenario 11 : Disconnected (Revised Logic)', async ({ browser }) => {
     const IMG_PATH = 'C:/Ride/SprintSE_Group4_4/sprint2/img/disconnect.jpg';
 
     const contextA = await browser.newContext({
