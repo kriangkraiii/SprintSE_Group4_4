@@ -323,7 +323,30 @@ async function loadMessages() {
   } finally {
     isLoadingMessages.value = false
     scrollToBottom()
+    // แสดง toast หลัง refresh แจ้งสถานะ content ที่โหลดมาได้
+    checkRefreshContent()
   }
+}
+
+function checkRefreshContent() {
+  // ตรวจสอบว่าเป็นการ reload จริงๆ
+  const navEntry = performance.getEntriesByType('navigation')[0]
+  if (!navEntry || navEntry.type !== 'reload') return
+
+  const msgs = messages.value
+  const hasText = msgs.some(m => m.type === 'TEXT' || (!m.type && m.content))
+  const hasImage = msgs.some(m => m.type === 'IMAGE' || m.imageUrl)
+  const hasLocation = msgs.some(m => m.type === 'LOCATION')
+
+  if (hasText && hasImage && hasLocation) {
+    toast.success('รีเฟรชเรียบร้อย', 'สามารถดูข้อความ รูปภาพ และตำแหน่งที่แชร์ก่อนหน้าได้ตามปกติ')
+    return
+  }
+
+  // แจ้งแยกว่าขาดอะไร
+  if (!hasText) toast.error('ไม่พบข้อความ', 'ไม่สามารถโหลดข้อความก่อนหน้าได้หลัง refresh')
+  if (!hasImage) toast.error('ไม่พบรูปภาพ', 'ไม่สามารถโหลดรูปภาพก่อนหน้าได้หลัง refresh')
+  if (!hasLocation) toast.error('ไม่พบตำแหน่งที่แชร์', 'ไม่สามารถโหลดตำแหน่งที่แชร์ก่อนหน้าได้หลัง refresh')
 }
 
 function onImageSelected(e) {
