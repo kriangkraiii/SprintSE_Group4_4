@@ -512,3 +512,198 @@ test('Scenario 5 : add image (.jpg, .png rejecting .pdf)', async ({ browser }) =
     await contextA.close();
     await contextB.close();
 });
+
+// ==========================================
+// Scenario 6: Shared Direction
+// ==========================================
+test('Scenario 6 : Shared Direction', async ({ browser }) => {
+    const contextA = await browser.newContext({
+        permissions: ['geolocation'],
+        geolocation: { latitude: 13.7563, longitude: 100.5018 },
+    });
+    const contextB = await browser.newContext({
+        permissions: ['geolocation'],
+        geolocation: { latitude: 13.7650, longitude: 100.5380 },
+    });
+
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // ─── Login A ──────────────────────────────────
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── Login B ──────────────────────────────────
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── เข้าห้องแชทสำหรับทั้งคู่ ────────────────
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageB.click(chatRoomQuery, { force: true });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    // ==========================================
+    // STEP 1: User A กดแชร์ตำแหน่ง
+    // ==========================================
+    await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+
+    // รอ location card ขึ้นในแชทของ A
+    await expect(
+        pageA.locator('a[href*="google.com/maps"]').last()
+    ).toBeVisible({ timeout: 15000 });
+
+    // ==========================================
+    // STEP 2: User B มองเห็น location card ของ A และกด เปิดใน Google Maps
+    // ==========================================
+    await expect(
+        pageB.locator('a[href*="google.com/maps"]').last()
+    ).toBeVisible({ timeout: 15000 });
+
+    // กดลิงก์ Google Maps — เปิด tab ใหม่ รับแล้วปิด
+    const [gmapPageB] = await Promise.all([
+        contextB.waitForEvent('page'),
+        pageB.locator('a[href*="google.com/maps"]').last().click(),
+    ]);
+    await gmapPageB.waitForLoadState('domcontentloaded');
+    await gmapPageB.close();
+
+    // ==========================================
+    // STEP 3: User B กดแชร์ตำแหน่ง
+    // ==========================================
+    await pageB.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+
+    // รอ location card ของ B ขึ้นในแชทของ B
+    await expect(
+        pageB.locator('a[href*="google.com/maps"]').last()
+    ).toBeVisible({ timeout: 15000 });
+
+    // ==========================================
+    // STEP 4: User A มองเห็น location card ของ B และกด เปิดใน Google Maps
+    // ==========================================
+    await expect(
+        pageA.locator('a[href*="google.com/maps"]').last()
+    ).toBeVisible({ timeout: 15000 });
+
+    // กดลิงก์ Google Maps บนฝั่ง A
+    const [gmapPageA] = await Promise.all([
+        contextA.waitForEvent('page'),
+        pageA.locator('a[href*="google.com/maps"]').last().click(),
+    ]);
+    await gmapPageA.waitForLoadState('domcontentloaded');
+    await gmapPageA.close();
+
+    await pageA.waitForTimeout(1000);
+
+    await contextA.close();
+    await contextB.close();
+});
+
+// ==========================================
+// Scenario 7: Stop Shared Direction
+// ==========================================
+test('Scenario 7 : Stop Shared Direction', async ({ browser }) => {
+    // ไม่ต้อง grant geolocation — Scenario 7 ไม่แชร์ตำแหน่งใหม่
+    const contextA = await browser.newContext();
+    const contextB = await browser.newContext();
+
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // ─── Login A (bow1234) ────────────────────────
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── Login B (kiangnz25464) ───────────────────
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── เข้าห้องแชท ─────────────────────────────
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+
+    await pageB.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageB.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageB.click(chatRoomQuery, { force: true });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    // รอโหลด messages จาก DB (location cards จาก Scenario 6 ต้องปรากฏ)
+    await pageA.waitForTimeout(1500);
+    await pageB.waitForTimeout(1500);
+
+    // ==========================================
+    // STEP 1: A ยืนยันว่ามองเห็น Google Maps link ของตัวเอง
+    //         แล้วกดปุ่ม หยุดแชร์ตำแหน่ง ใน card นั้น
+    // ==========================================
+    // หา location card ล่าสุดของ A (ที่ A เองเห็นปุ่มหยุดแชร์ใน card)
+    const stopBtnInCardA = pageA.locator('[data-testid="stop-share-in-card"]').last();
+    await expect(stopBtnInCardA).toBeVisible({ timeout: 10000 });
+
+    // B ต้องเห็น Google Maps link ของ A ก่อนกดหยุด
+    const mapsLinkOnB = pageB.locator('a[href*="google.com/maps"]').last();
+    await expect(mapsLinkOnB).toBeVisible({ timeout: 10000 });
+
+    // A กดหยุดแชร์ใน card
+    await stopBtnInCardA.click();
+
+    // B ต้องไม่เห็น Google Maps link ของ A อีกต่อไป
+    await expect(mapsLinkOnB).not.toBeVisible({ timeout: 10000 });
+
+    // ==========================================
+    // STEP 2: B ยืนยันว่ามองเห็น Google Maps link ของตัวเอง
+    //         แล้วกดปุ่ม หยุดแชร์ตำแหน่ง ใน card นั้น
+    // ==========================================
+    // หา in-card stop button ล่าสุดของ B
+    const stopBtnInCardB = pageB.locator('[data-testid="stop-share-in-card"]').last();
+    await expect(stopBtnInCardB).toBeVisible({ timeout: 10000 });
+
+    // A ต้องเห็น Google Maps link ของ B ก่อนกดหยุด
+    const mapsLinkOnA = pageA.locator('a[href*="google.com/maps"]').last();
+    await expect(mapsLinkOnA).toBeVisible({ timeout: 10000 });
+
+    // B กดหยุดแชร์ใน card
+    await stopBtnInCardB.click();
+
+    // A ต้องไม่เห็น Google Maps link ของ B อีกต่อไป
+    await expect(mapsLinkOnA).not.toBeVisible({ timeout: 10000 });
+
+    await pageA.waitForTimeout(500);
+
+    await contextA.close();
+    await contextB.close();
+});

@@ -34,7 +34,13 @@
       <!-- Location message -->
       <template v-else-if="message.type === 'LOCATION'">
         <!-- REVOKED state -->
-        <div v-if="isRevoked" class="w-[260px]">
+        <div
+          v-if="isRevoked"
+          class="w-[260px]"
+          :class="!isOwn ? 'cursor-pointer' : ''"
+          @click="!isOwn && onClickRevoked()"
+          data-testid="revoked-location-card"
+        >
           <div class="px-4 py-5 flex flex-col items-center gap-1" :class="isOwn ? 'text-white/70' : 'text-slate-400'">
             <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
@@ -93,6 +99,7 @@
               @click.prevent="$emit('revoke-location', message.id)"
               class="flex items-center gap-1.5 text-[11px] text-white/70 hover:text-white transition-colors cursor-pointer"
               title="หยุดแชร์ตำแหน่ง"
+              data-testid="stop-share-in-card"
             >
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
@@ -181,6 +188,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import dayjs from 'dayjs'
+import { useToast } from '~/composables/useToast'
 
 const props = defineProps({
   message: { type: Object, required: true },
@@ -191,6 +199,12 @@ const props = defineProps({
 defineEmits(['unsend', 'report', 'revoke-location'])
 
 const showLightbox = ref(false)
+
+const { toast } = useToast()
+
+function onClickRevoked() {
+  toast.error('ผู้ใช้ได้ทำการหยุดแชร์ตำแหน่งแล้ว', 'ไม่สามารถเข้าถึงตำแหน่งของผู้ใช้ได้')
+}
 
 const locationCoords = computed(() => {
   const meta = props.message.metadata

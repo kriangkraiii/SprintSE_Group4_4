@@ -431,10 +431,8 @@ function handleShareLocation() {
 
   // Toggle: stop if already tracking
   if (isTrackingLocation.value) {
-    navigator.geolocation.clearWatch(locationWatchId)
-    locationWatchId = null
     isTrackingLocation.value = false
-    // Revoke all location messages sent this session (updates cards for everyone)
+    // Revoke the shared location card so all participants see "หยุดแชร์ตำแหน่งแล้ว"
     currentSessionLocationIds.forEach(id => handleRevokeLocation(id))
     currentSessionLocationIds.length = 0
     toast.success('หยุดแชร์ตำแหน่งแล้ว')
@@ -444,55 +442,34 @@ function handleShareLocation() {
   // Reset session tracker
   currentSessionLocationIds.length = 0
 
-  // Helper: save + push + broadcast one location update
-  async function sendLocationOnce(pos) {
-    try {
-      const msg = await shareLocation(sessionId.value, pos.coords.latitude, pos.coords.longitude)
-      const msgData = msg?.data || msg
-      // avoid duplicate if socket already pushed it
-      if (!messages.value.some(m => m.id === msgData.id)) {
-        messages.value.push(msgData)
-        scrollToBottom()
-      }
-      // Track for revocation on stop
-      if (msgData.id && !currentSessionLocationIds.includes(msgData.id)) {
-        currentSessionLocationIds.push(msgData.id)
-      }
-      // broadcast to B immediately via socket
-      emitNewMessage(sessionId.value, msgData)
-    } catch (err) {
-      toast.error('แชร์ตำแหน่งล้มเหลว', err?.statusMessage || '')
-    }
-  }
-
   const onError = () => {
     toast.error('ไม่สามารถเข้าถึง GPS', 'กรุณาอนุญาตให้แอปเข้าถึงตำแหน่ง')
     isTrackingLocation.value = false
   }
 
-  // ① ส่งตำแหน่งแรกทันทีด้วย getCurrentPosition (เร็วกว่า watchPosition)
+  // ส่งตำแหน่งครั้งเดียว — ไม่ repeat ทุกๆนาที
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      lastLocationSentAt = Date.now()
-      sendLocationOnce(pos)
+    async (pos) => {
+      try {
+        const msg = await shareLocation(sessionId.value, pos.coords.latitude, pos.coords.longitude)
+        const msgData = msg?.data || msg
+        if (!messages.value.some(m => m.id === msgData.id)) {
+          messages.value.push(msgData)
+          scrollToBottom()
+        }
+        if (msgData.id) currentSessionLocationIds.push(msgData.id)
+        // broadcast to all participants via socket
+        emitNewMessage(sessionId.value, msgData)
+      } catch (err) {
+        toast.error('แชร์ตำแหน่งล้มเหลว', err?.statusMessage || '')
+        isTrackingLocation.value = false
+      }
     },
     onError,
     { enableHighAccuracy: false, timeout: 5000, maximumAge: 30000 }
   )
-
-  // ② watchPosition สำหรับ update ถัดไป (throttle 30 วิ)
-  locationWatchId = navigator.geolocation.watchPosition(
-    async (pos) => {
-      const now = Date.now()
-      if (now - lastLocationSentAt < 30000) return
-      lastLocationSentAt = now
-      await sendLocationOnce(pos)
-    },
-    onError,
-    { enableHighAccuracy: true, maximumAge: 10000 }
-  )
   isTrackingLocation.value = true
-  toast.success('เริ่มแชร์ตำแหน่งแบบ Real-time แล้ว')
+  toast.success('แชร์ตำแหน่งแล้ว')
 }
 
 function openReportModal(msg) {
