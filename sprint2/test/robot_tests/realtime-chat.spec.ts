@@ -799,4 +799,134 @@ test('Scenario 8 : Empty Message', async ({ browser }) => {
     await contextB.close();
 });
 
+// ==========================================
+// Scenario 9: Refresh Page
+// ==========================================
+test('Scenario 9 : Refresh Page', async ({ browser }) => {
+    const IMG_PATH = 'C:/Ride/SprintSE_Group4_4/sprint2/img/refreshpage.jpg';
+
+    const contextA = await browser.newContext({
+        permissions: ['geolocation'],
+        geolocation: { latitude: 13.7563, longitude: 100.5018 },
+    });
+    const contextB = await browser.newContext({
+        permissions: ['geolocation'],
+        geolocation: { latitude: 13.7650, longitude: 100.5380 },
+    });
+
+    const pageA = await contextA.newPage();
+    const pageB = await contextB.newPage();
+
+    // ─── Login A ──────────────────────────────────
+    await pageA.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageA.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageA.waitForTimeout(500);
+    await pageA.fill('input#identifier', 'bow1234');
+    await pageA.fill('input#password', 'Thanchanok1234');
+    await pageA.click('button[type="submit"]');
+    await pageA.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── Login B ──────────────────────────────────
+    await pageB.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+    await pageB.locator('input#identifier').waitFor({ state: 'visible', timeout: 15000 });
+    await pageB.waitForTimeout(500);
+    await pageB.fill('input#identifier', 'kiangnz25464');
+    await pageB.fill('input#password', 'Thanchanok1234');
+    await pageB.click('button[type="submit"]');
+    await pageB.waitForURL(/^(?!.*\/login).*$/, { timeout: 15000 });
+
+    // ─── เข้าห้องแชท ─────────────────────────────
+    const chatRoomQuery = 'div.divide-y > a';
+
+    await pageA.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+    await pageA.waitForSelector('text="รายการแชท"', { timeout: 15000 });
+    await pageA.waitForSelector(chatRoomQuery, { timeout: 15000 });
+    await pageA.click(chatRoomQuery, { force: true });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    const chatUrl = pageA.url();
+
+    await pageB.goto(chatUrl, { waitUntil: 'networkidle' });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+
+    // ==========================================
+    // STEP 1: A ส่งข้อความ รูปภาพ และแชร์ตำแหน่ง (ตามลำดับ)
+    // ==========================================
+    // 1.1 ส่งข้อความ
+    await pageA.locator('textarea').fill('ทดสอบการรีเฟรชจากผู้ใช้ A');
+    await pageA.locator('textarea').press('Enter');
+    await expect(pageA.locator('text="ทดสอบการรีเฟรชจากผู้ใช้ A"').last()).toBeVisible({ timeout: 10000 });
+
+    // 1.2 ส่งรูปภาพ
+    await pageA.locator('input[type="file"]').setInputFiles(IMG_PATH);
+    await pageA.waitForTimeout(800);
+    await pageA.locator('button.bg-cta').click();
+    await expect(pageA.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
+
+    // 1.3 แชร์ตำแหน่ง
+    await pageA.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+    await expect(pageA.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 15000 });
+
+    // ==========================================
+    // STEP 2: B Refresh และตรวจสอบข้อมูลของ A
+    // ==========================================
+    await pageB.reload({ waitUntil: 'networkidle' });
+    await pageB.waitForSelector('textarea', { timeout: 15000 });
+    await pageB.waitForTimeout(1500); // รอโหลดข้อความและ toast ตรวจสอบ
+
+    // B ตรวจสอบว่าเห็นทั้ง 3 อย่างของ A หลังจาก refresh
+    await expect(pageB.locator('text="ทดสอบการรีเฟรชจากผู้ใช้ A"').last()).toBeVisible({ timeout: 10000 });
+    await expect(pageB.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 10000 });
+    await expect(pageB.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 10000 });
+
+    // ==========================================
+    // STEP 3: A ทำการยกเลิกการแชร์ตำแหน่งที่พึ่งทำ
+    // ==========================================
+    await pageA.waitForTimeout(500); // รอให้ UI render เสร็จ
+    await pageA.locator('[data-testid="stop-share-in-card"]').last().click();
+    await pageA.waitForTimeout(1000); // รอให้ Socket และ Vue state อัปเดต
+
+    // ==========================================
+    // STEP 4: B ส่งข้อความ รูปภาพ และแชร์ตำแหน่ง (ตามลำดับ)
+    // ==========================================
+    // 4.1 ส่งข้อความ
+    await pageB.locator('textarea').fill('ทดสอบการรีเฟรชจากผู้ใช้ B');
+    await pageB.locator('textarea').press('Enter');
+    await expect(pageB.locator('text="ทดสอบการรีเฟรชจากผู้ใช้ B"').last()).toBeVisible({ timeout: 10000 });
+
+    // 4.2 ส่งรูปภาพ
+    await pageB.locator('input[type="file"]').setInputFiles(IMG_PATH);
+    await pageB.waitForTimeout(800);
+    await pageB.locator('button.bg-cta').click();
+    await expect(pageB.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 15000 });
+
+    // 4.3 แชร์ตำแหน่ง
+    await pageB.locator('button[title="แชร์ตำแหน่งแบบ Real-time"]').click();
+    await expect(pageB.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 15000 });
+
+    // ==========================================
+    // STEP 5: A Refresh และตรวจสอบข้อมูลของ B
+    // ==========================================
+    await pageA.reload({ waitUntil: 'networkidle' });
+    await pageA.waitForSelector('textarea', { timeout: 15000 });
+    await pageA.waitForTimeout(1500); // รอโหลดข้อความและ toast ตรวจสอบ
+
+    // A ตรวจสอบว่าเห็นทั้ง 3 อย่างของ B หลังจาก refresh
+    await expect(pageA.locator('text="ทดสอบการรีเฟรชจากผู้ใช้ B"').last()).toBeVisible({ timeout: 10000 });
+    await expect(pageA.locator('img[src*="cloudinary"], img[alt="image"]').last()).toBeVisible({ timeout: 10000 });
+    await expect(pageA.locator('a[href*="google.com/maps"]').last()).toBeVisible({ timeout: 10000 });
+
+    // ==========================================
+    // STEP 6: B ทำการยกเลิกการแชร์ตำแหน่งที่พึ่งทำ
+    // ==========================================
+    await pageB.waitForTimeout(500); // รอให้ UI render เสร็จ
+    await pageB.locator('[data-testid="stop-share-in-card"]').last().click();
+    await pageB.waitForTimeout(1000); // รอให้ Socket และ Vue state อัปเดต
+
+    await pageA.waitForTimeout(500);
+
+    await contextA.close();
+    await contextB.close();
+});
+
+
 
