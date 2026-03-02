@@ -65,6 +65,14 @@ router.post(
     reviewController.createDispute
 );
 
+// GET /reviews/my-received — driver's own reviews (includes privateFeedback)
+router.get(
+    '/my-received',
+    protect,
+    validate({ query: paginationQuery }),
+    reviewController.getMyReceivedReviews
+);
+
 // GET /reviews/driver/:driverId — public driver reviews
 router.get(
     '/driver/:driverId',
