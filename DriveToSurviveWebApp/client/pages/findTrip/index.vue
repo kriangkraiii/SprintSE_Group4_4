@@ -1560,6 +1560,11 @@ onMounted(() => {
         initAll()
         loadLocationDataFT()
     }
+
+    if (route.query.from) searchForm.value.origin = route.query.from
+    if (route.query.to) searchForm.value.destination = route.query.to
+    if (route.query.date) searchForm.value.date = route.query.date
+    if (route.query.seat) searchForm.value.seats = route.query.seat
 })
 
 onUnmounted(() => {
