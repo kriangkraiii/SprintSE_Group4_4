@@ -1,6 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validate');
 const { protect, requireAdmin } = require('../middlewares/auth');
+const { authLimiter } = require('../middlewares/rateLimiter');
 const requireDriverVerified = require('../middlewares/driverVerified');
 const requireIdVerified = require('../middlewares/idVerified');
 const bookingController = require('../controllers/booking.controller');
@@ -72,6 +73,13 @@ router.get(
   bookingController.getMyBookings
 );
 
+// GET /bookings/route/:routeId — get all bookings for a route (pickup locations)
+router.get(
+  '/route/:routeId',
+  protect,
+  bookingController.getBookingsByRouteId
+);
+
 // GET /bookings/:id
 router.get(
   '/:id',
@@ -84,6 +92,7 @@ router.get(
 router.post(
   '/',
   protect,
+  authLimiter,
   requireIdVerified,
   requirePassengerNotSuspended,
   validate({ body: createBookingSchema }),
@@ -103,6 +112,7 @@ router.patch(
 router.patch(
   '/:id/cancel',
   protect,
+  authLimiter,
   validate({ params: idParamSchema, body: cancelBookingSchema }),
   bookingController.cancelBooking
 );

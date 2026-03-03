@@ -34,6 +34,14 @@ router.get(
   driverVerifController.getVerificationById
 );
 
+// POST /driver-verifications/admin/quick-approve (JSON, no file upload)
+router.post(
+  '/admin/quick-approve',
+  protect,
+  requireAdmin,
+  driverVerifController.adminQuickApprove
+);
+
 // POST /driver-verifications/admin
 router.post(
   '/admin',

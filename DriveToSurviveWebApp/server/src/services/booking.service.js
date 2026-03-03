@@ -2,6 +2,7 @@ const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyPassengerSuspension } = require('./penalty.service');
+const { emitNotification } = require('../socket/emitter');
 
 const ACTIVE_STATUSES = [BookingStatus.PENDING, BookingStatus.CONFIRMED];
 
@@ -217,13 +218,24 @@ const adminUpdateBooking = async (id, patch) => {
 const createBooking = async (data, passengerId) => {
   return prisma.$transaction(async (tx) => {
 
-    // ตรวจสอบว่าผู้ใช้ยืนยันบัตรประชาชนแล้ว
+    // ตรวจสอบ role + ยืนยัน + suspension
     const user = await tx.user.findUnique({
       where: { id: passengerId },
-      select: { isVerified: true }
+      select: { isVerified: true, role: true, passengerSuspendedUntil: true }
     });
-    if (!user || !user.isVerified) {
+    if (!user) throw new ApiError(404, 'User not found');
+    if (!user.isVerified) {
       throw new ApiError(403, 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้');
+    }
+
+    // คนที่เป็น DRIVER จองเป็นผู้โดยสารไม่ได้
+    if (user.role === 'DRIVER') {
+      throw new ApiError(403, 'บัญชีคนขับไม่สามารถจองเส้นทางได้ กรุณาใช้บัญชีผู้โดยสาร');
+    }
+
+    // ตรวจ passenger suspension (role-based ban)
+    if (user.passengerSuspendedUntil && new Date(user.passengerSuspendedUntil) > new Date()) {
+      throw new ApiError(403, 'บัญชีผู้โดยสารของคุณถูกระงับชั่วคราว');
     }
 
     const route = await tx.route.findUnique({
@@ -245,7 +257,7 @@ const createBooking = async (data, passengerId) => {
       throw new ApiError(400, 'Not enough seats available on this route.');
     }
 
-    // สร้างการจองแบบอัตโนมัติ — ยืนยันทันที (CONFIRMED)
+    // สร้างการจอง — สถานะ PENDING รอคนขับยืนยัน
     const booking = await tx.booking.create({
       data: {
         routeId: data.routeId,
@@ -253,7 +265,7 @@ const createBooking = async (data, passengerId) => {
         numberOfSeats: data.numberOfSeats,
         pickupLocation: data.pickupLocation,
         dropoffLocation: data.dropoffLocation,
-        status: BookingStatus.CONFIRMED,
+        // status: default PENDING from schema
       },
     });
 
@@ -273,43 +285,85 @@ const createBooking = async (data, passengerId) => {
       });
     }
 
-    // แจ้งเตือนคนขับว่ามีการจองใหม่ (ยืนยันอัตโนมัติแล้ว)
-    await tx.notification.create({
+    // แจ้งเตือนคนขับว่ามีคำขอจองใหม่ (รอยืนยัน)
+    const driverNotif = await tx.notification.create({
       data: {
         userId: route.driverId,
         type: 'BOOKING',
-        title: 'มีการจองใหม่ในเส้นทางของคุณ (ยืนยันอัตโนมัติ)',
-        body: 'ผู้โดยสารได้ทำการจองที่นั่งในเส้นทางของคุณแล้ว การจองได้รับการยืนยันอัตโนมัติ',
+        title: 'มีคำขอจองใหม่ในเส้นทางของคุณ',
+        body: 'ผู้โดยสารได้ทำการจองที่นั่งในเส้นทางของคุณ กรุณายืนยันหรือปฏิเสธ',
         metadata: {
           kind: 'BOOKING_CREATED',
           bookingId: booking.id,
           routeId: data.routeId,
           passengerId,
           numberOfSeats: data.numberOfSeats,
-          autoConfirmed: true
         }
       }
     });
+    // Push real-time notification to driver
+    emitNotification(route.driverId, driverNotif);
 
-    // แจ้งเตือนผู้โดยสารว่าจองสำเร็จ
-    await tx.notification.create({
+    // แจ้งเตือนผู้โดยสารว่าจองสำเร็จ (รอยืนยัน)
+    const passengerNotif = await tx.notification.create({
       data: {
         userId: passengerId,
         type: 'BOOKING',
         title: 'จองเส้นทางสำเร็จ',
-        body: 'การจองของคุณได้รับการยืนยันอัตโนมัติแล้ว',
+        body: 'การจองของคุณอยู่ในสถานะรอดำเนินการ กรุณารอคนขับยืนยัน',
         metadata: {
           kind: 'BOOKING_STATUS',
           bookingId: booking.id,
           routeId: data.routeId,
-          status: 'CONFIRMED',
-          autoConfirmed: true
+          status: 'PENDING',
         }
       }
     });
+    // Push real-time notification to passenger
+    emitNotification(passengerId, passengerNotif);
 
     return booking;
   });
+};
+
+/**
+ * Post-booking: add passenger to group chat + send email to driver
+ * Called OUTSIDE the transaction to avoid deadlocks
+ */
+const postBookingActions = async (booking, routeId, passengerId) => {
+  try {
+    // Auto-create/join group chat for route
+    const { createSession: createChatSession } = require('./chat.service');
+    await createChatSession(routeId, passengerId);
+  } catch (e) {
+    console.error('[PostBooking] Chat setup failed:', e.message);
+  }
+
+  try {
+    // Send email notification to driver
+    const { sendBookingEmail } = require('./email.service');
+    if (sendBookingEmail) {
+      const route = await prisma.route.findUnique({
+        where: { id: routeId },
+        include: { driver: { select: { email: true, firstName: true } } },
+      });
+      const passenger = await prisma.user.findUnique({
+        where: { id: passengerId },
+        select: { firstName: true, lastName: true },
+      });
+      if (route?.driver?.email) {
+        await sendBookingEmail(route.driver.email, {
+          driverName: route.driver.firstName,
+          passengerName: `${passenger?.firstName || ''} ${passenger?.lastName || ''}`.trim(),
+          bookingId: booking.id,
+          routeId,
+          seats: booking.numberOfSeats,
+        });
+      }
+    }
+  } catch (e) {
+    console.error('[PostBooking] Email failed:', e.message);
+  }
 };
 
 const getMyBookings = async (passengerId) => {
@@ -325,7 +379,13 @@ const getMyBookings = async (passengerId) => {
               lastName: true,
               gender: true,
               profilePicture: true,
-              isVerified: true
+              isVerified: true,
+              driverStats: {
+                select: {
+                  avgRating: true,
+                  totalReviews: true,
+                }
+              }
             }
           },
           vehicle: {
@@ -337,10 +397,26 @@ const getMyBookings = async (passengerId) => {
             }
           }
         }
+      },
+      reviews: {
+        where: { passengerId }
       }
-
     },
     orderBy: { createdAt: 'desc' },
+  });
+};
+
+const getBookingsByRouteId = async (routeId) => {
+  return prisma.booking.findMany({
+    where: { routeId, status: { in: ['CONFIRMED', 'IN_PROGRESS', 'PENDING'] } },
+    select: {
+      id: true,
+      pickupLocation: true,
+      dropoffLocation: true,
+      status: true,
+      passenger: { select: { id: true, firstName: true, lastName: true } },
+    },
+    orderBy: { createdAt: 'asc' },
   });
 };
 
@@ -404,6 +480,12 @@ const updateBookingStatus = async (id, status, userId) => {
         }
       });
     }
+
+    // Fire-and-forget: create group chat + send email when confirmed
+    if (status === BookingStatus.CONFIRMED) {
+      postBookingActions(updated, booking.routeId, booking.passengerId).catch(console.error);
+    }
+
     return updated;
   });
 };
@@ -525,10 +607,11 @@ module.exports = {
   searchBookingsAdmin,
   adminCreateBooking,
   createBooking,
+  postBookingActions,
   adminUpdateBooking,
-  adminCreateBooking,
   getMyBookings,
   getBookingById,
+  getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
   deleteBooking,

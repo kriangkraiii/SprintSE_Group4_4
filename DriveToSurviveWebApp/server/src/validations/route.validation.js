@@ -71,6 +71,10 @@ const listRoutesQuerySchema = z.object({
   endNearLng: z.coerce.number().optional(),
   radiusMeters: z.coerce.number().int().min(1).max(50000).default(500),
 
+  startProvince: z.string().trim().optional(),
+  endProvince: z.string().trim().optional(),
+  excludeDriverId: z.string().optional(),
+
   seatsRequired: z.coerce.number().int().min(1).optional(),
 });
 

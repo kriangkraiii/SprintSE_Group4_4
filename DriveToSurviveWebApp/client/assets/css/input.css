@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* stylelint-disable-next-line at-rule-no-unknown */
 @theme {
   --color-primary: #137FEC;
   --color-secondary: #fff;
@@ -22,6 +23,7 @@ body {
   font-family: 'Kanit', sans-serif;
   color: #020617;
   background-color: #F8FAFC;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1,
@@ -231,6 +233,461 @@ h6 {
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Dark Mode — Comprehensive Overrides (all 56 pages)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Base ── */
+html.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+html.dark * {
+  border-color: inherit;
+}
+
+/* ── Backgrounds ── */
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-slate-50,
+html.dark .bg-surface,
+html.dark .bg-\[\#F8FAFC\],
+html.dark .bg-\[\#F2F2F2\],
+html.dark .bg-\[\#FAFAFA\] {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-gray-100,
+html.dark .bg-slate-100 {
+  background-color: #334155 !important;
+}
+
+html.dark .bg-gray-200,
+html.dark .bg-slate-200 {
+  background-color: #3b4a5e !important;
+}
+
+/* Light tints — darken for dark mode */
+html.dark .bg-blue-50,
+html.dark .bg-emerald-50,
+html.dark .bg-amber-50,
+html.dark .bg-green-50,
+html.dark .bg-red-50,
+html.dark .bg-yellow-50,
+html.dark .bg-orange-50,
+html.dark .bg-rose-50,
+html.dark .bg-indigo-50,
+html.dark .bg-cyan-50,
+html.dark .bg-teal-50 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-blue-100,
+html.dark .bg-emerald-100,
+html.dark .bg-amber-100,
+html.dark .bg-green-100,
+html.dark .bg-red-100 {
+  background-color: #334155 !important;
+}
+
+/* ── Text Colors ── */
+/* Primary text */
+html.dark .text-gray-800,
+html.dark .text-gray-900,
+html.dark .text-slate-800,
+html.dark .text-slate-900,
+html.dark .text-primary,
+html.dark .text-\[\#020617\],
+html.dark .text-\[\#0F172A\],
+html.dark .text-\[\#0f172a\],
+html.dark .text-\[\#383838\],
+html.dark .text-\[\#236993\],
+html.dark .text-black {
+  color: #f1f5f9 !important;
+}
+
+/* Secondary text */
+html.dark .text-gray-600,
+html.dark .text-gray-700,
+html.dark .text-slate-600,
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+/* Muted text */
+html.dark .text-gray-400,
+html.dark .text-gray-500,
+html.dark .text-slate-400,
+html.dark .text-slate-500,
+html.dark .text-gray-300,
+html.dark .text-slate-300 {
+  color: #94a3b8 !important;
+}
+
+/* ── Borders ── */
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-gray-300,
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-300,
+html.dark .border-\[\#E2E8F0\],
+html.dark .border-\[\#e2e8f0\],
+html.dark .divide-gray-200 > * + *,
+html.dark .divide-slate-200 > * + * {
+  border-color: #334155 !important;
+}
+
+/* ── Cards ── */
+html.dark .card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+/* ── Forms ── */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.dark select,
+html.dark textarea,
+html.dark .input-field {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder,
+html.dark .input-field::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.dark label {
+  color: #cbd5e1 !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15) !important;
+}
+
+/* ── Headings ── */
+html.dark h1, html.dark h2, html.dark h3,
+html.dark h4, html.dark h5, html.dark h6,
+html.dark .section-heading {
+  color: #f1f5f9 !important;
+}
+
+/* ── Paragraphs ── */
+html.dark p {
+  color: #cbd5e1;
+}
+
+/* ── Links ── */
+html.dark a:not([class*="bg-"]):not([class*="btn"]):not([class*="text-white"]) {
+  color: #60a5fa;
+}
+
+/* ── Tables ── */
+html.dark table {
+  border-color: #334155;
+}
+
+html.dark thead {
+  background-color: #1e293b !important;
+}
+
+html.dark th {
+  color: #94a3b8 !important;
+  border-color: #334155 !important;
+}
+
+html.dark td {
+  border-color: #334155 !important;
+  color: #e2e8f0;
+}
+
+html.dark tbody tr:hover {
+  background-color: #334155 !important;
+}
+
+html.dark tbody tr:nth-child(even) {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+/* ── Shadows ── */
+html.dark .shadow-sm,
+html.dark .shadow-md,
+html.dark .shadow-lg,
+html.dark .shadow-xl {
+  --tw-shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ── Header / Nav ── */
+html.dark .backdrop-blur-md,
+html.dark header .bg-white,
+html.dark .rounded-full.shadow-sm {
+  background-color: #1e293b !important;
+}
+
+/* ── Admin Sidebar ── */
+html.dark #sidebar,
+html.dark .admin-sidebar,
+html.dark aside.sidebar {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+/* Sidebar text — bright white */
+html.dark .sidebar-item,
+html.dark .sidebar-text,
+html.dark aside.sidebar span,
+html.dark aside.sidebar p,
+html.dark aside.sidebar a {
+  color: #cbd5e1 !important;
+}
+
+/* Sidebar icons */
+html.dark aside.sidebar i,
+html.dark .sidebar-item i {
+  color: #64748b !important;
+}
+
+/* Sidebar section labels (Admin Panel, กฎหมาย) */
+html.dark aside.sidebar .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Sidebar active link */
+html.dark .sidebar-item.router-link-active,
+html.dark aside.sidebar a.router-link-active {
+  background-color: #1e3a5f !important;
+  color: #60a5fa !important;
+}
+
+html.dark .sidebar-item.router-link-active span,
+html.dark aside.sidebar a.router-link-active span {
+  color: #60a5fa !important;
+}
+
+html.dark .sidebar-item.router-link-active i,
+html.dark aside.sidebar a.router-link-active i {
+  color: #60a5fa !important;
+}
+
+/* bg-cta-light in dark mode */
+html.dark .bg-cta-light {
+  background-color: #1e3a5f !important;
+}
+
+/* Sidebar hover */
+html.dark .sidebar-item:hover,
+html.dark .hover\:bg-cta-light:hover {
+  background-color: #1e293b !important;
+}
+
+/* Sidebar toggle button */
+html.dark aside.sidebar button.rounded-full {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+/* Sidebar dividers */
+html.dark aside.sidebar .border-slate-100,
+html.dark aside.sidebar .border-slate-200,
+html.dark aside.sidebar .border-t,
+html.dark aside.sidebar .border-b {
+  border-color: #1e293b !important;
+}
+
+/* ── Dropdown / Popup Menu ── */
+html.dark .dropdown-menu,
+html.dark [class*="absolute"][class*="bg-white"],
+html.dark [class*="fixed"][class*="bg-white"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* ── Modals / Overlays ── */
+html.dark .modal-content,
+html.dark [class*="rounded-xl"][class*="bg-white"][class*="shadow"] {
+  background-color: #1e293b !important;
+}
+
+/* ── Badges (keep colors but darken bg if light tint) ── */
+html.dark .badge-success { background-color: #065f46 !important; color: #a7f3d0 !important; }
+html.dark .badge-warning { background-color: #78350f !important; color: #fde68a !important; }
+html.dark .badge-danger  { background-color: #7f1d1d !important; color: #fecaca !important; }
+html.dark .badge-info    { background-color: #0c4a6e !important; color: #bae6fd !important; }
+
+/* ── Alerts (error/success boxes) ── */
+html.dark .bg-red-50 { background-color: rgba(127, 29, 29, 0.2) !important; }
+html.dark .bg-green-50 { background-color: rgba(6, 95, 70, 0.2) !important; }
+html.dark .bg-amber-50 { background-color: rgba(120, 53, 15, 0.2) !important; }
+
+html.dark .border-red-200 { border-color: #991b1b !important; }
+html.dark .border-green-200 { border-color: #166534 !important; }
+html.dark .border-amber-200 { border-color: #92400e !important; }
+
+/* ── Colored text (dark-800/900 tones) — lighten for dark mode ── */
+html.dark .text-green-800,
+html.dark .text-green-900,
+html.dark .text-blue-800,
+html.dark .text-blue-900,
+html.dark .text-red-800,
+html.dark .text-red-900,
+html.dark .text-amber-800,
+html.dark .text-amber-900,
+html.dark .text-teal-800,
+html.dark .text-teal-900,
+html.dark .text-indigo-800,
+html.dark .text-indigo-900,
+html.dark .text-purple-800,
+html.dark .text-purple-900 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-green-700,
+html.dark .text-blue-700,
+html.dark .text-red-700,
+html.dark .text-amber-700,
+html.dark .text-teal-700,
+html.dark .text-indigo-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-green-600,
+html.dark .text-blue-600,
+html.dark .text-red-600,
+html.dark .text-amber-600,
+html.dark .text-teal-600,
+html.dark .text-indigo-600,
+html.dark .text-purple-600 {
+  color: #94a3b8 !important;
+}
+
+/* ── Colored light borders — darken for dark mode ── */
+html.dark .border-blue-100,
+html.dark .border-blue-200,
+html.dark .border-green-100,
+html.dark .border-green-200,
+html.dark .border-red-100,
+html.dark .border-red-200,
+html.dark .border-amber-100,
+html.dark .border-amber-200,
+html.dark .border-teal-100,
+html.dark .border-teal-200,
+html.dark .border-indigo-100,
+html.dark .border-indigo-200,
+html.dark .border-purple-100 {
+  border-color: #334155 !important;
+}
+
+html.dark .border-l-4.border-blue-400,
+html.dark .border-l-4.border-green-400,
+html.dark .border-l-4.border-green-500,
+html.dark .border-l-4.border-red-400,
+html.dark .border-l-4.border-amber-400,
+html.dark .border-l-4.border-teal-500,
+html.dark .border-l-4.border-indigo-400,
+html.dark .border-l-4.border-cta {
+  border-left-color: #475569 !important;
+}
+
+/* ── More colored *-50 backgrounds for policy pages ── */
+html.dark .bg-indigo-50,
+html.dark .bg-purple-50,
+html.dark .bg-teal-50,
+html.dark .bg-cyan-50,
+html.dark .bg-rose-50,
+html.dark .bg-orange-50 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-indigo-100,
+html.dark .bg-teal-100,
+html.dark .bg-purple-100 {
+  background-color: #334155 !important;
+}
+
+/* ── Half-opacity bg variants ── */
+html.dark [class*="bg-green-50\\/"],
+html.dark [class*="bg-red-50\\/"],
+html.dark [class*="bg-blue-50\\/"] {
+  background-color: #1e293b !important;
+}
+
+/* ── Gradient hero sections ── */
+html.dark .bg-gradient-to-r.from-blue-50,
+html.dark .bg-gradient-to-r.from-blue-50.to-indigo-50 {
+  background: #1e293b !important;
+}
+
+/* ── Dividers / hr ── */
+html.dark hr,
+html.dark .border-t {
+  border-color: #334155 !important;
+}
+
+/* ── Stepper indicator circles ── */
+html.dark .bg-gray-300 {
+  background-color: #475569 !important;
+}
+
+/* ── Hover States ── */
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-gray-100:hover {
+  background-color: #334155 !important;
+}
+
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-gray-50:hover {
+  background-color: #1e293b !important;
+}
+
+html.dark .hover\:bg-blue-50:hover {
+  background-color: #1e3a5f !important;
+}
+
+html.dark .hover\:bg-emerald-50:hover {
+  background-color: #064e3b !important;
+}
+
+html.dark .hover\:bg-amber-50:hover {
+  background-color: #451a03 !important;
+}
+
+/* ── Mobile Menu ── */
+html.dark .mobile-menu,
+html.dark [class*="fixed"][class*="inset"][class*="bg-white"] {
+  background-color: #0f172a !important;
+}
+
+/* ── Scrollbar ── */
+html.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+/* ── Smooth Transition ── */
+body,
+main,
+.bg-white,
+.bg-gray-50,
+.bg-slate-50,
+.card,
+.input-field,
+input, select, textarea,
+header, #sidebar, table {
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }

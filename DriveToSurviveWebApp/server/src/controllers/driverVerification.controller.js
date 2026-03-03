@@ -421,6 +421,93 @@ const createVerificationWithOcr = asyncHandler(async (req, res) => {
   });
 });
 
+const adminQuickApprove = asyncHandler(async (req, res) => {
+  console.log('[QuickApprove] req.body:', JSON.stringify(req.body));
+  const { userId, approve } = req.body || {};
+  if (!userId) {
+    console.log('[QuickApprove] Missing userId, body:', req.body, 'content-type:', req.headers['content-type']);
+    throw new ApiError(400, 'userId is required');
+  }
+
+  try {
+    const existing = await verifService.getVerificationByUser(userId);
+
+    if (existing) {
+      // Toggle status on existing record
+      const newStatus = approve === false ? 'REJECTED' : 'APPROVED';
+      const updated = await verifService.updateVerificationStatus(existing.id, newStatus);
+      return res.status(200).json({
+        success: true,
+        message: `Driver verification ${newStatus.toLowerCase()}`,
+        data: updated,
+      });
+    }
+
+    // No record → create one with APPROVED status
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, firstName: true, lastName: true, username: true },
+    });
+    if (!user) throw new ApiError(404, 'User not found');
+
+    const now = new Date();
+    const futureDate = new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000);
+    const payload = {
+      userId: user.id,
+      licenseNumber: `ADMIN-${Date.now()}`,
+      firstNameOnLicense: user.firstName || user.username || '-',
+      lastNameOnLicense: user.lastName || '-',
+      typeOnLicense: 'PRIVATE_CAR',
+      licenseIssueDate: now,
+      licenseExpiryDate: futureDate,
+      licensePhotoUrl: null,
+      selfiePhotoUrl: null,
+      status: 'APPROVED',
+    };
+
+    const created = await prisma.$transaction(async (tx) => {
+      const record = await tx.driverVerification.create({
+        data: payload,
+        include: { user: true },
+      });
+      await tx.user.update({
+        where: { id: userId },
+        data: { isVerified: true },
+      });
+      return record;
+    });
+
+    try {
+      await notifService.createNotificationByAdmin({
+        userId,
+        type: 'VERIFICATION',
+        title: 'ยืนยันตัวตนคนขับสำเร็จ',
+        body: 'แอดมินได้อนุมัติใบขับขี่ของคุณแล้ว ตอนนี้คุณสามารถสร้างเส้นทางได้',
+        link: '/driver-verification',
+        metadata: {
+          kind: 'driver_verification',
+          verificationId: created.id,
+          userId,
+          status: 'APPROVED',
+          initiatedBy: 'admin',
+        },
+      });
+    } catch (e) {
+      console.error('Failed to notify after quick approve:', e);
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Driver verification created and approved by admin',
+      data: created,
+    });
+  } catch (err) {
+    console.error('[QuickApprove] Error:', err.message);
+    if (err.statusCode) throw err; // ApiError
+    throw new ApiError(500, `Quick approve failed: ${err.message}`);
+  }
+});
+
 module.exports = {
   adminListVerifications,
   getMyVerification,
@@ -433,4 +520,5 @@ module.exports = {
   adminCreateVerification,
   adminUpdateVerification,
   adminDeleteVerification,
+  adminQuickApprove,
 };

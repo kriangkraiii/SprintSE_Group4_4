@@ -216,6 +216,157 @@
                                     </svg>
                                     เพิ่มจุดแวะ
                                 </button>
+
+                                <!-- Location Suggestion Panel (Grab-style tabs) -->
+                                <div class="mt-4 border-t border-gray-100 pt-4">
+                                    <div class="flex gap-1 mb-3">
+                                        <button type="button" v-for="tab in locationTabs" :key="tab.key"
+                                            @click="activeLocationTab = tab.key"
+                                            :class="['px-3 py-1.5 text-xs font-medium rounded-lg transition-all',
+                                                activeLocationTab === tab.key
+                                                    ? 'bg-emerald-500 text-white shadow-sm'
+                                                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200']">
+                                            {{ tab.label }}
+                                        </button>
+                                    </div>
+
+                                    <!-- ล่าสุด (Recent) -->
+                                    <div v-if="activeLocationTab === 'recent'">
+                                        <div v-if="recentSearches.length === 0"
+                                            class="text-center py-4 text-xs text-gray-400">
+                                            ยังไม่มีรายการค้นหาล่าสุด
+                                        </div>
+                                        <div v-else>
+                                            <div v-for="item in recentSearches" :key="item.id"
+                                                @click="selectSuggestion(item)"
+                                                class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition group">
+                                                <div
+                                                    class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-800 truncate">{{
+                                                        item.name }}</p>
+                                                    <p v-if="item.address"
+                                                        class="text-[10px] text-gray-400 truncate">{{ item.address
+                                                        }}</p>
+                                                </div>
+                                                <button type="button" @click.stop="saveFromRecent(item)"
+                                                    class="opacity-0 group-hover:opacity-100 p-1 rounded text-gray-300 hover:text-emerald-500 transition"
+                                                    title="บันทึกสถานที่">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <button type="button" @click="handleClearRecent"
+                                                class="mt-2 w-full text-center text-xs text-gray-400 hover:text-red-500 py-1 transition">
+                                                ล้างรายการล่าสุด
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- แนะนำ (Nearby Places) -->
+                                    <div v-if="activeLocationTab === 'suggest'">
+                                        <div v-if="isFetchingSuggestionsCT" class="text-center py-4">
+                                            <svg class="w-6 h-6 mx-auto animate-spin text-amber-400" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                            </svg>
+                                            <p class="text-xs text-gray-400 mt-2">กำลังค้นหาสถานที่ใกล้เคียง...</p>
+                                        </div>
+                                        <div v-else-if="suggestedPlacesCT.length === 0" class="text-center py-4 text-xs text-gray-400">
+                                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-amber-50 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </div>
+                                            <p>ไม่พบสถานที่แนะนำ</p>
+                                            <p class="mt-1 text-[10px]">กรุณาเปิด GPS เพื่อดูสถานที่ใกล้เคียง</p>
+                                        </div>
+                                        <div v-else>
+                                            <div v-for="item in suggestedPlacesCT" :key="item.placeId"
+                                                @click="selectSuggestion(item)"
+                                                class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition">
+                                                <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-800 truncate">{{ item.name }}</p>
+                                                    <p v-if="item.address" class="text-[10px] text-gray-400 truncate">{{ item.address }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ที่บันทึกไว้ (Saved) -->
+                                    <div v-if="activeLocationTab === 'saved'">
+                                        <div v-if="savedPlaces.length === 0"
+                                            class="text-center py-4 text-xs text-gray-400">
+                                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-emerald-50 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                                </svg>
+                                            </div>
+                                            <p>ยังไม่มีสถานที่ที่บันทึกไว้</p>
+                                            <p class="mt-1 text-[10px]">กด ⋮ ที่รายการล่าสุดเพื่อบันทึก</p>
+                                        </div>
+                                        <div v-else>
+                                            <div v-for="item in savedPlaces" :key="item.id"
+                                                @click="selectSuggestion(item)"
+                                                class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition group">
+                                                <div
+                                                    :class="['w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0',
+                                                        item.icon === 'home' ? 'bg-green-50 text-green-500' :
+                                                            item.icon === 'work' ? 'bg-blue-50 text-blue-500' :
+                                                                'bg-red-50 text-red-500']">
+                                                    <svg v-if="item.icon === 'home'" class="w-4 h-4" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                                    </svg>
+                                                    <svg v-else-if="item.icon === 'work'" class="w-4 h-4"
+                                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <svg v-else class="w-4 h-4" fill="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-800">{{ item.label }}</p>
+                                                    <p class="text-[10px] text-gray-400 truncate">{{ item.name }}</p>
+                                                </div>
+                                                <button type="button" @click.stop="handleDeleteSavedPlace(item.id)"
+                                                    class="opacity-0 group-hover:opacity-100 p-1 rounded text-gray-300 hover:text-red-500 transition"
+                                                    title="ลบสถานที่">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -335,8 +486,73 @@
                     <div class="sticky top-4">
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
                             <div ref="mainMapEl" class="w-full h-[300px] lg:h-[calc(100vh-160px)]" style="min-height: 300px;"></div>
+
+                            <!-- Draggable Center Pin (Grab-style) -->
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-20 pointer-events-none transition-transform duration-200"
+                                :class="isDragging ? 'scale-110 -translate-y-[calc(100%+10px)]' : 'scale-100'"
+                                v-if="showCenterPin">
+                                <svg width="40" height="50" viewBox="0 0 40 50" fill="none">
+                                    <path d="M20 0C9 0 0 9 0 20c0 15 20 30 20 30s20-15 20-30C40 9 31 0 20 0z" fill="#10b981" />
+                                    <circle cx="20" cy="18" r="8" fill="white" />
+                                    <text x="20" y="22" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold">A</text>
+                                </svg>
+                                <!-- Pin shadow -->
+                                <div class="w-4 h-1 bg-black/20 rounded-full mx-auto mt-0.5 transition-all duration-200"
+                                    :class="isDragging ? 'scale-150 opacity-30' : 'scale-100 opacity-50'"></div>
+                            </div>
+
+                            <!-- Locate Me FAB -->
+                            <button
+                                @click="handleLocateMe"
+                                :disabled="!geo.hasGps.value"
+                                :title="!geo.hasGps.value ? 'อุปกรณ์ไม่รองรับ GPS' : 'ตำแหน่งของฉัน'"
+                                class="absolute bottom-16 right-4 z-20 w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                                :class="geo.isActive.value
+                                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'">
+                                <svg v-if="geo.isLocating.value" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M12 2v4m0 12v4m-10-10h4m12 0h4" />
+                                </svg>
+                            </button>
+
+                            <!-- Recenter Button (shows when user manually pans during tracking) -->
+                            <transition name="modal-fade">
+                                <button v-if="mapBounds.showRecenterButton.value"
+                                    @click="mapBounds.resumeAutoFit()"
+                                    class="absolute top-4 right-4 z-20 px-3 py-2 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-1.5 border border-gray-200 transition cursor-pointer">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    กลับสู่มุมมองเดิม
+                                </button>
+                            </transition>
+
+                            <!-- Address Card (when center pin mode) -->
+                            <div v-if="showCenterPin && (reverseGeo.address.value || reverseGeo.isLoading.value)"
+                                class="absolute bottom-4 left-4 right-16 z-20">
+                                <div class="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 px-4 py-3">
+                                    <div v-if="reverseGeo.isLoading.value" class="flex items-center gap-2">
+                                        <div class="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                                        <span class="text-xs text-gray-400">กำลังค้นหาที่อยู่...</span>
+                                    </div>
+                                    <div v-else-if="reverseGeo.hasError.value" class="flex items-center justify-between">
+                                        <span class="text-xs text-red-500">{{ reverseGeo.address.value }}</span>
+                                        <button @click="reverseGeo.retry()" class="text-xs text-emerald-500 hover:underline ml-2">ลองอีกครั้ง</button>
+                                    </div>
+                                    <div v-else>
+                                        <p class="text-sm font-medium text-gray-800 leading-tight">{{ reverseGeo.placeName.value }}</p>
+                                        <p class="text-[10px] text-gray-400 mt-0.5 truncate">{{ reverseGeo.address.value }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Realtime location badge -->
-                            <div v-if="userLocation.lat" class="absolute bottom-4 left-4 z-10">
+                            <div v-if="userLocation.lat" class="absolute bottom-4 left-4 z-10" :class="{ 'hidden': showCenterPin }">
                                 <div
                                     class="flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 text-xs">
                                     <span class="relative flex h-2.5 w-2.5">
@@ -346,6 +562,20 @@
                                             class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                                     </span>
                                     <span class="text-gray-600">ตำแหน่งของคุณ (เรียลไทม์)</span>
+                                </div>
+                            </div>
+
+                            <!-- GPS Permission Denied Banner -->
+                            <div v-if="geo.permissionDenied.value"
+                                class="absolute top-4 left-4 right-4 z-20">
+                                <div class="bg-amber-50/95 backdrop-blur-sm border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <div>
+                                        <p class="text-xs font-medium text-amber-800">GPS ถูกปิดกั้น</p>
+                                        <p class="text-[10px] text-amber-600 mt-0.5">กรุณาเปิด GPS หรือค้นหาที่อยู่ด้วยตนเอง</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -401,17 +631,25 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRuntimeConfig, useHead, navigateTo } from '#app'
 import { useToast } from '~/composables/useToast'
 import VehicleModal from '~/components/VehicleModal.vue'
 import { getProvinceFromPlace , stripCountry, stripLeadingPlusCode } from '~/utils/googleMaps'
+import { usePlace } from '~/composables/usePlace'
+import { useGeolocation } from '~/composables/useGeolocation'
+import { useReverseGeocode } from '~/composables/useReverseGeocode'
+import { useMapBounds } from '~/composables/useMapBounds'
 
 definePageMeta({ middleware: 'auth' })
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
 const config = useRuntimeConfig()
+const { fetchSavedPlaces, savePlaceLabel, deleteSavedPlace, fetchRecentSearches, addRecentSearch, clearRecentSearches } = usePlace()
+const geo = useGeolocation()
+const reverseGeo = useReverseGeocode(500)
+const mapBounds = useMapBounds()
 
 // ==================== Guard: ตรวจสอบสิทธิ์ก่อนสร้างเส้นทาง ====================
 const guardStatus = reactive({ idCard: false, driver: false, vehicle: false })
@@ -444,6 +682,109 @@ const minDate = new Date().toISOString().split('T')[0]
 const waypointMetas = ref([])
 const waypointInputs = ref([])
 let waypointAutocompletes = []
+
+// ==================== Premium Map State ====================
+const showCenterPin = ref(false)
+const isDragging = ref(false)
+let locationMarkerObj = null // { marker, circle }
+
+// ==================== Location Tabs (ล่าสุด / แนะนำ / ที่บันทึกไว้) ====================
+const activeLocationTab = ref('recent')
+const recentSearches = ref([])
+const savedPlaces = ref([])
+const lastFocusedField = ref('start') // tracks which input user last touched
+const locationTabs = [
+    { key: 'recent', label: 'ล่าสุด' },
+    { key: 'suggest', label: 'แนะนำ' },
+    { key: 'saved', label: 'ที่บันทึกไว้' },
+]
+const suggestedPlacesCT = ref([])
+const isFetchingSuggestionsCT = ref(false)
+
+function fetchSuggestedPlacesCT() {
+    if (suggestedPlacesCT.value.length > 0 || isFetchingSuggestionsCT.value) return
+    if (!placesService) return
+    const center = mainMap ? mainMap.getCenter() : null
+    const lat = center?.lat?.() ?? 16.4720
+    const lng = center?.lng?.() ?? 102.8239
+    isFetchingSuggestionsCT.value = true
+    placesService.nearbySearch({
+        location: new google.maps.LatLng(lat, lng),
+        radius: 5000,
+        type: ['transit_station', 'bus_station', 'university', 'shopping_mall', 'hospital', 'airport'],
+    }, (results, status) => {
+        isFetchingSuggestionsCT.value = false
+        if (status === google.maps.places.PlacesServiceStatus.OK && results?.length) {
+            suggestedPlacesCT.value = results.slice(0, 10).map(p => ({
+                name: p.name,
+                address: p.vicinity || '',
+                lat: p.geometry?.location?.lat?.() ?? null,
+                lng: p.geometry?.location?.lng?.() ?? null,
+                placeId: p.place_id || null,
+            }))
+        }
+    })
+}
+
+watch(activeLocationTab, (tab) => {
+    if (tab === 'suggest') fetchSuggestedPlacesCT()
+})
+
+async function loadLocationData() {
+    try { recentSearches.value = await fetchRecentSearches(10) || [] } catch { recentSearches.value = [] }
+    try { savedPlaces.value = await fetchSavedPlaces() || [] } catch { savedPlaces.value = [] }
+}
+
+function selectSuggestion(item) {
+    const field = lastFocusedField.value
+    const meta = { lat: item.lat, lng: item.lng, name: item.name, address: item.address || item.name, placeId: item.placeId || null, province: null }
+    if (field === 'start') {
+        form.startPoint = item.name
+        startMeta.value = meta
+    } else if (field === 'end') {
+        form.endPoint = item.name
+        endMeta.value = meta
+    }
+    updateMainMap()
+    if (mainMap && item.lat && item.lng) mainMap.panTo({ lat: item.lat, lng: item.lng })
+}
+
+async function autoSaveRecent(place) {
+    if (!place?.name || place.lat == null) return
+    try {
+        await addRecentSearch({ name: place.name, address: place.address, lat: place.lat, lng: place.lng, placeId: place.placeId })
+        recentSearches.value = await fetchRecentSearches(10) || []
+    } catch { /* silent */ }
+}
+
+async function saveFromRecent(item) {
+    const label = prompt('ตั้งชื่อสถานที่ (เช่น "บ้าน", "ที่ทำงาน"):', item.name)
+    if (!label) return
+    try {
+        const icon = label === 'บ้าน' ? 'home' : label === 'ที่ทำงาน' ? 'work' : 'pin'
+        await savePlaceLabel({ label, name: item.name, address: item.address, lat: item.lat, lng: item.lng, placeId: item.placeId, icon })
+        savedPlaces.value = await fetchSavedPlaces() || []
+        toast.success('บันทึกแล้ว', `"${label}" ถูกบันทึกเรียบร้อย`)
+    } catch (e) {
+        toast.error('ไม่สามารถบันทึกได้', e?.statusMessage || '')
+    }
+}
+
+async function handleDeleteSavedPlace(id) {
+    try {
+        await deleteSavedPlace(id)
+        savedPlaces.value = savedPlaces.value.filter(p => p.id !== id)
+        toast.success('ลบแล้ว', 'ลบสถานที่ที่บันทึกเรียบร้อย')
+    } catch { toast.error('ไม่สามารถลบได้') }
+}
+
+async function handleClearRecent() {
+    try {
+        await clearRecentSearches()
+        recentSearches.value = []
+        toast.success('ล้างแล้ว', 'ล้างรายการล่าสุดเรียบร้อย')
+    } catch { toast.error('ไม่สามารถล้างได้') }
+}
 
 const form = reactive({
     vehicleId: '',
@@ -745,6 +1086,7 @@ function initStartEndAutocomplete() {
     if (startInputEl.value) {
         if (startAutocomplete?.unbindAll) startAutocomplete.unbindAll()
         startAutocomplete = new google.maps.places.Autocomplete(startInputEl.value, opts)
+        startInputEl.value.addEventListener('focus', () => { lastFocusedField.value = 'start' })
         startAutocomplete.addListener('place_changed', () => {
             const p = startAutocomplete.getPlace()
             if (!p) return
@@ -757,12 +1099,14 @@ function initStartEndAutocomplete() {
             form.startPoint = name
             startMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
+            autoSaveRecent({ name, address, lat, lng, placeId: p.place_id })
         })
     }
 
     if (endInputEl.value) {
         if (endAutocomplete?.unbindAll) endAutocomplete.unbindAll()
         endAutocomplete = new google.maps.places.Autocomplete(endInputEl.value, opts)
+        endInputEl.value.addEventListener('focus', () => { lastFocusedField.value = 'end' })
         endAutocomplete.addListener('place_changed', () => {
             const p = endAutocomplete.getPlace()
             if (!p) return
@@ -775,6 +1119,7 @@ function initStartEndAutocomplete() {
             form.endPoint = name
             endMeta.value = { lat, lng, name, address, placeId: p.place_id || null, province }
             updateMainMap()
+            autoSaveRecent({ name, address, lat, lng, placeId: p.place_id })
         })
     }
 
@@ -786,19 +1131,23 @@ function initMainMap() {
     if (!mainMapEl.value || mainMap) return
     const center = userLocation.value.lat
         ? { lat: userLocation.value.lat, lng: userLocation.value.lng }
-        : { lat: 13.7563, lng: 100.5018 }
+        : { ...geo.KKU_DEFAULT }
 
     mainMap = new google.maps.Map(mainMapEl.value, {
         center,
-        zoom: userLocation.value.lat ? 14 : 6,
+        zoom: userLocation.value.lat ? 16 : 14,
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: true,
+        gestureHandling: 'greedy',
         styles: [
             { featureType: 'poi', stylers: [{ visibility: 'simplified' }] },
             { featureType: 'transit', stylers: [{ visibility: 'off' }] },
         ],
     })
+
+    // Initialize map bounds composable
+    mapBounds.init(mainMap)
 
     if (!geocoder) geocoder = new google.maps.Geocoder()
     if (!placesService) placesService = new google.maps.places.PlacesService(mainMap)
@@ -806,6 +1155,59 @@ function initMainMap() {
     if (userLocation.value.lat) {
         updateUserLocationOnMap(userLocation.value.lat, userLocation.value.lng)
     }
+
+    // Map drag listeners for center pin mode
+    mainMap.addListener('dragstart', () => {
+        isDragging.value = true
+    })
+    mainMap.addListener('dragend', () => {
+        isDragging.value = false
+    })
+    mainMap.addListener('idle', () => {
+        isDragging.value = false
+        if (showCenterPin.value && mainMap) {
+            const center = mainMap.getCenter()
+            reverseGeo.geocode(center.lat(), center.lng())
+        }
+    })
+}
+
+// ==================== Locate Me ====================
+async function handleLocateMe() {
+    if (geo.isLocating.value || !geo.hasGps.value) return
+
+    toast.info('กำลังค้นหาตำแหน่ง', 'กรุณารอสักครู่...')
+
+    const result = await geo.locate()
+
+    if (result.isDefault) {
+        // GPS denied or error → fallback to KKU
+        if (geo.permissionDenied.value) {
+            toast.warning('GPS ถูกปิดกั้น', 'กรุณาเปิด GPS เพื่อระบุตำแหน่งอัตโนมัติ หรือค้นหาที่อยู่ด้วยตนเอง')
+            // Auto-focus search bar
+            nextTick(() => startInputEl.value?.focus())
+        } else {
+            toast.error('ไม่พบตำแหน่ง GPS', 'ไม่สามารถหาตำแหน่ง GPS ได้ กรุณาลองอีกครั้ง')
+        }
+        if (mainMap) {
+            mapBounds.zoomTo(result.lat, result.lng, 18)
+        }
+        return
+    }
+
+    // Success — pan + zoom to user's position
+    if (mainMap) {
+        mapBounds.zoomTo(result.lat, result.lng, 16)
+
+        // Clear old location marker
+        if (locationMarkerObj?.marker) locationMarkerObj.marker.setMap(null)
+        if (locationMarkerObj?.circle) locationMarkerObj.circle.setMap(null)
+
+        // Render blue pulsing marker + accuracy circle
+        locationMarkerObj = geo.renderLocationMarker(mainMap, result.lat, result.lng, result.accuracy)
+    }
+
+    toast.success('พบตำแหน่งแล้ว', `ความแม่นยำ: ~${Math.round(result.accuracy || 0)}m`)
 }
 
 function clearMainMapMarkers() {
@@ -827,8 +1229,19 @@ async function updateMainMap() {
         mainStartMarker = new google.maps.Marker({
             position: { lat: startMeta.value.lat, lng: startMeta.value.lng },
             map: mainMap,
-            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#10b981', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 3 },
+            icon: {
+                path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+                fillColor: '#10b981',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+                scale: 1.8,
+                anchor: new google.maps.Point(12, 22),
+                labelOrigin: new google.maps.Point(12, 10),
+            },
+            label: { text: 'A', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
             title: 'จุดเริ่มต้น',
+            zIndex: 10,
         })
     }
 
@@ -836,8 +1249,19 @@ async function updateMainMap() {
         mainEndMarker = new google.maps.Marker({
             position: { lat: endMeta.value.lat, lng: endMeta.value.lng },
             map: mainMap,
-            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#ef4444', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 3 },
+            icon: {
+                path: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z',
+                fillColor: '#ef4444',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+                scale: 1.8,
+                anchor: new google.maps.Point(12, 22),
+                labelOrigin: new google.maps.Point(12, 10),
+            },
+            label: { text: 'B', color: '#ffffff', fontWeight: 'bold', fontSize: '11px' },
             title: 'จุดปลายทาง',
+            zIndex: 10,
         })
     }
 
@@ -846,8 +1270,18 @@ async function updateMainMap() {
             mainWaypointMarkers.push(new google.maps.Marker({
                 position: { lat: m.lat, lng: m.lng },
                 map: mainMap,
-                icon: { path: google.maps.SymbolPath.CIRCLE, scale: 7, fillColor: '#f59e0b', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 9,
+                    fillColor: '#f59e0b',
+                    fillOpacity: 1,
+                    strokeColor: '#ffffff',
+                    strokeWeight: 2,
+                    labelOrigin: new google.maps.Point(0, 0),
+                },
+                label: { text: String(i + 1), color: '#ffffff', fontWeight: 'bold', fontSize: '10px' },
                 title: `จุดแวะ ${i + 1}`,
+                zIndex: 5,
             }))
         }
     })
@@ -914,11 +1348,11 @@ function openPlacePicker(field) {
         const hasMeta = base?.lat != null && base?.lng != null
         const center = hasMeta ? { lat: base.lat, lng: base.lng }
             : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng }
-                : { lat: 13.7563, lng: 100.5018 }
+                : { lat: 16.4720, lng: 102.8239 }
 
         placePickerMap = new google.maps.Map(placePickerMapEl.value, {
             center,
-            zoom: hasMeta ? 14 : userLocation.value.lat ? 14 : 6,
+            zoom: hasMeta ? 16 : userLocation.value.lat ? 16 : 14,
             mapTypeControl: false,
             streetViewControl: false,
             fullscreenControl: false,
@@ -1031,6 +1465,7 @@ onMounted(async () => {
     await fetchGuardStatus()
     if (!canCreateRoute.value) return // ไม่ต้อง init map ถ้ายังไม่ผ่านเงื่อนไข
     fetchVehicles()
+    loadLocationData()
     if (window.google?.maps?.places) {
         initAll()
     } else {

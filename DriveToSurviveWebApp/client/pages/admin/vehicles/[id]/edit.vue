@@ -146,7 +146,7 @@ import AdminHeader from '~/components/admin/AdminHeader.vue';
 import AdminSidebar from '~/components/admin/AdminSidebar.vue';
 import { useToast } from '~/composables/useToast';
 
-definePageMeta({ middleware: ['admin-auth'] });
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' });
 
 const route = useRoute();
 const { toast } = useToast();

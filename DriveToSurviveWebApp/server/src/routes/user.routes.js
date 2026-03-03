@@ -5,6 +5,8 @@ const upload = require('../middlewares/upload.middleware');
 const { idParamSchema, createUserSchema, createAdminUserSchema, updateMyProfileSchema, updateUserByAdminSchema, updateUserStatusSchema, listUsersQuerySchema } = require('../validations/user.validation');
 const { protect, requireAdmin } = require('../middlewares/auth');
 
+const { authLimiter } = require('../middlewares/rateLimiter');
+
 const router = express.Router();
 
 // --- Admin Routes ---
@@ -80,6 +82,12 @@ router.get(
     userController.getMyUser
 );
 
+// GET /api/users/check-username/:username (public, ไม่ต้อง auth)
+router.get(
+    '/check-username/:username',
+    userController.checkUsername
+);
+
 // GET /api/users/:id
 router.get(
     '/:id',
@@ -90,6 +98,7 @@ router.get(
 // POST /api/users
 router.post(
     '/',
+    authLimiter,
     upload.fields([
         { name: 'nationalIdPhotoUrl', maxCount: 1 },
         { name: 'nationalIdBackPhotoUrl', maxCount: 1 },
