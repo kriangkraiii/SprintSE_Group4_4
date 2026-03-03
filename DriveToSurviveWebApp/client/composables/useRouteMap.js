@@ -327,6 +327,7 @@ export const STATUS_BADGES = {
     pending: { class: 'bg-amber-100 text-amber-700', label: 'รอดำเนินการ' },
     confirmed: { class: 'bg-green-100 text-green-700', label: 'ยืนยันแล้ว' },
     in_progress: { class: 'bg-blue-100 text-blue-700', label: 'กำลังเดินทาง' },
+    in_transit: { class: 'bg-indigo-100 text-indigo-700', label: '🚗 กำลังเดินทาง' },
     completed: { class: 'bg-emerald-100 text-emerald-700', label: 'เสร็จสิ้น' },
     rejected: { class: 'bg-red-100 text-red-700', label: 'ปฏิเสธ' },
     cancelled: { class: 'bg-slate-100 text-slate-600', label: 'ยกเลิก' },

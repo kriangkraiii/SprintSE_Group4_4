@@ -97,8 +97,8 @@
                                     <div class="flex-1">
                                         <div class="flex items-center justify-between">
                                             <h4 class="text-lg font-semibold text-primary">{{ route.origin }} → {{ route.destination }}</h4>
-                                            <span class="status-badge" :class="getStatusBadge(route.status === 'available' ? 'available' : 'full').class">
-                                                {{ getStatusBadge(route.status === 'available' ? 'available' : 'full').label }}
+                                            <span class="status-badge" :class="getStatusBadge(route.status).class">
+                                                {{ getStatusBadge(route.status).label }}
                                             </span>
                                         </div>
                                         <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-sm text-slate-500">
@@ -203,6 +203,17 @@
 
                                 <!-- Route Actions -->
                                 <div class="flex flex-wrap justify-end gap-2" :class="{ 'mt-4': selectedId !== route.id }">
+                                    <!-- Trip Lifecycle Buttons -->
+                                    <button v-if="['available', 'full'].includes(route.status)"
+                                        @click.stop="openConfirmModal({ id: route.id, _type: 'route' }, 'startTrip')"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition cursor-pointer flex items-center gap-1.5">
+                                        🚗 เริ่มเดินทาง
+                                    </button>
+                                    <button v-if="route.status === 'in_transit'"
+                                        @click.stop="openConfirmModal({ id: route.id, _type: 'route' }, 'endTrip')"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700 transition cursor-pointer flex items-center gap-1.5">
+                                        ✅ สิ้นสุดเดินทาง
+                                    </button>
                                     <button v-if="route.status === 'available' && addingWaypointRouteId !== route.id"
                                         @click.stop="startAddWaypoint(route.id)"
                                         class="px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-300 rounded-md hover:bg-amber-100 transition cursor-pointer flex items-center gap-1.5">
@@ -221,7 +232,7 @@
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-primary rounded-md hover:bg-primary/90">
                                         📍 ติดตามตำแหน่ง
                                     </NuxtLink>
-                                    <NuxtLink :to="`/myRoute/${route.id}/edit`"
+                                    <NuxtLink v-if="['available', 'full'].includes(route.status)" :to="`/myRoute/${route.id}/edit`"
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-cta rounded-md hover:bg-cta-hover" @click.stop>
                                         แก้ไขเส้นทาง
                                     </NuxtLink>
@@ -416,6 +427,15 @@
                                         <button v-if="item.status === 'pending'" @click.stop="openCancelModal(item)"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
                                         <template v-else-if="['confirmed', 'in_progress'].includes(item.status)">
+                                            <!-- Passenger: ขึ้นรถแล้ว -->
+                                            <button v-if="!item.passengerBoarded"
+                                                @click.stop="openConfirmModal(item, 'boarded')"
+                                                class="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-md hover:bg-teal-700 transition cursor-pointer flex items-center gap-1.5">
+                                                🚌 ขึ้นรถแล้ว
+                                            </button>
+                                            <span v-else class="px-3 py-1.5 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 rounded-md flex items-center gap-1">
+                                                ✅ ขึ้นรถแล้ว
+                                            </span>
                                             <button @click.stop="openCancelModal(item)" class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
                                             <a v-if="item.rawPickup?.lat" :href="getPickupNavUrl(item.rawPickup)" target="_blank" @click.stop
                                                 class="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-300 rounded-md hover:bg-green-100 transition cursor-pointer flex items-center gap-1.5">
@@ -447,6 +467,17 @@
                                             <button @click.stop="openConfirmModal(item, 'reject')" class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ปฏิเสธ</button>
                                         </template>
                                         <template v-else-if="['confirmed', 'in_progress'].includes(item.status)">
+                                            <!-- Driver: รับ/ส่งผู้โดยสาร -->
+                                            <button v-if="item.status === 'confirmed'"
+                                                @click.stop="openConfirmModal(item, 'pickup')"
+                                                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition cursor-pointer flex items-center gap-1.5">
+                                                👤 รับผู้โดยสารแล้ว
+                                            </button>
+                                            <button v-if="item.status === 'in_progress'"
+                                                @click.stop="openConfirmModal(item, 'dropoff')"
+                                                class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700 transition cursor-pointer flex items-center gap-1.5">
+                                                📍 ส่งผู้โดยสารแล้ว
+                                            </button>
                                             <a v-if="item.rawStart" :href="getGoogleMapsNavUrl(item.rawStart, item.rawEnd)" target="_blank" @click.stop
                                                 class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
                                                 🗺️ นำทาง
@@ -563,6 +594,7 @@ const driverStatuses = [
     { value: 'all', label: 'ทั้งหมด' },
     { value: 'confirmed', label: 'ยืนยันแล้ว' },
     { value: 'pending', label: 'รอดำเนินการ' },
+    { value: 'in_progress', label: 'กำลังเดินทาง' },
     { value: 'rejected', label: 'ปฏิเสธ' },
     { value: 'cancelled', label: 'ยกเลิก' },
     { value: 'myRoutes', label: 'เส้นทางของฉัน' },
@@ -682,7 +714,8 @@ async function fetchPassengerTrips() {
                 reviewData: (Array.isArray(b.reviews) && b.reviews[0]) ? b.reviews[0] : null,
                 durationText: fmtDuration(b.route), distanceText: fmtDistance(b.route),
                 rawStart: start, rawEnd: end,
-                rawPickup: b.pickupLocation || null, rawDropoff: b.dropoffLocation || null
+                rawPickup: b.pickupLocation || null, rawDropoff: b.dropoffLocation || null,
+                passengerBoarded: !!(b.metadata?.passengerBoarded),
             }
         })
         await waitMapReady()
@@ -900,6 +933,16 @@ function openConfirmModal(item, action) {
         modalContent.value = { title: 'ปฏิเสธคำขอจอง', message: `ต้องการปฏิเสธคำขอของ "${(item.person || {}).name}" ใช่หรือไม่?`, confirmText: 'ปฏิเสธ', action: 'reject', variant: 'danger' }
     } else if (action === 'delete') {
         modalContent.value = { title: 'ยืนยันการลบรายการ', message: 'ต้องการลบรายการนี้ออกจากประวัติใช่หรือไม่?', confirmText: 'ลบรายการ', action: 'delete', variant: 'danger' }
+    } else if (action === 'startTrip') {
+        modalContent.value = { title: '🚗 เริ่มเดินทาง', message: 'ยืนยันเริ่มเดินทางเส้นทางนี้ ผู้โดยสารทุกคนจะได้รับการแจ้งเตือน', confirmText: 'เริ่มเดินทาง', action: 'startTrip', variant: 'primary' }
+    } else if (action === 'endTrip') {
+        modalContent.value = { title: '✅ สิ้นสุดเดินทาง', message: 'ยืนยันสิ้นสุดการเดินทาง? การจองทั้งหมดจะถูกตั้งเป็นเสร็จสิ้น', confirmText: 'สิ้นสุดเดินทาง', action: 'endTrip', variant: 'primary' }
+    } else if (action === 'pickup') {
+        modalContent.value = { title: '👤 รับผู้โดยสารแล้ว', message: `ยืนยันว่ารับ "${(item.person || {}).name}" ขึ้นรถแล้ว?`, confirmText: 'รับแล้ว', action: 'pickup', variant: 'primary' }
+    } else if (action === 'dropoff') {
+        modalContent.value = { title: '📍 ส่งผู้โดยสารแล้ว', message: `ยืนยันว่าส่ง "${(item.person || {}).name}" ถึงแล้ว?`, confirmText: 'ส่งแล้ว', action: 'dropoff', variant: 'primary' }
+    } else if (action === 'boarded') {
+        modalContent.value = { title: '🚌 ขึ้นรถแล้ว', message: 'ยืนยันว่าคุณขึ้นรถแล้ว?', confirmText: 'ขึ้นรถแล้ว', action: 'boarded', variant: 'primary' }
     }
     isModalVisible.value = true
 }
@@ -919,6 +962,21 @@ async function handleConfirmAction() {
         } else if (action === 'delete') {
             await $api(`/bookings/${id}`, { method: 'DELETE' })
             toast.success('ลบรายการสำเร็จ')
+        } else if (action === 'startTrip') {
+            await $api(`/routes/${id}/start`, { method: 'PATCH' })
+            toast.success('🚗 เริ่มเดินทาง', 'ผู้โดยสารได้รับการแจ้งเตือนแล้ว')
+        } else if (action === 'endTrip') {
+            await $api(`/routes/${id}/end`, { method: 'PATCH' })
+            toast.success('✅ สิ้นสุดเดินทาง', 'การเดินทางเสร็จสิ้น')
+        } else if (action === 'pickup') {
+            await $api(`/bookings/${id}/status`, { method: 'PATCH', body: { status: 'IN_PROGRESS' } })
+            toast.success('👤 รับผู้โดยสารแล้ว')
+        } else if (action === 'dropoff') {
+            await $api(`/bookings/${id}/status`, { method: 'PATCH', body: { status: 'COMPLETED' } })
+            toast.success('📍 ส่งผู้โดยสารแล้ว')
+        } else if (action === 'boarded') {
+            await $api(`/bookings/${id}/boarded`, { method: 'PATCH' })
+            toast.success('🚌 ขึ้นรถแล้ว', 'คนขับได้รับการแจ้งเตือนแล้ว')
         }
         closeConfirmModal()
         if (role.value === 'passenger') await fetchPassengerTrips()
