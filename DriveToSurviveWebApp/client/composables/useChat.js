@@ -38,28 +38,16 @@ export function useChat() {
         _socket?.emit('send-message', { sessionId, message })
     }
 
-    function emitEditMessage(sessionId, message) {
-        _socket?.emit('edit-message', { sessionId, message })
+    function emitRevokeLocation(sessionId, messageId) {
+        _socket?.emit('revoke-location', { sessionId, messageId })
     }
 
-    function emitUnsendMessage(sessionId, messageId) {
-        _socket?.emit('unsend-message', { sessionId, messageId })
+    function onLocationRevoked(callback) {
+        _socket?.on('location-revoked', callback)
     }
 
-    function onMessageEdited(callback) {
-        _socket?.on('message-edited', callback)
-    }
-
-    function offMessageEdited(callback) {
-        _socket?.off('message-edited', callback)
-    }
-
-    function onMessageUnsent(callback) {
-        _socket?.on('message-unsent', callback)
-    }
-
-    function offMessageUnsent(callback) {
-        _socket?.off('message-unsent', callback)
+    function offLocationRevoked(callback) {
+        _socket?.off('location-revoked', callback)
     }
 
     function emitTyping(sessionId) {
@@ -128,9 +116,6 @@ export function useChat() {
     const fetchMessages = (sessionId, opts = {}) =>
         $api(`/chat/${sessionId}/messages`, { params: opts })
 
-    const editMessage = (messageId, data) =>
-        $api(`/chat/messages/${messageId}/edit`, { method: 'PATCH', body: data })
-
     const unsendMessage = (messageId) =>
         $api(`/chat/messages/${messageId}/unsend`, { method: 'PATCH' })
 
@@ -166,7 +151,6 @@ export function useChat() {
         endSession,
         sendMessage,
         fetchMessages,
-        editMessage,
         unsendMessage,
         shareLocation,
         reportMessage,
@@ -182,12 +166,9 @@ export function useChat() {
         onNewMessage,
         offNewMessage,
         emitNewMessage,
-        emitEditMessage,
-        emitUnsendMessage,
-        onMessageEdited,
-        offMessageEdited,
-        onMessageUnsent,
-        offMessageUnsent,
+        emitRevokeLocation,
+        onLocationRevoked,
+        offLocationRevoked,
         emitTyping,
         emitStopTyping,
         onTyping,
