@@ -1,0 +1,46 @@
+
+Running 10 tests using 1 worker
+
+[1A[2K[1/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:36:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat
+[1A[2K  1) [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:36:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('div.divide-y > a').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('div.divide-y > a').first()[22m
+
+
+      19 |     await page.goto('http://localhost:3003/chat', { waitUntil: 'networkidle' });
+      20 |     const chatRoomQuery = 'div.divide-y > a';
+    > 21 |     await expect(page.locator(chatRoomQuery).first()).toBeVisible({ timeout: 15000 });
+         |                                                       ^
+      22 |     await page.click(chatRoomQuery, { force: true });
+      23 |     await expect(page.locator('textarea')).toBeVisible({ timeout: 15000 });
+      24 | }
+        at enterChat (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:21:55)
+        at setupUser (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:28:5)
+        at C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:42:9
+
+    Error Context: test-results\realtime-chat-Real-time-Ch-a3ef4-tored-Scenario-1-Basic-Chat-custom-browser-test\error-context.md
+
+
+[1A[2K[2/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:61:9 › Real-time Chat Tests (Refactored) › Scenario 2 : Quick reply feature
+[1A[2K[3/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:90:9 › Real-time Chat Tests (Refactored) › Scenario 3 : Create new quick reply and send
+[1A[2K[4/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:130:9 › Real-time Chat Tests (Refactored) › Scenario 4 : Delete quick reply
+[1A[2K[5/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:173:9 › Real-time Chat Tests (Refactored) › Scenario 5 : Add image (rejecting .pdf)
+[1A[2K[6/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:215:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction
+[1A[2K[7/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:256:9 › Real-time Chat Tests (Refactored) › Scenario 7 : Stop Shared Direction
+[1A[2K[8/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:295:9 › Real-time Chat Tests (Refactored) › Scenario 8 : Empty Message
+[1A[2K[9/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:317:9 › Real-time Chat Tests (Refactored) › Scenario 9 : Refresh Page
+[1A[2K[10/10] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:385:9 › Real-time Chat Tests (Refactored) › Scenario 10 : Disconnected
+[1A[2K  1 failed
+    [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:36:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat 
+  9 did not run
+
+[36m  Serving HTML report at http://localhost:56003. Press Ctrl+C to quit.[39m
