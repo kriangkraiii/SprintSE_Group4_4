@@ -157,7 +157,32 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
 });
 
 const adminUpdateUser = asyncHandler(async (req, res) => {
-    const updatedUser = await userService.updateUserProfile(req.params.id, req.body);
+    const updateData = { ...req.body };
+
+    // Handle file uploads (same as updateCurrentUserProfile)
+    if (req.files?.nationalIdPhotoUrl) {
+        const buf = req.files.nationalIdPhotoUrl[0].buffer;
+        const result = await uploadToCloudinary(buf, 'drivetosurvive/national_ids');
+        updateData.nationalIdPhotoUrl = result.url;
+    }
+    if (req.files?.selfiePhotoUrl) {
+        const buf = req.files.selfiePhotoUrl[0].buffer;
+        const result = await uploadToCloudinary(buf, 'drivetosurvive/selfies');
+        updateData.selfiePhotoUrl = result.url;
+    }
+    if (req.files?.profilePicture) {
+        const buf = req.files.profilePicture[0].buffer;
+        const result = await uploadToCloudinary(buf, 'drivetosurvive/profiles');
+        updateData.profilePicture = result.url;
+    }
+
+    // Hash password if provided
+    if (updateData.password) {
+        const bcrypt = require('bcrypt');
+        updateData.password = await bcrypt.hash(updateData.password, 12);
+    }
+
+    const updatedUser = await userService.updateUserProfile(req.params.id, updateData);
     res.status(200).json({
         success: true,
         message: "User updated by admin",

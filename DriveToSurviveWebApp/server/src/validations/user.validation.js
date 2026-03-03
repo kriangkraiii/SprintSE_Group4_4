@@ -39,11 +39,16 @@ const updateMyProfileSchema = Joi.object({
 });
 
 const updateUserByAdminSchema = Joi.object({
+    email: Joi.string().email(),
+    username: Joi.string().allow('', null),
+    password: Joi.string().min(8).pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])/).message('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร ประกอบด้วย A-Z, a-z และ 0-9'),
     firstName: Joi.string(),
     lastName: Joi.string(),
     phoneNumber: Joi.string(),
-    email: Joi.string().email(),
+    gender: Joi.string().valid('MALE', 'FEMALE', 'OTHER').allow('', null),
     role: Joi.string().valid('PASSENGER', 'DRIVER', 'ADMIN'),
+    nationalIdNumber: Joi.string().allow('', null),
+    nationalIdExpiryDate: Joi.string().allow('', null),
     isActive: Joi.boolean(),
     isVerified: Joi.boolean(),
 });

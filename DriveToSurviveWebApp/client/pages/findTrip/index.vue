@@ -1267,7 +1267,10 @@ async function confirmBooking() {
         console.error('[Booking Error]', error, 'data:', error?.data)
         const rawData = error?.data
         const serverMsg = rawData?.message || rawData?.error?.message || rawData?.error || ''
-        const msg = String(serverMsg || error?.statusMessage || error?.message || '').replace(/^Forbidden$/i, '')
+        // Strip standard HTTP status texts that leak through (Forbidden, Bad Request, etc.)
+        const httpTexts = /^(Forbidden|Bad Request|Internal Server Error|Not Found|Unauthorized|Too Many Requests)$/i
+        const extracted = String(serverMsg || error?.statusMessage || error?.message || '')
+        const msg = httpTexts.test(extracted.trim()) ? '' : extracted
         const status = error?.status || error?.statusCode || rawData?.statusCode || 0
 
         if (status === 403 && /ยืนยัน|บัตรประชาชน|verify|verified/i.test(msg)) {
@@ -1275,14 +1278,17 @@ async function confirmBooking() {
             setTimeout(() => navigateTo('/profile'), 2000)
         } else if (status === 403 && /ระงับ|suspended/i.test(msg)) {
             toast.error('บัญชีถูกระงับ', msg)
-        } else if (status === 400 && /จองเส้นทางนี้แล้ว|already.*book/i.test(msg)) {
-            toast.warning('จองซ้ำ', msg || 'คุณมีการจองเส้นทางนี้อยู่แล้ว')
         } else if (status === 403) {
             toast.error('ไม่สามารถจองได้', msg || 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้')
+        } else if (status === 400 && /จองเส้นทางนี้แล้ว|already.*book/i.test(msg)) {
+            toast.warning('จองซ้ำ', msg)
+        } else if (status === 400 && !msg) {
+            // 400 without server message = likely duplicate booking or validation
+            toast.warning('ไม่สามารถจองได้', 'คุณอาจมีการจองเส้นทางนี้อยู่แล้ว หรือเส้นทางเต็มแล้ว')
+        } else if (status === 400) {
+            toast.error('ไม่สามารถจองได้', msg)
         } else if (status === 429) {
             toast.error('ส่งคำขอบ่อยเกินไป', msg || 'กรุณารอสักครู่แล้วลองใหม่')
-        } else if (status === 400) {
-            toast.error('ไม่สามารถจองได้', msg || 'ข้อมูลไม่ถูกต้องหรือเส้นทางเต็มแล้ว')
         } else {
             toast.error('เกิดข้อผิดพลาด', msg || 'โปรดลองใหม่อีกครั้ง')
         }
