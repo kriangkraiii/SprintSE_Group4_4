@@ -90,7 +90,6 @@ router.get(
 router.post(
     '/:sessionId/messages',
     protect,
-    authLimiter,
     validate({ body: sendMessageSchema }),
     chatController.sendMessage
 );
@@ -99,7 +98,6 @@ router.post(
 router.post(
     '/:sessionId/location',
     protect,
-    authLimiter,
     validate({ body: shareLocationSchema }),
     chatController.shareLocation
 );
@@ -115,7 +113,6 @@ router.patch(
 router.patch(
     '/messages/:messageId/edit',
     protect,
-    authLimiter,
     validate({ body: require('../validations/chat.validation').editMessageSchema }),
     chatController.editMessage
 );
@@ -137,7 +134,6 @@ router.post(
 router.post(
     '/:sessionId/image',
     protect,
-    authLimiter,
     upload.single('image'),
     chatController.sendImageMessage
 );

@@ -1,6 +1,7 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 const { containsProfanity } = require('../utils/profanityFilter');
+const { isEnabled } = require('../utils/securityConfig');
 
 const REVIEW_WINDOW_DAYS = 7;
 const POSITIVE_TAGS = ['polite', 'safe_driving', 'clean_car', 'on_time', 'good_conversation'];
@@ -34,17 +35,19 @@ const createReview = async (bookingId, passengerId, data) => {
     });
     if (existing) throw new ApiError(409, 'Already reviewed');
 
-    // Profanity check — block submission entirely
-    if (data.comment) {
-        const check = containsProfanity(data.comment);
-        if (check.hasProfanity) {
-            throw new ApiError(400, 'Review contains inappropriate language. Please remove: ' + check.words.join(', '));
+    // Profanity check — block submission entirely (skip if disabled by admin)
+    if (isEnabled('profanityFilterEnabled')) {
+        if (data.comment) {
+            const check = containsProfanity(data.comment);
+            if (check.hasProfanity) {
+                throw new ApiError(400, 'Review contains inappropriate language. Please remove: ' + check.words.join(', '));
+            }
         }
-    }
-    if (data.privateFeedback) {
-        const check = containsProfanity(data.privateFeedback);
-        if (check.hasProfanity) {
-            throw new ApiError(400, 'Private feedback contains inappropriate language.');
+        if (data.privateFeedback) {
+            const check = containsProfanity(data.privateFeedback);
+            if (check.hasProfanity) {
+                throw new ApiError(400, 'Private feedback contains inappropriate language.');
+            }
         }
     }
 
