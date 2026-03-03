@@ -4,7 +4,7 @@
     :class="isOwn ? 'justify-end' : 'justify-start'"
   >
     <!-- Actions (own messages only) - วางไว้นอกกล่องข้อความ -->
-    <div v-if="isOwn && canUnsend && !message.isUnsent && message.type !== 'SYSTEM'" class="flex items-center opacity-0 group-hover:opacity-100 transition-opacity pr-2 mt-1 relative z-50">
+    <div v-if="isOwn && canUnsend && !message.isUnsent && message.type !== 'SYSTEM' && !message.isFiltered" class="flex items-center opacity-0 group-hover:opacity-100 transition-opacity pr-2 mt-1 relative z-50">
         <button @click.stop="toggleMenu" class="p-1 text-slate-400 hover:text-slate-600 bg-white shadow-sm rounded-full cursor-pointer transition-colors" title="จัดการข้อความ">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
