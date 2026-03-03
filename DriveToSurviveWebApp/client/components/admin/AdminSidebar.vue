@@ -1,7 +1,7 @@
 <template>
-    <aside id="sidebar"
-        class="sidebar fixed left-0 top-16 bottom-0 z-40 w-[280px] border-r border-slate-200 bg-white transition-all duration-300">
-        <div class="h-full px-3 py-4 overflow-y-auto">
+    <aside id="sidebar" class="fixed bottom-0 left-3 bg-white shadow-sm sidebar top-32 h-fit rounded-md ">
+        <div class="py-4">
+            <!-- Toggle Button -->
             <button @click="toggleSidebar"
                 class="absolute items-center justify-center hidden w-6 h-6 transition-colors bg-white border rounded-full shadow-sm lg:flex -right-3 top-6 border-slate-200 text-slate-500 hover:bg-cta hover:text-white hover:border-cta">
                 <i class="text-xs fas fa-chevron-left" id="toggle-icon"></i>
