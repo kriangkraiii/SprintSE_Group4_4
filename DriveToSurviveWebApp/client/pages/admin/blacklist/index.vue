@@ -80,6 +80,7 @@
                             <tr>
                                 <th class="px-4 py-3">ID</th>
                                 <th class="px-4 py-3">National ID Hash (SHA-256)</th>
+                                <th class="px-4 py-3">แบน Role</th>
                                 <th class="px-4 py-3">เหตุผล</th>
                                 <th class="px-4 py-3">เพิ่มโดย (Admin ID)</th>
                                 <th class="px-4 py-3">วันที่เพิ่ม</th>
@@ -88,7 +89,7 @@
                         </thead>
                         <tbody>
                             <tr v-if="entries.length === 0">
-                                <td colspan="6" class="px-4 py-12 text-center text-slate-400">
+                                <td colspan="7" class="px-4 py-12 text-center text-slate-400">
                                     ไม่พบรายการ Blacklist
                                 </td>
                             </tr>
@@ -98,6 +99,16 @@
                                 <td class="px-4 py-3">
                                     <code
                                         class="px-2 py-1 text-xs break-all bg-slate-100 rounded">{{ entry.nationalIdHash }}</code>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full"
+                                        :class="{
+                                            'bg-red-100 text-red-700': entry.bannedRole === 'BOTH',
+                                            'bg-amber-100 text-amber-700': entry.bannedRole === 'DRIVER',
+                                            'bg-blue-100 text-blue-700': entry.bannedRole === 'PASSENGER'
+                                        }">
+                                        {{ entry.bannedRole || 'BOTH' }}
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3 max-w-xs">{{ entry.reason || '—' }}</td>
                                 <td class="px-4 py-3 font-mono text-xs">{{ entry.createdByAdminId }}</td>
@@ -156,6 +167,15 @@
                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-cta" />
                     </div>
                     <div>
+                        <label class="block mb-1.5 text-sm font-medium text-primary">แบน Role *</label>
+                        <select v-model="addForm.bannedRole"
+                            class="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-cta">
+                            <option value="BOTH">ทั้งสอง (Passenger + Driver)</option>
+                            <option value="PASSENGER">เฉพาะ Passenger</option>
+                            <option value="DRIVER">เฉพาะ Driver</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block mb-1.5 text-sm font-medium text-primary">เหตุผล</label>
                         <textarea v-model="addForm.reason" rows="3" placeholder="ระบุเหตุผล (ไม่บังคับ)"
                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-cta"></textarea>
@@ -196,7 +216,7 @@ import 'dayjs/locale/th'
 
 dayjs.locale('th')
 
-definePageMeta({ middleware: 'admin-auth' })
+definePageMeta({ middleware: 'admin-auth', layout: 'admin' })
 useHead({
     title: 'Blacklist Management • Admin',
     link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]
@@ -213,7 +233,7 @@ const filters = reactive({ createdFrom: '', createdTo: '', sortOrder: 'desc' })
 
 // Add modal
 const showAddModal = ref(false)
-const addForm = reactive({ nationalId: '', reason: '' })
+const addForm = reactive({ nationalId: '', reason: '', bannedRole: 'BOTH' })
 const addError = ref('')
 const addLoading = ref(false)
 
@@ -271,12 +291,13 @@ const handleAdd = async () => {
     try {
         await $api('/blacklist', {
             method: 'POST',
-            body: { nationalId: addForm.nationalId, reason: addForm.reason || undefined },
+            body: { nationalId: addForm.nationalId, reason: addForm.reason || undefined, bannedRole: addForm.bannedRole },
         })
         toast.success('สำเร็จ', 'เพิ่ม National ID เข้า Blacklist แล้ว (เก็บเป็น SHA-256 Hash)')
         showAddModal.value = false
         addForm.nationalId = ''
         addForm.reason = ''
+        addForm.bannedRole = 'BOTH'
         fetchEntries()
     } catch (err) {
         addError.value = err?.data?.message || err?.message || 'เกิดข้อผิดพลาด'

@@ -272,6 +272,11 @@ const softDeleteUser = async (id) => {
             nationalIdNumber: null,
         },
     });
+
+    // Sprint 2: Anonymize reviews to "Anonymous Passenger" (PDPA + driver stats preserved)
+    const reviewService = require('./review.service');
+    await reviewService.anonymizeReviews(id);
+
     // SystemLog ไม่ถูกลบ — เก็บไว้ตาม พ.ร.บ.คอมพิวเตอร์ ม.26
     const { password, ...safeUser } = anonymized;
     return safeUser;
@@ -337,6 +342,18 @@ const resetPasswordWithOtp = async (email, otpCode, newPassword) => {
     return { success: true };
 };
 
+/**
+ * ตรวจสอบว่า username นี้ว่างหรือถูกใช้ไปแล้ว
+ * ใช้ตอนลงทะเบียน (real-time check ขณะพิมพ์)
+ */
+const checkUsernameAvailability = async (username) => {
+    const existing = await prisma.user.findUnique({
+        where: { username },
+        select: { id: true },
+    });
+    return { available: !existing };
+};
+
 module.exports = {
     searchUsers,
     getAllUsers,
@@ -354,4 +371,5 @@ module.exports = {
     saveOtp,
     verifyOtp,
     resetPasswordWithOtp,
+    checkUsernameAvailability,
 };

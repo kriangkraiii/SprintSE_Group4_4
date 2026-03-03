@@ -1,0 +1,38 @@
+
+Running 10 tests using 1 worker
+
+  ✘   1 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:37:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat (355ms)
+  -   2 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:62:9 › Real-time Chat Tests (Refactored) › Scenario 2 : Quick reply feature
+  -   3 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:91:9 › Real-time Chat Tests (Refactored) › Scenario 3 : Create new quick reply and send
+  -   4 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:131:9 › Real-time Chat Tests (Refactored) › Scenario 4 : Delete quick reply
+  -   5 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:174:9 › Real-time Chat Tests (Refactored) › Scenario 5 : Add image (rejecting .pdf)
+  -   6 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:216:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction
+  -   7 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:257:9 › Real-time Chat Tests (Refactored) › Scenario 7 : Stop Shared Direction
+  -   8 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:296:9 › Real-time Chat Tests (Refactored) › Scenario 8 : Empty Message
+  -   9 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:318:9 › Real-time Chat Tests (Refactored) › Scenario 9 : Refresh Page
+  -  10 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:386:9 › Real-time Chat Tests (Refactored) › Scenario 10 : Disconnected
+
+
+  1) [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:37:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat 
+
+    Test was interrupted.
+
+    Error: page.goto: Target page, context or browser has been closed
+    Call log:
+    [2m  - navigating to "http://localhost:3003/login", waiting until "networkidle"[22m
+
+
+       8 | // ==========================================
+       9 | async function login(page: Page, username: string) {
+    > 10 |     await page.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+         |                ^
+      11 |     await expect(page.locator('input#identifier')).toBeVisible({ timeout: 15000 });
+      12 |     await page.fill('input#identifier', username);
+      13 |     await page.fill('input#password', 'Thanchanok1234');
+        at login (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:10:16)
+        at setupUser (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:28:11)
+        at C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:43:15
+
+  1 interrupted
+    [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:37:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat 
+  9 did not run

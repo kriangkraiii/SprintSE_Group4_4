@@ -1,0 +1,32 @@
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:215:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction
+[1A[2K  1) [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:215:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction 
+
+    Test was interrupted.
+
+    Error: page.goto: Test ended.
+    Call log:
+    [2m  - navigating to "http://localhost:3003/login", waiting until "networkidle"[22m
+
+
+       8 | // ==========================================
+       9 | async function login(page: Page, username: string) {
+    > 10 |     await page.goto('http://localhost:3003/login', { waitUntil: 'networkidle' });
+         |                ^
+      11 |     await expect(page.locator('input#identifier')).toBeVisible({ timeout: 15000 });
+      12 |     await page.fill('input#identifier', username);
+      13 |     await page.fill('input#password', 'Thanchanok1234');
+        at login (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:10:16)
+        at setupUser (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:27:11)
+        at C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:225:15
+
+
+[1A[2K  1 interrupted
+    [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:215:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction 
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report[39m
+[36m[39m
