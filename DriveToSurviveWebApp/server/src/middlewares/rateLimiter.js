@@ -10,7 +10,7 @@ const rateLimit = require('express-rate-limit');
 
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: 10000, // Temporarily increased for testing
     standardHeaders: true,
     legacyHeaders: false,
     message: {
