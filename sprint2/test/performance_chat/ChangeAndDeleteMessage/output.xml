@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.11.9 on win32)" generated="2026-03-04T02:59:15.299404" rpa="false" schemaversion="5">
+<suite id="s1" name="ChangeAndDeleteMessage" source="C:\Users\User\Desktop\Sprint2\SprintSE_Group4_4\sprint2\test\performance_chat\ChangeAndDeleteMessage\ChangeAndDeleteMessage.robot">
+<kw name="Open Browser To Chat" type="SETUP">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:15.431009" level="INFO">Opening browser 'edge' to base url 'http://localhost:3000/login'.</msg>
+<arg>${LOGIN_URL}</arg>
+<arg>edge</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T02:59:15.429501" elapsed="1.343293"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:16.772794" elapsed="0.016548"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:16.789342" level="INFO">Clicking element 'css=[data-testid="identifier-input"]'.</msg>
+<arg>css=[data-testid="identifier-input"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:16.789342" elapsed="0.059188"/>
+</kw>
+<kw name="Press Keys" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:16.849529" level="INFO">Sending key(s) ('CTRL+A',) to css=[data-testid="identifier-input"] element.</msg>
+<msg time="2026-03-04T02:59:17.154058" level="INFO">Pressing special key CONTROL down.</msg>
+<msg time="2026-03-04T02:59:17.154058" level="INFO">Sending key A</msg>
+<msg time="2026-03-04T02:59:17.154058" level="INFO">Releasing special key CONTROL.</msg>
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>CTRL+A</arg>
+<doc>Simulates the user pressing key(s) to an element or on the active browser.</doc>
+<status status="PASS" start="2026-03-04T02:59:16.848530" elapsed="0.309038"/>
+</kw>
+<kw name="Press Keys" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:17.158568" level="INFO">Sending key(s) ('BACKSPACE',) to css=[data-testid="identifier-input"] element.</msg>
+<msg time="2026-03-04T02:59:17.451040" level="INFO">Pressing special key BACKSPACE to element.</msg>
+<msg time="2026-03-04T02:59:17.451040" level="INFO">Releasing special key BACKSPACE.</msg>
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>BACKSPACE</arg>
+<doc>Simulates the user pressing key(s) to an element or on the active browser.</doc>
+<status status="PASS" start="2026-03-04T02:59:17.158568" elapsed="0.297590"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:17.456158" level="INFO">Typing text 'test1' into text field 'css=[data-testid="identifier-input"]'.</msg>
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>${IDENTIFIER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:17.456158" elapsed="0.035566"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:17.492723" level="INFO">Clicking element 'css=[data-testid="password-input"]'.</msg>
+<arg>css=[data-testid="password-input"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:17.492723" elapsed="0.032082"/>
+</kw>
+<kw name="Press Keys" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:17.526309" level="INFO">Sending key(s) ('CTRL+A',) to css=[data-testid="password-input"] element.</msg>
+<msg time="2026-03-04T02:59:17.812039" level="INFO">Pressing special key CONTROL down.</msg>
+<msg time="2026-03-04T02:59:17.812039" level="INFO">Sending key A</msg>
+<msg time="2026-03-04T02:59:17.812039" level="INFO">Releasing special key CONTROL.</msg>
+<arg>css=[data-testid="password-input"]</arg>
+<arg>CTRL+A</arg>
+<doc>Simulates the user pressing key(s) to an element or on the active browser.</doc>
+<status status="PASS" start="2026-03-04T02:59:17.526309" elapsed="0.289729"/>
+</kw>
+<kw name="Press Keys" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:17.816038" level="INFO">Sending key(s) ('BACKSPACE',) to css=[data-testid="password-input"] element.</msg>
+<msg time="2026-03-04T02:59:18.094578" level="INFO">Pressing special key BACKSPACE to element.</msg>
+<msg time="2026-03-04T02:59:18.094578" level="INFO">Releasing special key BACKSPACE.</msg>
+<arg>css=[data-testid="password-input"]</arg>
+<arg>BACKSPACE</arg>
+<doc>Simulates the user pressing key(s) to an element or on the active browser.</doc>
+<status status="PASS" start="2026-03-04T02:59:17.816038" elapsed="0.282051"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:18.098089" level="INFO">Typing text 'Cp12345678' into text field 'css=[data-testid="password-input"]'.</msg>
+<arg>css=[data-testid="password-input"]</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:18.098089" elapsed="0.032627"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T02:59:19.131928" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T02:59:18.130716" elapsed="1.001212"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:19.131928" level="INFO">Clicking button 'css=[data-testid="login-btn"]'.</msg>
+<arg>css=[data-testid="login-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.131928" elapsed="0.058879"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.190807" elapsed="0.210104"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:19.400911" level="INFO">Opening url 'http://localhost:3000/chat/cmmb0myrb000cusc450b390oz'</msg>
+<arg>${CHAT_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.400911" elapsed="0.055521"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.456432" elapsed="0.229751"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.686183" elapsed="0.013030"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:15.429501" elapsed="4.269712"/>
+</kw>
+<test id="s1-t1" name="Test 01 - Edit Message 3 Times" line="102">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:19.699213" level="INFO">Typing text 'Robot Test Message' into text field 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>${TEST_MESSAGE}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.699213" elapsed="0.055732"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:19.754945" level="INFO">Clicking button 'css=[data-testid="send-btn"]'.</msg>
+<arg>css=[data-testid="send-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.754945" elapsed="0.051384"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.807337" elapsed="0.015541"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${TEST_MESSAGE}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.822878" elapsed="0.009017"/>
+</kw>
+<for flavor="IN RANGE">
+<iter>
+<kw name="Edit Message">
+<kw name="Open Message Menu">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.832896" elapsed="0.009012"/>
+</kw>
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:19.841908" level="INFO">Simulating Mouse Over on element 'xpath=(//div[@data-testid="chat-message"])[last()]'.</msg>
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:19.841908" elapsed="0.277572"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.119480" elapsed="0.011310"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:20.130790" level="INFO">Clicking element 'xpath=(//button[@data-testid="message-menu-btn"])[last()]'.</msg>
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.130790" elapsed="0.034063"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.164853" elapsed="0.009023"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:19.832896" elapsed="0.340980"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.173876" elapsed="0.011024"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:20.184900" level="INFO">Clicking element 'css=[data-testid="edit-message-btn"]'.</msg>
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.184900" elapsed="0.032638"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.217538" elapsed="0.007089"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.224627" elapsed="0.014534"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:20.239161" level="INFO">Clicking element 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.239161" elapsed="0.030057"/>
+</kw>
+<kw name="Clear Element Text" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Clears the value of the text-input-element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.269218" elapsed="0.015539"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:20.284757" level="INFO">Typing text 'Edit ครั้งที่ 1' into text field 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.284757" elapsed="0.051610"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="send-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.336367" elapsed="0.011027"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:20.347394" level="INFO">Clicking button 'css=[data-testid="send-btn"]'.</msg>
+<arg>css=[data-testid="send-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.347394" elapsed="0.034553"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.381947" elapsed="0.217276"/>
+</kw>
+<kw name="Close Toast If Present">
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:23.773490" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-1.png"&gt;&lt;img src="selenium-screenshot-1.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:23.773490" level="FAIL">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T02:59:20.600730" elapsed="3.173758">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</status>
+</kw>
+<arg>Wait Until Element Is Visible</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:20.600225" elapsed="3.174263"/>
+</kw>
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:23.775492" level="INFO">Clicking element 'css=[data-testid="toast-close-btn"]'.</msg>
+<msg time="2026-03-04T02:59:23.874871" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-2.png"&gt;&lt;img src="selenium-screenshot-2.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:23.874871" level="FAIL">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T02:59:23.775492" elapsed="0.100884">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</status>
+</kw>
+<arg>Click Element</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:23.775492" elapsed="0.100884"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T02:59:24.377494" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T02:59:23.876376" elapsed="0.501118"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:20.600225" elapsed="3.777269"/>
+</kw>
+<arg>${i}</arg>
+<status status="PASS" start="2026-03-04T02:59:19.832896" elapsed="4.544598"/>
+</kw>
+<var name="${i}">1</var>
+<status status="PASS" start="2026-03-04T02:59:19.832896" elapsed="4.544598"/>
+</iter>
+<iter>
+<kw name="Edit Message">
+<kw name="Open Message Menu">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.378502" elapsed="0.012536"/>
+</kw>
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.392044" level="INFO">Simulating Mouse Over on element 'xpath=(//div[@data-testid="chat-message"])[last()]'.</msg>
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.391038" elapsed="0.270556"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.661594" elapsed="0.009016"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.670610" level="INFO">Clicking element 'xpath=(//button[@data-testid="message-menu-btn"])[last()]'.</msg>
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.670610" elapsed="0.034083"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.704693" elapsed="0.010024"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:24.378502" elapsed="0.336215"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.714717" elapsed="0.009613"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.725330" level="INFO">Clicking element 'css=[data-testid="edit-message-btn"]'.</msg>
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.724330" elapsed="0.035141"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.759471" elapsed="0.009025"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.768496" elapsed="0.009617"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.778113" level="INFO">Clicking element 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.778113" elapsed="0.029767"/>
+</kw>
+<kw name="Clear Element Text" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Clears the value of the text-input-element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.807880" elapsed="0.013585"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.821465" level="INFO">Typing text 'Edit ครั้งที่ 2' into text field 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.821465" elapsed="0.049157"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="send-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.870622" elapsed="0.011027"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:24.881649" level="INFO">Clicking button 'css=[data-testid="send-btn"]'.</msg>
+<arg>css=[data-testid="send-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:24.881649" elapsed="0.794557"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:25.677211" elapsed="0.215163"/>
+</kw>
+<kw name="Close Toast If Present">
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:29.038430" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-3.png"&gt;&lt;img src="selenium-screenshot-3.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:29.038430" level="FAIL">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T02:59:25.892374" elapsed="3.146056">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</status>
+</kw>
+<arg>Wait Until Element Is Visible</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:25.892374" elapsed="3.146056"/>
+</kw>
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:29.039434" level="INFO">Clicking element 'css=[data-testid="toast-close-btn"]'.</msg>
+<msg time="2026-03-04T02:59:29.128313" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-4.png"&gt;&lt;img src="selenium-screenshot-4.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:29.128313" level="FAIL">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T02:59:29.039434" elapsed="0.088879">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</status>
+</kw>
+<arg>Click Element</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.039434" elapsed="0.088879"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T02:59:29.628802" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.128313" elapsed="0.500489"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:25.892374" elapsed="3.736428"/>
+</kw>
+<arg>${i}</arg>
+<status status="PASS" start="2026-03-04T02:59:24.377494" elapsed="5.251308"/>
+</kw>
+<var name="${i}">2</var>
+<status status="PASS" start="2026-03-04T02:59:24.377494" elapsed="5.251308"/>
+</iter>
+<iter>
+<kw name="Edit Message">
+<kw name="Open Message Menu">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.628802" elapsed="0.010522"/>
+</kw>
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:29.639324" level="INFO">Simulating Mouse Over on element 'xpath=(//div[@data-testid="chat-message"])[last()]'.</msg>
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.639324" elapsed="0.270995"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.910319" elapsed="0.007012"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:29.917331" level="INFO">Clicking element 'xpath=(//button[@data-testid="message-menu-btn"])[last()]'.</msg>
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.917331" elapsed="0.027421"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.944752" elapsed="0.007566"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:29.628802" elapsed="0.323516"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.952318" elapsed="0.010054"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:29.962372" level="INFO">Clicking element 'css=[data-testid="edit-message-btn"]'.</msg>
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.962372" elapsed="0.029646"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.992018" elapsed="0.007513"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:29.999531" elapsed="0.011738"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:30.011269" level="INFO">Clicking element 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.011269" elapsed="0.028218"/>
+</kw>
+<kw name="Clear Element Text" owner="SeleniumLibrary">
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Clears the value of the text-input-element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.039487" elapsed="0.015393"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:30.054880" level="INFO">Typing text 'Edit ครั้งที่ 3' into text field 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.054880" elapsed="0.055642"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="send-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.110522" elapsed="0.014027"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:30.124549" level="INFO">Clicking button 'css=[data-testid="send-btn"]'.</msg>
+<arg>css=[data-testid="send-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.124549" elapsed="0.803870"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Edit ครั้งที่ ${round}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:30.929422" elapsed="0.216677"/>
+</kw>
+<kw name="Close Toast If Present">
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:34.293739" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-5.png"&gt;&lt;img src="selenium-screenshot-5.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:34.294741" level="FAIL">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T02:59:31.147103" elapsed="3.147638">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</status>
+</kw>
+<arg>Wait Until Element Is Visible</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:31.147103" elapsed="3.147638"/>
+</kw>
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:34.294741" level="INFO">Clicking element 'css=[data-testid="toast-close-btn"]'.</msg>
+<msg time="2026-03-04T02:59:34.372947" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-6.png"&gt;&lt;img src="selenium-screenshot-6.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:34.372947" level="FAIL">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T02:59:34.294741" elapsed="0.078206">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</status>
+</kw>
+<arg>Click Element</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:34.294741" elapsed="0.078206"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T02:59:34.874036" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T02:59:34.372947" elapsed="0.501089"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:31.146099" elapsed="3.727937"/>
+</kw>
+<arg>${i}</arg>
+<status status="PASS" start="2026-03-04T02:59:29.628802" elapsed="5.245234"/>
+</kw>
+<var name="${i}">3</var>
+<status status="PASS" start="2026-03-04T02:59:29.628802" elapsed="5.245234"/>
+</iter>
+<var>${i}</var>
+<value>1</value>
+<value>4</value>
+<status status="PASS" start="2026-03-04T02:59:19.832896" elapsed="15.041140"/>
+</for>
+<status status="PASS" start="2026-03-04T02:59:19.699213" elapsed="15.174823"/>
+</test>
+<test id="s1-t2" name="Test 02 - Edit Button Should Be Disabled After 3 Edits" line="112">
+<kw name="Open Message Menu">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:34.875108" elapsed="0.009514"/>
+</kw>
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:34.886136" level="INFO">Simulating Mouse Over on element 'xpath=(//div[@data-testid="chat-message"])[last()]'.</msg>
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:34.884622" elapsed="0.264534"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.149156" elapsed="0.007078"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:35.157242" level="INFO">Clicking element 'xpath=(//button[@data-testid="message-menu-btn"])[last()]'.</msg>
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.157242" elapsed="0.031217"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.188459" elapsed="0.009022"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:34.875108" elapsed="0.322373"/>
+</kw>
+<kw name="Element Should Be Disabled" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<doc>Verifies that element identified by ``locator`` is disabled.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.197481" elapsed="0.006509"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:34.874036" elapsed="0.329954"/>
+</test>
+<test id="s1-t3" name="Test 03 - Unsend Message" line="116">
+<kw name="Unsend Message">
+<kw name="Open Message Menu">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.204991" elapsed="0.009022"/>
+</kw>
+<kw name="Mouse Over" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:35.215130" level="INFO">Simulating Mouse Over on element 'xpath=(//div[@data-testid="chat-message"])[last()]'.</msg>
+<arg>xpath=(//div[@data-testid="chat-message"])[last()]</arg>
+<doc>Simulates hovering the mouse over the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.215130" elapsed="0.277633"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.492763" elapsed="0.006513"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:35.500278" level="INFO">Clicking element 'xpath=(//button[@data-testid="message-menu-btn"])[last()]'.</msg>
+<arg>xpath=(//button[@data-testid="message-menu-btn"])[last()]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.500278" elapsed="0.031709"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="edit-message-btn"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.531987" elapsed="0.006509"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:35.204991" elapsed="0.333505"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:35.538496" level="INFO">Clicking element 'css=[data-testid="unsend-message-btn"]'.</msg>
+<arg>css=[data-testid="unsend-message-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.538496" elapsed="0.034785"/>
+</kw>
+<kw name="Wait Until Page Does Not Contain" owner="SeleniumLibrary">
+<arg>Edit ครั้งที่ 3</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` disappears from the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.573281" elapsed="0.214074"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ลบข้อความแล้ว</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.788358" elapsed="0.006511"/>
+</kw>
+<kw name="Close Toast If Present">
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:38.961223" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-7.png"&gt;&lt;img src="selenium-screenshot-7.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:38.961223" level="FAIL">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-04T02:59:35.796373" elapsed="3.164850">Element 'css=[data-testid="toast-close-btn"]' not visible after 3 seconds.</status>
+</kw>
+<arg>Wait Until Element Is Visible</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<arg>timeout=3s</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:35.796373" elapsed="3.164850"/>
+</kw>
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T02:59:38.962266" level="INFO">Clicking element 'css=[data-testid="toast-close-btn"]'.</msg>
+<msg time="2026-03-04T02:59:39.086342" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-8.png"&gt;&lt;img src="selenium-screenshot-8.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T02:59:39.086342" level="FAIL">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</msg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T02:59:38.961223" elapsed="0.126124">Element with locator 'css=[data-testid="toast-close-btn"]' not found.</status>
+</kw>
+<arg>Click Element</arg>
+<arg>css=[data-testid="toast-close-btn"]</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2026-03-04T02:59:38.961223" elapsed="0.126124"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T02:59:39.587825" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T02:59:39.087347" elapsed="0.500478"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:35.794869" elapsed="3.792956"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:35.204991" elapsed="4.382834"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:35.204991" elapsed="4.382834"/>
+</test>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T02:59:39.588832" elapsed="2.140571"/>
+</kw>
+<status status="PASS" start="2026-03-04T02:59:15.300908" elapsed="26.428495"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="ChangeAndDeleteMessage" id="s1" pass="3" fail="0" skip="0">ChangeAndDeleteMessage</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

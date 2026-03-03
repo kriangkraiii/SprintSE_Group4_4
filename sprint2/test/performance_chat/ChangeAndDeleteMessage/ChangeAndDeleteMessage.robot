@@ -5,9 +5,9 @@ Suite Teardown    Close Browser
 
 *** Variables ***
 ${LOGIN_URL}    http://localhost:3000/login
-${CHAT_URL}     http://localhost:3000/chat/cmmasg7uv000evrtg7mr0186y
-${IDENTIFIER}   bow1234
-${PASSWORD}     Thanchanok1234
+${CHAT_URL}     http://localhost:3000/chat/cmmb0myrb000cusc450b390oz
+${IDENTIFIER}   test1
+${PASSWORD}     Cp12345678
 ${TEST_MESSAGE}    Robot Test Message
 
 *** Keywords ***
@@ -88,10 +88,15 @@ Close Toast If Present
 
 Unsend Message
     Open Message Menu
-    Click Element    css=[data-testid="unsend-message-btn"]
-    Click Button    css=[data-testid="confirm-unsend-btn"]
-    Wait Until Page Does Not Contain    Edit ครั้งที่ 3
 
+    Click Element    css=[data-testid="unsend-message-btn"]
+
+    Wait Until Page Does Not Contain    Edit ครั้งที่ 3    timeout=10s
+
+    Wait Until Page Contains    ลบข้อความแล้ว    timeout=10s
+
+    Close Toast If Present
+    
 *** Test Cases ***
 
 Test 01 - Edit Message 3 Times
