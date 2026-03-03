@@ -85,7 +85,8 @@
                         <button ref="bellBtn"
                             class="relative p-2 transition-colors duration-200 rounded-lg cursor-pointer hover:bg-slate-100"
                             :class="openNotif ? 'text-primary bg-primary/10' : 'text-slate-700 hover:text-primary'"
-                            @click="onBellClick" aria-haspopup="true" :aria-expanded="openNotif ? 'true' : 'false'">
+                            @click="onBellClick" aria-haspopup="true" :aria-expanded="openNotif ? 'true' : 'false'"
+                            aria-label="notification-bell">
                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M15 17h5l-1.405-1.405C18.21 14.79 18 13.918 18 13V9a6 6 0 10-12 0v4c0 .918-.21 1.79-.595 2.595L4 17h5m6 0a3 3 0 11-6 0h6z" />
@@ -359,7 +360,7 @@ function toggleNotif() {
 
 async function onBellClick() {
     toggleNotif()
-    if (openNotif.value && notifications.value.length === 0) {
+    if (openNotif.value) {
         await fetchUserNotifications()
     }
 }

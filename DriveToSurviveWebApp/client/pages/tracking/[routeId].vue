@@ -217,7 +217,7 @@ function fitAllMarkers() {
     if (p.lat) bounds.extend({ lat: p.lat, lng: p.lng })
   })
   if (pickupLatLng.value) bounds.extend(pickupLatLng.value)
-  map.fitBounds(bounds, { top: 120, bottom: 200, left: 40, right: 40 })
+  map.fitBounds(bounds, { top: 80, bottom: 420, left: 60, right: 60 })
 }
 
 // Fetch booking data to get pickup location
