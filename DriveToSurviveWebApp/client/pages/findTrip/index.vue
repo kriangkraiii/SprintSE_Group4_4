@@ -337,7 +337,7 @@
                         <!-- Expanded details -->
                         <transition name="slide">
                             <div v-if="selectedRoute && selectedRoute.id === route.id"
-                                class="border-t border-gray-100 bg-gray-50/50 p-5 space-y-4">
+                                class="border-t border-gray-100 bg-gray-50 p-5 space-y-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -1197,10 +1197,27 @@ function openModal(route) {
     if (route?.availableSeats > 0) {
         bookingRoute.value = route
         bookingSeats.value = 1
-        pickupPoint.value = ''
-        dropoffPoint.value = ''
-        pickupData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
-        dropoffData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+
+        // Pre-fill pickup/dropoff with route start/end as defaults
+        const startLoc = route.start || null
+        const endLoc = route.end || null
+
+        if (startLoc?.lat && startLoc?.lng) {
+            pickupPoint.value = startLoc.name || route.originName || ''
+            pickupData.value = { lat: startLoc.lat, lng: startLoc.lng, placeId: startLoc.placeId || null, address: startLoc.address || startLoc.name || '', name: startLoc.name || '' }
+        } else {
+            pickupPoint.value = route.originName || ''
+            pickupData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+        }
+
+        if (endLoc?.lat && endLoc?.lng) {
+            dropoffPoint.value = endLoc.name || route.destinationName || ''
+            dropoffData.value = { lat: endLoc.lat, lng: endLoc.lng, placeId: endLoc.placeId || null, address: endLoc.address || endLoc.name || '', name: endLoc.name || '' }
+        } else {
+            dropoffPoint.value = route.destinationName || ''
+            dropoffData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+        }
+
         bookingPickingTarget.value = null
         showModal.value = true
         nextTick(() => initBookingAutocomplete())
@@ -1238,16 +1255,25 @@ async function confirmBooking() {
             },
         })
         closeModal()
-        toast.success('จองสำเร็จ!', 'การจองได้รับการยืนยันแล้ว')
-        setTimeout(() => navigateTo('/myTrip'), 1500)
+        toast.success('จองสำเร็จ!', 'การจองของคุณอยู่ในสถานะรอดำเนินการ')
+        setTimeout(() => navigateTo('/myTrips'), 1500)
     } catch (error) {
-        const msg = String(error?.data?.message || error?.message || '')
-        const is403 = error?.status === 403 || error?.statusCode === 403
-        if (is403 && /ยืนยันบัตรประชาชน/.test(msg)) {
+        console.error('[Booking Error]', error)
+        const msg = String(error?.data?.message || error?.statusMessage || error?.message || '')
+        const status = error?.status || error?.statusCode || 0
+        if (status === 403 && /ยืนยันบัตรประชาชน/.test(msg)) {
             toast.error('ต้องยืนยันตัวตน', 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองได้')
             setTimeout(() => navigateTo('/profile'), 1500)
+        } else if (status === 403 && /ระงับ|suspended/i.test(msg)) {
+            toast.error('บัญชีถูกระงับ', msg)
+        } else if (status === 403) {
+            toast.error('ไม่สามารถจองได้', msg || 'คุณไม่มีสิทธิ์ในการจองเส้นทางนี้')
+        } else if (status === 429) {
+            toast.error('ส่งคำขอบ่อยเกินไป', msg || 'กรุณารอสักครู่แล้วลองใหม่')
+        } else if (status === 400) {
+            toast.error('ไม่สามารถจองได้', msg || 'ข้อมูลไม่ถูกต้องหรือเส้นทางเต็มแล้ว')
         } else {
-            toast.error('เกิดข้อผิดพลาด', error.data?.message || 'โปรดลองใหม่อีกครั้ง')
+            toast.error('เกิดข้อผิดพลาด', msg || 'โปรดลองใหม่อีกครั้ง')
         }
     }
 }
@@ -1340,7 +1366,7 @@ function openPlacePicker(field) {
     nextTick(() => {
         const meta = field === 'origin' ? searchForm.value._originMeta : searchForm.value._destinationMeta
         const center = (meta?.lat && meta?.lng) ? { lat: meta.lat, lng: meta.lng } : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
-        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 16 : userLocation.value.lat ? 16 : 14, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
+        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 16 : userLocation.value.lat ? 16 : 14, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: false })
         placePickerMap.addListener('click', (e) => { setPickerMarker(e.latLng); resolvePicked(e.latLng) })
     })
 }
@@ -1422,7 +1448,7 @@ function startBookingPicker(target) {
     nextTick(() => {
         const base = target === 'pickup' ? pickupData.value : dropoffData.value
         const center = (base.lat && base.lng) ? { lat: base.lat, lng: base.lng } : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
-        bookingPickerMap = new google.maps.Map(bookingPickerMapEl.value, { center, zoom: base.lat ? 15 : userLocation.value.lat ? 14 : 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
+        bookingPickerMap = new google.maps.Map(bookingPickerMapEl.value, { center, zoom: base.lat ? 15 : userLocation.value.lat ? 14 : 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: false })
         bookingPickerMap.addListener('click', async (e) => { setBookingPickerMarker(e.latLng); await resolveBookingPicked(e.latLng) })
     })
 }
