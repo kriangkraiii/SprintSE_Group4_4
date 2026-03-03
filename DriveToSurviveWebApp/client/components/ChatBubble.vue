@@ -4,6 +4,7 @@
     :class="isOwn ? 'justify-end' : 'justify-start'"
   >
     <div
+      data-testid="chat-message"
       class="relative max-w-[75%] rounded-2xl shadow-sm group"
       :class="bubbleClass"
     >
@@ -164,6 +165,7 @@
       >
         <div class="relative">
           <button
+            data-testid="message-menu-btn"
             @click.stop="showMenu = !showMenu"
             class="p-1.5 bg-white rounded-full shadow-md text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
             title="ตัวเลือกเพิ่มเติม"
@@ -187,6 +189,7 @@
             </div>
 
             <button
+              data-testid="edit-message-btn"
               v-if="canEdit"
               @click.stop="$emit('edit', message); showMenu = false"
               class="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
@@ -198,6 +201,7 @@
               <span class="ml-auto text-xs text-slate-400">({{ editCount }})</span>
             </button>
             <button
+              data-testid="edit-message-btn"
               v-else-if="editCount >= MAX_EDITS"
               disabled
               class="w-full px-3 py-2 text-left text-sm text-slate-400 flex items-center gap-2 cursor-not-allowed"
@@ -209,6 +213,7 @@
               <span class="ml-auto text-xs">(ครบ 3 ครั้ง)</span>
             </button>
             <button
+              data-testid="unsend-message-btn"
               v-if="canUnsend"
               @click.stop="$emit('unsend', message.id); showMenu = false"
               class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer"

@@ -52,6 +52,7 @@
     <input 
       type="text"
       id="identifier"
+      data-testid="identifier-input"
       v-model="identifier"
       required
       placeholder="กรอกชื่อผู้ใช้หรืออีเมล"
@@ -94,6 +95,7 @@
     <input
       :type="showPassword ? 'text' : 'password'"
       id="password"
+      data-testid="password-input"
       v-model="password"
       required
       minlength="6"
@@ -122,7 +124,7 @@
 </div>
 
 
-          <button type="submit" :disabled="isLoading"
+          <button data-testid="login-btn" type="submit" :disabled="isLoading"
             class="inline-flex items-center justify-center gap-2 w-full py-3 text-sm font-semibold text-white bg-[#137FEC] hover:bg-[#236993] rounded-lg shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
             <svg v-if="!isLoading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
