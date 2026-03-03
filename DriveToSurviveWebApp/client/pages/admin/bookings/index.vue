@@ -303,7 +303,7 @@ import ConfirmModal from '~/components/ConfirmModal.vue'
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 
 const { toast } = useToast()
 

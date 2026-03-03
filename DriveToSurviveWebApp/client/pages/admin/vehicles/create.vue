@@ -259,7 +259,7 @@ import AdminSidebar from '~/components/admin/AdminSidebar.vue'
 import { useToast } from '~/composables/useToast'
 import debounce from 'lodash.debounce'
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 
 const { toast } = useToast()
 

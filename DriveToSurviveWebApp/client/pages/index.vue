@@ -1,13 +1,13 @@
 <template>
   <div>
     <!-- Hero Section -->
-    <section class="relative min-h-[60vh] sm:min-h-[80vh] lg:min-h-[95vh] flex items-start justify-center ">
+    <section class="relative min-h-[50vh] sm:min-h-[80vh] lg:min-h-[95vh] flex items-start justify-center ">
       <!-- Subtle grid pattern -->
       <div class="absolute inset-0 opacity-100 bg-no-repeat bg-cover "
         style="background-image: url('/images/bgindex.png'); background-position:center 70%;"></div>
 
-      <div class="relative py-12 sm:py-16 lg:py-24 mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 w-full ">
-        <div class="max-w-7xl text-center mx-auto mt-2 sm:mt-10">
+      <div class="relative pt-28 pb-4 sm:pt-28 sm:pb-8 lg:pt-32 lg:pb-8 mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 w-full ">
+        <div class="max-w-7xl text-center mx-auto">
 
           <!-- Main Heading -->
           <h1
@@ -49,9 +49,12 @@
         </div>
 
       </div>
-      <div class="absolute -bottom-8 sm:-bottom-14 left-1/2 -translate-x-1/2 w-full px-4 sm:px-6">
-        <div class="max-w-6xl mx-auto p-4 bg-white h-auto rounded-2xl shadow-[0_5px_10px_rgba(0,0,0,0.25)]">
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+    </section>
+
+    <!-- Search Bar Section -->
+    <section class="relative z-10 -mt-8 sm:-mt-12 px-4 sm:px-6 pb-8">
+      <div class="max-w-6xl mx-auto p-4 bg-white h-auto rounded-2xl shadow-[0_5px_10px_rgba(0,0,0,0.25)]">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
 
             <!-- จุดเริ่มต้น -->
             <div class="relative">
@@ -112,8 +115,6 @@
 
           </div>
         </div>
-      </div>
-
     </section>
 
     <!-- How It Works -->

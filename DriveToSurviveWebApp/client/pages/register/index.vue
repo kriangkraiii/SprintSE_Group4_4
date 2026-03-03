@@ -36,9 +36,29 @@
             <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ข้อมูลบัญชีผู้ใช้</h2>
             <div>
               <label for="username" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ชื่อผู้ใช้ <span class="text-red-500">*</span></label>
-              <input type="text" id="username" v-model="formData.username" placeholder="example123"
-                class="input-field" :class="{ 'border-red-400 focus:border-red-400 focus:shadow-red-100': errors.username }">
+              <div class="relative">
+                <input type="text" id="username" v-model="formData.username" placeholder="example123"
+                  class="input-field pr-10" :class="{
+                    'border-red-400 focus:border-red-400 focus:shadow-red-100': errors.username || usernameStatus === 'taken',
+                    'border-green-400 focus:border-green-400': usernameStatus === 'available',
+                  }">
+                <!-- Username availability indicator -->
+                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg v-if="usernameStatus === 'checking'" class="w-5 h-5 text-slate-400 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <svg v-else-if="usernameStatus === 'available'" class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <svg v-else-if="usernameStatus === 'taken'" class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
               <p v-if="errors.username" class="mt-1 text-xs text-red-600">{{ errors.username }}</p>
+              <p v-else-if="usernameStatus === 'taken'" class="mt-1 text-xs text-red-600">ชื่อผู้ใช้นี้ถูกใช้งานแล้ว กรุณาเลือกชื่ออื่น</p>
+              <p v-else-if="usernameStatus === 'available'" class="mt-1 text-xs text-green-600">✓ ชื่อผู้ใช้นี้สามารถใช้ได้</p>
               <p v-else class="mt-1 text-xs text-slate-400 ml-6">ความยาว 4–20 ตัวอักษร ภาษาอังกฤษ ตัวเลข หรือขีดล่าง (_) เท่านั้น</p>
             </div>
             <div>
@@ -60,48 +80,19 @@
                 class="input-field" :class="{ 'border-red-400': errors.confirmPassword }">
               <p v-if="errors.confirmPassword" class="mt-1 text-xs text-red-600">{{ errors.confirmPassword }}</p>
             </div>
-            <button type="button" @click="nextStep" class="w-full max-w-lg py-4 mx-auto text-lg font-semibold text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg block">ถัดไป</button>
-          </div>
-
-          <!-- Step 2: Personal Info -->
-          <div v-if="currentStep === 2" class="space-y-4">
-            <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ข้อมูลส่วนตัว</h2>
-            <div>
-              <label for="firstName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">ชื่อจริง <span class="text-red-500">*</span></label>
-              <input type="text" id="firstName" v-model="formData.firstName" placeholder="กรอกชื่อจริง"
-                class="input-field" :class="{ 'border-red-400': errors.firstName }">
-              <p v-if="errors.firstName" class="mt-1 text-xs text-red-600">{{ errors.firstName }}</p>
-            </div>
-            <div>
-              <label for="lastName" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">นามสกุล <span class="text-red-500">*</span></label>
-              <input type="text" id="lastName" v-model="formData.lastName" placeholder="กรอกนามสกุล"
-                class="input-field" :class="{ 'border-red-400': errors.lastName }">
-              <p v-if="errors.lastName" class="mt-1 text-xs text-red-600">{{ errors.lastName }}</p>
-            </div>
             <div>
               <label for="phoneNumber" class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">เบอร์โทรศัพท์ <span class="text-red-500">*</span></label>
               <input type="tel" id="phoneNumber" v-model="formData.phoneNumber" placeholder="เช่น 0891234567"
                 class="input-field" :class="{ 'border-red-400': errors.phoneNumber }">
               <p v-if="errors.phoneNumber" class="mt-1 text-xs text-red-600">{{ errors.phoneNumber }}</p>
             </div>
-            <div>
-              <label class="block mb-2 text-sm font-medium text-[#383838] ml-1">เพศ <span class="text-red-500">*</span></label>
-              <div class="flex gap-6">
-                <label class="flex items-center cursor-pointer"><input type="radio" name="gender" value="male" v-model="formData.gender"
-                    class="mr-2 text-cta focus:ring-cta"> ชาย</label>
-                <label class="flex items-center cursor-pointer"><input type="radio" name="gender" value="female" v-model="formData.gender"
-                    class="mr-2 text-cta focus:ring-cta"> หญิง</label>
-              </div>
-              <p v-if="errors.gender" class="mt-1 text-xs text-red-600">{{ errors.gender }}</p>
-            </div>
-            <div class="flex gap-3 pt-2">
-              <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
-              <button type="button" @click="nextStep" class="w-full py-3 text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg font-semibold">ถัดไป</button>
-            </div>
+            <button type="button" @click="nextStep" class="w-full max-w-lg py-4 mx-auto text-lg font-semibold text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg block">ถัดไป</button>
           </div>
 
-          <!-- Step 3: Verification -->
-          <div v-if="currentStep === 3" class="space-y-4">
+
+
+          <!-- Step 2: Verification -->
+          <div v-if="currentStep === 2" class="space-y-4">
             <h2 class="mb-4 text-2xl font-semibold font-heading text-[#383838]">ยืนยันตัวตนด้วยบัตรประชาชน</h2>
 
             <!-- บัตรประชาชน ด้านหน้า -->
@@ -153,19 +144,35 @@
                 <div class="grid grid-cols-2 gap-2 text-sm">
                   <div><span class="text-slate-500">เลขบัตร:</span> <span class="font-medium">{{ ocrFrontResult.idNumber }}</span></div>
                   <div><span class="text-slate-500">ชื่อ:</span> <span class="font-medium">{{ ocrFrontResult.thName }}</span></div>
+                  <div><span class="text-slate-500">ชื่อจริง:</span> <span class="font-medium">{{ formData.firstName }}</span></div>
+                  <div><span class="text-slate-500">นามสกุล:</span> <span class="font-medium">{{ formData.lastName }}</span></div>
+                  <div><span class="text-slate-500">เพศ:</span> <span class="font-medium">{{ formData.gender === 'MALE' ? 'ชาย' : formData.gender === 'FEMALE' ? 'หญิง' : '-' }}</span></div>
                   <div><span class="text-slate-500">วันเกิด:</span> <span class="font-medium">{{ ocrFrontResult.thDob }}</span></div>
                   <div><span class="text-slate-500">หมดอายุ:</span> <span class="font-medium">{{ ocrFrontResult.thExpiryDate }}</span></div>
                   <div class="col-span-2"><span class="text-slate-500">ที่อยู่:</span> <span class="font-medium">{{ ocrFrontResult.address }}</span></div>
                 </div>
               </div>
 
-              <!-- แสดง error ถ้า OCR ไม่ผ่าน -->
-              <div v-if="ocrFrontError && !isBlacklisted" class="p-3 mt-3 border rounded-lg bg-red-50 border-red-200">
+              <!-- แสดง error ถ้า OCR ไม่ผ่าน (กรณีทั่วไป) -->
+              <div v-if="ocrFrontError && !isBlacklisted && !isDuplicateId" class="p-3 mt-3 border rounded-lg bg-red-50 border-red-200">
                 <p class="text-sm text-red-600">{{ ocrFrontError }}</p>
                 <button type="button" @click="resetOcrFront" class="mt-2 text-xs font-medium text-red-700 underline">ลองใหม่</button>
               </div>
 
-              <!-- แสดง Blacklist Warning -->
+              <!-- แสดง Duplicate ID Warning (409) -->
+              <div v-if="isDuplicateId" class="p-4 mt-3 border-2 rounded-lg bg-amber-50 border-amber-400">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                  <span class="text-base font-bold text-amber-700">บัตรประชาชนนี้ถูกใช้สมัครสมาชิกไปแล้ว</span>
+                </div>
+                <p class="text-sm text-amber-700">{{ ocrFrontError }}</p>
+                <p class="mt-2 text-xs text-amber-600">หากคุณเป็นเจ้าของบัตรนี้ กรุณาเข้าสู่ระบบด้วยบัญชีเดิม หรือติดต่อฝ่ายสนับสนุน</p>
+                <button type="button" @click="resetOcrFront" class="mt-3 text-xs font-medium text-amber-700 underline">ลองใหม่ด้วยบัตรอื่น</button>
+              </div>
+
+              <!-- แสดง Blacklist Warning (403) -->
               <div v-if="isBlacklisted" class="p-4 mt-3 border-2 rounded-lg bg-red-100 border-red-400">
                 <div class="flex items-center gap-2 mb-2">
                   <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -180,7 +187,7 @@
             </div>
 
             <!-- บัตรประชาชน ด้านหลัง -->
-            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
+            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted || isDuplicateId }">
               <label class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">บัตรประชาชน (ด้านหลัง) <span class="text-red-500">*</span></label>
               <div v-if="!idCardBackPreview" @click="triggerFileUpload('idCardBackFile')"
                 @dragover.prevent="dropping.idCardBack = true"
@@ -245,7 +252,7 @@
               <p class="text-xs text-blue-600">ข้อมูลจากบัตรจะถูกใช้ในการสร้างบัญชีของคุณโดยอัตโนมัติ</p>
             </div>
 
-            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted }">
+            <div :class="{ 'opacity-40 pointer-events-none': isBlacklisted || isDuplicateId }">
               <label class="block mb-1.5 text-sm font-medium text-[#383838] ml-1">รูปถ่ายใบหน้าตรงคู่บัตรประชาชน<span class="text-red-500">*</span></label>
               <p class="mb-2 text-xs text-slate-400 ml-6">ระบบจะเปรียบเทียบรูปถ่ายใบหน้าของคุณคู่บัตรประชาชน เพื่อยืนยันตัวตน</p>
               <div v-if="!selfiePreview" @click="triggerFileUpload('selfieFile')"
@@ -336,7 +343,7 @@
 
             <div class="flex gap-3 pt-2">
               <button type="button" @click="prevStep" class="w-full py-3 btn-ghost border border-slate-200">ย้อนกลับ</button>
-              <button type="submit" :disabled="isLoading || isBlacklisted"
+              <button type="submit" :disabled="isLoading || isBlacklisted || isDuplicateId"
                 class="flex items-center justify-center w-full py-3 text-white transition-all duration-200 rounded-xl bg-[#137FEC] hover:bg-[#137FEC]/90 shadow-lg font-semibold disabled:opacity-50">
                 <svg v-if="isLoading" class="w-5 h-5 mr-2 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -358,7 +365,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, nextTick } from 'vue';
+import { ref, reactive, computed, nextTick, watch } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useToast } from '~/composables/useToast';
 import { useRouter } from '#app';
@@ -368,7 +375,7 @@ const { toast } = useToast();
 const router = useRouter();
 
 const currentStep = ref(1);
-const totalSteps = 3;
+const totalSteps = 2;
 
 const formData = reactive({
   username: '',
@@ -393,6 +400,10 @@ const idCardBackPreview = ref(null);
 const selfiePreview = ref(null);
 const isLoading = ref(false);
 
+// Username availability check states
+const usernameStatus = ref('idle'); // 'idle' | 'checking' | 'available' | 'taken'
+let usernameCheckTimer = null;
+
 // OCR states
 const isOcrLoading = ref(false);
 const isOcrBackLoading = ref(false);
@@ -401,6 +412,7 @@ const ocrFrontError = ref(null);
 const ocrBackResult = ref(null);
 const ocrBackError = ref(null);
 const isBlacklisted = ref(false); // ถูก Blacklist → บล็อกการสมัครทั้งหมด
+const isDuplicateId = ref(false); // บัตร ปชช. ซ้ำ → บล็อกแยกจาก Blacklist
 
 const dropping = reactive({
   idCard: false,
@@ -415,13 +427,39 @@ const faceIdError = ref(null);
 
 const apiBase = useRuntimeConfig().public.apiBase || 'http://localhost:3000/api';
 
+// ── Debounced Username Check ──
+watch(() => formData.username, (newVal) => {
+  if (usernameCheckTimer) clearTimeout(usernameCheckTimer);
+
+  // รีเซ็ต status ถ้ายังไม่ผ่าน basic validation
+  if (!newVal || newVal.length < 4 || !/^[a-zA-Z0-9_]{4,20}$/.test(newVal)) {
+    usernameStatus.value = 'idle';
+    return;
+  }
+
+  usernameStatus.value = 'checking';
+  usernameCheckTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${apiBase}/users/check-username/${encodeURIComponent(newVal)}`);
+      const body = await res.json();
+      // ตรวจเฉพาะกรณี username ยังตรงกับค่าปัจจุบัน (กันกรณีพิมพ์เร็ว)
+      if (formData.username === newVal) {
+        usernameStatus.value = body?.data?.available ? 'available' : 'taken';
+      }
+    } catch {
+      // ถ้า API error ให้ไม่แสดงสถานะ
+      if (formData.username === newVal) usernameStatus.value = 'idle';
+    }
+  }, 500);
+});
+
 const stepProgress = computed(() => {
   if (totalSteps <= 1) return '0%';
   return `${((currentStep.value - 1) / (totalSteps - 1)) * 100}%`;
 });
 
 const getStepLabel = (step) => {
-  return ['บัญชีผู้ใช้', 'ข้อมูลส่วนตัว', 'ยืนยันตัวตน'][step - 1];
+  return ['บัญชีผู้ใช้', 'ยืนยันตัวตน'][step - 1];
 };
 
 const getStepClass = (step) => {
@@ -448,6 +486,7 @@ const scanIdCardFront = async () => {
   ocrFrontError.value = null;
   ocrFrontResult.value = null;
   isBlacklisted.value = false;
+  isDuplicateId.value = false;
 
   try {
     const fd = new FormData();
@@ -455,14 +494,23 @@ const scanIdCardFront = async () => {
     const res = await fetch(`${apiBase}/ocr/id-card/front`, { method: 'POST', body: fd });
     const body = await res.json();
 
-    // ── ตรวจจับ Blacklist (403) หรือ บัตรซ้ำ (409) ──
-    if (res.status === 403 || res.status === 409) {
+    // ── ตรวจจับ Blacklist (403) ──
+    if (res.status === 403) {
       isBlacklisted.value = true;
-      const msg = body?.message || (res.status === 403
-        ? 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้'
-        : 'หมายเลขบัตรประชาชนนี้ถูกใช้สมัครสมาชิกไปแล้ว');
+      isDuplicateId.value = false;
+      const msg = body?.message || 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ ไม่สามารถสมัครสมาชิกได้';
       ocrFrontError.value = msg;
       toast.error('ไม่สามารถสมัครสมาชิกได้', msg);
+      return;
+    }
+
+    // ── ตรวจจับ บัตร ปชช. ซ้ำ (409) ──
+    if (res.status === 409) {
+      isDuplicateId.value = true;
+      isBlacklisted.value = false;
+      const msg = body?.message || 'หมายเลขบัตรประชาชนนี้ถูกใช้สมัครสมาชิกไปแล้ว';
+      ocrFrontError.value = msg;
+      toast.error('บัตรประชาชนซ้ำ', msg);
       return;
     }
 
@@ -482,6 +530,21 @@ const scanIdCardFront = async () => {
           formData.expiryDate = `${dd}/${mm}/${yyyy}`;
         }
       } catch { }
+    }
+
+    // Auto-fill ชื่อจริง, นามสกุล จาก OCR
+    if (body.data.thFirstName) formData.firstName = body.data.thFirstName;
+    if (body.data.thLastName) formData.lastName = body.data.thLastName;
+
+    // Auto-fill เพศ จากคำนำหน้า (thInit)
+    const prefix = (body.data.thInit || '').trim();
+    if (prefix === 'นาย') {
+      formData.gender = 'MALE';
+    } else if (['นาง', 'น.ส.', 'นางสาว'].includes(prefix)) {
+      formData.gender = 'FEMALE';
+    } else if (body.data.gender) {
+      // fallback ใช้ gender จาก iApp (ถ้ามี)
+      formData.gender = body.data.gender.toUpperCase();
     }
 
     toast.success('ตรวจสอบสำเร็จ', 'อ่านข้อมูลบัตรประชาชน (ด้านหน้า) สำเร็จ');
@@ -526,10 +589,14 @@ const resetOcrFront = () => {
   ocrFrontResult.value = null;
   ocrFrontError.value = null;
   isBlacklisted.value = false;
+  isDuplicateId.value = false;
   idCardPreview.value = null;
   formData.idCardFile = null;
   formData.idNumber = '';
   formData.expiryDate = '';
+  formData.firstName = '';
+  formData.lastName = '';
+  formData.gender = '';
 };
 
 const resetOcrBack = () => {
@@ -585,26 +652,23 @@ const validationFunctions = [
   () => {
     clearErrors();
     if (!formData.username || formData.username.length < 4) errors.username = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
+    else if (!/^[a-zA-Z0-9_]{4,20}$/.test(formData.username)) errors.username = 'ชื่อผู้ใช้ต้องเป็นตัวอักษร a-z, A-Z, 0-9 หรือ _ ความยาว 4–20 ตัว';
+    else if (usernameStatus.value === 'taken') errors.username = 'ชื่อผู้ใช้นี้ถูกใช้งานแล้ว กรุณาเลือกชื่ออื่น';
+    else if (usernameStatus.value === 'checking') errors.username = 'กรุณารอระบบตรวจสอบชื่อผู้ใช้';
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) errors.email = 'รูปแบบอีเมลไม่ถูกต้อง';
     if (!formData.password || formData.password.length < 8) errors.password = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
     else if (!/[A-Z]/.test(formData.password)) errors.password = 'รหัสผ่านต้องมีตัวพิมพ์ใหญ่ (A–Z) อย่างน้อย 1 ตัว';
     else if (!/[a-z]/.test(formData.password)) errors.password = 'รหัสผ่านต้องมีตัวพิมพ์เล็ก (a–z) อย่างน้อย 1 ตัว';
     else if (!/[0-9]/.test(formData.password)) errors.password = 'รหัสผ่านต้องมีตัวเลข (0–9) อย่างน้อย 1 ตัว';
     if (formData.password !== formData.confirmPassword || !formData.confirmPassword) errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
-    return Object.keys(errors).length === 0;
-  },
-  () => {
-    clearErrors();
-    if (!formData.firstName.trim()) errors.firstName = 'กรุณากรอกชื่อจริง';
-    if (!formData.lastName.trim()) errors.lastName = 'กรุณากรอกนามสกุล';
     if (!/^\d{9,10}$/.test(formData.phoneNumber)) errors.phoneNumber = 'รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง';
-    if (!formData.gender) errors.gender = 'กรุณาเลือกเพศ';
     return Object.keys(errors).length === 0;
   },
   () => {
     clearErrors();
     if (!formData.idCardFile) errors.idCardFile = 'กรุณาอัปโหลดรูปบัตรประชาชน (ด้านหน้า)';
     if (!ocrFrontResult.value) errors.idCardFile = 'กรุณากดตรวจสอบบัตรประชาชน (ด้านหน้า)';
+    if (!formData.firstName) errors.idCardFile = 'ไม่สามารถอ่านชื่อจริงจากบัตรได้ กรุณาถ่ายรูปใหม่';
     if (!formData.idCardBackFile) errors.idCardBackFile = 'กรุณาอัปโหลดรูปบัตรประชาชน (ด้านหลัง)';
     if (!ocrBackResult.value) errors.idCardBackFile = 'กรุณากดตรวจสอบบัตรประชาชน (ด้านหลัง)';
     if (!formData.selfieFile) errors.selfieFile = 'กรุณาอัปโหลดรูปเซลฟี่';
@@ -672,7 +736,7 @@ function toISODateFromDDMMYYYY(ddmmyyyy) {
 }
 
 const handleRegister = async () => {
-  if (isBlacklisted.value) {
+  if (isBlacklisted.value || isDuplicateId.value) {
     toast.error('ไม่สามารถสมัครสมาชิกได้', 'หมายเลขบัตรประชาชนนี้ถูกขึ้นบัญชีดำ');
     return;
   }
@@ -703,7 +767,7 @@ const handleRegister = async () => {
   fd.append('firstName', formData.firstName);
   fd.append('lastName', formData.lastName);
   fd.append('phoneNumber', formData.phoneNumber);
-  fd.append('gender', String(formData.gender || '').toUpperCase());
+  fd.append('gender', String(formData.gender || ''));
   fd.append('nationalIdNumber', idNumber);
   fd.append('nationalIdExpiryDate', isoDate);
   fd.append('nationalIdPhotoUrl', formData.idCardFile);
@@ -812,7 +876,7 @@ const handleDrop = (event, type) => {
 };
 
 const removeImage = (type) => {
-  if (type === 'idCard') { idCardPreview.value = null; formData.idCardFile = null; ocrFrontResult.value = null; ocrFrontError.value = null; isBlacklisted.value = false; faceIdResult.value = null; faceIdError.value = null; }
+  if (type === 'idCard') { idCardPreview.value = null; formData.idCardFile = null; ocrFrontResult.value = null; ocrFrontError.value = null; isBlacklisted.value = false; isDuplicateId.value = false; faceIdResult.value = null; faceIdError.value = null; }
   else if (type === 'idCardBack') { idCardBackPreview.value = null; formData.idCardBackFile = null; ocrBackResult.value = null; ocrBackError.value = null; }
   else if (type === 'selfie') { selfiePreview.value = null; formData.selfieFile = null; faceIdResult.value = null; faceIdError.value = null; }
 };

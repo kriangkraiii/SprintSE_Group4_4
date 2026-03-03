@@ -13,6 +13,7 @@
             </div>
 
             <nav class="space-y-1">
+                <!-- Dashboard -->
                 <NuxtLink v-for="item in mainMenus" :key="item.to" :to="item.to"
                     class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
                     active-class="font-semibold text-cta bg-cta-light">
@@ -20,11 +21,12 @@
                     <span class="sidebar-text">{{ item.label }}</span>
                 </NuxtLink>
 
+                <!-- จัดการข้อมูล -->
                 <div class="pt-3 mt-3 border-t border-slate-200">
                     <p class="px-3 mb-2 text-xs font-semibold tracking-wider uppercase sidebar-text text-slate-400">
-                        กฎหมาย & ความปลอดภัย
+                        จัดการข้อมูล
                     </p>
-                    <NuxtLink v-for="item in complianceMenus" :key="item.to" :to="item.to"
+                    <NuxtLink v-for="item in dataMenus" :key="item.to" :to="item.to"
                         class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
                         active-class="font-semibold text-cta bg-cta-light">
                         <i :class="item.icon" class="w-5 text-center text-slate-400 group-[.router-link-active]:text-cta"></i>
@@ -32,22 +34,39 @@
                     </NuxtLink>
                 </div>
 
-
+                <!-- การเดินทาง -->
                 <div class="pt-3 mt-3 border-t border-slate-200">
-                    <button @click="toggleSubmenu('settings-menu')"
-                        class="sidebar-item w-full flex items-center justify-between gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light">
-                        <div class="flex items-center gap-3">
-                            <i class="w-5 text-center text-slate-400 fas fa-gear"></i>
-                            <span class="sidebar-text">Setting</span>
-                        </div>
-                        <i class="text-xs transition-transform fas fa-chevron-down sidebar-text" id="settings-menu-icon"></i>
-                    </button>
+                    <p class="px-3 mb-2 text-xs font-semibold tracking-wider uppercase sidebar-text text-slate-400">
+                        การเดินทาง
+                    </p>
+                    <NuxtLink v-for="item in tripMenus" :key="item.to" :to="item.to"
+                        class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
+                        active-class="font-semibold text-cta bg-cta-light">
+                        <i :class="item.icon" class="w-5 text-center text-slate-400 group-[.router-link-active]:text-cta"></i>
+                        <span class="sidebar-text">{{ item.label }}</span>
+                    </NuxtLink>
+                </div>
 
-                    <div id="settings-menu" class="hidden mt-1 ml-11 space-y-1 sidebar-text">
-                        <button @click="logout" class="block px-3 py-2 text-sm text-slate-500 hover:text-cta">
-                            Logout
-                        </button>
-                    </div>
+                <!-- ระบบ -->
+                <div class="pt-3 mt-3 border-t border-slate-200">
+                    <p class="px-3 mb-2 text-xs font-semibold tracking-wider uppercase sidebar-text text-slate-400">
+                        ระบบ
+                    </p>
+                    <NuxtLink v-for="item in systemMenus" :key="item.to" :to="item.to"
+                        class="sidebar-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-primary hover:bg-cta-light"
+                        active-class="font-semibold text-cta bg-cta-light">
+                        <i :class="item.icon" class="w-5 text-center text-slate-400 group-[.router-link-active]:text-cta"></i>
+                        <span class="sidebar-text">{{ item.label }}</span>
+                    </NuxtLink>
+                </div>
+
+                <!-- Logout -->
+                <div class="pt-3 mt-3 border-t border-slate-200">
+                    <button @click="logout"
+                        class="sidebar-item w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-red-500 hover:bg-red-50 transition-colors cursor-pointer">
+                        <i class="w-5 text-center fas fa-right-from-bracket"></i>
+                        <span class="sidebar-text">ออกจากระบบ</span>
+                    </button>
                 </div>
             </nav>
         </div>
@@ -60,15 +79,24 @@ import { useAuth } from '~/composables/useAuth'
 const { logout } = useAuth()
 
 const mainMenus = [
-    { to: '/admin/users', label: 'User Management', icon: 'fas fa-user' },
-    { to: '/admin/vehicles', label: 'Vehicle Management', icon: 'fas fa-car-side' },
-    { to: '/admin/routes', label: 'Route Management', icon: 'fas fa-route' },
-    { to: '/admin/bookings', label: 'Booking Management', icon: 'fas fa-calendar-check' },
-    { to: '/admin/driver-verifications', label: 'Driver Verification Management', icon: 'fas fa-id-card' },
+    { to: '/admin/dashboard', label: 'Dashboard', icon: 'fas fa-chart-line' },
 ]
 
-const complianceMenus = [
+const dataMenus = [
+    { to: '/admin/users', label: 'ผู้ใช้งาน', icon: 'fas fa-users' },
+    { to: '/admin/driver-verifications', label: 'ยืนยันตัวตนคนขับ', icon: 'fas fa-id-card' },
+    { to: '/admin/vehicles', label: 'ยานพาหนะ', icon: 'fas fa-car-side' },
+]
+
+const tripMenus = [
+    { to: '/admin/routes', label: 'เส้นทาง', icon: 'fas fa-route' },
+    { to: '/admin/bookings', label: 'การจอง', icon: 'fas fa-calendar-check' },
+    { to: '/admin/sprint2', label: 'แชท & รีวิว', icon: 'fas fa-comments' },
+]
+
+const systemMenus = [
     { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
+    { to: '/admin/cron', label: 'CRON Jobs', icon: 'fas fa-clock' },
     { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
 ]
 

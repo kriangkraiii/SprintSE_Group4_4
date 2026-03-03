@@ -39,7 +39,7 @@ const checkBlacklist = async (rawNationalId) => {
 /**
  * เพิ่มรายชื่อเข้า Blacklist (Admin only)
  */
-const addToBlacklist = async (rawNationalId, reason, adminId) => {
+const addToBlacklist = async (rawNationalId, reason, adminId, bannedRole = 'BOTH') => {
     const hash = hashNationalId(rawNationalId);
 
     // เช็คซ้ำ
@@ -54,6 +54,7 @@ const addToBlacklist = async (rawNationalId, reason, adminId) => {
         data: {
             nationalIdHash: hash,
             reason: reason || null,
+            bannedRole: bannedRole || 'BOTH',
             createdByAdminId: adminId,
         },
     });

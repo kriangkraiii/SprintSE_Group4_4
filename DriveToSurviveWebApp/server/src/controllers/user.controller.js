@@ -240,6 +240,29 @@ const setUserStatus = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, message: "User status updated", data: updatedUser });
 });
 
+/**
+ * GET /api/users/check-username/:username
+ * ตรวจสอบว่า username ว่างหรือถูกใช้ไปแล้ว (public, ไม่ต้อง auth)
+ */
+const checkUsername = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+
+    if (!username || username.length < 4) {
+        throw new ApiError(400, 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร');
+    }
+
+    if (!/^[a-zA-Z0-9_]{4,20}$/.test(username)) {
+        throw new ApiError(400, 'ชื่อผู้ใช้ต้องเป็นตัวอักษร a-z, A-Z, 0-9 หรือ _ ความยาว 4–20 ตัว');
+    }
+
+    const result = await userService.checkUsernameAvailability(username);
+
+    res.status(200).json({
+        success: true,
+        data: result,
+    });
+});
+
 module.exports = {
     adminListUsers,
     getAllUsers,
@@ -253,4 +276,5 @@ module.exports = {
     adminDeleteUser,
     softDeleteMyAccount,
     setUserStatus,
+    checkUsername,
 };
