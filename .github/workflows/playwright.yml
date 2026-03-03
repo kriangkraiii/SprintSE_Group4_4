@@ -13,19 +13,23 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
-    - name: Install dependencies
+    - name: Install root dependencies
+      run: npm install
+    - name: Install app dependencies
       run: |
         cd DriveToSurviveWebApp
-        npm ci
         npm run install:all
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
+    - name: Start dev server
       run: |
         cd DriveToSurviveWebApp
         npm run dev &
         npx wait-on http://localhost:3003 --timeout 60000
-        npx playwright test
+      env:
+        CI: true
+    - name: Run Playwright tests
+      run: npx playwright test
       env:
         CI: true
     - uses: actions/upload-artifact@v4
