@@ -228,10 +228,7 @@ const createBooking = async (data, passengerId) => {
       throw new ApiError(403, 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้');
     }
 
-    // คนที่เป็น DRIVER จองเป็นผู้โดยสารไม่ได้
-    if (user.role === 'DRIVER') {
-      throw new ApiError(403, 'บัญชีคนขับไม่สามารถจองเส้นทางได้ กรุณาใช้บัญชีผู้โดยสาร');
-    }
+    // คนขับสามารถจองเส้นทางของคนอื่นได้ (ตรวจเฉพาะ driverId === passengerId ด้านล่าง)
 
     // ตรวจ passenger suspension (role-based ban)
     if (user.passengerSuspendedUntil && new Date(user.passengerSuspendedUntil) > new Date()) {

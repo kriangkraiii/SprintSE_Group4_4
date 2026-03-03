@@ -259,6 +259,12 @@
             </div>
           </div>
 
+          <!-- Passenger: navigate to my pickup -->
+          <a v-if="userRole === 'passenger' && myPickupNavUrl" :href="myPickupNavUrl" target="_blank" @click.stop
+            class="block w-full mt-3 px-4 py-2.5 text-sm font-medium text-center text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition">
+            📍 นำทางไปจุดขึ้นรถ (Google Maps)
+          </a>
+
           <!-- Passenger list (shown to driver) -->
           <div v-if="userRole === 'driver'">
             <p class="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">👥 ผู้โดยสาร ({{ passengerContacts.length }})</p>
@@ -276,6 +282,10 @@
                     🏁 ส่ง: {{ p.dropoffLabel }}
                   </p>
                   <p v-if="p.seats" class="text-xs text-slate-400">🪑 {{ p.seats }} ที่นั่ง</p>
+                  <a v-if="p.pickupLat" :href="getNavToPickupUrl(p.pickupLat, p.pickupLng, p.pickupLabel, p.pickupPlaceId)" target="_blank" @click.stop
+                    class="inline-flex items-center gap-1 mt-1 px-2 py-1 text-[11px] font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 transition">
+                    🗺️ นำทางไปรับ
+                  </a>
                 </div>
                 <div class="flex items-center gap-1 flex-shrink-0">
                   <a v-if="p.phoneNumber"
@@ -494,6 +504,9 @@ const passengerContacts = computed(() => {
         pickupLabel: locationLabel(booking?.pickupLocation),
         dropoffLabel: locationLabel(booking?.dropoffLocation),
         seats: booking?.numberOfSeats,
+        pickupLat: booking?.pickupLocation?.lat,
+        pickupLng: booking?.pickupLocation?.lng,
+        pickupPlaceId: booking?.pickupLocation?.placeId || null,
       }
     })
 })
@@ -510,6 +523,21 @@ function copyPhone(phone) {
   navigator.clipboard?.writeText(phone)
   toast.success('คัดลอกเบอร์แล้ว', phone)
 }
+
+function getNavToPickupUrl(lat, lng, label, placeId) {
+  if (!lat) return '#'
+  let url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`
+  if (placeId) url += `&destination_place_id=${placeId}`
+  return url
+}
+
+// Passenger's own pickup nav URL
+const myPickupNavUrl = computed(() => {
+  if (!session.value?.bookings || !userId.value) return null
+  const myBooking = session.value.bookings.find(b => b.passengerId === userId.value)
+  if (!myBooking?.pickupLocation?.lat) return null
+  return getNavToPickupUrl(myBooking.pickupLocation.lat, myBooking.pickupLocation.lng, locationLabel(myBooking.pickupLocation), myBooking.pickupLocation.placeId)
+})
 
 function scrollToBottom() {
   nextTick(() => {
