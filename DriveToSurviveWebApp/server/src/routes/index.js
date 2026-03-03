@@ -19,6 +19,7 @@ const adminSprint2Routes = require('./adminSprint2.routes');
 const placeRoutes = require('./place.routes');
 const geoRoutes = require('./geo.routes');
 const dashboardRoutes = require('./dashboard.routes');
+const securityConfigRoutes = require('./securityConfig.routes');
 const router = express.Router();
 
 router.use('/auth', authRoutes);
@@ -41,6 +42,7 @@ router.use('/admin', adminSprint2Routes);
 router.use('/places', placeRoutes);
 router.use('/geo', geoRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/security-config', securityConfigRoutes);
 
 
 module.exports = router;
