@@ -4,7 +4,7 @@
     :class="isOwn ? 'justify-end' : 'justify-start'"
   >
     <div
-      class="relative max-w-[75%] rounded-2xl shadow-sm"
+      class="relative max-w-[75%] rounded-2xl shadow-sm group"
       :class="bubbleClass"
     >
       <!-- System message -->
@@ -128,8 +128,18 @@
 
       <!-- Text message -->
       <template v-else>
-        <div class="px-4 py-2.5">
-          <p class="text-sm whitespace-pre-wrap break-words leading-relaxed">{{ message.content }}</p>
+        <div class="px-4 py-2.5 flex flex-col">
+          <!-- Edit Histories -->
+          <div v-if="showEditHistory && message.metadata?.editHistory?.length" class="mb-3 flex flex-col gap-2">
+               <div class="text-[11px] font-medium cursor-pointer hover:opacity-80 transition-opacity" :class="isOwn ? 'text-white/90 self-end' : 'text-blue-600 self-start'" @click.stop="showEditHistory = false">
+                  ซ่อนการแก้ไข
+               </div>
+               <div v-for="(hist, idx) in message.metadata.editHistory" :key="idx" class="border rounded-2xl px-3 py-1.5 text-sm max-w-full break-words" :class="isOwn ? 'border-white/30 text-white/70 self-end' : 'border-slate-300 text-slate-600 self-start'">
+                  {{ hist.content }}
+               </div>
+          </div>
+
+          <p class="text-sm whitespace-pre-wrap break-words leading-relaxed" :class="showEditHistory && isOwn ? 'self-end' : showEditHistory && !isOwn ? 'self-start' : ''">{{ message.content }}</p>
 
           <!-- Filtered badge -->
           <span v-if="message.isFiltered && !message.isUnsent"
@@ -139,22 +149,77 @@
 
           <!-- Timestamp -->
           <div class="flex items-center gap-1.5 mt-1" :class="isOwn ? 'justify-end' : 'justify-start'">
+            <span v-if="message.metadata?.isEdited && !showEditHistory" class="text-[10px] font-medium cursor-pointer hover:underline transition-colors font-bold" :class="isOwn ? 'text-white/90' : 'text-blue-600'" @click.stop="showEditHistory = true">
+              มีการแก้ไข
+            </span>
             <span class="text-[10px] opacity-50">{{ formatTime(message.createdAt) }}</span>
           </div>
         </div>
       </template>
 
-      <!-- Actions (own messages only) -->
-      <div v-if="isOwn && canUnsend && !message.isUnsent" class="absolute -top-2 -left-2">
-        <button
-          @click="$emit('unsend', message.id)"
-          class="p-1 bg-white rounded-full shadow-md text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
-          title="ยกเลิกข้อความ"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
+      <!-- Three dots menu (own messages only, visible on hover, within 5 min window) -->
+      <div
+        v-if="isOwn && canShowMenu"
+        class="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <div class="relative">
+          <button
+            @click.stop="showMenu = !showMenu"
+            class="p-1.5 bg-white rounded-full shadow-md text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+            title="ตัวเลือกเพิ่มเติม"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+            </svg>
+          </button>
+
+          <!-- Dropdown menu -->
+          <div
+            v-if="showMenu"
+            class="absolute right-0 top-full mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg z-20 py-1"
+            @mouseleave="showMenu = false"
+          >
+            <!-- Edit count info (show only when not at max) -->
+            <div v-if="editCount < MAX_EDITS" class="px-3 py-2 text-xs border-b border-slate-100">
+              <p v-if="editCount > 0" class="text-slate-500">แก้ไขแล้ว {{ editCount }} ครั้ง</p>
+              <p v-else class="text-slate-500">สามารถแก้ไขได้ไม่เกิน 3 ครั้ง</p>
+              <p class="text-amber-600">เหลืออีก {{ remainingEdits }} ครั้ง</p>
+            </div>
+
+            <button
+              v-if="canEdit"
+              @click.stop="$emit('edit', message); showMenu = false"
+              class="w-full px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              แก้ไขข้อความ
+              <span class="ml-auto text-xs text-slate-400">({{ editCount }})</span>
+            </button>
+            <button
+              v-else-if="editCount >= MAX_EDITS"
+              disabled
+              class="w-full px-3 py-2 text-left text-sm text-slate-400 flex items-center gap-2 cursor-not-allowed"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              แก้ไขข้อความ
+              <span class="ml-auto text-xs">(ครบ 3 ครั้ง)</span>
+            </button>
+            <button
+              v-if="canUnsend"
+              @click.stop="$emit('unsend', message.id); showMenu = false"
+              class="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              ยกเลิกข้อความ
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Report (other's messages) -->
@@ -186,7 +251,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import dayjs from 'dayjs'
 import { useToast } from '~/composables/useToast'
 
@@ -196,11 +261,17 @@ const props = defineProps({
   isRevoked: { type: Boolean, default: false },
 })
 
-defineEmits(['unsend', 'report', 'revoke-location'])
-
-const showLightbox = ref(false)
+defineEmits(['edit', 'unsend', 'report', 'revoke-location'])
 
 const { toast } = useToast()
+const showLightbox = ref(false)
+const showEditHistory = ref(false)
+const showMenu = ref(false)
+const now = ref(new Date())
+let clockTimer = null
+
+onMounted(() => { clockTimer = setInterval(() => { now.value = new Date() }, 10000) })
+onUnmounted(() => { clearInterval(clockTimer) })
 
 function onClickRevoked() {
   toast.error('ผู้ใช้ได้ทำการหยุดแชร์ตำแหน่งแล้ว', 'ไม่สามารถเข้าถึงตำแหน่งของผู้ใช้ได้')
@@ -229,9 +300,35 @@ const bubbleClass = computed(() => {
     : 'bg-white text-slate-800 border border-slate-200 rounded-bl-md'
 })
 
+const MAX_EDITS = 3
+
+const editCount = computed(() => {
+  return props.message.metadata?.editHistory?.length || 0
+})
+
+const remainingEdits = computed(() => {
+  return MAX_EDITS - editCount.value
+})
+
+const canEdit = computed(() => {
+  if (!props.message.unsendDeadline) return false
+  if (props.message.isUnsent) return false
+  if (props.message.type !== 'TEXT') return false
+  if (editCount.value >= MAX_EDITS) return false
+  return now.value < new Date(props.message.unsendDeadline)
+})
+
+const canShowMenu = computed(() => {
+  if (!props.message.unsendDeadline) return false
+  if (props.message.isUnsent) return false
+  if (props.message.type !== 'TEXT') return false
+  return now.value < new Date(props.message.unsendDeadline)
+})
+
 const canUnsend = computed(() => {
   if (!props.message.unsendDeadline) return false
-  return new Date() < new Date(props.message.unsendDeadline)
+  if (props.message.isUnsent) return false
+  return now.value < new Date(props.message.unsendDeadline)
 })
 
 const formatTime = (date) => dayjs(date).format('HH:mm')

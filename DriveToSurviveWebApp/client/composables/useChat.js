@@ -83,6 +83,30 @@ export function useChat() {
         _socket?.off('new-notification', callback)
     }
 
+    function emitEditMessage(sessionId, message) {
+        _socket?.emit('edit-message', { sessionId, message })
+    }
+
+    function emitUnsendMessage(sessionId, messageId) {
+        _socket?.emit('unsend-message', { sessionId, messageId })
+    }
+
+    function onMessageEdited(callback) {
+        _socket?.on('message-edited', callback)
+    }
+
+    function offMessageEdited(callback) {
+        _socket?.off('message-edited', callback)
+    }
+
+    function onMessageUnsent(callback) {
+        _socket?.on('message-unsent', callback)
+    }
+
+    function offMessageUnsent(callback) {
+        _socket?.off('message-unsent', callback)
+    }
+
     function disconnectSocket() {
         if (_socket) { _socket.disconnect(); _socket = null }
     }
@@ -119,6 +143,9 @@ export function useChat() {
     const unsendMessage = (messageId) =>
         $api(`/chat/messages/${messageId}/unsend`, { method: 'PATCH' })
 
+    const editMessage = (messageId, data) =>
+        $api(`/chat/messages/${messageId}/edit`, { method: 'PATCH', body: data })
+
     const shareLocation = (sessionId, lat, lon) =>
         $api(`/chat/${sessionId}/location`, { method: 'POST', body: { lat, lon } })
 
@@ -151,6 +178,7 @@ export function useChat() {
         endSession,
         sendMessage,
         fetchMessages,
+        editMessage,
         unsendMessage,
         shareLocation,
         reportMessage,
@@ -166,6 +194,8 @@ export function useChat() {
         onNewMessage,
         offNewMessage,
         emitNewMessage,
+        emitEditMessage,
+        emitUnsendMessage,
         emitRevokeLocation,
         onLocationRevoked,
         offLocationRevoked,
@@ -173,8 +203,12 @@ export function useChat() {
         emitStopTyping,
         onTyping,
         onStopTyping,
+        onMessageEdited,
+        onMessageUnsent,
         offTyping,
         offStopTyping,
+        offMessageEdited,
+        offMessageUnsent,
         onNewNotification,
         offNewNotification,
         disconnectSocket,
