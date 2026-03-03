@@ -273,6 +273,45 @@ const getReviewByBooking = async (bookingId, userId) => {
 };
 
 /**
+ * Get reviews for a driver — PRIVATE view (includes privateFeedback). Only for authenticated driver.
+ */
+const getReviewsForDriver = async (driverId, opts = {}) => {
+    const { page = 1, limit = 20 } = opts;
+    const skip = (page - 1) * limit;
+
+    const where = {
+        driverId,
+        status: { in: ['ACTIVE', 'ANONYMIZED'] },
+    };
+
+    const [total, data] = await prisma.$transaction([
+        prisma.rideReview.count({ where }),
+        prisma.rideReview.findMany({
+            where,
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take: Number(limit),
+            select: {
+                id: true,
+                rating: true,
+                tags: true,
+                comment: true,
+                privateFeedback: true,  // included for driver
+                isAnonymous: true,
+                displayName: true,
+                status: true,
+                createdAt: true,
+            },
+        }),
+    ]);
+
+    return {
+        data,
+        pagination: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / limit) },
+    };
+};
+
+/**
  * Anonymize all reviews when a user deletes their account (PDPA compliance)
  */
 const anonymizeReviews = async (passengerId) => {
@@ -332,6 +371,7 @@ const getPendingReviews = async (passengerId) => {
 module.exports = {
     createReview,
     getReviewsByDriver,
+    getReviewsForDriver,
     getMyReviews,
     getDriverStats,
     getReviewByBooking,

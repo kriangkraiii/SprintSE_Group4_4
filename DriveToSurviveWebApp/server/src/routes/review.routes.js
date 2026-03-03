@@ -1,6 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validate');
 const { protect, requireAdmin } = require('../middlewares/auth');
+const { authLimiter } = require('../middlewares/rateLimiter');
 const reviewController = require('../controllers/review.controller');
 const {
     createReviewSchema,
@@ -53,6 +54,7 @@ router.get(
 router.post(
     '/',
     protect,
+    authLimiter,
     validate({ body: createReviewSchema }),
     reviewController.createReview
 );
@@ -61,8 +63,17 @@ router.post(
 router.post(
     '/disputes',
     protect,
+    authLimiter,
     validate({ body: createDisputeSchema }),
     reviewController.createDispute
+);
+
+// GET /reviews/my-received — driver's own reviews (includes privateFeedback)
+router.get(
+    '/my-received',
+    protect,
+    validate({ query: paginationQuery }),
+    reviewController.getMyReceivedReviews
 );
 
 // GET /reviews/driver/:driverId — public driver reviews

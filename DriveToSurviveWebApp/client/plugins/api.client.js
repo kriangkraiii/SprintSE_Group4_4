@@ -21,8 +21,8 @@ export default defineNuxtPlugin(() => {
       const b = response._data
       if (b && typeof b === 'object' && Object.prototype.hasOwnProperty.call(b, 'data')) {
         response._data = Object.prototype.hasOwnProperty.call(b, 'pagination')
-          ? { data: b.data, pagination: b.pagination }   
-          : b.data                                       
+          ? { data: b.data, pagination: b.pagination, ...(b.session && { session: b.session }) }
+          : b.data
       }
     },
 
@@ -40,7 +40,7 @@ export default defineNuxtPlugin(() => {
         const user = useCookie('user')
         token.value = null
         user.value = null
-        try { localStorage.removeItem('token') } catch {}
+        try { localStorage.removeItem('token') } catch { }
         // redirect ไป login (avoid infinite loop ถ้าอยู่ที่ login อยู่แล้ว)
         if (!window.location.pathname.startsWith('/login')) {
           window.location.href = '/login'

@@ -1,6 +1,7 @@
 const express = require('express');
 const validate = require('../middlewares/validate');
 const { protect, requireAdmin } = require('../middlewares/auth');
+const { authLimiter } = require('../middlewares/rateLimiter');
 const upload = require('../middlewares/upload.middleware');
 const chatController = require('../controllers/chat.controller');
 const {
@@ -89,6 +90,7 @@ router.get(
 router.post(
     '/:sessionId/messages',
     protect,
+    authLimiter,
     validate({ body: sendMessageSchema }),
     chatController.sendMessage
 );
@@ -97,6 +99,7 @@ router.post(
 router.post(
     '/:sessionId/location',
     protect,
+    authLimiter,
     validate({ body: shareLocationSchema }),
     chatController.shareLocation
 );
@@ -108,12 +111,22 @@ router.patch(
     chatController.unsendMessage
 );
 
+// PATCH /chat/messages/:messageId/edit — edit a message
+router.patch(
+    '/messages/:messageId/edit',
+    protect,
+    authLimiter,
+    validate({ body: require('../validations/chat.validation').editMessageSchema }),
+    chatController.editMessage
+);
+
 // ─── Report Endpoints ────────────────────────────────────
 
 // POST /chat/reports — create report
 router.post(
     '/reports',
     protect,
+    authLimiter,
     validate({ body: createReportSchema }),
     chatController.createReport
 );
@@ -124,6 +137,7 @@ router.post(
 router.post(
     '/:sessionId/image',
     protect,
+    authLimiter,
     upload.single('image'),
     chatController.sendImageMessage
 );

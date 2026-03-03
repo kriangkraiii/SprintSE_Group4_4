@@ -460,8 +460,8 @@ const adminQuickApprove = asyncHandler(async (req, res) => {
       typeOnLicense: 'PRIVATE_CAR',
       licenseIssueDate: now,
       licenseExpiryDate: futureDate,
-      licensePhotoUrl: 'admin-approved-no-photo',
-      selfiePhotoUrl: 'admin-approved-no-photo',
+      licensePhotoUrl: null,
+      selfiePhotoUrl: null,
       status: 'APPROVED',
     };
 

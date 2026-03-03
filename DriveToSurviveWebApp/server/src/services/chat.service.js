@@ -63,14 +63,18 @@ const createSession = async (routeId, userId) => {
  * Add a participant to an existing group chat session
  */
 const addParticipant = async (sessionId, userId) => {
-    // Upsert — skip if already exists
-    await prisma.chatSessionParticipant.upsert({
+    // Check if already a participant — skip system message if so
+    const existing = await prisma.chatSessionParticipant.findUnique({
         where: { sessionId_userId: { sessionId, userId } },
-        update: {},
-        create: { sessionId, userId },
+    });
+    if (existing) return; // Already in — no need to notify again
+
+    // Actually add new participant
+    await prisma.chatSessionParticipant.create({
+        data: { sessionId, userId },
     });
 
-    // System message
+    // System message only for genuinely new participants
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { firstName: true } });
     await prisma.chatMessage.create({
         data: {
@@ -97,15 +101,6 @@ const endSession = async (routeId) => {
     const updated = await prisma.chatSession.update({
         where: { id: session.id },
         data: { status: 'ENDED', endedAt: now, chatExpiresAt, readOnlyExpiresAt },
-    });
-
-    await prisma.chatMessage.create({
-        data: {
-            sessionId: session.id,
-            senderId: session.driverId,
-            type: 'SYSTEM',
-            content: '🔒 การเดินทางจบแล้ว — ยังคุยต่อได้อีก 1 วัน หลังจากนั้นจะเป็นอ่านอย่างเดียว',
-        },
     });
 
     return updated;
@@ -165,7 +160,7 @@ const sendMessage = async (sessionId, senderId, data) => {
         },
         select: {
             id: true, sessionId: true, senderId: true, type: true, content: true,
-            imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
+            imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
             sender: { select: { firstName: true, profilePicture: true } },
         },
     });
@@ -181,8 +176,24 @@ const getMessages = async (sessionId, userId, opts = {}) => {
         throw new ApiError(403, 'You are not a participant in this chat');
     }
 
+    // Fetch session with route info for chat header
+    const sessionInfo = await prisma.chatSession.findUnique({
+        where: { id: sessionId },
+        select: {
+            id: true, routeId: true, status: true, createdAt: true, endedAt: true,
+            chatExpiresAt: true, readOnlyExpiresAt: true,
+            driver: { select: { id: true, firstName: true, profilePicture: true } },
+            route: { select: { startLocation: true, endLocation: true } },
+            participants: {
+                select: {
+                    user: { select: { id: true, firstName: true, profilePicture: true } },
+                },
+            },
+        },
+    });
+
     const skip = (page - 1) * limit;
-    const [total, messages] = await prisma.$transaction([
+    const [total, messages, session] = await prisma.$transaction([
         prisma.chatMessage.count({ where: { sessionId } }),
         prisma.chatMessage.findMany({
             where: { sessionId },
@@ -191,14 +202,35 @@ const getMessages = async (sessionId, userId, opts = {}) => {
             take: Number(limit),
             select: {
                 id: true, senderId: true, type: true, content: true,
-                imageUrl: true, isFiltered: true, isUnsent: true, metadata: true, createdAt: true,
+                imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
                 sender: { select: { firstName: true, profilePicture: true } },
             },
         }),
+        prisma.chatSession.findUnique({
+            where: { id: sessionId },
+            include: {
+                driver: { select: { id: true, firstName: true, profilePicture: true } }
+            }
+        })
     ]);
 
+    // Format passenger info for UI compatibility
+    const participants = await prisma.chatSessionParticipant.findMany({
+        where: { sessionId },
+        include: { user: { select: { id: true, firstName: true, profilePicture: true } } }
+    });
+
+    if (session) {
+        const passengerParticipant = participants.find(p => p.userId !== session.driverId);
+        if (passengerParticipant) {
+            session.passenger = passengerParticipant.user;
+        }
+    }
+
     return {
+        session,
         data: messages.reverse(),
+        session: sessionInfo,
         pagination: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / limit) },
     };
 };
@@ -219,7 +251,57 @@ const unsendMessage = async (messageId, senderId) => {
     return prisma.chatMessage.update({
         where: { id: messageId },
         data: { content: 'ข้อความถูกลบ / Message unsent', isUnsent: true },
-        select: { id: true, content: true, isUnsent: true },
+        select: { id: true, content: true, isUnsent: true, sessionId: true },
+    });
+};
+
+/**
+ * Edit a message within the time window
+ */
+const editMessage = async (messageId, senderId, content) => {
+    const message = await prisma.chatMessage.findUnique({ where: { id: messageId } });
+    if (!message) throw new ApiError(404, 'Message not found');
+    if (message.senderId !== senderId) throw new ApiError(403, 'Not your message');
+    if (message.isUnsent) throw new ApiError(400, 'Cannot edit unsent message');
+    if (message.type !== 'TEXT') throw new ApiError(400, 'Only text messages can be edited');
+    if (message.unsendDeadline && new Date() > message.unsendDeadline) {
+        throw new ApiError(400, 'Edit time expired (5 minutes)');
+    }
+
+    const { filtered, original, isFiltered } = filterContent(content || '');
+
+    // Initialize metadata if empty, or append to it
+    const metadata = (message.metadata && typeof message.metadata === 'object') ? { ...message.metadata } : {};
+
+    // Check and update edit history
+    const editHistory = Array.isArray(metadata.editHistory) ? [...metadata.editHistory] : [];
+    if (editHistory.length >= 3) {
+        throw new ApiError(400, 'สามารถแก้ไขได้สูงสุด 3 ครั้งเท่านั้น');
+    }
+
+    // Save the old content and time before applying the new edit
+    editHistory.push({
+        content: message.content,
+        editedAt: metadata.editedAt || message.createdAt
+    });
+
+    metadata.isEdited = true;
+    metadata.editedAt = new Date().toISOString();
+    metadata.editHistory = editHistory;
+
+    return prisma.chatMessage.update({
+        where: { id: messageId },
+        data: {
+            content: filtered,
+            originalContent: isFiltered ? original : message.originalContent,
+            isFiltered: isFiltered || message.isFiltered,
+            metadata: metadata,
+        },
+        select: {
+            id: true, sessionId: true, senderId: true, type: true, content: true,
+            imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
+            sender: { select: { firstName: true, profilePicture: true } },
+        },
     });
 };
 
@@ -233,6 +315,7 @@ const getSession = async (routeId, userId) => {
             id: true, routeId: true, status: true, createdAt: true, endedAt: true,
             chatExpiresAt: true, readOnlyExpiresAt: true,
             driver: { select: { id: true, firstName: true, profilePicture: true } },
+            route: { select: { startLocation: true, endLocation: true } },
             participants: {
                 select: {
                     user: { select: { id: true, firstName: true, profilePicture: true } },
@@ -288,6 +371,7 @@ const getMySessions = async (userId) => {
             select: {
                 id: true, routeId: true, status: true, createdAt: true, endedAt: true,
                 driver: { select: { id: true, firstName: true, profilePicture: true } },
+                route: { select: { startLocation: true, endLocation: true } },
                 participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
                 messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
             },
@@ -301,6 +385,7 @@ const getMySessions = async (userId) => {
                     select: {
                         id: true, routeId: true, status: true, createdAt: true, endedAt: true,
                         driver: { select: { id: true, firstName: true, profilePicture: true } },
+                        route: { select: { startLocation: true, endLocation: true } },
                         participants: { select: { user: { select: { id: true, firstName: true, profilePicture: true } } } },
                         messages: { orderBy: { createdAt: 'desc' }, take: 1, select: { content: true, createdAt: true } },
                     },
@@ -313,7 +398,15 @@ const getMySessions = async (userId) => {
     // Deduplicate by session id
     const map = new Map();
     [...driverSessions, ...passengerSessions].forEach(s => { if (!map.has(s.id)) map.set(s.id, s); });
-    return Array.from(map.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const sessions = Array.from(map.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Attach passenger for easy frontend access
+    sessions.forEach(s => {
+        const passengerP = s.participants?.find(p => p.user.id !== s.driver?.id);
+        s.passenger = passengerP?.user || null;
+    });
+
+    return sessions;
 };
 
 module.exports = {
@@ -323,6 +416,7 @@ module.exports = {
     sendMessage,
     getMessages,
     unsendMessage,
+    editMessage,
     getSession,
     getSessionByBooking,
     shareLocation,

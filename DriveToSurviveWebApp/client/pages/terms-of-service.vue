@@ -1,647 +1,544 @@
 <template>
-  <div class="kanit-font bg-slate-50">
-    <!-- Scroll Progress Indicator -->
-    <div class="scroll-indicator">
-      <div class="scroll-progress" ref="scrollProgressEl"></div>
-    </div>
+    <div class="min-h-screen text-primary bg-slate-50">
+        <AppHeader />
 
-    <div class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <!-- Table of Contents (Sidebar) -->
-        <div class="lg:col-span-1">
-          <div class="sticky p-6 bg-white rounded-lg shadow-sm top-24">
-            <h3 class="mb-4 text-lg font-semibold text-primary">สารบัญ</h3>
-            <nav class="space-y-2">
-              <a href="#section-1" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                1. บทนำ
-              </a>
-              <a href="#section-2" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                2. คำจำกัดความ
-              </a>
-              <a href="#section-3" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                3. ขอบเขตและลักษณะของบริการ
-              </a>
-              <a href="#section-4" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                4. การสมัครสมาชิกและบัญชีผู้ใช้
-              </a>
-              <a href="#section-5" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                5. หน้าที่และความรับผิดชอบ
-              </a>
-              <a href="#section-6" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                6. การชำระเงิน
-              </a>
-              <a href="#section-7" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                7. ระบบการให้คะแนนและรีวิว
-              </a>
-              <a href="#section-8" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                8. ข้อจำกัดความรับผิด
-              </a>
-              <a href="#section-9" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                9. ทรัพย์สินทางปัญญา
-              </a>
-              <a href="#section-10" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                10. การระงับและยกเลิกบัญชี
-              </a>
-              <a href="#section-11" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                11. การแก้ไขเปลี่ยนแปลง
-              </a>
-              <a href="#section-12" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                12. กฎหมายที่ใช้บังคับ
-              </a>
-              <a href="#section-13" class="block px-3 py-2 text-sm text-slate-500 rounded-md toc-link hover:text-cta">
-                13. การติดต่อ
-              </a>
-            </nav>
-          </div>
+        <!-- Hero Banner -->
+        <div class="relative pt-24 pb-12 overflow-hidden bg-gradient-to-br from-[#0a2540] to-[#1a4b7a]">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute inset-0"
+                    style="background-image: radial-gradient(circle at 30% 40%, rgba(19,127,236,0.3) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(20,94,231,0.2) 0%, transparent 50%);">
+                </div>
+            </div>
+            <div class="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-sm">
+                        <svg class="w-7 h-7 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white md:text-4xl">ข้อกำหนดและเงื่อนไขการใช้งาน</h1>
+                        <p class="text-blue-200">Terms of Service — Ride Platform</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-4 mt-6 text-sm text-blue-200">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        มีผลบังคับใช้: 8 กรกฎาคม 2568
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        อัปเดตล่าสุด: 2 มีนาคม 2569
+                    </span>
+                </div>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="lg:col-span-3">
-          <!-- Header Section -->
-          <div class="p-8 mb-8 bg-white rounded-lg shadow-sm">
-            <h1 class="mb-4 text-3xl font-bold text-primary">ข้อตกลงและเงื่อนไขการใช้บริการ</h1>
-            <p class="mb-6 text-lg text-slate-500">(Terms of Service)</p>
-
-            <div class="p-6 rounded-lg highlight-box">
-              <div class="flex items-center mb-2">
-                <svg class="w-6 h-6 mr-2 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span class="text-lg font-semibold text-blue-900">
-                  มีผลบังคับใช้ตั้งแต่วันที่: 8 กรกฎาคม 2568
-                </span>
-              </div>
-              <p class="text-sm text-primary">
-                การใช้บริการของเราถือว่าท่านได้อ่านและยอมรับข้อตกลงนี้แล้ว
-              </p>
-            </div>
-          </div>
-
-          <!-- Section 1: บทนำ -->
-          <section id="section-1" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 1: บทนำ</h2>
-            <p class="mb-4 leading-relaxed text-primary">
-              ยินดีต้อนรับสู่ "Drive To Survive" ("แพลตฟอร์ม") ข้อตกลงและเงื่อนไขการใช้บริการนี้ ("ข้อตกลง")
-              ถือเป็นสัญญาระหว่างท่าน ("ผู้ใช้") และแพลตฟอร์ม "Drive To Survive" การที่ท่านได้ลงทะเบียน เข้าสู่ระบบ
-              และใช้งานบริการของเรา ถือว่าท่านได้อ่าน ทำความเข้าใจ และยอมรับข้อตกลงทั้งหมดนี้โดยสมบูรณ์แล้ว
-            </p>
-            <div class="p-4 border-l-4 border-red-400 rounded-r-lg bg-red-50">
-              <p class="font-medium text-red-700">
-                หากท่านไม่ยอมรับข้อตกลงนี้ กรุณายุติการใช้งานแพลตฟอร์มของเราทันที
-              </p>
-            </div>
-          </section>
-
-          <!-- Section 2: คำจำกัดความ -->
-          <section id="section-2" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 2: คำจำกัดความ</h2>
-            <div class="space-y-4">
-              <div class="pl-4 border-l-4 border-blue-400">
-                <h3 class="font-semibold text-primary">"แพลตฟอร์ม"</h3>
-                <p class="text-primary">หมายถึง เว็บแอปพลิเคชัน "Drive To Survive" และบริการอื่นๆ ที่เกี่ยวข้อง</p>
-              </div>
-              <div class="pl-4 border-l-4 border-green-400">
-                <h3 class="font-semibold text-primary">"บริการ"</h3>
-                <p class="text-primary">
-                  หมายถึง การที่แพลตฟอร์มทำหน้าที่เป็นตัวกลางทางเทคโนโลยีเพื่อเชื่อมต่อระหว่าง "ผู้ขับขี่" และ
-                  "ผู้โดยสาร" ที่มีความต้องการเดินทางในเส้นทางเดียวกันหรือใกล้เคียงกัน
-                </p>
-              </div>
-              <div class="pl-4 border-l-4 border-purple-400">
-                <h3 class="font-semibold text-primary">"ผู้ใช้"</h3>
-                <p class="text-primary">
-                  หมายถึง บุคคลทั่วไปที่ลงทะเบียนและสร้างบัญชีบนแพลตฟอร์ม ไม่ว่าจะในฐานะผู้โดยสารหรือผู้ขับขี่
-                </p>
-              </div>
-              <div class="pl-4 border-l-4 border-orange-400">
-                <h3 class="font-semibold text-primary">"ผู้ขับขี่" (Driver)</h3>
-                <p class="text-primary">
-                  หมายถึง ผู้ใช้ที่ลงทะเบียนบนแพลตฟอร์มเพื่อเสนอเส้นทางการเดินทางและแบ่งปันที่นั่งว่างในยานพาหนะส่วนตัวของตน
-                </p>
-              </div>
-              <div class="pl-4 border-l-4 border-teal-400">
-                <h3 class="font-semibold text-primary">"ผู้โดยสาร" (Passenger)</h3>
-                <p class="text-primary">
-                  หมายถึง ผู้ใช้ที่ใช้งานแพลตฟอร์มเพื่อค้นหาและทำการจองการเดินทางร่วมกับผู้ขับขี่
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 3: ขอบเขตและลักษณะของบริการ -->
-          <section id="section-3" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 3: ขอบเขตและลักษณะของบริการ</h2>
-            <div class="space-y-4">
-              <div class="p-4 rounded-lg bg-cta-light">
-                <h3 class="mb-2 font-semibold text-blue-900">3.1</h3>
-                <p class="text-primary">
-                  "Drive To Survive" เป็นเพียงแพลตฟอร์มเทคโนโลยีที่ทำหน้าที่เป็นตัวกลางในการจับคู่เท่านั้น
-                  เราไม่ได้เป็นผู้ให้บริการขนส่ง, ไม่ได้เป็นนายจ้างของผู้ขับขี่,
-                  ไม่ได้เป็นเจ้าของหรือผู้ควบคุมยานพาหนะ และไม่ได้เสนอบริการเดินทางโดยตรง
-                </p>
-              </div>
-              <div class="p-4 rounded-lg bg-yellow-50">
-                <h3 class="mb-2 font-semibold text-yellow-900">3.2</h3>
-                <p class="text-primary">
-                  สัญญาหรือข้อตกลงใดๆ ที่เกี่ยวกับการเดินทางถือเป็นข้อตกลงโดยตรงระหว่างผู้ขับขี่และผู้โดยสาร
-                  "Drive To Survive" ไม่มีส่วนรับผิดชอบในข้อตกลงหรือการกระทำใดๆ ที่เกิดขึ้นระหว่างผู้ใช้
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 4: การสมัครสมาชิกและบัญชีผู้ใช้ -->
-          <section id="section-4" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 4: การสมัครสมาชิกและบัญชีผู้ใช้</h2>
-            <div class="space-y-4">
-              <div class="flex items-start">
-                <span class="bg-cta-light text-cta-hover text-sm font-semibold mr-3 px-2.5 py-0.5 rounded">4.1</span>
-                <p class="text-primary">
-                  ในการใช้บริการ ท่านต้องลงทะเบียนสร้างบัญชีผู้ใช้และให้ข้อมูลที่เป็นจริง ถูกต้อง และเป็นปัจจุบัน
-                </p>
-              </div>
-              <div class="flex items-start">
-                <span class="bg-cta-light text-cta-hover text-sm font-semibold mr-3 px-2.5 py-0.5 rounded">4.2</span>
-                <p class="text-primary">
-                  ท่านต้องมีอายุครบตามที่กฎหมายกำหนดในการทำนิติกรรมสัญญา และมีความสามารถในการขับขี่ยานพาหนะตามกฎหมาย (กรณีเป็นผู้ขับขี่)
-                </p>
-              </div>
-              <div class="flex items-start">
-                <span class="bg-cta-light text-cta-hover text-sm font-semibold mr-3 px-2.5 py-0.5 rounded">4.3</span>
-                <p class="text-primary">
-                  แพลตฟอร์มมีกระบวนการยืนยันตัวตนผ่านรหัส OTP และอาจร้องขอเอกสารเพิ่มเติม เช่น บัตรประชาชน เพื่อความปลอดภัยและความน่าเชื่อถือของชุมชนผู้ใช้
-                </p>
-              </div>
-              <div class="flex items-start">
-                <span class="bg-cta-light text-cta-hover text-sm font-semibold mr-3 px-2.5 py-0.5 rounded">4.4</span>
-                <p class="text-primary">
-                  ท่านมีหน้าที่รับผิดชอบในการรักษารหัสผ่านและข้อมูลบัญชีของท่านให้เป็นความลับ และท่านต้องรับผิดชอบต่อกิจกรรมทั้งหมดที่เกิดขึ้นภายใต้บัญชีของท่าน
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 5: หน้าที่และความรับผิดชอบของผู้ใช้ -->
-          <section id="section-5" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 5: หน้าที่และความรับผิดชอบของผู้ใช้</h2>
-
-            <div class="space-y-6">
-              <div class="p-6 rounded-lg bg-slate-50">
-                <h3 class="mb-3 text-lg font-semibold text-primary">5.1 สำหรับผู้ใช้ทุกคน:</h3>
-                <ul class="space-y-2 text-primary">
-                  <li class="flex items-start">
-                    <span class="mr-2 text-blue-500">•</span>
-                    <span>ต้องปฏิบัติต่อผู้ใช้อื่นด้วยความเคารพและให้เกียรติ</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-blue-500">•</span>
-                    <span>ห้ามใช้แพลตฟอร์มในการกระทำที่ผิดกฎหมาย, ฉ้อโกง, คุกคาม หรือสร้างความเดือดร้อนรำคาญ</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-blue-500">•</span>
-                    <span>ต้องใช้ระบบการให้คะแนนและรีวิวตามความเป็นจริงและอย่างสร้างสรรค์</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="p-6 rounded-lg bg-green-50">
-                <h3 class="mb-3 text-lg font-semibold text-green-900">5.2 สำหรับผู้โดยสาร (Passenger):</h3>
-                <ul class="space-y-2 text-primary">
-                  <li class="flex items-start">
-                    <span class="mr-2 text-green-500">•</span>
-                    <span>ต้องให้ข้อมูลจุดนัดพบและจุดหมายปลายทางที่ถูกต้อง</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-green-500">•</span>
-                    <span>ต้องตรงต่อเวลาตามที่ได้นัดหมายไว้กับผู้ขับขี่</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-green-500">•</span>
-                    <span>ต้องรับผิดชอบค่าเดินทางตามที่ได้ตกลงกันไว้</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-green-500">•</span>
-                    <span>มีหน้าที่ดูแลทรัพย์สินส่วนตัวของตนเอง</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-green-500">•</span>
-                    <span>มีสิทธิ์ในการยกเลิกการจองตามเงื่อนไขที่แพลตฟอร์มกำหนด</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="p-6 rounded-lg bg-orange-50">
-                <h3 class="mb-3 text-lg font-semibold text-orange-900">5.3 สำหรับผู้ขับขี่ (Driver):</h3>
-                <ul class="space-y-2 text-primary">
-                  <li class="flex items-start">
-                    <span class="mr-2 text-orange-500">•</span>
-                    <span>ต้องมีใบอนุญาตขับขี่ที่ยังไม่หมดอายุ, เอกสารจดทะเบียนรถยนต์ และประกันภัยภาคบังคับ (พ.ร.บ.) และภาคสมัครใจที่ยังให้ความคุ้มครอง</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-orange-500">•</span>
-                    <span>ยานพาหนะที่ใช้ต้องอยู่ในสภาพที่ปลอดภัยและได้รับการบำรุงรักษาอย่างสม่ำเสมอ</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-orange-500">•</span>
-                    <span>ต้องขับขี่อย่างปลอดภัย ปฏิบัติตามกฎจราจรอย่างเคร่งครัด และไม่ใช้สารเสพติดหรือดื่มแอลกอฮอล์ก่อนหรือขณะขับขี่</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-orange-500">•</span>
-                    <span>ต้องให้ข้อมูลเส้นทาง, วัน-เวลาเดินทาง, และจำนวนที่นั่งว่างที่ถูกต้องแก่ผู้โดยสาร</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-orange-500">•</span>
-                    <span>มีสิทธิ์ในการยอมรับหรือปฏิเสธคำขอร่วมเดินทางจากผู้โดยสาร</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 6: การชำระเงิน -->
-          <section id="section-6" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 6: การชำระเงิน</h2>
-            <div class="p-6 border-l-4 rounded-r-lg bg-amber-50 border-amber-400">
-              <p class="text-primary">
-                ค่าใช้จ่ายในการเดินทางเป็นการตกลงกันโดยตรงระหว่างผู้ขับขี่และผู้โดยสาร แพลตฟอร์ม "Drive To Survive"
-                ไม่ได้มีส่วนเกี่ยวข้องในการทำธุรกรรมทางการเงินดังกล่าว และจะไม่รับผิดชอบต่อข้อพิพาทใดๆ ที่เกี่ยวกับการชำระเงิน
-              </p>
-            </div>
-          </section>
-
-          <!-- Section 7: ระบบการให้คะแนนและรีวิว -->
-          <section id="section-7" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 7: ระบบการให้คะแนนและรีวิว</h2>
-            <div class="p-6 border-l-4 border-indigo-400 rounded-r-lg bg-indigo-50">
-              <p class="mb-4 text-primary">
-                แพลตฟอร์มสนับสนุนให้มีระบบการให้คะแนนและรีวิวเพื่อสร้างความน่าเชื่อถือในชุมชน
-              </p>
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <h3 class="mb-3 font-semibold text-indigo-900">เงื่อนไขการรีวิว:</h3>
-                <ul class="space-y-2 text-primary">
-                  <li class="flex items-start">
-                    <span class="mr-2 text-indigo-500">•</span>
-                    <span>รีวิวต้องมาจากประสบการณ์จริงเท่านั้น</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-indigo-500">•</span>
-                    <span>ไม่ใช้ถ้อยคำหยาบคายหรือมีเนื้อหาที่ไม่เหมาะสม</span>
-                  </li>
-                  <li class="flex items-start">
-                    <span class="mr-2 text-indigo-500">•</span>
-                    <span>ไม่เป็นการหมิ่นประมาทหรือโจมตีส่วนบุคคล</span>
-                  </li>
-                </ul>
-              </div>
-              <div class="p-4 mt-4 rounded-lg bg-red-50">
-                <p class="font-medium text-red-700">⚠️ แพลตฟอร์มขอสงวนสิทธิ์ในการลบรีวิวที่ไม่เป็นไปตามเงื่อนไข</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 8: ข้อจำกัดความรับผิด -->
-          <section id="section-8" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 8: ข้อจำกัดความรับผิดของแพลตฟอร์ม</h2>
-            <div class="p-6 border-l-4 border-red-400 rounded-r-lg bg-red-50">
-              <div class="mb-4">
-                <div class="flex items-center mb-2">
-                  <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z"/>
-                  </svg>
-                  <h3 class="font-semibold text-red-900">ข้อจำกัดความรับผิดชอบ</h3>
-                </div>
-                <p class="mb-4 text-primary">
-                  เนื่องจาก "Drive To Survive" เป็นเพียงตัวกลางในการเชื่อมต่อ บริการของเราจึงมีให้ในลักษณะ "ตามที่เป็นอยู่" (As Is)
-                </p>
-              </div>
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <h4 class="mb-3 font-semibold text-red-900">เราขอปฏิเสธความรับผิดในเรื่องต่อไปนี้:</h4>
-                <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <div class="flex items-center"><span class="mr-2 text-red-500">×</span><span class="text-primary">ความเสียหายและการสูญเสีย</span></div>
-                  <div class="flex items-center"><span class="mr-2 text-red-500">×</span><span class="text-primary">การบาดเจ็บและอุบัติเหตุ</span></div>
-                  <div class="flex items-center"><span class="mr-2 text-red-500">×</span><span class="text-primary">ข้อพิพาทระหว่างผู้ใช้</span></div>
-                  <div class="flex items-center"><span class="mr-2 text-red-500">×</span><span class="text-primary">ความล่าช้าในการเดินทาง</span></div>
-                </div>
-                <p class="mt-3 text-sm text-slate-500">
-                  * เหตุการณ์ใดๆ ที่เกิดขึ้นจากการเดินทางซึ่งอยู่นอกเหนือการควบคุมของเรา
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 9: ทรัพย์สินทางปัญญา -->
-          <section id="section-9" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 9: ทรัพย์สินทางปัญญา</h2>
-            <div class="p-6 border-l-4 border-purple-400 rounded-r-lg bg-purple-50">
-              <div class="flex items-center mb-4">
-                <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                <h3 class="font-semibold text-purple-900">ความเป็นเจ้าของทรัพย์สินทางปัญญา</h3>
-              </div>
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <p class="mb-4 text-primary">
-                  ทรัพย์สินทางปัญญาทั้งหมดบนแพลตฟอร์ม "Drive To Survive" ถือเป็นสิทธิ์ของแพลตฟอร์ม ประกอบด้วย:
-                </p>
-                <div class="grid grid-cols-2 gap-4 mb-4 md:grid-cols-4">
-                  <div class="text-center">
-                    <div class="w-12 h-12 p-3 mx-auto mb-2 bg-purple-100 rounded-full">
-                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10l1 14H6L7 4z"/>
-                      </svg>
-                    </div>
-                    <span class="text-sm text-slate-500">โลโก้</span>
-                  </div>
-                  <div class="text-center">
-                    <div class="w-12 h-12 p-3 mx-auto mb-2 bg-purple-100 rounded-full">
-                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
-                      </svg>
-                    </div>
-                    <span class="text-sm text-slate-500">การออกแบบ</span>
-                  </div>
-                  <div class="text-center">
-                    <div class="w-12 h-12 p-3 mx-auto mb-2 bg-purple-100 rounded-full">
-                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                      </svg>
-                    </div>
-                    <span class="text-sm text-slate-500">ข้อความ</span>
-                  </div>
-                  <div class="text-center">
-                    <div class="w-12 h-12 p-3 mx-auto mb-2 bg-purple-100 rounded-full">
-                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                      </svg>
-                    </div>
-                    <span class="text-sm text-slate-500">ซอฟต์แวร์</span>
-                  </div>
-                </div>
-              </div>
-              <div class="p-4 mt-4 rounded-lg bg-red-50">
-                <p class="font-medium text-red-700">
-                  🚫 ห้ามมิให้มีการคัดลอก, ดัดแปลง, หรือนำไปใช้โดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 10: การระงับและยกเลิกบัญชี -->
-          <section id="section-10" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 10: การระงับและยกเลิกบัญชี</h2>
-            <div class="p-6 border-l-4 border-orange-400 rounded-r-lg bg-orange-50">
-              <div class="flex items-center mb-4">
-                <svg class="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z"/>
-                </svg>
-                <h3 class="font-semibold text-orange-900">สิทธิ์ในการระงับบัญชี</h3>
-              </div>
-              <p class="mb-4 text-primary">
-                "Drive To Survive" ขอสงวนสิทธิ์ในการระงับหรือยกเลิกบัญชีของท่านได้ทันทีโดยไม่ต้องแจ้งให้ทราบล่วงหน้า
-              </p>
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <h4 class="mb-3 font-semibold text-orange-900">เหตุผลในการระงับบัญชี:</h4>
-                <div class="space-y-3">
-                  <div class="flex items-start">
-                    <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-3 px-2.5 py-1 rounded">1</span>
-                    <span class="text-primary">ละเมิดข้อตกลงและเงื่อนไขการใช้บริการ</span>
-                  </div>
-                  <div class="flex items-start">
-                    <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-3 px-2.5 py-1 rounded">2</span>
-                    <span class="text-primary">มีพฤติกรรมที่เป็นอันตรายต่อผู้ใช้อื่น</span>
-                  </div>
-                  <div class="flex items-start">
-                    <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-3 px-2.5 py-1 rounded">3</span>
-                    <span class="text-primary">สร้างความเสี่ยงทางกฎหมายให้กับแพลตฟอร์ม</span>
-                  </div>
-                  <div class="flex items-start">
-                    <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-3 px-2.5 py-1 rounded">4</span>
-                    <span class="text-primary">ได้รับรายงานด้านความปลอดภัยอย่างร้ายแรง</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 11: การแก้ไขเปลี่ยนแปลงข้อตกลง -->
-          <section id="section-11" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 11: การแก้ไขเปลี่ยนแปลงข้อตกลง</h2>
-            <div class="p-6 border-l-4 border-teal-400 rounded-r-lg bg-teal-50">
-              <div class="flex items-center mb-4">
-                <svg class="w-6 h-6 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                <h3 class="font-semibold text-teal-900">การอัปเดตข้อตกลง</h3>
-              </div>
-              <div class="space-y-4">
-                <div class="p-4 bg-white rounded-lg shadow-sm">
-                  <p class="mb-3 text-primary">
-                    เราขอสงวนสิทธิ์ในการแก้ไขหรือเปลี่ยนแปลงข้อตกลงนี้ได้ทุกเมื่อ การเปลี่ยนแปลงจะมีผลทันทีเมื่อมีการเผยแพร่บนแพลตฟอร์ม
-                  </p>
-                  <div class="flex items-center text-teal-700">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span class="font-medium">เราจะพยายามแจ้งให้ท่านทราบถึงการเปลี่ยนแปลงที่สำคัญ</span>
-                  </div>
-                </div>
-                <div class="p-4 rounded-lg bg-cta-light">
-                  <p class="text-cta-hover">
-                    <strong>หมายเหตุ:</strong> การที่ท่านยังคงใช้งานแพลตฟอร์มต่อไป ถือว่าท่านยอมรับข้อตกลงฉบับใหม่
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 12: กฎหมายที่ใช้บังคับ -->
-          <section id="section-12" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 12: กฎหมายที่ใช้บังคับ</h2>
-            <div class="p-6 border-l-4 border-gray-400 rounded-r-lg bg-slate-50">
-              <div class="flex items-center mb-4">
-                <svg class="w-6 h-6 mr-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
-                </svg>
-                <h3 class="font-semibold text-primary">เขตอำนาจศาล</h3>
-              </div>
-              <div class="p-4 text-center bg-white rounded-lg shadow-sm">
-                <div class="mb-3">
-                  <svg class="w-12 h-12 mx-auto text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
-                  </svg>
-                </div>
-                <p class="mb-2 text-lg font-semibold text-primary">
-                  ข้อตกลงนี้อยู่ภายใต้การบังคับใช้และตีความตาม
-                </p>
-                <p class="text-2xl font-bold text-red-600">กฎหมายแห่งราชอาณาจักรไทย</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 13: การติดต่อ -->
-          <section id="section-13" class="p-8 mb-6 bg-white rounded-lg shadow-sm content-section section-card">
-            <h2 class="mb-4 text-2xl font-bold text-primary">ข้อ 13: การติดต่อ</h2>
-            <div class="p-6 border-l-4 border-green-400 rounded-r-lg bg-green-50">
-              <div class="flex items-center mb-4">
-                <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                <h3 class="font-semibold text-green-900">ติดต่อเรา</h3>
-              </div>
-              <div class="p-4 bg-white rounded-lg shadow-sm">
-                <p class="mb-4 text-primary">
-                  หากท่านมีคำถามเกี่ยวกับข้อตกลงและเงื่อนไขการใช้บริการนี้ กรุณาติดต่อเราผ่านทาง:
-                </p>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div class="flex items-center p-3 rounded-lg bg-slate-50">
-                    <svg class="w-5 h-5 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"/>
-                    </svg>
-                    <div>
-                      <div class="font-medium text-primary">อีเมล</div>
-                      <div class="text-sm text-slate-500">support@drivetosurvive.com</div>
-                    </div>
-                  </div>
-                  <div class="flex items-center p-3 rounded-lg bg-slate-50">
-                    <svg class="w-5 h-5 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502ล4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                    </svg>
-                    <div>
-                      <div class="font-medium text-primary">โทรศัพท์</div>
-                      <div class="text-sm text-slate-500">02-XXX-XXXX</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
+        <!-- Scroll Progress -->
+        <div class="scroll-indicator">
+            <div class="scroll-progress" :style="{ width: scrollWidth + '%' }"></div>
         </div>
-      </div>
+
+        <main class="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 md:py-12">
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
+                <!-- TOC Sidebar -->
+                <aside class="lg:col-span-1">
+                    <div class="sticky p-5 bg-white border border-slate-200 rounded-xl shadow-sm top-20">
+                        <h3 class="flex items-center gap-2 mb-4 text-sm font-semibold tracking-wider uppercase text-slate-400">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                            </svg>
+                            สารบัญ
+                        </h3>
+                        <nav class="space-y-1">
+                            <a v-for="item in tocItems" :key="item.id" :href="'#' + item.id"
+                                :class="['toc-link block px-3 py-2 text-sm rounded-lg transition-all', activeSectionId === item.id ? 'active' : 'text-slate-500 hover:text-cta hover:bg-slate-50']">
+                                {{ item.label }}
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="space-y-6 lg:col-span-3">
+
+                    <!-- Intro Banner -->
+                    <div class="p-6 border border-blue-200 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50">
+                        <p class="leading-relaxed text-primary">
+                            ข้อกำหนดและเงื่อนไขฉบับนี้เป็นข้อตกลงระหว่าง <strong>Ride</strong> ("แพลตฟอร์ม", "เรา")
+                            และท่าน ("ผู้ใช้", "ท่าน") ซึ่งกำหนดข้อกำหนดทั่วไปสำหรับการใช้งานแพลตฟอร์ม Ride
+                            และบริการที่เกี่ยวข้องทั้งหมด โดยการลงทะเบียนหรือใช้งาน
+                            ท่านตกลงยอมรับข้อกำหนดเหล่านี้ทั้งหมด
+                        </p>
+                    </div>
+
+                    <!-- Section 1: การยอมรับข้อกำหนด -->
+                    <section id="section-1" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">1</span>
+                            การยอมรับข้อกำหนด
+                        </h2>
+                        <div class="space-y-4 text-slate-600 leading-relaxed">
+                            <p>
+                                การเข้าถึงและใช้งานแพลตฟอร์ม Ride ถือว่าท่านได้อ่าน ทำความเข้าใจ
+                                และยอมรับข้อกำหนดและเงื่อนไขฉบับนี้ทุกประการ
+                                รวมถึง <NuxtLink to="/privacy" class="text-cta font-semibold hover:underline">นโยบายความเป็นส่วนตัว</NuxtLink> ด้วย
+                            </p>
+                            <div class="p-4 border-l-4 border-amber-400 rounded-r-lg bg-amber-50">
+                                <p class="font-medium text-amber-800">
+                                    ⚠️ หากท่านไม่ยอมรับข้อกำหนดเหล่านี้ กรุณาหยุดใช้งานแพลตฟอร์มทันที
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 2: บัญชีผู้ใช้และการลงทะเบียน -->
+                    <section id="section-2" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">2</span>
+                            บัญชีผู้ใช้และการลงทะเบียน
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                <h3 class="mb-2 font-semibold text-primary">📝 การสร้างบัญชี</h3>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ท่านต้องมีอายุไม่ต่ำกว่า 18 ปีในการลงทะเบียน</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ข้อมูลที่ท่านให้ต้องเป็นข้อมูลจริง ถูกต้อง และเป็นปัจจุบัน</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ท่านต้องยืนยันตัวตนด้วยอีเมลและ OTP ก่อนใช้งานฟีเจอร์หลัก</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> บัญชีหนึ่งต่อบุคคล — ห้ามสร้างบัญชีซ้ำ</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                <h3 class="mb-2 font-semibold text-primary">🔐 ความรับผิดชอบต่อบัญชี</h3>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ท่านรับผิดชอบในการรักษาความลับของรหัสผ่าน</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> กิจกรรมทั้งหมดภายใต้บัญชีของท่านถือเป็นความรับผิดชอบของท่าน</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> หากพบการเข้าถึงโดยไม่ได้รับอนุญาต ต้องแจ้งเราทันที</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 3: สำหรับผู้ขับขี่ -->
+                    <section id="section-3" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">3</span>
+                            ข้อกำหนดสำหรับผู้ขับขี่
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-5 rounded-lg bg-green-50 border border-green-100">
+                                <h3 class="mb-3 font-semibold text-green-800">🚗 คุณสมบัติผู้ขับขี่</h3>
+                                <ul class="space-y-2 text-sm text-green-700">
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> มีใบอนุญาตขับขี่ที่ถูกต้องตามกฎหมายและไม่หมดอายุ</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ผ่านการยืนยันตัวตนด้วยระบบ OCR หรือการตรวจสอบโดยแอดมิน</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ลงทะเบียนยานพาหนะพร้อมข้อมูลครบถ้วน (รุ่น, ทะเบียน, จำนวนที่นั่ง)</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> เลขบัตรประชาชนบนใบขับขี่ต้องตรงกับที่ลงทะเบียนไว้</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                <h3 class="mb-3 font-semibold text-primary">📋 ความรับผิดชอบผู้ขับขี่</h3>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ปฏิบัติตามกฎจราจรและกฎหมายที่เกี่ยวข้องทุกประการ</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ดูแลความปลอดภัยของผู้โดยสารระหว่างเดินทาง</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> เดินทางตามเส้นทางที่ประกาศไว้ หรือแจ้งผู้โดยสารล่วงหน้า</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ห้ามขับขี่ภายใต้อิทธิพลของสุรา ยาเสพติด หรือสารมึนเมา</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 4: สำหรับผู้โดยสาร -->
+                    <section id="section-4" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">4</span>
+                            ข้อกำหนดสำหรับผู้โดยสาร
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-5 rounded-lg bg-blue-50 border border-blue-100">
+                                <h3 class="mb-3 font-semibold text-blue-800">🎫 การจองและการยกเลิก</h3>
+                                <ul class="space-y-2 text-sm text-blue-700">
+                                    <li class="flex items-start gap-2"><span class="shrink-0">→</span> การจองถือเป็นข้อตกลงระหว่างท่านกับผู้ขับขี่</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">→</span> หากต้องยกเลิก ควรแจ้งผู้ขับขี่ล่วงหน้าผ่านระบบแชท</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">→</span> ห้ามจองที่นั่งเกินจำนวนที่ต้องการจริง</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                <h3 class="mb-3 font-semibold text-primary">👤 ความรับผิดชอบผู้โดยสาร</h3>
+                                <ul class="space-y-2 text-sm text-slate-600">
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ตรงเวลาตามจุดขึ้นรถที่ตกลงไว้</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ปฏิบัติตัวสุภาพและให้เกียรติผู้ขับขี่และผู้ร่วมเดินทาง</li>
+                                    <li class="flex items-start gap-2"><span class="text-cta shrink-0">•</span> ชำระค่าใช้จ่ายตามที่ตกลงกับผู้ขับขี่ (ถ้ามี)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 5: เนื้อหาของผู้ใช้ -->
+                    <section id="section-5" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">5</span>
+                            เนื้อหาของผู้ใช้งาน
+                        </h2>
+                        <div class="space-y-4 text-slate-600 leading-relaxed">
+                            <p>
+                                ท่านเป็นเจ้าของเนื้อหาทั้งหมดที่ท่านสร้างขึ้นบนแพลตฟอร์ม (รีวิว, ข้อความแชท, รูปโปรไฟล์)
+                                โดยท่านให้สิทธิ์แก่ Ride ในการแสดง จัดเก็บ และประมวลผลเนื้อหาดังกล่าวเพื่อการให้บริการ
+                            </p>
+                            <div class="p-4 border-l-4 border-red-400 rounded-r-lg bg-red-50">
+                                <h3 class="mb-2 font-semibold text-red-800">🚫 เนื้อหาต้องห้าม</h3>
+                                <ul class="space-y-1 text-sm text-red-700">
+                                    <li>• ข้อความหยาบคาย คุกคาม หรือสแปม (กรองอัตโนมัติโดย Profanity Filter)</li>
+                                    <li>• รีวิวเท็จหรือบิดเบือนข้อเท็จจริง</li>
+                                    <li>• ข้อมูลส่วนบุคคลของผู้อื่นโดยไม่ได้รับอนุญาต</li>
+                                    <li>• เนื้อหาละเมิดลิขสิทธิ์หรือทรัพย์สินทางปัญญาของผู้อื่น</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 6: ข้อห้ามในการใช้งาน -->
+                    <section id="section-6" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">6</span>
+                            ข้อห้ามในการใช้งาน
+                        </h2>
+                        <p class="mb-4 text-sm text-slate-600">ห้ามใช้แพลตฟอร์มเพื่อ:</p>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div v-for="(item, i) in prohibitions" :key="i"
+                                class="flex items-start gap-3 p-4 rounded-lg bg-red-50/50 border border-red-100">
+                                <span class="text-lg shrink-0">{{ item.icon }}</span>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-red-800">{{ item.title }}</h4>
+                                    <p class="text-xs text-red-600 mt-0.5">{{ item.desc }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 mt-4 border-l-4 border-red-400 rounded-r-lg bg-red-50">
+                            <p class="text-sm font-medium text-red-800">
+                                ⚠️ การฝ่าฝืนอาจนำไปสู่การระงับบัญชี ขึ้น Blacklist หรือดำเนินคดีตามกฎหมาย
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Section 7: ความปลอดภัยและ SOS -->
+                    <section id="section-7" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">7</span>
+                            ความปลอดภัยและระบบฉุกเฉิน
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-5 rounded-lg bg-green-50 border border-green-100">
+                                <h3 class="mb-2 font-semibold text-green-800">🛡️ มาตรการความปลอดภัย</h3>
+                                <ul class="space-y-2 text-sm text-green-700">
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ระบบ Checkpoint ติดตามตำแหน่งระหว่างเดินทาง</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ระบบแจ้งเตือนเมื่อผู้ขับขี่ใกล้ถึงจุดรับ (Arrival Notification)</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ระบบยืนยันตัวตนหลายชั้น (OTP, บัตรประชาชน, ใบขับขี่ OCR)</li>
+                                    <li class="flex items-start gap-2"><span class="shrink-0">✓</span> ระบบ Profanity Filter กรองข้อความไม่เหมาะสมอัตโนมัติ</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 rounded-lg bg-red-50 border border-red-100">
+                                <h3 class="mb-2 font-semibold text-red-800">🆘 ปุ่ม SOS ฉุกเฉิน</h3>
+                                <p class="text-sm text-red-700 leading-relaxed">
+                                    ในกรณีฉุกเฉิน ท่านสามารถกดปุ่ม SOS เพื่อแจ้งเหตุ ระบบจะส่งตำแหน่งปัจจุบันและข้อมูลการเดินทางไปยังผู้ติดต่อฉุกเฉินที่ท่านกำหนดไว้
+                                    การใช้ SOS เท็จอาจนำไปสู่การระงับบัญชี
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 8: ทรัพย์สินทางปัญญา -->
+                    <section id="section-8" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">8</span>
+                            สิทธิ์ในทรัพย์สินทางปัญญา
+                        </h2>
+                        <div class="p-5 rounded-lg bg-indigo-50 border border-indigo-100">
+                            <p class="leading-relaxed text-primary">
+                                สิทธิ์ในทรัพย์สินทางปัญญาทั้งหมดของแพลตฟอร์ม Ride รวมถึงแต่ไม่จำกัดเพียง
+                                ซอร์สโค้ด, ดีไซน์ UI/UX, โลโก้, ชื่อแบรนด์ และอัลกอริทึม เป็นทรัพย์สินของ Ride
+                                ห้ามทำซ้ำ ดัดแปลง แจกจ่าย หรือใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Section 9: บริการบุคคลที่สาม -->
+                    <section id="section-9" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">9</span>
+                            บริการของบุคคลที่สาม
+                        </h2>
+                        <p class="mb-4 text-sm text-slate-600 leading-relaxed">
+                            แพลตฟอร์มใช้บริการของบุคคลที่สามเพื่อดำเนินการบางอย่าง
+                            ซึ่งอยู่ภายใต้ข้อกำหนดและนโยบายของผู้ให้บริการนั้นๆ:
+                        </p>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-100">
+                                <h4 class="font-semibold text-primary text-sm">🗺️ Google Maps API</h4>
+                                <p class="text-xs text-slate-500 mt-1">แผนที่ เส้นทาง และระบุตำแหน่ง</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-100">
+                                <h4 class="font-semibold text-primary text-sm">☁️ Cloudinary</h4>
+                                <p class="text-xs text-slate-500 mt-1">จัดเก็บรูปภาพ (โปรไฟล์, ใบขับขี่)</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-100">
+                                <h4 class="font-semibold text-primary text-sm">🔍 iApp OCR</h4>
+                                <p class="text-xs text-slate-500 mt-1">อ่านข้อมูลใบขับขี่อัตโนมัติ</p>
+                            </div>
+                            <div class="p-4 rounded-lg bg-slate-50 border border-slate-100">
+                                <h4 class="font-semibold text-primary text-sm">📧 SMTP Service</h4>
+                                <p class="text-xs text-slate-500 mt-1">ส่งอีเมล OTP และการแจ้งเตือน</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 10: ข้อจำกัดความรับผิด -->
+                    <section id="section-10" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">10</span>
+                            ข้อจำกัดความรับผิด
+                        </h2>
+                        <div class="space-y-4 text-slate-600 leading-relaxed">
+                            <p>
+                                Ride ทำหน้าที่เป็น <strong>ตัวกลาง</strong> ในการจับคู่ผู้ขับขี่กับผู้โดยสาร
+                                โดยเราไม่ได้เป็นผู้ให้บริการขนส่ง
+                            </p>
+                            <div class="p-4 rounded-lg bg-amber-50 border border-amber-100">
+                                <p class="text-sm text-amber-800 leading-relaxed">
+                                    <strong>Ride จะไม่รับผิดชอบ</strong> ต่อความเสียหายอันเกิดจาก:
+                                    อุบัติเหตุระหว่างเดินทาง, ทรัพย์สินสูญหาย, ความล่าช้า,
+                                    พฤติกรรมของผู้ใช้รายอื่น, หรือเหตุสุดวิสัยใดๆ
+                                    ทั้งนี้เราจะพยายามอย่างสุดความสามารถเพื่อให้บริการที่ปลอดภัย
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 11: การระงับข้อพิพาท -->
+                    <section id="section-11" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">11</span>
+                            การระงับข้อพิพาท
+                        </h2>
+                        <div class="space-y-4 text-slate-600 leading-relaxed">
+                            <p>
+                                หากเกิดข้อพิพาทระหว่างผู้ใช้ ท่านสามารถ:
+                            </p>
+                            <div class="grid gap-3 sm:grid-cols-3">
+                                <div class="p-4 text-center rounded-lg bg-blue-50 border border-blue-100">
+                                    <span class="text-2xl">💬</span>
+                                    <h4 class="mt-2 text-sm font-semibold text-blue-800">รายงานผ่านแชท</h4>
+                                    <p class="mt-1 text-xs text-blue-600">ใช้ปุ่มรายงานข้อความ</p>
+                                </div>
+                                <div class="p-4 text-center rounded-lg bg-amber-50 border border-amber-100">
+                                    <span class="text-2xl">⭐</span>
+                                    <h4 class="mt-2 text-sm font-semibold text-amber-800">Dispute รีวิว</h4>
+                                    <p class="mt-1 text-xs text-amber-600">ร้องเรียนรีวิวที่ไม่เป็นธรรม</p>
+                                </div>
+                                <div class="p-4 text-center rounded-lg bg-green-50 border border-green-100">
+                                    <span class="text-2xl">📧</span>
+                                    <h4 class="mt-2 text-sm font-semibold text-green-800">ติดต่อแอดมิน</h4>
+                                    <p class="mt-1 text-xs text-green-600">อีเมลหรือระบบ ticket</p>
+                                </div>
+                            </div>
+                            <p class="text-sm">
+                                แอดมินจะพิจารณาและดำเนินการภายในระยะเวลาที่เหมาะสม
+                                หากไม่สามารถตกลงกันได้ จะใช้กฎหมายไทยในการระงับข้อพิพาท
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Section 12: การเปลี่ยนแปลงและยกเลิก -->
+                    <section id="section-12" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">12</span>
+                            การเปลี่ยนแปลงข้อกำหนดและการยกเลิกบัญชี
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-5 rounded-lg bg-teal-50 border border-teal-100">
+                                <h3 class="mb-2 font-semibold text-teal-800">🔄 การแก้ไขข้อกำหนด</h3>
+                                <p class="text-sm text-teal-700 leading-relaxed">
+                                    เราขอสงวนสิทธิ์ในการแก้ไขข้อกำหนดเป็นครั้งคราว
+                                    การเปลี่ยนแปลงที่สำคัญจะแจ้งให้ทราบผ่านระบบแจ้งเตือนบนแพลตฟอร์ม
+                                    การใช้งานต่อหลังการเปลี่ยนแปลง ถือว่าท่านยอมรับข้อกำหนดใหม่
+                                </p>
+                            </div>
+                            <div class="p-5 rounded-lg bg-slate-50 border border-slate-100">
+                                <h3 class="mb-2 font-semibold text-primary">🗑️ การยกเลิกบัญชี</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    ท่านสามารถขอยกเลิกบัญชีได้ตลอดเวลาโดยติดต่อแอดมิน
+                                    ข้อมูลบางส่วนอาจถูกเก็บไว้ตามระยะเวลาที่กฎหมายกำหนด
+                                    ข้อกำหนดบางข้อยังคงมีผลบังคับใช้หลังยกเลิกบัญชี (เช่น ข้อจำกัดความรับผิด)
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 13: ติดต่อเรา -->
+                    <section id="section-13" class="p-8 bg-white border border-slate-200 rounded-xl shadow-sm content-section">
+                        <h2 class="flex items-center gap-3 mb-6 text-2xl font-bold text-primary">
+                            <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white rounded-full bg-cta">13</span>
+                            ติดต่อเรา
+                        </h2>
+                        <p class="mb-6 text-slate-600">
+                            หากมีคำถามเกี่ยวกับข้อกำหนดและเงื่อนไข กรุณาติดต่อ:
+                        </p>
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div class="flex items-center gap-4 p-4 bg-cta-light rounded-xl">
+                                <div class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm">
+                                    <svg class="w-5 h-5 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-slate-500">อีเมล</div>
+                                    <a href="mailto:support@drivetosurvive.com"
+                                        class="font-semibold text-cta hover:underline">support@drivetosurvive.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 bg-cta-light rounded-xl">
+                                <div class="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-sm">
+                                    <svg class="w-5 h-5 text-cta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-slate-500">ที่อยู่</div>
+                                    <div class="text-sm font-medium text-primary">Drive To Survive — ถ.มิตรภาพ ขอนแก่น 40000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- กฎหมายที่ใช้บังคับ -->
+                    <div class="p-6 text-center border border-slate-200 rounded-xl bg-white shadow-sm">
+                        <p class="text-sm text-slate-500">
+                            ข้อกำหนดฉบับนี้อยู่ภายใต้กฎหมายของราชอาณาจักรไทย
+                            และศาลไทยมีเขตอำนาจในการพิจารณาข้อพิพาทที่เกิดขึ้น
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <AppFooter />
     </div>
-  </div>
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue'
-import { useHead } from '#imports'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
-// ตั้งค่า <head> สำหรับหน้า (โหลดฟอนต์ Kanit และตั้ง title)
 useHead({
-  title: 'ข้อตกลงและเงื่อนไขการใช้บริการ - Drive To Survive',
-  htmlAttrs: { lang: 'th' },
-  link: [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    {
-      rel: 'stylesheet',
-      href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap'
-    }
-  ]
+    title: 'ข้อกำหนดและเงื่อนไขการใช้งาน — Ride',
+    meta: [
+        { name: 'description', content: 'ข้อกำหนดและเงื่อนไขการใช้งาน Ride แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย — สิทธิ์ ความรับผิดชอบ และกฎเกณฑ์การใช้บริการ' }
+    ]
 })
 
-const scrollProgressEl = ref(null)
+const tocItems = [
+    { id: 'section-1', label: 'การยอมรับข้อกำหนด' },
+    { id: 'section-2', label: 'บัญชีผู้ใช้และการลงทะเบียน' },
+    { id: 'section-3', label: 'ข้อกำหนดสำหรับผู้ขับขี่' },
+    { id: 'section-4', label: 'ข้อกำหนดสำหรับผู้โดยสาร' },
+    { id: 'section-5', label: 'เนื้อหาของผู้ใช้งาน' },
+    { id: 'section-6', label: 'ข้อห้ามในการใช้งาน' },
+    { id: 'section-7', label: 'ความปลอดภัยและ SOS' },
+    { id: 'section-8', label: 'ทรัพย์สินทางปัญญา' },
+    { id: 'section-9', label: 'บริการบุคคลที่สาม' },
+    { id: 'section-10', label: 'ข้อจำกัดความรับผิด' },
+    { id: 'section-11', label: 'การระงับข้อพิพาท' },
+    { id: 'section-12', label: 'การเปลี่ยนแปลงและยกเลิก' },
+    { id: 'section-13', label: 'ติดต่อเรา' },
+]
 
-const onScroll = () => {
-  // อัปเดตแถบความคืบหน้าขณะเลื่อน
-  const doc = document.documentElement
-  const scrollTotal = doc.scrollHeight - doc.clientHeight
-  const scrolled = window.scrollY
-  const progress = scrollTotal > 0 ? (scrolled / scrollTotal) * 100 : 0
-  if (scrollProgressEl.value) scrollProgressEl.value.style.width = `${progress}%`
+const prohibitions = [
+    { icon: '🚫', title: 'กระทำผิดกฎหมาย', desc: 'ห้ามใช้แพลตฟอร์มเพื่อกิจกรรมผิดกฎหมายทุกชนิด' },
+    { icon: '🤖', title: 'ระบบอัตโนมัติ', desc: 'ห้ามใช้ Bot หรือ Scraper เข้าถึงข้อมูล' },
+    { icon: '💣', title: 'โจมตีระบบ', desc: 'ห้าม DDoS, SQL Injection หรือพยายามเข้าถึงระบบโดยไม่ได้รับอนุญาต' },
+    { icon: '🎭', title: 'ปลอมแปลงตัวตน', desc: 'ห้ามแอบอ้างหรือปลอมแปลงเป็นบุคคลอื่น' },
+    { icon: '📧', title: 'สแปม', desc: 'ห้ามส่งข้อความสแปมหรือโฆษณาโดยไม่ได้รับอนุญาต' },
+    { icon: '🔄', title: 'หลีกเลี่ยงระบบ', desc: 'ห้ามหลบเลี่ยง Blacklist หรือมาตรการความปลอดภัย' },
+]
 
-  // อัปเดต active link ของสารบัญ
-  const sections = Array.from(document.querySelectorAll('.content-section'))
-  let current = ''
-  sections.forEach((section) => {
-    const top = section.offsetTop
-    if (window.scrollY >= top - 120) {
-      current = section.getAttribute('id') || ''
-    }
-  })
-  const links = Array.from(document.querySelectorAll('.toc-link'))
-  links.forEach((a) => {
-    a.classList.toggle('active', a.getAttribute('href') === `#${current}`)
-  })
+const scrollWidth = ref(0)
+const activeSectionId = ref('section-1')
+
+function handleScroll() {
+    const doc = document.documentElement
+    const scrollTotal = doc.scrollHeight - doc.clientHeight
+    scrollWidth.value = scrollTotal > 0 ? (window.scrollY / scrollTotal) * 100 : 0
+
+    const OFFSET = 120
+    const sections = document.querySelectorAll('.content-section')
+    let current = activeSectionId.value
+    sections.forEach(el => {
+        if (window.scrollY >= el.offsetTop - OFFSET) current = el.id
+    })
+    activeSectionId.value = current
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', onScroll, { passive: true })
-  // เรียกครั้งแรกให้สถานะถูกต้องตั้งแต่โหลดหน้า
-  onScroll()
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 })
-
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
 <style scoped>
-.kanit-font {
-  font-family: 'Kanit', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
-}
-
-.section-card {
-  transition: all 0.3s ease;
-}
-.section-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.1);
-}
-
-.highlight-box {
-  background-color: #F8FAFC;
-  border-left: 4px solid #3b82f6;
-}
-
 .scroll-indicator {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: #e5e7eb;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    z-index: 1000;
 }
 
 .scroll-progress {
-  height: 100%;
-  background-color: #EAB308;
-  width: 0%;
-  transition: width 0.3s ease;
+    height: 100%;
+    background: linear-gradient(90deg, #137FEC, #145ee7);
+    transition: width 0.1s ease-out;
 }
 
 .content-section {
-  scroll-margin-top: 100px;
+    scroll-margin-top: 100px;
+    transition: all 0.3s ease;
+}
+
+.content-section:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(19, 127, 236, 0.08);
 }
 
 .toc-link {
-  transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
 }
+
 .toc-link:hover {
-  background-color: #f3f4f6;
-  padding-left: 1rem;
+    padding-left: 1rem;
+    border-left-color: #93c5fd;
 }
+
 .toc-link.active {
-  background-color: #eff6ff;
-  border-left: 3px solid #3b82f6;
-  padding-left: 1rem;
-  color: #1d4ed8;
+    background-color: #eff6ff;
+    border-left-color: #137FEC !important;
+    padding-left: 1rem;
+    color: #137FEC;
+    font-weight: 500;
 }
 </style>

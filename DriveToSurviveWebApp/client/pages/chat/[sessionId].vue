@@ -31,13 +31,20 @@
       {{ lifecycleBanner.text }}
     </div>
 
-    <!-- Typing Indicator -->
-    <div v-if="typingUsers.length" class="px-4 py-1 text-xs text-slate-400 animate-pulse">
-      {{ typingUsers.join(', ') }} กำลังพิมพ์...
+    <!-- Typing Indicator with animated dots -->
+    <div v-if="typingUsers.length" class="px-4 py-2 flex items-center gap-2">
+      <div class="flex items-center gap-1">
+        <span class="text-xs text-slate-400">{{ typingUsers.join(', ') }} กำลังพิมพ์</span>
+        <div class="flex gap-0.5">
+          <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+          <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+          <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+        </div>
+      </div>
     </div>
 
     <!-- Messages Area -->
-    <div ref="messagesContainer" class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+    <div ref="messagesContainer" class="flex-1 overflow-y-auto px-4 py-4 pb-20 space-y-1">
       <div v-if="isLoadingMessages" class="text-center py-8 text-slate-400">
         <p>กำลังโหลดข้อความ...</p>
       </div>
@@ -49,6 +56,7 @@
           :message="msg"
           :isOwn="msg.senderId === userId"
           :isRevoked="revokedLocationIds.has(msg.id)"
+          @edit="startEdit"
           @unsend="handleUnsend"
           @report="openReportModal"
           @revoke-location="handleRevokeLocation"
@@ -122,25 +130,42 @@
           </svg>
         </button>
 
+        <!-- Edit indicator -->
+        <div v-if="editingMessage" class="px-4 py-2 bg-blue-50 border-t border-blue-100 flex items-center justify-between">
+          <div class="flex items-center gap-2 text-sm text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>กำลังแก้ไขข้อความ...</span>
+          </div>
+          <button @click="cancelEdit" class="text-sm text-slate-500 hover:text-slate-700 cursor-pointer">ยกเลิก</button>
+        </div>
+
         <!-- Text input -->
         <textarea
           ref="messageInput"
-          v-model="newMessage"
-          @keydown.enter.exact.prevent="handleSend"
+          :value="editingMessage ? editContent : newMessage"
+          @input="onInputChange"
+          @keydown.enter.exact.prevent="editingMessage ? handleEditSend() : handleSend()"
+          @keydown.escape="editingMessage && cancelEdit()"
           rows="1"
           maxlength="2000"
           class="flex-1 px-4 py-2.5 border border-slate-200 rounded-2xl resize-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-sm"
+          :class="editingMessage ? 'bg-blue-50 border-blue-200' : ''"
           placeholder="พิมพ์ข้อความ..."
           :disabled="isSending"
         ></textarea>
 
-        <!-- Send button -->
+        <!-- Send/Save button -->
         <button
-          @click="handleSend"
-          :disabled="(!newMessage.trim() && !selectedImage) || isSending"
+          @click="editingMessage ? handleEditSend() : handleSend()"
+          :disabled="(editingMessage ? (!editContent.trim() || editContent.trim() === editingMessage.content) : (!newMessage.trim() && !selectedImage)) || isSending"
           class="p-2.5 bg-cta text-white rounded-full hover:bg-cta-hover transition-colors disabled:opacity-40 cursor-pointer"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <svg v-if="editingMessage" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
           </svg>
         </button>
@@ -196,9 +221,10 @@ useHead({ title: 'แชท — Ride' })
 
 const route = useRoute()
 const {
-  fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage,
+  fetchMessages, sendMessage, editMessage, unsendMessage, shareLocation, reportMessage, sendImage,
   connectChatSocket, joinSession, leaveSession, onNewMessage, offNewMessage,
-  emitNewMessage, emitRevokeLocation, onLocationRevoked, offLocationRevoked,
+  emitNewMessage, emitEditMessage, emitUnsendMessage, emitRevokeLocation, onLocationRevoked, offLocationRevoked,
+  onMessageEdited, offMessageEdited, onMessageUnsent, offMessageUnsent,
   emitTyping, emitStopTyping, onTyping, onStopTyping, offTyping, offStopTyping,
   disconnectSocket,
 } = useChat()
@@ -218,6 +244,10 @@ const messagesContainer = ref(null)
 const showQuickReply = ref(false)
 const typingUsers = ref([])
 let typingTimer = null
+
+// Edit message state
+const editingMessage = ref(null)
+const editContent = ref('')
 
 // Image upload
 const selectedImage = ref(null)
@@ -449,9 +479,76 @@ async function handleUnsend(messageId) {
       messages.value[idx].content = 'ข้อความถูกลบ / Message unsent'
       messages.value[idx].isUnsent = true
     }
+    // Broadcast unsend to other participants via socket
+    emitUnsendMessage(sessionId.value, messageId)
     toast.success('ลบข้อความแล้ว')
   } catch (err) {
     toast.error('ลบข้อความไม่สำเร็จ', err?.statusMessage || '')
+  }
+}
+
+function onInputChange(e) {
+  if (editingMessage.value) {
+    editContent.value = e.target.value
+  } else {
+    newMessage.value = e.target.value
+  }
+}
+
+function startEdit(msg) {
+  editingMessage.value = msg
+  editContent.value = msg.content
+  nextTick(() => {
+    if (messageInput.value) messageInput.value.focus()
+  })
+}
+
+function cancelEdit() {
+  editingMessage.value = null
+  editContent.value = ''
+}
+
+async function handleEditSend() {
+  if (!editingMessage.value || !editContent.value.trim() || isSending.value) return
+  if (editContent.value.trim() === editingMessage.value.content) {
+    toast.info('ไม่มีการเปลี่ยนแปลง', 'ข้อความเหมือนเดิม')
+    return
+  }
+  isSending.value = true
+  try {
+    const res = await editMessage(editingMessage.value.id, { content: editContent.value.trim() })
+    const updated = res?.data || res
+    const idx = messages.value.findIndex(m => m.id === editingMessage.value.id)
+    if (idx >= 0) {
+      messages.value[idx].content = updated.content
+      messages.value[idx].metadata = updated.metadata
+    }
+    // Broadcast edit to other participants via socket
+    emitEditMessage(sessionId.value, updated)
+    toast.success('แก้ไขข้อความแล้ว')
+    cancelEdit()
+  } catch (err) {
+    toast.error('แก้ไขไม่สำเร็จ', err?.statusMessage || '')
+  } finally {
+    isSending.value = false
+  }
+}
+
+// Real-time update handlers for edit/unsend
+function handleMessageEdited(msg) {
+  const targetId = msg.id || msg.messageId
+  const idx = messages.value.findIndex(m => m.id === targetId)
+  if (idx !== -1) {
+    if (msg.content) messages.value[idx].content = msg.content
+    if (msg.metadata) messages.value[idx].metadata = msg.metadata
+  }
+}
+
+function handleMessageUnsent({ messageId, isUnsent, content }) {
+  const idx = messages.value.findIndex(m => m.id === messageId)
+  if (idx !== -1) {
+    messages.value[idx].isUnsent = isUnsent
+    if (content) messages.value[idx].content = content
   }
 }
 
@@ -598,6 +695,8 @@ onMounted(() => {
     connectChatSocket(token.value)
     joinSession(sessionId.value)
     onNewMessage(handleIncomingMessage)
+    onMessageEdited(handleMessageEdited)
+    onMessageUnsent(handleMessageUnsent)
     onTyping(handleTyping)
     onStopTyping(handleStopTyping)
     onLocationRevoked(handleLocationRevoked)
@@ -614,6 +713,8 @@ onUnmounted(() => {
   }
   leaveSession(sessionId.value)
   offNewMessage(handleIncomingMessage)
+  offMessageEdited(handleMessageEdited)
+  offMessageUnsent(handleMessageUnsent)
   offTyping(handleTyping)
   offStopTyping(handleStopTyping)
   offLocationRevoked(handleLocationRevoked)

@@ -397,10 +397,26 @@ const getMyBookings = async (passengerId) => {
             }
           }
         }
+      },
+      reviews: {
+        where: { passengerId }
       }
-
     },
     orderBy: { createdAt: 'desc' },
+  });
+};
+
+const getBookingsByRouteId = async (routeId) => {
+  return prisma.booking.findMany({
+    where: { routeId, status: { in: ['CONFIRMED', 'IN_PROGRESS', 'PENDING'] } },
+    select: {
+      id: true,
+      pickupLocation: true,
+      dropoffLocation: true,
+      status: true,
+      passenger: { select: { id: true, firstName: true, lastName: true } },
+    },
+    orderBy: { createdAt: 'asc' },
   });
 };
 
@@ -595,6 +611,7 @@ module.exports = {
   adminUpdateBooking,
   getMyBookings,
   getBookingById,
+  getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
   deleteBooking,

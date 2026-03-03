@@ -4,6 +4,7 @@ const vehicleService = require("../services/vehicle.service");
 const ApiError = require("../utils/ApiError");
 const verifService = require("../services/driverVerification.service");
 const { getDirections } = require("../utils/googleMaps");
+const { enrichLocation } = require("../services/thaiGeo.service");
 
 const getAllRoutes = asyncHandler(async (req, res) => {
   const routes = await routeService.getAllRoutes();
@@ -79,6 +80,10 @@ const createRoute = asyncHandler(async (req, res) => {
   }
 
   await vehicleService.getVehicleById(vehicleId, driverId);
+
+  // Enrich locations with Thai province data
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
 
   const payload = {
     ...routeFields,
@@ -175,6 +180,10 @@ const updateRoute = asyncHandler(async (req, res) => {
     await vehicleService.getVehicleById(vehicleId, driverId);
     newVehicleId = vehicleId;
   }
+  // Enrich locations with Thai province data if changed
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
+
   const payload = {
     ...routeFields,
     vehicleId: newVehicleId,
@@ -290,6 +299,10 @@ const adminCreateRoute = asyncHandler(async (req, res) => {
 
   await vehicleService.getVehicleById(vehicleId, driverId);
 
+  // Enrich locations with Thai province data
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
+
   const payload = {
     ...routeFields,
     driverId,
@@ -372,6 +385,10 @@ const adminUpdateRoute = asyncHandler(async (req, res) => {
     await vehicleService.getVehicleById(vehicleId, ownerToCheck);
     newVehicleId = vehicleId;
   }
+
+  // Enrich locations with Thai province data if changed
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
 
   const payload = {
     ...routeFields,
