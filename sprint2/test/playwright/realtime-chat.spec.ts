@@ -397,6 +397,127 @@ test.describe('Real-time Chat Tests (Refactored)', () => {
         await contextB.close();
     });
 
+    test('Scenario 11 : Edit message 3 times with history view - both users real-time', async ({ browser }) => {
+        const contextA = await browser.newContext();
+        const contextB = await browser.newContext();
+        const pageA = await contextA.newPage();
+        const pageB = await contextB.newPage();
+
+        await login(pageA, 'bow1234');
+        await login(pageB, 'kiangnz25464');
+        await enterChat(pageA);
+        await enterChat(pageB);
+
+        // A sends original message slowly — both see it
+        const origMsg = 'รอข้างหน้าตึกหลักนะครับ';
+        await pageA.locator('textarea').pressSequentially(origMsg, { delay: 60 });
+        await pageA.waitForTimeout(600);
+        await pageA.keyboard.press('Enter');
+        await expect(pageA.locator(`text="${origMsg}"`).last()).toBeVisible({ timeout: 10000 });
+        await expect(pageB.locator(`text="${origMsg}"`).last()).toBeVisible({ timeout: 10000 });
+        await pageA.waitForTimeout(1200); // pause — both users see original message
+
+        const editRounds = [
+            'รอข้างหน้าตึก A นะครับ',
+            'รอหน้าประตูทางเข้าตึก A นะครับ',
+            'รอหน้าประตูทางเข้าตึก A ชั้น 1 นะครับ',
+        ];
+
+        for (const newContent of editRounds) {
+            // ── Step 1: A hovers on the message bubble → 3-dot button appears
+            const bubble = pageA.locator('div.relative').filter({ has: pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]') }).last();
+            await bubble.hover();
+            await pageA.waitForTimeout(600); // pause — show hover state
+
+            // ── Step 2: A clicks 3-dot → dropdown opens (hold to show options)
+            await pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]').last().click({ force: true });
+            await expect(pageA.locator('button:not([disabled]):has-text("แก้ไขข้อความ")').last()).toBeVisible({ timeout: 5000 });
+            await pageA.waitForTimeout(1200); // pause — show dropdown menu clearly
+
+            // ── Step 3: A clicks "แก้ไขข้อความ" → edit mode indicator appears
+            await pageA.locator('button:not([disabled]):has-text("แก้ไขข้อความ")').last().click();
+            await expect(pageA.locator('text="กำลังแก้ไขข้อความ..."').first()).toBeVisible({ timeout: 5000 });
+            await pageA.waitForTimeout(800); // pause — show edit mode UI
+
+            // ── Step 4: A clears textarea and types new content slowly character by character
+            await pageA.fill('textarea', '');
+            await pageA.locator('textarea').pressSequentially(newContent, { delay: 70 });
+            await pageA.waitForTimeout(600); // pause — show completed typed text before sending
+
+            // ── Step 5: A confirms the edit
+            await pageA.keyboard.press('Enter');
+
+            // ── Step 6: Both A and B see the updated message in real-time
+            await expect(pageA.locator(`text="${newContent}"`).last()).toBeVisible({ timeout: 10000 });
+            await expect(pageB.locator(`text="${newContent}"`).last()).toBeVisible({ timeout: 10000 });
+            await pageA.waitForTimeout(1200); // pause — show both users see the real-time update
+
+            // ── Step 7: A clicks "มีการแก้ไข" badge → edit history panel opens
+            await pageA.locator('text="มีการแก้ไข"').last().click();
+            await expect(pageA.locator('text="ซ่อนการแก้ไข"').last()).toBeVisible({ timeout: 5000 });
+            await pageA.waitForTimeout(800);
+
+            // ── Step 8: B clicks "มีการแก้ไข" badge → sees history too
+            await pageB.locator('text="มีการแก้ไข"').last().click();
+            await expect(pageB.locator('text="ซ่อนการแก้ไข"').last()).toBeVisible({ timeout: 5000 });
+            await pageA.waitForTimeout(2000); // pause — show history to viewer (both screens)
+
+            // ── Step 9: Close history for both
+            await pageA.locator('text="ซ่อนการแก้ไข"').last().click();
+            await pageB.locator('text="ซ่อนการแก้ไข"').last().click();
+            await pageA.waitForTimeout(800);
+        }
+
+        // ── Final: After 3 edits — hover → open menu → hold to show disabled button
+        const bubbleFinal = pageA.locator('div.relative').filter({ has: pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]') }).last();
+        await bubbleFinal.hover();
+        await pageA.waitForTimeout(600);
+        await pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]').last().click({ force: true });
+        await expect(pageA.locator('button[disabled]:has-text("แก้ไขข้อความ")').first()).toBeVisible({ timeout: 5000 });
+        await pageA.waitForTimeout(2500); // hold — show disabled state clearly "(ครบ 3 ครั้ง)"
+
+        await contextA.close();
+        await contextB.close();
+    });
+
+    test('Scenario 12 : Unsend message - both users see real-time update', async ({ browser }) => {
+        const contextA = await browser.newContext();
+        const contextB = await browser.newContext();
+        const pageA = await contextA.newPage();
+        const pageB = await contextB.newPage();
+
+        await login(pageA, 'bow1234');
+        await login(pageB, 'kiangnz25464');
+        await enterChat(pageA);
+        await enterChat(pageB);
+
+        // A sends a message — both see it
+        const msg = 'ข้อความที่จะยกเลิกส่ง';
+        await pageA.fill('textarea', msg);
+        await pageA.keyboard.press('Enter');
+        await expect(pageA.locator(`text="${msg}"`).last()).toBeVisible({ timeout: 10000 });
+        await expect(pageB.locator(`text="${msg}"`).last()).toBeVisible({ timeout: 10000 });
+        await pageA.waitForTimeout(800); // pause — show both users see the message
+
+        // A: hover → 3-dot → dropdown opens (hold briefly to show options)
+        const bubble = pageA.locator('div.relative').filter({ has: pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]') }).last();
+        await bubble.hover();
+        await pageA.locator('button[title="ตัวเลือกเพิ่มเติม"]').last().click({ force: true });
+        await expect(pageA.locator('button:has-text("ยกเลิกข้อความ")').last()).toBeVisible({ timeout: 5000 });
+        await pageA.waitForTimeout(1000); // hold menu to show options
+
+        // A clicks "ยกเลิกข้อความ"
+        await pageA.locator('button:has-text("ยกเลิกข้อความ")').last().click();
+
+        // Both A and B see "ข้อความถูกลบ" in real-time
+        await expect(pageA.locator('text="ข้อความถูกลบ"').last()).toBeVisible({ timeout: 10000 });
+        await expect(pageB.locator('text="ข้อความถูกลบ"').last()).toBeVisible({ timeout: 10000 });
+        await pageA.waitForTimeout(1500); // pause — show both users see unsent state
+
+        await contextA.close();
+        await contextB.close();
+    });
+
     test('Scenario 10 : Disconnected', async ({ browser }) => {
         const IMG_PATH = 'C:/Ride/SprintSE_Group4_4/sprint2/img/disconnect.jpg';
 
