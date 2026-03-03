@@ -250,6 +250,18 @@ const createBooking = async (data, passengerId) => {
       throw new ApiError(400, 'Driver cannot book their own route.');
     }
 
+    // ห้ามจองซ้ำ — ถ้ามี PENDING หรือ CONFIRMED อยู่แล้วในเส้นทางเดียวกัน
+    const existingBooking = await tx.booking.findFirst({
+      where: {
+        routeId: data.routeId,
+        passengerId,
+        status: { in: ['PENDING', 'CONFIRMED'] },
+      },
+    });
+    if (existingBooking) {
+      throw new ApiError(400, 'คุณมีการจองเส้นทางนี้แล้ว กรุณารอคนขับอนุมัติหรือปฏิเสธก่อน');
+    }
+
     if (route.status !== RouteStatus.AVAILABLE) {
       throw new ApiError(400, 'This route is no longer available.');
     }
