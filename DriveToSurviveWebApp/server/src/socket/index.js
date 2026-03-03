@@ -81,17 +81,11 @@ function initSocketIO(httpServer) {
             }
         });
 
-        socket.on('edit-message', (data) => {
-            const { sessionId, message } = data;
-            if (sessionId && message) {
-                socket.to(`chat:${sessionId}`).emit('message-edited', message);
-            }
-        });
-
-        socket.on('unsend-message', (data) => {
+        // Broadcast location revocation to all participants in the room
+        socket.on('revoke-location', (data) => {
             const { sessionId, messageId } = data;
             if (sessionId && messageId) {
-                socket.to(`chat:${sessionId}`).emit('message-unsent', { messageId, isUnsent: true, content: 'ข้อความถูกลบ / Message unsent' });
+                socket.to(`chat:${sessionId}`).emit('location-revoked', { messageId });
             }
         });
 
@@ -107,7 +101,7 @@ function initSocketIO(httpServer) {
         // ─── GPS Location Tracking (Route-level) ─────────
         // Throttle map: userId → last emit timestamp
         const locationThrottle = new Map();
-        const THROTTLE_MS = 1000; // max 1 emit / 1 sec — fast real-time
+        const THROTTLE_MS = 2000; // max 1 emit / 2 วินาที
 
         // Join a route room for location sharing (post-booking)
         socket.on('join-route', (routeId) => {
