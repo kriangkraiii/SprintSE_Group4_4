@@ -162,7 +162,12 @@
                                                             <span v-if="p.email" class="mx-2 text-slate-200">|</span>
                                                             <a v-if="p.email" :href="`mailto:${p.email}`" class="text-cta hover:underline" @click.stop>{{ p.email }}</a>
                                                         </div>
+                                                        <p v-if="p.rawPickup?.name" class="text-xs text-slate-400 mt-0.5">📍 จุดรับ: {{ p.rawPickup.name }}</p>
                                                     </div>
+                                                    <a v-if="p.rawPickup?.lat" :href="getPickupNavUrl(p.rawPickup)" target="_blank" @click.stop
+                                                        class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-300 rounded-md hover:bg-green-100 transition flex items-center gap-1 flex-shrink-0">
+                                                        📍 นำทางไปรับ
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -412,7 +417,11 @@
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
                                         <template v-else-if="['confirmed', 'in_progress'].includes(item.status)">
                                             <button @click.stop="openCancelModal(item)" class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50 cursor-pointer">ยกเลิกการจอง</button>
-                                            <a v-if="item.rawStart" :href="getGoogleMapsNavUrl(item.rawStart, item.rawEnd)" target="_blank" @click.stop
+                                            <a v-if="item.rawPickup?.lat" :href="getPickupNavUrl(item.rawPickup)" target="_blank" @click.stop
+                                                class="px-4 py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-300 rounded-md hover:bg-green-100 transition cursor-pointer flex items-center gap-1.5">
+                                                📍 นำทางไปจุดขึ้นรถ
+                                            </a>
+                                            <a v-else-if="item.rawStart" :href="getGoogleMapsNavUrl(item.rawStart, item.rawEnd)" target="_blank" @click.stop
                                                 class="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-300 rounded-md hover:bg-blue-100 transition cursor-pointer flex items-center gap-1.5">
                                                 🗺️ นำทาง
                                             </a>
@@ -672,7 +681,8 @@ async function fetchPassengerTrips() {
                 hasReviewed: Array.isArray(b.reviews) && b.reviews.length > 0,
                 reviewData: (Array.isArray(b.reviews) && b.reviews[0]) ? b.reviews[0] : null,
                 durationText: fmtDuration(b.route), distanceText: fmtDistance(b.route),
-                rawStart: start, rawEnd: end
+                rawStart: start, rawEnd: end,
+                rawPickup: b.pickupLocation || null, rawDropoff: b.dropoffLocation || null
             }
         })
         await waitMapReady()
@@ -732,7 +742,8 @@ async function fetchDriverRoutes() {
                     originAddress: start?.address ? cleanAddr(start.address) : null,
                     destinationAddress: end?.address ? cleanAddr(end.address) : null,
                     durationText: fmtDuration(r), distanceText: fmtDistance(r),
-                    rawStart: start, rawEnd: end
+                    rawStart: start, rawEnd: end,
+                    rawPickup: b.pickupLocation || null, rawDropoff: b.dropoffLocation || null
                 })
             }
 
@@ -755,7 +766,9 @@ async function fetchDriverRoutes() {
                     image: b.passenger?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(b.passenger?.firstName || 'P')}&background=random&size=64`,
                     email: b.passenger?.email || '', isVerified: !!b.passenger?.isVerified,
                     rating: b.passenger?.driverStats?.avgRating || 0,
-                    reviews: b.passenger?.driverStats?.totalReviews || 0
+                    reviews: b.passenger?.driverStats?.totalReviews || 0,
+                    rawPickup: b.pickupLocation || null,
+                    rawDropoff: b.dropoffLocation || null
                 })),
                 durationText: fmtDuration(r), distanceText: fmtDistance(r),
                 rawStart: start, rawEnd: end
@@ -948,6 +961,13 @@ async function openChatForRoute(route) {
 function getGoogleMapsNavUrl(start, end) {
     if (!start?.lat || !end?.lat) return '#'
     return `https://www.google.com/maps/dir/?api=1&origin=${start.lat},${start.lng}&destination=${end.lat},${end.lng}&travelmode=driving`
+}
+
+function getPickupNavUrl(pickup) {
+    if (!pickup?.lat) return '#'
+    let url = `https://www.google.com/maps/dir/?api=1&destination=${pickup.lat},${pickup.lng}&travelmode=driving`
+    if (pickup.placeId) url += `&destination_place_id=${pickup.placeId}`
+    return url
 }
 
 // --- Reviews ---

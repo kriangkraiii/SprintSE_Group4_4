@@ -216,6 +216,7 @@ const adminUpdateBooking = async (id, patch) => {
 };
 
 const createBooking = async (data, passengerId) => {
+  console.log('[createBooking] START — passengerId:', passengerId, 'data:', JSON.stringify(data));
   return prisma.$transaction(async (tx) => {
 
     // ตรวจสอบ role + ยืนยัน + suspension
@@ -223,15 +224,14 @@ const createBooking = async (data, passengerId) => {
       where: { id: passengerId },
       select: { isVerified: true, role: true, passengerSuspendedUntil: true }
     });
+    console.log('[createBooking] user:', JSON.stringify(user));
     if (!user) throw new ApiError(404, 'User not found');
     if (!user.isVerified) {
+      console.log('[createBooking] BLOCKED — isVerified is false');
       throw new ApiError(403, 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้');
     }
 
-    // คนที่เป็น DRIVER จองเป็นผู้โดยสารไม่ได้
-    if (user.role === 'DRIVER') {
-      throw new ApiError(403, 'บัญชีคนขับไม่สามารถจองเส้นทางได้ กรุณาใช้บัญชีผู้โดยสาร');
-    }
+    // คนขับสามารถจองเส้นทางของคนอื่นได้ (ตรวจเฉพาะ driverId === passengerId ด้านล่าง)
 
     // ตรวจ passenger suspension (role-based ban)
     if (user.passengerSuspendedUntil && new Date(user.passengerSuspendedUntil) > new Date()) {
@@ -248,6 +248,18 @@ const createBooking = async (data, passengerId) => {
 
     if (route.driverId === passengerId) {
       throw new ApiError(400, 'Driver cannot book their own route.');
+    }
+
+    // ห้ามจองซ้ำ — ถ้ามี PENDING หรือ CONFIRMED อยู่แล้วในเส้นทางเดียวกัน
+    const existingBooking = await tx.booking.findFirst({
+      where: {
+        routeId: data.routeId,
+        passengerId,
+        status: { in: ['PENDING', 'CONFIRMED'] },
+      },
+    });
+    if (existingBooking) {
+      throw new ApiError(400, 'คุณมีการจองเส้นทางนี้แล้ว กรุณารอคนขับอนุมัติหรือปฏิเสธก่อน');
     }
 
     if (route.status !== RouteStatus.AVAILABLE) {

@@ -337,7 +337,7 @@
                         <!-- Expanded details -->
                         <transition name="slide">
                             <div v-if="selectedRoute && selectedRoute.id === route.id"
-                                class="border-t border-gray-100 bg-gray-50/50 p-5 space-y-4">
+                                class="border-t border-gray-100 bg-gray-50 p-5 space-y-4">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <h5 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -601,13 +601,17 @@
 
                             <!-- Actions -->
                             <div class="flex gap-3">
-                                <button @click="closeModal"
-                                    class="flex-1 py-3 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition cursor-pointer">
+                                <button @click="closeModal" :disabled="bookingLoading"
+                                    class="flex-1 py-3 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition cursor-pointer disabled:opacity-50">
                                     ยกเลิก
                                 </button>
-                                <button @click="confirmBooking"
-                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
-                                    ยืนยันการจอง
+                                <button @click="confirmBooking" :disabled="bookingLoading"
+                                    class="flex-[2] py-3 text-sm font-semibold text-white bg-[#1B9329] rounded-xl hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                    <svg v-if="bookingLoading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    {{ bookingLoading ? 'กำลังจอง...' : 'ยืนยันการจอง' }}
                                 </button>
                             </div>
                         </div>
@@ -895,6 +899,7 @@ async function handleClearRecentFT() {
 const showModal = ref(false)
 const bookingRoute = ref(null)
 const bookingSeats = ref(1)
+const bookingLoading = ref(false)
 const pickupPoint = ref('')
 const dropoffPoint = ref('')
 
@@ -1197,10 +1202,27 @@ function openModal(route) {
     if (route?.availableSeats > 0) {
         bookingRoute.value = route
         bookingSeats.value = 1
-        pickupPoint.value = ''
-        dropoffPoint.value = ''
-        pickupData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
-        dropoffData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+
+        // Pre-fill pickup/dropoff with route start/end as defaults
+        const startLoc = route.start || null
+        const endLoc = route.end || null
+
+        if (startLoc?.lat && startLoc?.lng) {
+            pickupPoint.value = startLoc.name || route.originName || ''
+            pickupData.value = { lat: startLoc.lat, lng: startLoc.lng, placeId: startLoc.placeId || null, address: startLoc.address || startLoc.name || '', name: startLoc.name || '' }
+        } else {
+            pickupPoint.value = route.originName || ''
+            pickupData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+        }
+
+        if (endLoc?.lat && endLoc?.lng) {
+            dropoffPoint.value = endLoc.name || route.destinationName || ''
+            dropoffData.value = { lat: endLoc.lat, lng: endLoc.lng, placeId: endLoc.placeId || null, address: endLoc.address || endLoc.name || '', name: endLoc.name || '' }
+        } else {
+            dropoffPoint.value = route.destinationName || ''
+            dropoffData.value = { lat: null, lng: null, placeId: null, address: null, name: null }
+        }
+
         bookingPickingTarget.value = null
         showModal.value = true
         nextTick(() => initBookingAutocomplete())
@@ -1213,21 +1235,22 @@ function closeModal() {
 }
 
 async function confirmBooking() {
-    if (!bookingRoute.value) return
-    if (pickupPoint.value && !pickupData.value.lat) {
-        const g = await geocodeText(pickupPoint.value)
-        if (g) pickupData.value = g
-    }
-    if (dropoffPoint.value && !dropoffData.value.lat) {
-        const g = await geocodeText(dropoffPoint.value)
-        if (g) dropoffData.value = g
-    }
-    if (!pickupData.value.lat || !dropoffData.value.lat) {
-        toast.warning('ข้อมูลไม่ครบถ้วน', 'กรุณาเลือกจุดขึ้นรถและจุดลงรถ')
-        return
-    }
-
+    if (!bookingRoute.value || bookingLoading.value) return
+    bookingLoading.value = true
     try {
+        if (pickupPoint.value && !pickupData.value.lat) {
+            const g = await geocodeText(pickupPoint.value)
+            if (g) pickupData.value = g
+        }
+        if (dropoffPoint.value && !dropoffData.value.lat) {
+            const g = await geocodeText(dropoffPoint.value)
+            if (g) dropoffData.value = g
+        }
+        if (!pickupData.value.lat || !dropoffData.value.lat) {
+            toast.warning('ข้อมูลไม่ครบถ้วน', 'กรุณาเลือกจุดขึ้นรถและจุดลงรถ')
+            return
+        }
+
         await $api('/bookings', {
             method: 'POST',
             body: {
@@ -1238,17 +1261,39 @@ async function confirmBooking() {
             },
         })
         closeModal()
-        toast.success('จองสำเร็จ!', 'การจองได้รับการยืนยันแล้ว')
-        setTimeout(() => navigateTo('/myTrip'), 1500)
+        toast.success('จองสำเร็จ!', 'การจองของคุณอยู่ในสถานะรอดำเนินการ')
+        setTimeout(() => navigateTo('/myTrips'), 1500)
     } catch (error) {
-        const msg = String(error?.data?.message || error?.message || '')
-        const is403 = error?.status === 403 || error?.statusCode === 403
-        if (is403 && /ยืนยันบัตรประชาชน/.test(msg)) {
-            toast.error('ต้องยืนยันตัวตน', 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองได้')
-            setTimeout(() => navigateTo('/profile'), 1500)
+        console.error('[Booking Error]', error, 'data:', error?.data)
+        const rawData = error?.data
+        const serverMsg = rawData?.message || rawData?.error?.message || rawData?.error || ''
+        // Strip standard HTTP status texts that leak through (Forbidden, Bad Request, etc.)
+        const httpTexts = /^(Forbidden|Bad Request|Internal Server Error|Not Found|Unauthorized|Too Many Requests)$/i
+        const extracted = String(serverMsg || error?.statusMessage || error?.message || '')
+        const msg = httpTexts.test(extracted.trim()) ? '' : extracted
+        const status = error?.status || error?.statusCode || rawData?.statusCode || 0
+
+        if (status === 403 && /ยืนยัน|บัตรประชาชน|verify|verified/i.test(msg)) {
+            toast.error('ต้องยืนยันตัวตน', msg || 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองได้')
+            setTimeout(() => navigateTo('/profile'), 2000)
+        } else if (status === 403 && /ระงับ|suspended/i.test(msg)) {
+            toast.error('บัญชีถูกระงับ', msg)
+        } else if (status === 403) {
+            toast.error('ไม่สามารถจองได้', msg || 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้')
+        } else if (status === 400 && /จองเส้นทางนี้แล้ว|already.*book/i.test(msg)) {
+            toast.warning('จองซ้ำ', msg)
+        } else if (status === 400 && !msg) {
+            // 400 without server message = likely duplicate booking or validation
+            toast.warning('ไม่สามารถจองได้', 'คุณอาจมีการจองเส้นทางนี้อยู่แล้ว หรือเส้นทางเต็มแล้ว')
+        } else if (status === 400) {
+            toast.error('ไม่สามารถจองได้', msg)
+        } else if (status === 429) {
+            toast.error('ส่งคำขอบ่อยเกินไป', msg || 'กรุณารอสักครู่แล้วลองใหม่')
         } else {
-            toast.error('เกิดข้อผิดพลาด', error.data?.message || 'โปรดลองใหม่อีกครั้ง')
+            toast.error('เกิดข้อผิดพลาด', msg || 'โปรดลองใหม่อีกครั้ง')
         }
+    } finally {
+        bookingLoading.value = false
     }
 }
 
@@ -1340,7 +1385,7 @@ function openPlacePicker(field) {
     nextTick(() => {
         const meta = field === 'origin' ? searchForm.value._originMeta : searchForm.value._destinationMeta
         const center = (meta?.lat && meta?.lng) ? { lat: meta.lat, lng: meta.lng } : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
-        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 16 : userLocation.value.lat ? 16 : 14, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
+        placePickerMap = new google.maps.Map(placePickerMapEl.value, { center, zoom: meta?.lat ? 16 : userLocation.value.lat ? 16 : 14, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: false })
         placePickerMap.addListener('click', (e) => { setPickerMarker(e.latLng); resolvePicked(e.latLng) })
     })
 }
@@ -1422,7 +1467,7 @@ function startBookingPicker(target) {
     nextTick(() => {
         const base = target === 'pickup' ? pickupData.value : dropoffData.value
         const center = (base.lat && base.lng) ? { lat: base.lat, lng: base.lng } : userLocation.value.lat ? { lat: userLocation.value.lat, lng: userLocation.value.lng } : { lat: 13.7563, lng: 100.5018 }
-        bookingPickerMap = new google.maps.Map(bookingPickerMapEl.value, { center, zoom: base.lat ? 15 : userLocation.value.lat ? 14 : 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: false })
+        bookingPickerMap = new google.maps.Map(bookingPickerMapEl.value, { center, zoom: base.lat ? 15 : userLocation.value.lat ? 14 : 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: false })
         bookingPickerMap.addListener('click', async (e) => { setBookingPickerMarker(e.latLng); await resolveBookingPicked(e.latLng) })
     })
 }

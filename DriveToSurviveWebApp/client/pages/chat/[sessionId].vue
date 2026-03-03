@@ -9,21 +9,36 @@
       </NuxtLink>
 
       <template v-if="session">
-        <img
-          :src="otherUser.profilePicture || `https://ui-avatars.com/api/?name=${otherUser.firstName || 'U'}&background=random&size=40`"
-          class="w-10 h-10 rounded-full object-cover"
-        />
+        <!-- Group avatar stack -->
+        <div class="relative flex -space-x-2 flex-shrink-0">
+          <img v-for="p in headerAvatars" :key="p.id"
+            :src="p.profilePicture || `https://ui-avatars.com/api/?name=${p.firstName || 'U'}&background=random&size=36`"
+            class="w-9 h-9 rounded-full object-cover border-2 border-white"
+          />
+          <div v-if="participantCount > 3"
+            class="w-9 h-9 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-bold text-slate-600">
+            +{{ participantCount - 3 }}
+          </div>
+        </div>
         <div class="flex-1 min-w-0">
-          <h3 class="text-sm font-medium text-primary truncate">{{ otherUser.firstName || 'ผู้ใช้' }}</h3>
+          <h3 class="text-sm font-medium text-primary truncate">{{ routeLabel }}</h3>
           <p class="text-xs text-slate-400">
-            <template v-if="session.status === 'ACTIVE'">🟢 ออนไลน์</template>
+            <template v-if="session.status === 'ACTIVE'">🟢 {{ participantCount }} คนในแชท</template>
             <template v-else-if="session.status === 'ENDED'">🟡 จบทริปแล้ว</template>
             <template v-else-if="session.status === 'READ_ONLY'">🔴 อ่านอย่างเดียว</template>
             <template v-else>🔒 ถูกลบแล้ว</template>
           </p>
         </div>
-      </template>
 
+        <!-- Call button -->
+        <button @click="showContactPanel = true"
+          class="p-2 rounded-lg text-cta hover:bg-blue-50 transition-colors cursor-pointer"
+          title="โทร / ข้อมูลผู้ร่วมเดินทาง">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+        </button>
+      </template>
     </div>
 
     <!-- Lifecycle Banner -->
@@ -58,6 +73,7 @@
           :message="msg"
           :isOwn="msg.senderId === userId"
           :isRevoked="revokedLocationIds.has(msg.id)"
+          :showSenderName="isGroupChat"
           @edit="startEdit"
           @unsend="handleUnsend"
           @report="openReportModal"
@@ -210,6 +226,109 @@
         </div>
       </div>
     </div>
+
+    <!-- Contact Panel (Bottom Sheet) -->
+    <div v-if="showContactPanel" class="fixed inset-0 z-50 flex items-end justify-center bg-black/40" @click.self="showContactPanel = false">
+      <div class="w-full max-w-lg bg-white rounded-t-2xl shadow-xl max-h-[70vh] overflow-y-auto animate-slide-up">
+        <!-- Handle bar -->
+        <div class="flex justify-center py-2">
+          <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+        </div>
+
+        <div class="px-5 pb-6">
+          <h3 class="text-lg font-semibold text-primary mb-4">📞 ผู้ร่วมเดินทาง</h3>
+
+          <!-- Driver card (shown to passengers) -->
+          <div v-if="userRole === 'passenger' && session?.driver" class="mb-4">
+            <p class="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">🚗 คนขับ</p>
+            <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl">
+              <img :src="session.driver.profilePicture || `https://ui-avatars.com/api/?name=${session.driver.firstName || 'D'}&background=3b82f6&color=fff&size=40`"
+                class="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-primary">{{ session.driver.firstName }}</p>
+                <p class="text-xs text-slate-500">คนขับ</p>
+              </div>
+              <a v-if="session.driver.phoneNumber"
+                :href="`tel:${session.driver.phoneNumber}`"
+                class="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors"
+                @click.stop>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                โทร
+              </a>
+              <button v-if="session.driver.phoneNumber"
+                @click="copyPhone(session.driver.phoneNumber)"
+                class="p-1.5 text-slate-400 hover:text-primary transition-colors cursor-pointer" title="คัดลอกเบอร์">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Passenger: navigate to my pickup -->
+          <a v-if="userRole === 'passenger' && myPickupNavUrl" :href="myPickupNavUrl" target="_blank" @click.stop
+            class="block w-full mt-3 px-4 py-2.5 text-sm font-medium text-center text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition">
+            📍 นำทางไปจุดขึ้นรถ (Google Maps)
+          </a>
+
+          <!-- Passenger list (shown to driver) -->
+          <div v-if="userRole === 'driver'">
+            <p class="text-xs font-medium text-slate-400 mb-2 uppercase tracking-wide">👥 ผู้โดยสาร ({{ passengerContacts.length }})</p>
+            <div class="space-y-2">
+              <div v-for="p in passengerContacts" :key="p.id"
+                class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl">
+                <img :src="p.profilePicture || `https://ui-avatars.com/api/?name=${p.firstName || 'U'}&background=random&size=40`"
+                  class="w-10 h-10 rounded-full object-cover flex-shrink-0 mt-0.5" />
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-primary">{{ p.firstName }}</p>
+                  <p v-if="p.pickupLabel" class="text-xs text-slate-500 mt-0.5">
+                    📍 รับ: {{ p.pickupLabel }}
+                  </p>
+                  <p v-if="p.dropoffLabel" class="text-xs text-slate-400">
+                    🏁 ส่ง: {{ p.dropoffLabel }}
+                  </p>
+                  <p v-if="p.seats" class="text-xs text-slate-400">🪑 {{ p.seats }} ที่นั่ง</p>
+                  <a v-if="p.pickupLat" :href="getNavToPickupUrl(p.pickupLat, p.pickupLng, p.pickupLabel, p.pickupPlaceId)" target="_blank" @click.stop
+                    class="inline-flex items-center gap-1 mt-1 px-2 py-1 text-[11px] font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 transition">
+                    🗺️ นำทางไปรับ
+                  </a>
+                </div>
+                <div class="flex items-center gap-1 flex-shrink-0">
+                  <a v-if="p.phoneNumber"
+                    :href="`tel:${p.phoneNumber}`"
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors"
+                    @click.stop>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    โทร
+                  </a>
+                  <button v-if="p.phoneNumber"
+                    @click="copyPhone(p.phoneNumber)"
+                    class="p-1.5 text-slate-400 hover:text-primary transition-colors cursor-pointer" title="คัดลอกเบอร์">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                  </button>
+                </div>
+              </div>
+              <p v-if="passengerContacts.length === 0" class="text-sm text-slate-400 text-center py-4">ยังไม่มีผู้โดยสาร</p>
+            </div>
+          </div>
+
+          <!-- Passenger list (shown to passenger - see other passengers) -->
+          <div v-if="userRole === 'passenger' && otherPassengers.length">
+            <p class="text-xs font-medium text-slate-400 mb-2 mt-4 uppercase tracking-wide">👥 ผู้โดยสารคนอื่น</p>
+            <div class="space-y-2">
+              <div v-for="p in otherPassengers" :key="p.id" class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                <img :src="p.profilePicture || `https://ui-avatars.com/api/?name=${p.firstName || 'U'}&background=random&size=36`"
+                  class="w-9 h-9 rounded-full object-cover flex-shrink-0" />
+                <p class="text-sm font-medium text-primary">{{ p.firstName }}</p>
+              </div>
+            </div>
+          </div>
+
+          <button @click="showContactPanel = false"
+            class="w-full mt-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors cursor-pointer">
+            ปิด
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -246,6 +365,7 @@ const isLoadingMessages = ref(false)
 const isSending = ref(false)
 const messagesContainer = ref(null)
 const showQuickReply = ref(false)
+const showContactPanel = ref(false)
 const typingUsers = ref([])
 let typingTimer = null
 
@@ -338,6 +458,89 @@ const otherUser = computed(() => {
   return session.value.driver?.id === userId.value
     ? session.value.passenger || {}
     : session.value.driver || {}
+})
+
+// ─── Group Chat helpers ──────────────────────────────────
+function locationLabel(loc) {
+  if (!loc) return ''
+  if (typeof loc === 'string') return loc
+  return loc.name || loc.label || loc.address || loc.formatted_address || ''
+}
+
+const participantCount = computed(() => {
+  if (!session.value?.participants) return 1
+  // participants + driver
+  return session.value.participants.length + 1
+})
+
+const isGroupChat = computed(() => participantCount.value > 2)
+
+const headerAvatars = computed(() => {
+  if (!session.value) return []
+  const list = []
+  if (session.value.driver) list.push(session.value.driver)
+  if (session.value.participants) {
+    session.value.participants.forEach(p => {
+      if (p.user && p.user.id !== session.value.driver?.id) list.push(p.user)
+    })
+  }
+  return list.slice(0, 3) // max 3 avatars
+})
+
+const routeLabel = computed(() => {
+  if (!session.value?.route) return 'แชทกลุ่ม'
+  const start = locationLabel(session.value.route.startLocation)
+  const end = locationLabel(session.value.route.endLocation)
+  if (start && end) return `${start} → ${end}`
+  return start || end || 'แชทกลุ่ม'
+})
+
+const passengerContacts = computed(() => {
+  if (!session.value?.participants) return []
+  const driverId = session.value.driver?.id
+  const bookings = session.value.bookings || []
+  return session.value.participants
+    .filter(p => p.user?.id !== driverId)
+    .map(p => {
+      const booking = bookings.find(b => b.passengerId === p.user.id)
+      return {
+        ...p.user,
+        pickupLabel: locationLabel(booking?.pickupLocation),
+        dropoffLabel: locationLabel(booking?.dropoffLocation),
+        seats: booking?.numberOfSeats,
+        pickupLat: booking?.pickupLocation?.lat,
+        pickupLng: booking?.pickupLocation?.lng,
+        pickupPlaceId: booking?.pickupLocation?.placeId || null,
+      }
+    })
+})
+
+const otherPassengers = computed(() => {
+  if (!session.value?.participants) return []
+  const driverId = session.value.driver?.id
+  return session.value.participants
+    .filter(p => p.user?.id !== driverId && p.user?.id !== userId.value)
+    .map(p => p.user)
+})
+
+function copyPhone(phone) {
+  navigator.clipboard?.writeText(phone)
+  toast.success('คัดลอกเบอร์แล้ว', phone)
+}
+
+function getNavToPickupUrl(lat, lng, label, placeId) {
+  if (!lat) return '#'
+  let url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`
+  if (placeId) url += `&destination_place_id=${placeId}`
+  return url
+}
+
+// Passenger's own pickup nav URL
+const myPickupNavUrl = computed(() => {
+  if (!session.value?.bookings || !userId.value) return null
+  const myBooking = session.value.bookings.find(b => b.passengerId === userId.value)
+  if (!myBooking?.pickupLocation?.lat) return null
+  return getNavToPickupUrl(myBooking.pickupLocation.lat, myBooking.pickupLocation.lng, locationLabel(myBooking.pickupLocation), myBooking.pickupLocation.placeId)
 })
 
 function scrollToBottom() {

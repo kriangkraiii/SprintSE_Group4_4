@@ -3,11 +3,22 @@
     class="flex mb-3"
     :class="isOwn ? 'justify-end' : 'justify-start'"
   >
+    <!-- Sender avatar (group chat, other's messages) -->
+    <img
+      v-if="!isOwn && showSenderName && message.type !== 'SYSTEM' && message.sender"
+      :src="message.sender.profilePicture || `https://ui-avatars.com/api/?name=${message.sender.firstName || 'U'}&background=random&size=32`"
+      class="w-7 h-7 rounded-full object-cover mr-2 mt-1 flex-shrink-0"
+    />
     <div
       data-testid="chat-message"
       class="relative max-w-[75%] rounded-2xl shadow-sm group"
       :class="bubbleClass"
     >
+      <!-- Sender name label (group chat) -->
+      <p v-if="!isOwn && showSenderName && message.type !== 'SYSTEM' && message.sender" class="text-[11px] font-medium text-slate-500 mb-0.5 px-1">
+        {{ message.sender.firstName || 'ผู้ใช้' }}
+      </p>
+
       <!-- System message -->
       <template v-if="message.type === 'SYSTEM'">
         <div class="px-4 py-2.5">
@@ -264,6 +275,7 @@ const props = defineProps({
   message: { type: Object, required: true },
   isOwn: { type: Boolean, default: false },
   isRevoked: { type: Boolean, default: false },
+  showSenderName: { type: Boolean, default: false },
 })
 
 defineEmits(['edit', 'unsend', 'report', 'revoke-location'])

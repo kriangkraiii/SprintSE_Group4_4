@@ -131,7 +131,10 @@ import 'dayjs/locale/th'
 dayjs.locale('th')
 
 definePageMeta({ middleware: 'admin-auth', layout: 'admin' })
-useHead({ title: 'CRON Jobs • Admin' })
+useHead({
+    title: 'CRON Jobs • Admin',
+    link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }],
+})
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
@@ -236,7 +239,7 @@ const jobIconBg = (status) => ({
 })
 
 const jobIcon = (name) => ({
-    retentionPurge: 'fa-trash-clock',
+    retentionPurge: 'fa-trash-can',
     chatLifecycle: 'fa-comments',
 }[name] || 'fa-clock')
 
