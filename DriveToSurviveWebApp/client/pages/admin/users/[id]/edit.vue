@@ -39,13 +39,13 @@
                                 <h3 class="mb-3 text-sm font-semibold text-primary">บัญชีผู้ใช้</h3>
                                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">อีเมล *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">อีเมล</label>
                                         <input v-model.trim="form.email" type="email" placeholder="example@email.com"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
                                         <label class="block mb-1 text-xs font-medium text-slate-500">ชื่อผู้ใช้
-                                            (username) *</label>
+                                            (username)</label>
                                         <input v-model.trim="form.username" type="text" placeholder="user_001"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
@@ -57,8 +57,7 @@
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">เบอร์โทรศัพท์
-                                            *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">เบอร์โทรศัพท์</label>
                                         <input v-model.trim="form.phoneNumber" type="tel" placeholder="0891234567"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
@@ -70,17 +69,17 @@
                                 <h3 class="mb-3 text-sm font-semibold text-primary">ข้อมูลส่วนตัว</h3>
                                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">ชื่อจริง *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">ชื่อจริง</label>
                                         <input v-model.trim="form.firstName" type="text"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">นามสกุล *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">นามสกุล</label>
                                         <input v-model.trim="form.lastName" type="text"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">เพศ *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">เพศ</label>
                                         <select v-model="form.gender"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta">
                                             <option value="">-- เลือก --</option>
@@ -89,7 +88,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">บทบาท *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">บทบาท</label>
                                         <select v-model="form.role"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta">
                                             <option value="PASSENGER">PASSENGER</option>
@@ -105,14 +104,12 @@
                                 <h3 class="mb-3 text-sm font-semibold text-primary">บัตรประชาชน</h3>
                                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">เลขบัตรประชาชน
-                                            *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">เลขบัตรประชาชน</label>
                                         <input v-model.trim="form.nationalIdNumber" type="text" placeholder="13 หลัก"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
                                     <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">วันหมดอายุบัตร
-                                            *</label>
+                                        <label class="block mb-1 text-xs font-medium text-slate-500">วันหมดอายุบัตร</label>
                                         <input v-model="form.nationalIdExpiryDate" type="date"
                                             class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
                                     </div>
@@ -122,7 +119,7 @@
                             <!-- Uploads -->
                             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                 <div>
-                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปบัตรประชาชน *</label>
+                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปบัตรประชาชน</label>
                                     <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md cursor-pointer hover:border-cta"
                                         @click="pick('idCardInput')">
                                         <div v-if="idPreview" class="flex items-center justify-center">
@@ -138,8 +135,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปถ่ายใบหน้า (Selfie)
-                                        *</label>
+                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปถ่ายใบหน้า (Selfie)</label>
                                     <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md cursor-pointer hover:border-cta"
                                         @click="pick('selfieInput')">
                                         <div v-if="selfiePreview" class="flex items-center justify-center">
@@ -397,14 +393,6 @@ async function putForm(url, formData, token) {
 
 // ---------- SUBMIT ----------
 async function handleSubmit() {
-    if (
-        !form.email || !form.username || !form.firstName || !form.lastName ||
-        !form.phoneNumber || !form.gender || !form.nationalIdNumber || !form.nationalIdExpiryDate
-    ) {
-        toast.error('กรอกข้อมูลไม่ครบ', 'โปรดกรอกข้อมูลที่มี * ให้ครบถ้วน')
-        return
-    }
-
     isSubmitting.value = true
     try {
         const id = route.params.id
@@ -414,16 +402,17 @@ async function handleSubmit() {
         if (process.client && !token) token = localStorage.getItem('token') || ''
 
         const fd = new FormData()
-        fd.append('email', form.email)
-        fd.append('username', form.username)
-        if (form.password) fd.append('password', form.password) // ส่งเฉพาะเมื่อมีการเปลี่ยน
-        fd.append('firstName', form.firstName)
-        fd.append('lastName', form.lastName)
-        fd.append('phoneNumber', form.phoneNumber)
-        fd.append('gender', form.gender.toUpperCase())
-        fd.append('nationalIdNumber', form.nationalIdNumber)
-        fd.append('nationalIdExpiryDate', toISODate(form.nationalIdExpiryDate))
-        fd.append('role', form.role)
+        // ส่งเฉพาะ field ที่มีค่า (partial update)
+        if (form.email) fd.append('email', form.email)
+        if (form.username) fd.append('username', form.username)
+        if (form.password) fd.append('password', form.password)
+        if (form.firstName) fd.append('firstName', form.firstName)
+        if (form.lastName) fd.append('lastName', form.lastName)
+        if (form.phoneNumber) fd.append('phoneNumber', form.phoneNumber)
+        if (form.gender) fd.append('gender', form.gender.toUpperCase())
+        if (form.nationalIdNumber) fd.append('nationalIdNumber', form.nationalIdNumber)
+        if (form.nationalIdExpiryDate) fd.append('nationalIdExpiryDate', toISODate(form.nationalIdExpiryDate))
+        if (form.role) fd.append('role', form.role)
 
         // แนบไฟล์เฉพาะที่ผู้ใช้เลือกใหม่ (File instance)
         if (form.nationalIdPhotoUrl instanceof File) {

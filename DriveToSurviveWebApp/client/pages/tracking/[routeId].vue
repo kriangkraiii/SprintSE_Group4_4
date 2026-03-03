@@ -5,7 +5,7 @@
 
     <!-- Top bar -->
     <div class="absolute top-0 left-0 right-0 z-10 p-4">
-      <div class="mx-auto max-w-lg bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-4">
+      <div class="mx-auto max-w-lg bg-white backdrop-blur-sm rounded-2xl shadow-lg p-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
             <NuxtLink :to="userRole === 'DRIVER' ? '/myRoute' : '/myTrip'"
@@ -54,7 +54,7 @@
 
     <!-- Bottom: Participants list -->
     <div class="absolute bottom-0 left-0 right-0 z-10 p-4">
-      <div class="mx-auto max-w-lg bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-4">
+      <div class="mx-auto max-w-lg bg-white backdrop-blur-sm rounded-2xl shadow-lg p-4">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-sm font-semibold text-slate-700">ผู้ร่วมทริป</h3>
           <button @click="fitAllMarkers"
@@ -87,25 +87,6 @@
           <p v-if="participants.size === 0" class="text-xs text-slate-400 text-center py-2">รอผู้ร่วมทริปออนไลน์...</p>
         </div>
 
-        <!-- Pickup location info -->
-        <div v-if="pickupInfo" class="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2">
-          <span class="text-lg">📍</span>
-          <div class="flex-1 min-w-0">
-            <p class="text-xs font-medium text-green-700">จุดรับผู้โดยสาร</p>
-            <p class="text-xs text-slate-500 truncate">{{ pickupInfo.name || pickupInfo.address || 'ตำแหน่งปักหมุด' }}</p>
-            <p v-if="pickupInfo.lat" class="text-xs text-slate-400 font-mono">📍 {{ pickupInfo.lat.toFixed(6) }}, {{ pickupInfo.lng.toFixed(6) }}</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <div v-if="etaText" class="px-2 py-1 bg-green-50 rounded-lg">
-              <p class="text-xs font-bold text-green-700">{{ etaText }}</p>
-            </div>
-            <a v-if="pickupInfo.lat" :href="`https://www.google.com/maps/dir/?api=1&destination=${pickupInfo.lat},${pickupInfo.lng}`" target="_blank" rel="noopener"
-              class="px-2 py-1 text-xs font-medium bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" @click.stop>
-              🗺️ นำทาง
-            </a>
-          </div>
-        </div>
-
         <!-- Route start/end & Google Maps direction -->
         <div v-if="routeInfo" class="mt-3 pt-3 border-t border-slate-100">
           <div class="flex items-center gap-2 mb-2">
@@ -115,16 +96,23 @@
               <p class="text-xs text-slate-500 truncate">
                 {{ routeInfo.startName }} → {{ routeInfo.endName }}
               </p>
-              <p class="text-xs text-slate-400 font-mono">
-                ต้นทาง: {{ routeInfo.startLat.toFixed(6) }}, {{ routeInfo.startLng.toFixed(6) }}
-              </p>
-              <p class="text-xs text-slate-400 font-mono">
-                ปลายทาง: {{ routeInfo.endLat.toFixed(6) }}, {{ routeInfo.endLng.toFixed(6) }}
-              </p>
             </div>
           </div>
-          <a :href="`https://www.google.com/maps/dir/?api=1&origin=${routeInfo.startLat},${routeInfo.startLng}&destination=${routeInfo.endLat},${routeInfo.endLng}`"
-            target="_blank" rel="noopener"
+
+          <!-- Pickup info (only if different from route start) -->
+          <div v-if="pickupInfo && pickupDiffersFromRouteStart" class="flex items-center gap-2 mb-2 px-2 py-1.5 bg-green-50 rounded-lg">
+            <span class="text-base">📍</span>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-medium text-green-700">จุดขึ้นรถของคุณ</p>
+              <p class="text-xs text-slate-500 truncate">{{ pickupInfo.name || pickupInfo.address || 'ตำแหน่งปักหมุด' }}</p>
+            </div>
+            <a v-if="pickupInfo.lat" :href="getNavUrl(pickupInfo)" target="_blank" rel="noopener"
+              class="px-2 py-1 text-xs font-medium bg-green-500 text-white rounded-lg hover:bg-green-600 transition shrink-0" @click.stop>
+              🗺️ นำทาง
+            </a>
+          </div>
+
+          <a :href="getRouteNavUrl()" target="_blank" rel="noopener"
             class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition">
             🗺️ เปิดเส้นทางใน Google Maps
           </a>
@@ -273,14 +261,39 @@ async function fetchRouteInfo() {
         endName: data.endLocation.name || data.endLocation.label || 'ปลายทาง',
         startLat: data.startLocation.lat,
         startLng: data.startLocation.lng,
+        startPlaceId: data.startLocation.placeId || null,
         endLat: data.endLocation.lat,
         endLng: data.endLocation.lng,
+        endPlaceId: data.endLocation.placeId || null,
       }
     }
   } catch (err) {
     console.warn('[Tracking] Failed to fetch route info:', err.message)
   }
 }
+
+// Navigation URL helpers — use placeId for accuracy, fallback to coordinates
+function getNavUrl(loc) {
+  let url = `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`
+  if (loc.placeId) url += `&destination_place_id=${loc.placeId}`
+  return url
+}
+
+function getRouteNavUrl() {
+  if (!routeInfo.value) return '#'
+  const r = routeInfo.value
+  let url = `https://www.google.com/maps/dir/?api=1&origin=${r.startLat},${r.startLng}&destination=${r.endLat},${r.endLng}`
+  if (r.startPlaceId) url += `&origin_place_id=${r.startPlaceId}`
+  if (r.endPlaceId) url += `&destination_place_id=${r.endPlaceId}`
+  return url
+}
+
+// Only show pickup section if it's different from route start (>100m apart)
+const pickupDiffersFromRouteStart = computed(() => {
+  if (!pickupInfo.value?.lat || !routeInfo.value?.startLat) return false
+  const dist = haversineDistance(pickupInfo.value.lat, pickupInfo.value.lng, routeInfo.value.startLat, routeInfo.value.startLng)
+  return dist > 100
+})
 
 // Update the route line when driver moves (responsive real-time)
 let lastRouteDriverPos = null
@@ -361,7 +374,7 @@ function initMap() {
   // Fetch booking pickup and place green marker
   fetchPickupLocation().then(() => {
     if (pickupLatLng.value && map) {
-      addPickupMarker(map, pickupLatLng.value.lat, pickupLatLng.value.lng, pickupInfo.value?.name || 'จุดรับผู้โดยสาร')
+      addPickupMarker(map, pickupLatLng.value.lat, pickupLatLng.value.lng, pickupInfo.value?.name || 'จุดขึ้นรถ')
 
       // Set pickup location for proximity alerts
       setPickupLocation(pickupLatLng.value.lat, pickupLatLng.value.lng)

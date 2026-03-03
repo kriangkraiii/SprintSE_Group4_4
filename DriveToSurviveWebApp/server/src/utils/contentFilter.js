@@ -5,6 +5,7 @@
  */
 
 const { maskProfanity, containsProfanity } = require('./profanityFilter');
+const { isEnabled } = require('./securityConfig');
 
 // Thai phone number patterns
 const PHONE_REGEX = /(\+?66|0)[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}/g;
@@ -23,6 +24,11 @@ const LINE_REGEX = /@?line[\s:]*[a-zA-Z0-9._-]+/gi;
  */
 const filterContent = (text) => {
     if (!text || typeof text !== 'string') {
+        return { filtered: text, original: text, isFiltered: false, matches: [] };
+    }
+
+    // Skip all filtering if content filter is disabled by admin
+    if (!isEnabled('contentFilterEnabled')) {
         return { filtered: text, original: text, isFiltered: false, matches: [] };
     }
 

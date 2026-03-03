@@ -182,11 +182,11 @@ const getMessages = async (sessionId, userId, opts = {}) => {
         select: {
             id: true, routeId: true, status: true, createdAt: true, endedAt: true,
             chatExpiresAt: true, readOnlyExpiresAt: true,
-            driver: { select: { id: true, firstName: true, profilePicture: true } },
-            route: { select: { startLocation: true, endLocation: true } },
+            driver: { select: { id: true, firstName: true, profilePicture: true, phoneNumber: true } },
+            route: { select: { id: true, startLocation: true, endLocation: true } },
             participants: {
                 select: {
-                    user: { select: { id: true, firstName: true, profilePicture: true } },
+                    user: { select: { id: true, firstName: true, profilePicture: true, phoneNumber: true } },
                 },
             },
         },
@@ -203,7 +203,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
             select: {
                 id: true, senderId: true, type: true, content: true,
                 imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
-                sender: { select: { firstName: true, profilePicture: true } },
+                sender: { select: { id: true, firstName: true, profilePicture: true } },
             },
         }),
         prisma.chatSession.findUnique({
@@ -217,7 +217,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
     // Format passenger info for UI compatibility
     const participants = await prisma.chatSessionParticipant.findMany({
         where: { sessionId },
-        include: { user: { select: { id: true, firstName: true, profilePicture: true } } }
+        include: { user: { select: { id: true, firstName: true, profilePicture: true, phoneNumber: true } } }
     });
 
     if (session) {
@@ -225,6 +225,15 @@ const getMessages = async (sessionId, userId, opts = {}) => {
         if (passengerParticipant) {
             session.passenger = passengerParticipant.user;
         }
+    }
+
+    // Fetch booking info (pickupLocation) for each participant
+    if (sessionInfo?.routeId) {
+        const bookings = await prisma.booking.findMany({
+            where: { routeId: sessionInfo.routeId, status: { in: ['CONFIRMED', 'COMPLETED'] } },
+            select: { passengerId: true, pickupLocation: true, dropoffLocation: true, numberOfSeats: true },
+        });
+        sessionInfo.bookings = bookings;
     }
 
     return {
