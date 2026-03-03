@@ -1258,16 +1258,20 @@ async function confirmBooking() {
         toast.success('จองสำเร็จ!', 'การจองของคุณอยู่ในสถานะรอดำเนินการ')
         setTimeout(() => navigateTo('/myTrips'), 1500)
     } catch (error) {
-        console.error('[Booking Error]', error)
-        const msg = String(error?.data?.message || error?.statusMessage || error?.message || '')
-        const status = error?.status || error?.statusCode || 0
-        if (status === 403 && /ยืนยันบัตรประชาชน/.test(msg)) {
-            toast.error('ต้องยืนยันตัวตน', 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองได้')
-            setTimeout(() => navigateTo('/profile'), 1500)
+        console.error('[Booking Error]', error, 'data:', error?.data, 'statusMessage:', error?.statusMessage, 'cause:', error?.cause)
+        // Extract server error message from all possible locations
+        const rawData = error?.data
+        const serverMsg = rawData?.message || rawData?.error?.message || rawData?.error || ''
+        const msg = String(serverMsg || error?.statusMessage || error?.message || '').replace(/^Forbidden$/i, '')
+        const status = error?.status || error?.statusCode || rawData?.statusCode || 0
+
+        if (status === 403 && /ยืนยัน|บัตรประชาชน|verify|verified/i.test(msg)) {
+            toast.error('ต้องยืนยันตัวตน', msg || 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองได้')
+            setTimeout(() => navigateTo('/profile'), 2000)
         } else if (status === 403 && /ระงับ|suspended/i.test(msg)) {
             toast.error('บัญชีถูกระงับ', msg)
         } else if (status === 403) {
-            toast.error('ไม่สามารถจองได้', msg || 'คุณไม่มีสิทธิ์ในการจองเส้นทางนี้')
+            toast.error('ไม่สามารถจองได้', msg || 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้')
         } else if (status === 429) {
             toast.error('ส่งคำขอบ่อยเกินไป', msg || 'กรุณารอสักครู่แล้วลองใหม่')
         } else if (status === 400) {

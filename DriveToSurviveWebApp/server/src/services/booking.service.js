@@ -216,6 +216,7 @@ const adminUpdateBooking = async (id, patch) => {
 };
 
 const createBooking = async (data, passengerId) => {
+  console.log('[createBooking] START — passengerId:', passengerId, 'data:', JSON.stringify(data));
   return prisma.$transaction(async (tx) => {
 
     // ตรวจสอบ role + ยืนยัน + suspension
@@ -223,8 +224,10 @@ const createBooking = async (data, passengerId) => {
       where: { id: passengerId },
       select: { isVerified: true, role: true, passengerSuspendedUntil: true }
     });
+    console.log('[createBooking] user:', JSON.stringify(user));
     if (!user) throw new ApiError(404, 'User not found');
     if (!user.isVerified) {
+      console.log('[createBooking] BLOCKED — isVerified is false');
       throw new ApiError(403, 'คุณต้องยืนยันบัตรประชาชนก่อนจึงจะจองเส้นทางได้');
     }
 
