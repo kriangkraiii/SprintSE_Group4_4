@@ -63,6 +63,7 @@ export function useLocationTracking() {
     const signalLost = ref(false)
     const driverPosition = ref(null) // For preview mode
     const arrivalAlerts = ref([]) // Real-time arrival notifications
+    const pickupPosition = ref({ lat: null, lng: null }) // Pickup location for proximity alerts
 
     let socket = null
     let watchId = null
@@ -73,6 +74,42 @@ export function useLocationTracking() {
     let participantMarkers = new Map() // userId → google.maps.Marker
     let pickupMarkers = [] // Green pickup location markers
     let directionsRenderer = null // Google Directions route line
+
+    // Proximity alert thresholds (meters) and tracking which have fired
+    const PROXIMITY_THRESHOLDS = [
+        { key: 'FIVE_KM', distance: 5000, title: 'คนขับอยู่ห่าง 5 กม.', body: 'คนขับกำลังเดินทางมาหาคุณ เตรียมตัวให้พร้อม' },
+        { key: 'ONE_KM', distance: 1000, title: 'คนขับใกล้ถึงแล้ว! (1 กม.)', body: 'คนขับอยู่ห่างคุณประมาณ 1 กิโลเมตร' },
+        { key: 'ZERO_KM', distance: 200, title: 'คนขับมาถึงแล้ว!', body: 'คนขับอยู่ใกล้คุณมาก เตรียมขึ้นรถได้เลย' },
+    ]
+    const firedAlerts = new Set() // track which thresholds have been fired
+
+    function checkProximityAlerts(driverLat, driverLng) {
+        const pickup = pickupPosition.value
+        if (!pickup.lat || !pickup.lng) return
+
+        const dist = haversineDistance(pickup.lat, pickup.lng, driverLat, driverLng)
+
+        for (const threshold of PROXIMITY_THRESHOLDS) {
+            if (dist <= threshold.distance && !firedAlerts.has(threshold.key)) {
+                firedAlerts.add(threshold.key)
+                const alert = {
+                    radiusType: threshold.key,
+                    title: threshold.title,
+                    body: `${threshold.body} (${dist < 1000 ? Math.round(dist) + ' ม.' : (dist / 1000).toFixed(1) + ' กม.'})`,
+                    timestamp: Date.now(),
+                }
+                arrivalAlerts.value = [...arrivalAlerts.value, alert]
+            }
+        }
+    }
+
+    /**
+     * Set pickup location for proximity alerts
+     * Call this after fetching booking pickup location
+     */
+    function setPickupLocation(lat, lng) {
+        pickupPosition.value = { lat, lng }
+    }
 
     function resetSignalLossTimer() {
         if (signalLossTimer) clearTimeout(signalLossTimer)
@@ -136,11 +173,6 @@ export function useLocationTracking() {
         }
 
         resetSignalLossTimer()
-
-        // Listen for real-time arrival alerts
-        sock.on('arrival-alert', (data) => {
-            arrivalAlerts.value = [...arrivalAlerts.value, data]
-        })
     }
 
     /**
@@ -208,6 +240,11 @@ export function useLocationTracking() {
         participants.set(userId, { lat, lng, role, name, timestamp: Date.now() })
         signalLost.value = false
         resetSignalLossTimer()
+
+        // Client-side proximity alerts: when driver moves, check distance to pickup location
+        if (role === 'DRIVER') {
+            checkProximityAlerts(lat, lng)
+        }
     }
 
     function stopTracking() {
@@ -222,6 +259,8 @@ export function useLocationTracking() {
         pickupMarkers = []
         if (directionsRenderer) { directionsRenderer.setMap(null); directionsRenderer = null }
         previousPositions.clear()
+        pickupPosition.value = { lat: null, lng: null }
+        firedAlerts.clear()
         if (socket) { socket.disconnect(); socket = null }
         isConnected.value = false
     }
@@ -308,9 +347,11 @@ export function useLocationTracking() {
         isConnected,
         signalLost,
         arrivalAlerts,
+        pickupPosition,
         startTracking,
         startPreview,
         stopTracking,
+        setPickupLocation,
         createMyMarker,
         addPickupMarker,
         drawRouteToPickup,

@@ -110,8 +110,18 @@
 
       <!-- Text message -->
       <template v-else>
-        <div class="px-4 py-2.5">
-          <p class="text-sm whitespace-pre-wrap break-words leading-relaxed">{{ message.content }}</p>
+        <div class="px-4 py-2.5 flex flex-col">
+          <!-- Edit Histories -->
+          <div v-if="showEditHistory && message.metadata?.editHistory?.length" class="mb-3 flex flex-col gap-2">
+               <div class="text-[11px] font-medium cursor-pointer hover:opacity-80 transition-opacity" :class="isOwn ? 'text-white/90 self-end' : 'text-blue-600 self-start'" @click.stop="showEditHistory = false">
+                  ซ่อนการแก้ไข
+               </div>
+               <div v-for="(hist, idx) in message.metadata.editHistory" :key="idx" class="border rounded-2xl px-3 py-1.5 text-sm max-w-full break-words" :class="isOwn ? 'border-white/30 text-white/70 self-end' : 'border-slate-300 text-slate-600 self-start'">
+                  {{ hist.content }}
+               </div>
+          </div>
+
+          <p class="text-sm whitespace-pre-wrap break-words leading-relaxed" :class="showEditHistory && isOwn ? 'self-end' : showEditHistory && !isOwn ? 'self-start' : ''">{{ message.content }}</p>
 
           <!-- Filtered badge -->
           <span v-if="message.isFiltered && !message.isUnsent"
@@ -121,8 +131,8 @@
 
           <!-- Timestamp -->
           <div class="flex items-center gap-1.5 mt-1" :class="isOwn ? 'justify-end' : 'justify-start'">
-            <span v-if="message.metadata?.isEdited" class="text-[10px] italic" :class="isOwn ? 'text-white/70' : 'text-slate-500'">
-              (แก้ไขแล้ว)
+            <span v-if="message.metadata?.isEdited && !showEditHistory" class="text-[10px] font-medium cursor-pointer hover:underline transition-colors font-bold" :class="isOwn ? 'text-white/90' : 'text-blue-600'" @click.stop="showEditHistory = true">
+              มีการแก้ไข
             </span>
             <span class="text-[10px] opacity-50">{{ formatTime(message.createdAt) }}</span>
           </div>
@@ -172,6 +182,7 @@ defineEmits(['unsend', 'report', 'edit'])
 
 const showLightbox = ref(false)
 const showMenu = ref(false)
+const showEditHistory = ref(false)
 
 const toggleMenu = () => {
     showMenu.value = !showMenu.value

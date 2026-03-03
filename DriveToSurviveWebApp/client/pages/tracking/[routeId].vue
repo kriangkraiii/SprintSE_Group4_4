@@ -152,8 +152,10 @@ const {
   isConnected,
   signalLost,
   arrivalAlerts,
+  pickupPosition,
   startTracking,
   stopTracking,
+  setPickupLocation,
   createMyMarker,
   addPickupMarker,
   drawRouteToPickup,
@@ -360,6 +362,9 @@ function initMap() {
   fetchPickupLocation().then(() => {
     if (pickupLatLng.value && map) {
       addPickupMarker(map, pickupLatLng.value.lat, pickupLatLng.value.lng, pickupInfo.value?.name || 'จุดรับผู้โดยสาร')
+
+      // Set pickup location for proximity alerts
+      setPickupLocation(pickupLatLng.value.lat, pickupLatLng.value.lng)
 
       // Initial route draw if we have our position
       if (myPosition.value.lat && userRole.value === 'DRIVER') {

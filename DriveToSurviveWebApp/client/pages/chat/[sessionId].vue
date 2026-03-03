@@ -89,8 +89,8 @@
           :key="msg.id"
           :message="msg"
           :isOwn="msg.senderId === userId"
+          @edit="startEdit"
           @unsend="handleUnsend"
-          @edit="handleEdit"
           @report="openReportModal"
         />
       </template>
@@ -115,22 +115,25 @@
       @select="handleQuickReply"
     />
 
+    <!-- Edit Message Bar -->
+    <div v-if="editingMessage" class="px-4 py-2 bg-blue-50 border-t border-blue-200 flex items-center gap-2">
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-medium text-blue-600">แก้ไขข้อความ</p>
+        <p class="text-xs text-slate-500 truncate">{{ editingMessage.content }}</p>
+      </div>
+      <button @click="cancelEdit" class="p-1.5 rounded-full hover:bg-blue-100 text-blue-500 transition-colors cursor-pointer" title="ยกเลิกแก้ไข">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
     <!-- Input Area (Messenger-like) -->
     <div v-if="canSend"
       class="px-4 py-3 bg-white border-t border-slate-200">
-      
-      <!-- Editing Indicator -->
-      <div v-if="editingMessageId" class="flex items-center justify-between mb-2">
-         <span class="text-xs text-primary font-medium flex items-center gap-1">
-           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-           กำลังแก้ไขข้อความ
-         </span>
-         <button @click="cancelEdit" class="text-xs text-slate-400 hover:text-red-500 cursor-pointer">✕ ยกเลิก</button>
-      </div>
-
       <div class="flex items-end gap-2">
-        <!-- Image upload -->
-        <button
+        <!-- Image upload (hide when editing) -->
+        <button v-if="!editingMessage"
           @click="$refs.imageInput.click()"
           class="p-2.5 rounded-full text-slate-400 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer"
           title="ส่งรูปภาพ"
@@ -141,8 +144,8 @@
         </button>
         <input ref="imageInput" type="file" accept="image/jpeg,image/png" class="hidden" @change="onImageSelected" />
 
-        <!-- Quick reply toggle -->
-        <button
+        <!-- Quick reply toggle (hide when editing) -->
+        <button v-if="!editingMessage"
           @click="showQuickReply = !showQuickReply"
           class="p-2.5 rounded-full transition-colors cursor-pointer"
           :class="showQuickReply ? 'bg-blue-100 text-primary' : 'text-slate-400 hover:text-primary hover:bg-slate-100'"
@@ -155,17 +158,31 @@
 
         <!-- Text input -->
         <textarea
-          v-model="newMessage"
-          @keydown.enter.exact.prevent="handleSend"
+          ref="messageInput"
+          :value="editingMessage ? editContent : newMessage"
+          @input="onInputChange"
+          @keydown.enter.exact.prevent="editingMessage ? handleEditSend() : handleSend()"
+          @keydown.escape="editingMessage && cancelEdit()"
           rows="1"
           maxlength="2000"
-          class="flex-1 px-4 py-2.5 border border-slate-200 rounded-2xl resize-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-sm"
-          placeholder="พิมพ์ข้อความ..."
+          class="flex-1 px-4 py-2.5 border rounded-2xl resize-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all text-sm"
+          :class="editingMessage ? 'border-blue-300 bg-blue-50/30' : 'border-slate-200'"
+          :placeholder="editingMessage ? 'แก้ไขข้อความ...' : 'พิมพ์ข้อความ...'"
           :disabled="isSending"
         ></textarea>
 
-        <!-- Send button -->
-        <button
+        <!-- Send / Save button -->
+        <button v-if="editingMessage"
+          @click="handleEditSend"
+          :disabled="!editContent.trim() || isSending"
+          class="p-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors disabled:opacity-40 cursor-pointer"
+          title="บันทึกการแก้ไข"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+        <button v-else
           @click="handleSend"
           :disabled="(!newMessage.trim() && !selectedImage) || isSending"
           class="p-2.5 bg-cta text-white rounded-full hover:bg-cta-hover transition-colors disabled:opacity-40 cursor-pointer"
@@ -230,10 +247,12 @@ useHead({ title: 'แชท — Ride' })
 
 const route = useRoute()
 const {
-  fetchMessages, sendMessage, unsendMessage, shareLocation, reportMessage, sendImage, editMessage,
+  fetchMessages, sendMessage, editMessage, unsendMessage, shareLocation, reportMessage, sendImage,
   connectChatSocket, joinSession, leaveSession, onNewMessage, offNewMessage,
-  emitNewMessage, emitEditMessage, emitUnsendMessage, onMessageEdited, offMessageEdited, onMessageUnsent, offMessageUnsent,
+  emitNewMessage, emitEditMessage, emitUnsendMessage,
+  onMessageEdited, offMessageEdited, onMessageUnsent, offMessageUnsent,
   emitTyping, emitStopTyping, onTyping, onStopTyping, offTyping, offStopTyping,
+  onNewNotification, offNewNotification,
   disconnectSocket,
 } = useChat()
 const { user, token } = useAuth()
@@ -248,10 +267,14 @@ const newMessage = ref('')
 const isLoadingMessages = ref(false)
 const isSending = ref(false)
 const messagesContainer = ref(null)
+const messageInput = ref(null)
 const showQuickReply = ref(false)
 const typingUsers = ref([])
-const editingMessageId = ref(null)
 let typingTimer = null
+
+// Edit message state
+const editingMessage = ref(null)
+const editContent = ref('')
 
 // Notifications
 const showNotifPanel = ref(false)
@@ -391,28 +414,6 @@ function cancelImage() {
 }
 
 async function handleSend() {
-  if (editingMessageId.value) {
-    // Edit message flow
-    if (!newMessage.value.trim() || isSending.value) return
-    isSending.value = true
-    const content = newMessage.value
-    const msgId = editingMessageId.value
-    try {
-      const msg = await editMessage(msgId, { content })
-      const msgData = msg.data || msg
-      const idx = messages.value.findIndex(m => m.id === msgId)
-      if (idx !== -1) messages.value[idx] = msgData
-      emitEditMessage(sessionId.value, msgData)
-      cancelEdit()
-      toast.success('แก้ไขข้อความสำเร็จ')
-    } catch (err) {
-      toast.error('แก้ไขล้มเหลว', err?.statusMessage || '')
-    } finally {
-      isSending.value = false
-    }
-    return
-  }
-
   // Send image if selected
   if (selectedImage.value) {
     isSending.value = true
@@ -457,14 +458,46 @@ async function handleQuickReply(text) {
   await handleSend()
 }
 
-function handleEdit(message) {
-  editingMessageId.value = message.id
-  newMessage.value = message.content
+function onInputChange(e) {
+  if (editingMessage.value) {
+    editContent.value = e.target.value
+  } else {
+    newMessage.value = e.target.value
+  }
+}
+
+function startEdit(msg) {
+  editingMessage.value = msg
+  editContent.value = msg.content
+  nextTick(() => {
+    if (messageInput.value) messageInput.value.focus()
+  })
 }
 
 function cancelEdit() {
-  editingMessageId.value = null
-  newMessage.value = ''
+  editingMessage.value = null
+  editContent.value = ''
+}
+
+async function handleEditSend() {
+  if (!editingMessage.value || !editContent.value.trim() || isSending.value) return
+  isSending.value = true
+  try {
+    const res = await editMessage(editingMessage.value.id, { content: editContent.value.trim() })
+    const updated = res?.data || res
+    const idx = messages.value.findIndex(m => m.id === editingMessage.value.id)
+    if (idx >= 0) {
+      messages.value[idx].content = updated.content
+      messages.value[idx].metadata = updated.metadata
+    }
+    emitEditMessage(sessionId.value, updated)
+    toast.success('แก้ไขข้อความแล้ว')
+    cancelEdit()
+  } catch (err) {
+    toast.error('แก้ไขไม่สำเร็จ', err?.data?.message || err?.statusMessage || '')
+  } finally {
+    isSending.value = false
+  }
 }
 
 async function handleUnsend(messageId) {
@@ -535,17 +568,16 @@ function handleIncomingMessage(msg) {
 }
 
 function handleMessageEdited(msg) {
-  const targetId = msg.id || msg.messageId;
+  const targetId = msg.id || msg.messageId
   const idx = messages.value.findIndex(m => m.id === targetId)
   if (idx !== -1) {
     if (msg.content) messages.value[idx].content = msg.content
-    if (msg.isUnsent !== undefined) messages.value[idx].isUnsent = msg.isUnsent
     if (msg.metadata) messages.value[idx].metadata = msg.metadata
   }
 }
 
 function handleMessageUnsent(data) {
-  const targetId = data.messageId || data.id;
+  const targetId = data.messageId || data.id
   const idx = messages.value.findIndex(m => m.id === targetId)
   if (idx !== -1) {
     messages.value[idx].content = 'ข้อความถูกลบ / Message unsent'
@@ -563,6 +595,18 @@ function handleTyping({ userId: typingUserId }) {
 
 function handleStopTyping() {
   typingUsers.value = []
+}
+
+// Real-time notification handler
+function handleNewNotification(notif) {
+  notifications.value.unshift({
+    id: notif.id || Date.now(),
+    title: notif.title || 'แจ้งเตือนใหม่',
+    body: notif.body || '',
+    createdAt: notif.createdAt || Date.now(),
+    readAt: null,
+  })
+  toast.info(notif.title || 'แจ้งเตือนใหม่', notif.body || '')
 }
 
 // Emit typing when user types
@@ -586,6 +630,7 @@ onMounted(() => {
     onMessageUnsent(handleMessageUnsent)
     onTyping(handleTyping)
     onStopTyping(handleStopTyping)
+    onNewNotification(handleNewNotification)
   }
 })
 
@@ -596,6 +641,7 @@ onUnmounted(() => {
   offMessageUnsent(handleMessageUnsent)
   offTyping(handleTyping)
   offStopTyping(handleStopTyping)
+  offNewNotification(handleNewNotification)
   // Don't disconnect socket entirely — shared across pages
 })
 </script>
