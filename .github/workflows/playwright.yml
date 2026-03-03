@@ -14,11 +14,20 @@ jobs:
       with:
         node-version: lts/*
     - name: Install dependencies
-      run: npm ci
+      run: |
+        cd DriveToSurviveWebApp
+        npm ci
+        npm run install:all
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
+      run: |
+        cd DriveToSurviveWebApp
+        npm run dev &
+        npx wait-on http://localhost:3003 --timeout 60000
+        npx playwright test
+      env:
+        CI: true
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
