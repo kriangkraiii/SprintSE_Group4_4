@@ -29,6 +29,10 @@ const hashNationalId = (rawId) => {
  * ใช้ในขั้นตอนลงทะเบียน/ยืนยันตัวตน
  */
 const checkBlacklist = async (rawNationalId) => {
+    // Skip check if disabled by admin
+    const { isEnabled } = require('../utils/securityConfig');
+    if (!isEnabled('blacklistCheckEnabled')) return null;
+
     const hash = hashNationalId(rawNationalId);
     const entry = await prisma.blacklist.findUnique({
         where: { nationalIdHash: hash },
