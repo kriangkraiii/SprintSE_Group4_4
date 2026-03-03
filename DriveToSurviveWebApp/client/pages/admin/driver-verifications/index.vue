@@ -453,9 +453,9 @@ async function toggleLicense(row) {
     try {
         const config = useRuntimeConfig()
         const token = useCookie('token').value || (process.client ? localStorage.getItem('token') : '')
-        await $fetch(`/driver-verifications/admin/${row.id}`, {
+        await $fetch(`/driver-verifications/${row.id}/status`, {
             baseURL: config.public.apiBase,
-            method: 'PUT',
+            method: 'PATCH',
             headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
             body: { status: newStatus }
         })
@@ -463,7 +463,7 @@ async function toggleLicense(row) {
         toast.success(newStatus === 'APPROVED' ? 'อนุมัติใบขับขี่แล้ว' : 'ปฏิเสธใบขับขี่แล้ว')
     } catch (err) {
         console.error('Toggle license error:', err)
-        toast.error('เกิดข้อผิดพลาด', err?.data?.message || '')
+        toast.error('เกิดข้อผิดพลาด', err?.data?.message || 'เกิดข้อผิดพลาดภายในระบบ กรุณาลองใหม่ภายหลัง')
     }
 }
 
