@@ -67,3 +67,5 @@ echo ""
 
 # Wait for all background processes
 wait
+
+# ./start-dev.sh
