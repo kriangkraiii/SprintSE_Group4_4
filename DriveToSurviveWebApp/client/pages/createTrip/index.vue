@@ -1356,6 +1356,7 @@ function openPlacePicker(field) {
             mapTypeControl: false,
             streetViewControl: false,
             fullscreenControl: false,
+            clickableIcons: false,
         })
 
         placePickerMap.addListener('click', (e) => {
