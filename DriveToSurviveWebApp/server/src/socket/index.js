@@ -89,6 +89,26 @@ function initSocketIO(httpServer) {
             }
         });
 
+        // Broadcast edit message to other participants
+        socket.on('edit-message', (data) => {
+            const { sessionId, message } = data;
+            if (sessionId && message) {
+                socket.to(`chat:${sessionId}`).emit('message-edited', message);
+            }
+        });
+
+        // Broadcast unsend message to other participants
+        socket.on('unsend-message', (data) => {
+            const { sessionId, messageId } = data;
+            if (sessionId && messageId) {
+                socket.to(`chat:${sessionId}`).emit('message-unsent', { 
+                    messageId, 
+                    isUnsent: true, 
+                    content: 'ข้อความถูกลบ / Message unsent' 
+                });
+            }
+        });
+
         // Typing indicators
         socket.on('typing', (sessionId) => {
             socket.to(`chat:${sessionId}`).emit('user-typing', { userId, sessionId });

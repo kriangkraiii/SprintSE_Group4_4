@@ -44,6 +44,17 @@
               activeTab === 'received' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
             รีวิวที่ได้รับ
           </button>
+          <!-- Private Feedback tab — DRIVER only -->
+          <button v-if="isDriver" @click="activeTab = 'private'"
+            :class="['flex-1 text-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+              activeTab === 'private' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
+            ความเห็นส่วนตัว
+            <span v-if="privateFeedbacks.length"
+              class="ml-1.5 inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded-full"
+              :class="activeTab === 'private' ? 'bg-white text-slate-700' : 'bg-slate-200 text-slate-700'">
+              {{ privateFeedbacks.length }}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -75,7 +86,37 @@
             <p>ยังไม่มีรีวิว</p>
           </div>
           <div v-else class="space-y-4 text-left">
-            <ReviewCard v-for="review in driverReviews" :key="review.id" :review="review" :showPrivate="true" />
+            <ReviewCard v-for="review in driverReviews" :key="review.id" :review="review" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔒 Private Feedback Inbox (Driver only) -->
+      <div v-if="activeTab === 'private' && isDriver">
+        <div v-if="isLoadingPrivate" class="p-12 text-center text-slate-400">
+          <p>กำลังโหลด...</p>
+        </div>
+
+        <div v-else-if="privateFeedbacks.length === 0"
+          class="p-12 bg-white border border-slate-200 rounded-xl text-center">
+          <p class="text-slate-500 font-medium">ยังไม่มีความเห็นส่วนตัว</p>
+          <p class="text-xs text-slate-400 mt-1">ผู้โดยสารสามารถฝากข้อความถึงคุณโดยตรงตอนเขียนรีวิว</p>
+        </div>
+
+        <div v-else class="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+          <div v-for="review in privateFeedbacks" :key="review.id" class="flex items-start gap-3 px-5 py-4">
+            <div class="shrink-0 mt-0.5 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-sm font-semibold text-slate-500">
+              {{ review.isAnonymous ? '?' : (review.displayName || 'P').charAt(0).toUpperCase() }}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <span class="text-sm font-medium text-slate-700">
+                  {{ review.isAnonymous ? 'ผู้โดยสารนิรนาม' : (review.displayName || 'ผู้โดยสาร') }}
+                </span>
+                <span class="text-xs text-slate-400 shrink-0">{{ formatDate(review.createdAt) }}</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">{{ review.privateFeedback }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -84,24 +125,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useReview } from '~/composables/useReview'
 import { useAuth } from '~/composables/useAuth'
 import { useToast } from '~/composables/useToast'
+import dayjs from 'dayjs'
+import 'dayjs/locale/th'
+import buddhistEra from 'dayjs/plugin/buddhistEra'
+
+dayjs.locale('th')
+dayjs.extend(buddhistEra)
 
 definePageMeta({ middleware: 'auth' })
 useHead({ title: 'รีวิวของฉัน — Ride' })
 
-const { fetchMyReviews, fetchPendingReviews, fetchDriverReviews, fetchDriverStats } = useReview()
+const { fetchMyReviews, fetchPendingReviews, fetchDriverReviews, fetchMyReceivedReviews, fetchDriverStats } = useReview()
 const { user } = useAuth()
 const { toast } = useToast()
 
+const isDriver = computed(() => user.value?.role === 'DRIVER')
+
 const activeTab = ref('my')
 const isLoading = ref(false)
+const isLoadingPrivate = ref(false)
 const myReviews = ref([])
 const pendingBookings = ref([])
 const driverReviews = ref([])
 const driverStats = ref(null)
+
+// Only reviews that have privateFeedback content
+const privateFeedbacks = computed(() =>
+  driverReviews.value.filter(r => r.privateFeedback && r.privateFeedback.trim() !== '')
+)
+
+const formatDate = (date) => dayjs(date).format('D MMM BBBB')
 
 async function loadMyReviews() {
   isLoading.value = true
@@ -126,17 +183,21 @@ async function loadPending() {
 
 async function loadDriverReviews() {
   if (!user.value?.id) return
+  isLoadingPrivate.value = true
   try {
-    const result = await fetchDriverReviews(user.value.id)
+    // Use authenticated endpoint that includes privateFeedback
+    const result = await fetchMyReceivedReviews()
     driverReviews.value = result?.data || result || []
     driverStats.value = await fetchDriverStats(user.value.id)
   } catch {
     driverReviews.value = []
+  } finally {
+    isLoadingPrivate.value = false
   }
 }
 
 watch(activeTab, (tab) => {
-  if (tab === 'received' && driverReviews.value.length === 0) {
+  if ((tab === 'received' || tab === 'private') && driverReviews.value.length === 0) {
     loadDriverReviews()
   }
 })
@@ -144,5 +205,9 @@ watch(activeTab, (tab) => {
 onMounted(() => {
   loadMyReviews()
   loadPending()
+  // Pre-load driver reviews if driver is logged in
+  if (isDriver.value) {
+    loadDriverReviews()
+  }
 })
 </script>

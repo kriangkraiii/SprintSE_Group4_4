@@ -25,11 +25,15 @@ export function useReview() {
     const createDispute = (data) =>
         $api('/reviews/disputes', { method: 'POST', body: data })
 
+    const fetchMyReceivedReviews = (opts = {}) =>
+        $api('/reviews/my-received', { params: opts })
+
     return {
         createReview,
         fetchDriverReviews,
         fetchDriverStats,
         fetchMyReviews,
+        fetchMyReceivedReviews,
         fetchPendingReviews,
         checkReviewed,
         fetchReviewByBooking,

@@ -16,7 +16,7 @@ import { io } from 'socket.io-client'
 
 const ANIMATION_DURATION = 1000
 const OUTLIER_THRESHOLD_KM = 50
-const SIGNAL_LOSS_TIMEOUT = 15000
+const SIGNAL_LOSS_TIMEOUT = 30000 // 30s — realistic for mobile GPS gaps
 
 // ─── Geo Math ─────────────────────────────────────────────
 
@@ -30,7 +30,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 function animateMarker(marker, from, to, duration = ANIMATION_DURATION) {
-    if (!marker) return () => {}
+    if (!marker) return () => { }
     const startTime = performance.now()
     let animId = null
 
@@ -62,6 +62,8 @@ export function useLocationTracking() {
     const isConnected = ref(false)
     const signalLost = ref(false)
     const driverPosition = ref(null) // For preview mode
+    const arrivalAlerts = ref([]) // Real-time arrival notifications
+    const pickupPosition = ref({ lat: null, lng: null }) // Pickup location for proximity alerts
 
     let socket = null
     let watchId = null
@@ -70,6 +72,44 @@ export function useLocationTracking() {
     let signalLossTimer = null
     let reemitInterval = null
     let participantMarkers = new Map() // userId → google.maps.Marker
+    let pickupMarkers = [] // Green pickup location markers
+    let directionsRenderer = null // Google Directions route line
+
+    // Proximity alert thresholds (meters) and tracking which have fired
+    const PROXIMITY_THRESHOLDS = [
+        { key: 'FIVE_KM', distance: 5000, title: 'คนขับอยู่ห่าง 5 กม.', body: 'คนขับกำลังเดินทางมาหาคุณ เตรียมตัวให้พร้อม' },
+        { key: 'ONE_KM', distance: 1000, title: 'คนขับใกล้ถึงแล้ว! (1 กม.)', body: 'คนขับอยู่ห่างคุณประมาณ 1 กิโลเมตร' },
+        { key: 'ZERO_KM', distance: 200, title: 'คนขับมาถึงแล้ว!', body: 'คนขับอยู่ใกล้คุณมาก เตรียมขึ้นรถได้เลย' },
+    ]
+    const firedAlerts = new Set() // track which thresholds have been fired
+
+    function checkProximityAlerts(driverLat, driverLng) {
+        const pickup = pickupPosition.value
+        if (!pickup.lat || !pickup.lng) return
+
+        const dist = haversineDistance(pickup.lat, pickup.lng, driverLat, driverLng)
+
+        for (const threshold of PROXIMITY_THRESHOLDS) {
+            if (dist <= threshold.distance && !firedAlerts.has(threshold.key)) {
+                firedAlerts.add(threshold.key)
+                const alert = {
+                    radiusType: threshold.key,
+                    title: threshold.title,
+                    body: `${threshold.body} (${dist < 1000 ? Math.round(dist) + ' ม.' : (dist / 1000).toFixed(1) + ' กม.'})`,
+                    timestamp: Date.now(),
+                }
+                arrivalAlerts.value = [...arrivalAlerts.value, alert]
+            }
+        }
+    }
+
+    /**
+     * Set pickup location for proximity alerts
+     * Call this after fetching booking pickup location
+     */
+    function setPickupLocation(lat, lng) {
+        pickupPosition.value = { lat, lng }
+    }
 
     function resetSignalLossTimer() {
         if (signalLossTimer) clearTimeout(signalLossTimer)
@@ -117,13 +157,19 @@ export function useLocationTracking() {
                 { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
             )
 
-            // ส่งตำแหน่งล่าสุดซ้ำทุก 3 วินาที — ป้องกันกรณี GPS ไม่อัปเดตบ่อย (desktop)
+            // Re-emit position periodically — but only if GPS hasn't updated (fallback for desktop)
+            let lastEmittedPos = { lat: null, lng: null }
             reemitInterval = setInterval(() => {
                 const pos = myPosition.value
                 if (pos.lat && sock.connected) {
-                    sock.emit('location-update', { routeId, lat: pos.lat, lng: pos.lng, name: myName || '' })
+                    // Only re-emit if position is same as last (GPS stuck) to keep alive
+                    // If GPS is updating normally, watchPosition already emits
+                    if (pos.lat === lastEmittedPos.lat && pos.lng === lastEmittedPos.lng) {
+                        sock.emit('location-update', { routeId, lat: pos.lat, lng: pos.lng, name: myName || '' })
+                    }
+                    lastEmittedPos = { lat: pos.lat, lng: pos.lng }
                 }
-            }, 3000)
+            }, 5000)
         }
 
         resetSignalLossTimer()
@@ -194,6 +240,11 @@ export function useLocationTracking() {
         participants.set(userId, { lat, lng, role, name, timestamp: Date.now() })
         signalLost.value = false
         resetSignalLossTimer()
+
+        // Client-side proximity alerts: when driver moves, check distance to pickup location
+        if (role === 'DRIVER') {
+            checkProximityAlerts(lat, lng)
+        }
     }
 
     function stopTracking() {
@@ -204,9 +255,67 @@ export function useLocationTracking() {
         if (signalLossTimer) { clearTimeout(signalLossTimer); signalLossTimer = null }
         participantMarkers.forEach(m => m.setMap(null))
         participantMarkers.clear()
+        pickupMarkers.forEach(m => m.setMap(null))
+        pickupMarkers = []
+        if (directionsRenderer) { directionsRenderer.setMap(null); directionsRenderer = null }
         previousPositions.clear()
+        pickupPosition.value = { lat: null, lng: null }
+        firedAlerts.clear()
         if (socket) { socket.disconnect(); socket = null }
         isConnected.value = false
+    }
+
+    /**
+     * Add a green pickup marker on the map for a passenger's pickup location
+     * Uses Google Maps standard green pin with "A" label (like Google Maps directions)
+     */
+    function addPickupMarker(map, lat, lng, label) {
+        if (!map || !window.google?.maps) return null
+        const marker = new google.maps.Marker({
+            map,
+            position: { lat, lng },
+            icon: {
+                url: 'https://maps.google.com/mapfiles/marker_greenA.png',
+            },
+            zIndex: 1002,
+            title: label || 'จุดรับผู้โดยสาร',
+        })
+        pickupMarkers.push(marker)
+        return marker
+    }
+
+    /**
+     * Draw/update a green route polyline from driver to pickup using Google Directions API
+     */
+    function drawRouteToPickup(map, driverPos, pickupPos) {
+        if (!map || !window.google?.maps || !driverPos || !pickupPos) return
+
+        const directionsService = new google.maps.DirectionsService()
+
+        if (!directionsRenderer) {
+            directionsRenderer = new google.maps.DirectionsRenderer({
+                map,
+                suppressMarkers: true,
+                polylineOptions: {
+                    strokeColor: '#22c55e',
+                    strokeOpacity: 0.85,
+                    strokeWeight: 5,
+                },
+            })
+        }
+
+        directionsService.route(
+            {
+                origin: new google.maps.LatLng(driverPos.lat, driverPos.lng),
+                destination: new google.maps.LatLng(pickupPos.lat, pickupPos.lng),
+                travelMode: google.maps.TravelMode.DRIVING,
+            },
+            (result, status) => {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(result)
+                }
+            }
+        )
     }
 
     /**
@@ -237,10 +346,15 @@ export function useLocationTracking() {
         driverPosition,
         isConnected,
         signalLost,
+        arrivalAlerts,
+        pickupPosition,
         startTracking,
         startPreview,
         stopTracking,
+        setPickupLocation,
         createMyMarker,
+        addPickupMarker,
+        drawRouteToPickup,
         haversineDistance,
     }
 }

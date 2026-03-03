@@ -35,4 +35,13 @@ function emitNotification(userId, notification) {
     emitToUser(userId, 'new-notification', notification);
 }
 
-module.exports = { setIO, getIO, emitToUser, emitNotification };
+/**
+ * Emit an event to all participants in a route room.
+ * Used for real-time arrival notifications on the tracking page.
+ */
+function emitToRoute(routeId, event, data) {
+    if (!_io) return;
+    _io.to(`route:${routeId}`).emit(event, data);
+}
+
+module.exports = { setIO, getIO, emitToUser, emitNotification, emitToRoute };

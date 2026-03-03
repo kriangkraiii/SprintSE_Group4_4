@@ -14,9 +14,16 @@
           <h3 class="text-lg font-semibold text-[#383838]">รายการแชท</h3>
         </div>
 
-        <!-- Loading -->
-        <div v-if="isLoading" class="p-12 text-center text-slate-400">
-          <p>กำลังโหลด...</p>
+        <!-- Loading Skeleton -->
+        <div v-if="isLoading" class="divide-y divide-slate-100">
+          <div v-for="i in 3" :key="i" class="flex items-center gap-4 p-4 animate-pulse">
+            <div class="w-12 h-12 rounded-full bg-slate-200 flex-shrink-0"></div>
+            <div class="flex-1 space-y-2">
+              <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+              <div class="h-3 bg-slate-100 rounded w-1/2"></div>
+              <div class="h-3 bg-slate-100 rounded w-5/6"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Empty -->
@@ -34,13 +41,11 @@
             :to="`/chat/${session.id}`"
             class="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors cursor-pointer"
           >
-            <!-- Avatar -->
+            <!-- Route Icon -->
             <div class="relative flex-shrink-0">
-              <img
-                :src="getOtherUser(session).profilePicture || `https://ui-avatars.com/api/?name=${getOtherUser(session).firstName || 'U'}&background=random&size=48`"
-                :alt="getOtherUser(session).firstName"
-                class="w-12 h-12 rounded-full object-cover"
-              />
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl">
+                🚗
+              </div>
               <span v-if="session.status === 'ACTIVE'"
                 class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
             </div>
@@ -49,12 +54,15 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between">
                 <h4 class="text-sm font-medium text-primary truncate">
-                  {{ getOtherUser(session).firstName || 'ผู้ใช้' }}
+                  {{ getRouteTitle(session) }}
                 </h4>
                 <span class="text-xs text-slate-400 flex-shrink-0 ml-2">
                   {{ formatTime(session.messages?.[0]?.createdAt || session.createdAt) }}
                 </span>
               </div>
+              <p class="text-xs text-slate-400 mt-0.5">
+                {{ getParticipantSummary(session) }}
+              </p>
               <p class="text-sm text-slate-500 truncate mt-0.5">
                 {{ session.messages?.[0]?.content || 'เริ่มการสนทนา...' }}
               </p>
@@ -92,9 +100,17 @@ const { user } = useAuth()
 const isLoading = ref(false)
 const sessions = ref([])
 
-const getOtherUser = (session) => {
-  if (session.driver?.id === user.value?.id) return session.passenger || {}
-  return session.driver || {}
+const getRouteTitle = (session) => {
+  if (!session?.route) return 'แชทกลุ่ม'
+  const start = session.route.startLocation?.name || session.route.startLocation?.label || 'ต้นทาง'
+  const end = session.route.endLocation?.name || session.route.endLocation?.label || 'ปลายทาง'
+  return `🚗 ${start} → ${end}`
+}
+
+const getParticipantSummary = (session) => {
+  const members = (session.participants?.length || 0) + 1 // +1 for driver
+  const driverName = session.driver?.firstName || 'คนขับ'
+  return `👤 ${driverName} + ${members - 1} ผู้โดยสาร`
 }
 
 const formatTime = (date) => {

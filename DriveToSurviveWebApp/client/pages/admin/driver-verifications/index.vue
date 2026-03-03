@@ -117,8 +117,16 @@
                                 <tr v-for="r in rows" :key="r.id" class="transition-colors hover:bg-slate-50">
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-3">
-                                            <img :src="r.user?.profilePicture || r.selfiePhotoUrl || 'https://via.placeholder.com/80x80?text=Selfie'"
-                                                class="object-cover w-12 h-12 rounded-full" alt="avatar" />
+                                            <div class="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-cta/10 flex items-center justify-center">
+                                                <img v-if="r.user?.profilePicture || r.selfiePhotoUrl"
+                                                    :src="r.user?.profilePicture || r.selfiePhotoUrl"
+                                                    class="object-cover w-full h-full" alt=""
+                                                    @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'" />
+                                                <span class="text-sm font-semibold text-cta"
+                                                    :style="(r.user?.profilePicture || r.selfiePhotoUrl) ? 'display:none' : ''">
+                                                    {{ (r.user?.firstName?.[0] || '?').toUpperCase() }}{{ (r.user?.lastName?.[0] || '').toUpperCase() }}
+                                                </span>
+                                            </div>
                                             <div>
                                                 <div class="font-medium text-primary">
                                                     {{ r.user?.firstName }} {{ r.user?.lastName }}
