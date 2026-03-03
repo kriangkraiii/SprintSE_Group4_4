@@ -16,6 +16,8 @@
       <!-- Sender name label (group chat) -->
       <p v-if="!isOwn && showSenderName && message.type !== 'SYSTEM' && message.sender" class="text-[11px] font-medium text-slate-500 mb-0.5 px-1">
         {{ message.sender.firstName || 'ผู้ใช้' }}
+        <span v-if="message.sender.role === 'DRIVER'" class="ml-1 text-[10px] text-blue-500 font-semibold">🚗 คนขับ</span>
+        <span v-else class="ml-1 text-[10px] text-green-500 font-semibold">👤 ผู้โดยสาร</span>
       </p>
 
       <!-- System message -->

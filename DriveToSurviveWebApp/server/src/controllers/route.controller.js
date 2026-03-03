@@ -514,6 +514,28 @@ const addWaypoint = asyncHandler(async (req, res) => {
   });
 });
 
+const startTrip = asyncHandler(async (req, res) => {
+  const driverId = req.user.sub;
+  const { id } = req.params;
+  const result = await routeService.startTrip(id, driverId);
+  res.status(200).json({
+    success: true,
+    message: "Trip started successfully",
+    data: result,
+  });
+});
+
+const endTrip = asyncHandler(async (req, res) => {
+  const driverId = req.user.sub;
+  const { id } = req.params;
+  const result = await routeService.endTrip(id, driverId);
+  res.status(200).json({
+    success: true,
+    message: "Trip ended successfully",
+    data: result,
+  });
+});
+
 module.exports = {
   getAllRoutes,
   listRoutes,
@@ -529,4 +551,6 @@ module.exports = {
   adminGetRoutesByDriver,
   cancelRoute,
   addWaypoint,
+  startTrip,
+  endTrip,
 };
