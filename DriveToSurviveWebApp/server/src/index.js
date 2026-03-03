@@ -15,6 +15,33 @@ const io = initSocketIO(server);
 app.set('io', io);
 setIO(io);  // Make io available to socket/emitter helper
 
+// ── Start server with retry (handles node --watch EADDRINUSE) ──
+function startServer(port, retries = 10, delay = 500) {
+  server.listen(port, () => {
+    console.log(`🚀 Express API + Socket.IO server running on http://localhost:${port}`);
+    console.log(`📖 Swagger docs: http://localhost:${port}/documentation`);
+    console.log(`🔌 WebSocket ready on ws://localhost:${port}`);
+
+    // Chat lifecycle CRON — runs every hour
+    const { runLifecycleCron } = require('./services/chatLifecycle.service');
+    setInterval(() => runLifecycleCron().catch(e => console.error('[CRON] Lifecycle error:', e)), 60 * 60 * 1000);
+    console.log('⏰ Chat lifecycle CRON scheduled (hourly)');
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && retries > 0) {
+      console.log(`⏳ Port ${port} busy, retrying in ${delay}ms... (${retries} retries left)`);
+      setTimeout(() => {
+        server.close();
+        startServer(port, retries - 1, delay);
+      }, delay);
+    } else {
+      console.error('❌ Server error:', err);
+      process.exit(1);
+    }
+  });
+}
+
 (async () => {
   try {
     const bootstrapResult = await ensureAdmin();
@@ -27,36 +54,34 @@ setIO(io);  // Make io available to socket/emitter helper
     console.error('Admin bootstrap failed:', e);
   }
 
-  server.listen(PORT, () => {
-    console.log(`🚀 Express API + Socket.IO server running on http://localhost:${PORT}`);
-    console.log(`📖 Swagger docs: http://localhost:${PORT}/documentation`);
-    console.log(`🔌 WebSocket ready on ws://localhost:${PORT}`);
-
-    // Chat lifecycle CRON — runs every hour
-    const { runLifecycleCron } = require('./services/chatLifecycle.service');
-    setInterval(() => runLifecycleCron().catch(e => console.error('[CRON] Lifecycle error:', e)), 60 * 60 * 1000);
-    console.log('⏰ Chat lifecycle CRON scheduled (hourly)');
-  });
+  startServer(PORT);
 })();
 
 // ─── Graceful Shutdown ───
 async function gracefulShutdown(signal) {
   console.log(`\n${signal} received. Shutting down gracefully...`);
 
-  // 1. ปิดรับ connection ใหม่
-  server.close(() => {
-    console.log('  ✔ HTTP server closed');
-  });
-
-  // 2. ปิด Socket.IO connections
-  io.close(() => {
-    console.log('  ✔ Socket.IO closed');
-  });
-
-  // 3. Flush pending system logs
+  // 1. Flush pending system logs
   try {
     await systemLogMiddleware.flush();
     console.log('  ✔ System logs flushed');
+  } catch {}
+
+  // 2. ปิด Socket.IO connections
+  try {
+    await new Promise((resolve) => io.close(resolve));
+    console.log('  ✔ Socket.IO closed');
+  } catch {}
+
+  // 3. ปิด HTTP server (รอ port ถูกปล่อยจริง)
+  try {
+    await new Promise((resolve, reject) => {
+      server.close((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+    console.log('  ✔ HTTP server closed');
   } catch {}
 
   // 4. ปิด Prisma connection
@@ -65,19 +90,21 @@ async function gracefulShutdown(signal) {
     console.log('  ✔ Database disconnected');
   } catch {}
 
-  // 5. Force exit after 10 seconds
-  setTimeout(() => {
-    console.error('  ⚠ Could not close connections in time, forcing shutdown');
-    process.exit(1);
-  }, 10000).unref();
-
   process.exit(0);
 }
 
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+// Force exit after 5 seconds if graceful shutdown hangs
+process.on('SIGTERM', () => {
+  const forceTimer = setTimeout(() => process.exit(1), 5000);
+  forceTimer.unref();
+  gracefulShutdown('SIGTERM');
+});
+process.on('SIGINT', () => {
+  const forceTimer = setTimeout(() => process.exit(1), 5000);
+  forceTimer.unref();
+  gracefulShutdown('SIGINT');
+});
 
 process.on('unhandledRejection', (err) => {
   console.error('UNHANDLED REJECTION! 💥', err);
-  // ไม่ exit ทันที — ให้ log แล้วปล่อยให้ process monitoring จัดการ
 });
