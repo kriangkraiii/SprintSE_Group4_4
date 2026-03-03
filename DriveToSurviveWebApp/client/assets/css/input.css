@@ -259,7 +259,10 @@ html.dark .bg-slate-50,
 html.dark .bg-surface,
 html.dark .bg-\[\#F8FAFC\],
 html.dark .bg-\[\#F2F2F2\],
-html.dark .bg-\[\#FAFAFA\] {
+html.dark .bg-\[\#FAFAFA\],
+html.dark [class*="bg-white\/"],
+html.dark [class*="bg-gray-50\/"],
+html.dark [class*="bg-slate-50\/"] {
   background-color: #1e293b !important;
 }
 
