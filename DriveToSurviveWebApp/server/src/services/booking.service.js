@@ -442,14 +442,17 @@ const getBookingById = async (id) => {
 const updateBookingStatus = async (id, status, userId) => {
   const booking = await prisma.booking.findUnique({
     where: { id },
-    include: { route: true },
+    include: {
+      route: { include: { driver: true, startLocation: true, endLocation: true } },
+      passenger: true,
+    },
   });
   if (!booking) throw new ApiError(404, 'Booking not found');
   if (booking.route.driverId !== userId) {
     throw new ApiError(403, 'Forbidden');
   }
 
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const updated = await tx.booking.update({
       where: { id },
       data: { status },
@@ -493,10 +496,103 @@ const updateBookingStatus = async (id, status, userId) => {
       });
     }
 
+    if (status === BookingStatus.IN_PROGRESS) {
+      // 🔔 แจ้งเตือน Passenger ว่าคนขับรับแล้ว
+      await tx.notification.create({
+        data: {
+          userId: booking.passengerId,
+          type: 'BOOKING',
+          title: '👤 คนขับรับผู้โดยสารแล้ว',
+          body: 'คนขับยืนยันว่ารับคุณขึ้นรถแล้ว',
+          metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'IN_PROGRESS' }
+        }
+      });
+    }
+
+    if (status === BookingStatus.COMPLETED) {
+      // 🔔 แจ้งเตือน Passenger ว่าส่งถึงแล้ว
+      await tx.booking.update({
+        where: { id },
+        data: { completedAt: new Date() }
+      });
+      await tx.notification.create({
+        data: {
+          userId: booking.passengerId,
+          type: 'BOOKING',
+          title: '📍 ส่งถึงจุดหมายแล้ว',
+          body: 'คนขับส่งคุณถึงแล้ว ขอบคุณที่ใช้บริการ',
+          metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'COMPLETED' }
+        }
+      });
+    }
+
     // Fire-and-forget: create group chat + send email when confirmed
     if (status === BookingStatus.CONFIRMED) {
       postBookingActions(updated, booking.routeId, booking.passengerId).catch(console.error);
     }
+
+    return updated;
+  });
+
+  // ── Fire-and-forget: lifecycle email notifications ──
+  const passengerEmail = booking.passenger?.email;
+  const routeName = `${booking.route.startLocation?.name || 'ต้นทาง'} → ${booking.route.endLocation?.name || 'ปลายทาง'}`;
+  const driverName = `${booking.route.driver?.firstName || ''} ${booking.route.driver?.lastName || ''}`.trim();
+  const passengerName = `${booking.passenger?.firstName || ''} ${booking.passenger?.lastName || ''}`.trim();
+  const emailInfo = { passengerName, driverName, routeName, seats: booking.numberOfSeats };
+
+  if (passengerEmail) {
+    const { sendBookingConfirmedEmail, sendBookingRejectedEmail, sendPassengerPickedUpEmail, sendReviewReminderEmail } = require('./email.service');
+    if (status === BookingStatus.CONFIRMED) {
+      sendBookingConfirmedEmail(passengerEmail, emailInfo).catch(e => console.error('[Email] confirmed:', e.message));
+    } else if (status === BookingStatus.REJECTED) {
+      sendBookingRejectedEmail(passengerEmail, emailInfo).catch(e => console.error('[Email] rejected:', e.message));
+    } else if (status === BookingStatus.IN_PROGRESS) {
+      sendPassengerPickedUpEmail(passengerEmail, emailInfo).catch(e => console.error('[Email] pickedup:', e.message));
+    } else if (status === BookingStatus.COMPLETED) {
+      sendReviewReminderEmail(passengerEmail, emailInfo).catch(e => console.error('[Email] completed:', e.message));
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Passenger confirms they have boarded the vehicle
+ */
+const confirmBoarded = async (bookingId, passengerId) => {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: { route: { select: { driverId: true, id: true } } },
+  });
+  if (!booking) throw new ApiError(404, 'Booking not found');
+  if (booking.passengerId !== passengerId) throw new ApiError(403, 'Forbidden');
+  if (booking.status !== BookingStatus.CONFIRMED && booking.status !== BookingStatus.IN_PROGRESS) {
+    throw new ApiError(400, 'การจองยังไม่ได้ยืนยัน');
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const updated = await tx.booking.update({
+      where: { id: bookingId },
+      data: {
+        metadata: {
+          ...(typeof booking.metadata === 'object' && booking.metadata !== null ? booking.metadata : {}),
+          passengerBoarded: true,
+          boardedAt: new Date().toISOString(),
+        }
+      }
+    });
+
+    // Notify driver
+    await tx.notification.create({
+      data: {
+        userId: booking.route.driverId,
+        type: 'BOOKING',
+        title: '✅ ผู้โดยสารขึ้นรถแล้ว',
+        body: 'ผู้โดยสารยืนยันว่าขึ้นรถแล้ว',
+        metadata: { kind: 'PASSENGER_BOARDED', bookingId, routeId: booking.route.id }
+      }
+    });
 
     return updated;
   });
@@ -626,6 +722,7 @@ module.exports = {
   getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
+  confirmBoarded,
   deleteBooking,
   adminDeleteBooking
 };

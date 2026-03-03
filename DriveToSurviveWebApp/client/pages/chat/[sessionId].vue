@@ -469,7 +469,7 @@ const participantCount = computed(() => {
   return session.value.participants.length + 1
 })
 
-const isGroupChat = computed(() => participantCount.value > 2)
+const isGroupChat = computed(() => participantCount.value >= 2)
 
 const headerAvatars = computed(() => {
   if (!session.value) return []

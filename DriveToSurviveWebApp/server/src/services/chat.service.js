@@ -161,7 +161,7 @@ const sendMessage = async (sessionId, senderId, data) => {
         select: {
             id: true, sessionId: true, senderId: true, type: true, content: true,
             imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
-            sender: { select: { firstName: true, profilePicture: true } },
+            sender: { select: { firstName: true, profilePicture: true, role: true } },
         },
     });
 };
@@ -203,7 +203,7 @@ const getMessages = async (sessionId, userId, opts = {}) => {
             select: {
                 id: true, senderId: true, type: true, content: true,
                 imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
-                sender: { select: { id: true, firstName: true, profilePicture: true } },
+                sender: { select: { id: true, firstName: true, profilePicture: true, role: true } },
             },
         }),
         prisma.chatSession.findUnique({
@@ -309,7 +309,7 @@ const editMessage = async (messageId, senderId, content) => {
         select: {
             id: true, sessionId: true, senderId: true, type: true, content: true,
             imageUrl: true, isFiltered: true, isUnsent: true, unsendDeadline: true, metadata: true, createdAt: true,
-            sender: { select: { firstName: true, profilePicture: true } },
+            sender: { select: { firstName: true, profilePicture: true, role: true } },
         },
     });
 };

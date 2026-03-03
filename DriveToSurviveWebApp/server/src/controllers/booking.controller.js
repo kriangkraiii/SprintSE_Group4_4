@@ -77,6 +77,13 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: updated });
 });
 
+const confirmBoarded = asyncHandler(async (req, res) => {
+  const passengerId = req.user.sub;
+  const { id } = req.params;
+  const result = await bookingService.confirmBoarded(id, passengerId);
+  res.status(200).json({ success: true, data: result });
+});
+
 const cancelBooking = asyncHandler(async (req, res) => {
   const passengerId = req.user.sub;
   const { id } = req.params;
@@ -113,6 +120,7 @@ module.exports = {
   getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
+  confirmBoarded,
   deleteBooking,
   adminGetBookingById,
   adminCreateBooking,

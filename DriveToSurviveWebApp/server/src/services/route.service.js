@@ -427,6 +427,135 @@ const addWaypointToRoute = async (routeId, driverId, waypointData) => {
   return updated;
 };
 
+/**
+ * Start a trip: Route → IN_TRANSIT
+ * Only the driver can do this. Route must be AVAILABLE or FULL.
+ */
+const startTrip = async (routeId, driverId) => {
+  const route = await prisma.route.findUnique({
+    where: { id: routeId },
+    include: {
+      driver: { select: { firstName: true, lastName: true } },
+      startLocation: true,
+      endLocation: true,
+      bookings: {
+        where: { status: BookingStatus.CONFIRMED },
+        include: { passenger: { select: { id: true, firstName: true, lastName: true, email: true } } }
+      }
+    }
+  });
+  if (!route) throw new ApiError(404, 'Route not found');
+  if (route.driverId !== driverId) throw new ApiError(403, 'Forbidden');
+  if (![RouteStatus.AVAILABLE, RouteStatus.FULL].includes(route.status)) {
+    throw new ApiError(400, 'เส้นทางนี้ไม่สามารถเริ่มเดินทางได้');
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    const updated = await tx.route.update({
+      where: { id: routeId },
+      data: { status: RouteStatus.IN_TRANSIT },
+    });
+
+    // Notify all confirmed passengers
+    for (const b of route.bookings) {
+      await tx.notification.create({
+        data: {
+          userId: b.passengerId,
+          type: 'BOOKING',
+          title: '🚗 คนขับเริ่มเดินทางแล้ว',
+          body: 'คนขับได้เริ่มเดินทางแล้ว กรุณาเตรียมตัวรอ ณ จุดรับ',
+          metadata: { kind: 'TRIP_STARTED', routeId, bookingId: b.id }
+        }
+      });
+    }
+
+    return updated;
+  });
+
+  // Fire-and-forget: Email passengers about trip start
+  const { sendTripStartedEmail } = require('./email.service');
+  const driverName = `${route.driver?.firstName || ''} ${route.driver?.lastName || ''}`.trim();
+  const routeName = `${route.startLocation?.name || 'ต้นทาง'} → ${route.endLocation?.name || 'ปลายทาง'}`;
+  for (const b of route.bookings) {
+    if (b.passenger?.email) {
+      const passengerName = `${b.passenger.firstName || ''} ${b.passenger.lastName || ''}`.trim();
+      sendTripStartedEmail(b.passenger.email, { passengerName, driverName, routeName }).catch(e => console.error('[Email] tripStarted:', e.message));
+    }
+  }
+
+  return result;
+};
+
+/**
+ * End a trip: Route → COMPLETED, all active bookings → COMPLETED
+ */
+const endTrip = async (routeId, driverId) => {
+  const route = await prisma.route.findUnique({
+    where: { id: routeId },
+    include: {
+      driver: { select: { firstName: true, lastName: true } },
+      startLocation: true,
+      endLocation: true,
+      bookings: {
+        where: { status: { in: [BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS] } },
+        include: { passenger: { select: { id: true, firstName: true, lastName: true, email: true } } }
+      }
+    }
+  });
+  if (!route) throw new ApiError(404, 'Route not found');
+  if (route.driverId !== driverId) throw new ApiError(403, 'Forbidden');
+  if (route.status !== RouteStatus.IN_TRANSIT) {
+    throw new ApiError(400, 'เส้นทางนี้ยังไม่ได้เริ่มเดินทาง');
+  }
+
+  const now = new Date();
+
+  const result = await prisma.$transaction(async (tx) => {
+    const updated = await tx.route.update({
+      where: { id: routeId },
+      data: { status: RouteStatus.COMPLETED },
+    });
+
+    // Complete all remaining active bookings
+    if (route.bookings.length > 0) {
+      await tx.booking.updateMany({
+        where: {
+          routeId,
+          status: { in: [BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS] }
+        },
+        data: { status: BookingStatus.COMPLETED, completedAt: now }
+      });
+
+      for (const b of route.bookings) {
+        await tx.notification.create({
+          data: {
+            userId: b.passengerId,
+            type: 'BOOKING',
+            title: '✅ ถึงจุดหมายแล้ว',
+            body: 'การเดินทางเสร็จสิ้น ขอบคุณที่ใช้บริการ คุณสามารถเขียนรีวิวได้',
+            metadata: { kind: 'TRIP_ENDED', routeId, bookingId: b.id }
+          }
+        });
+      }
+    }
+
+    return updated;
+  });
+
+  // Fire-and-forget: Email passengers about trip completion + review reminder
+  const { sendReviewReminderEmail } = require('./email.service');
+  const driverName = `${route.driver?.firstName || ''} ${route.driver?.lastName || ''}`.trim();
+  const routeName = `${route.startLocation?.name || 'ต้นทาง'} → ${route.endLocation?.name || 'ปลายทาง'}`;
+  for (const b of route.bookings) {
+    if (b.passenger?.email) {
+      const passengerName = `${b.passenger.firstName || ''} ${b.passenger.lastName || ''}`.trim();
+      sendReviewReminderEmail(b.passenger.email, { passengerName, driverName, routeName }).catch(e => console.error('[Email] tripEnded:', e.message));
+    }
+  }
+
+  return result;
+};
+
 module.exports = {
   getAllRoutes,
   searchRoutes,
@@ -437,4 +566,6 @@ module.exports = {
   deleteRoute,
   cancelRoute,
   addWaypointToRoute,
+  startTrip,
+  endTrip,
 };

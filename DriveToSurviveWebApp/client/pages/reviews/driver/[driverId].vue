@@ -44,7 +44,7 @@
         </div>
 
         <div v-else class="space-y-4">
-          <ReviewCard v-for="review in reviews" :key="review.id" :review="review" />
+          <ReviewCard v-for="review in reviews" :key="review.id" :review="review" :showPrivate="isOwnProfile" />
         </div>
 
         <!-- Load More -->
@@ -62,9 +62,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useReview } from '~/composables/useReview'
+import { useAuth } from '~/composables/useAuth'
 
 const route = useRoute()
 const driverId = route.params.driverId
+const { user } = useAuth()
+
+const isOwnProfile = computed(() => {
+  return String(user.value?.id) === String(driverId)
+})
 
 useHead({ title: 'รีวิวคนขับ — Ride' })
 
