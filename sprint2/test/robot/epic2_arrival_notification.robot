@@ -39,6 +39,10 @@ Test 02: Open GPS Tracking Dashboard From MyTrips
     Sleep    7s
     ${url}=    Get Location
     Should Contain     ${url}    /tracking/
+    # Zoom out map so popup panel does not cover the route marker
+    Execute Javascript    window.scrollTo(0, 0)
+    Press Keys    NONE    -    -    -
+    Sleep    1s
     Capture Page Screenshot    results/02_tracking_loaded.png
 
 Test 03: Simulate Driving And Automatic GPS Notifications
@@ -63,9 +67,16 @@ Test 04: Verify In-App Notification Bell
     Go To     ${WEB_URL}/myTrips
     Sleep     4s
     Capture Page Screenshot    results/07_mytrips_after.png
-    ${bell_clicked}=    Run Keyword And Return Status    Click Element    xpath=//button[contains(@class,'bell') or contains(@aria-label,'notification') or contains(@aria-label,'แจ้งเตือน')]
-    Sleep     2s
+    # Click bell icon to open notification panel
+    Wait Until Element Is Visible    xpath=//button[@aria-label='notification-bell']    timeout=10s
+    Click Element    xpath=//button[@aria-label='notification-bell']
+    Sleep     3s
+    # Wait for notification panel to render
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'การแจ้งเตือน')]    timeout=10s
     Capture Page Screenshot    results/08_bell_panel.png
+    # Hold notification panel open so it is clearly visible
+    Sleep     8s
+    Capture Page Screenshot    results/08b_bell_panel_hold.png
 
 Test 05: Verify 3 GPS Notification Types Are Saved
     [Documentation]    GET /api/arrival-notifications/{bookingId} expects FIVE_KM, ONE_KM, ZERO_KM
@@ -80,6 +91,7 @@ Test 05: Verify 3 GPS Notification Types Are Saved
 Test 06: Trigger Manual Arrival Notification
     [Documentation]    POST /api/arrival-notifications/manual 
     [Tags]             Critical
+    Sleep    5s
     Create Session    API    ${BASE_URL}    disable_warnings=True
     ${headers}=    Create Dictionary    Authorization=${DRIVER_TOKEN}    Content-Type=application/json
     ${body}=    Create Dictionary    bookingId=${BOOKING_ID}
@@ -89,8 +101,9 @@ Test 06: Trigger Manual Arrival Notification
     Go To     ${WEB_URL}/myTrips
     Sleep     4s
     Capture Page Screenshot    results/10_after_manual_trigger.png
-    ${bell_clicked}=    Run Keyword And Return Status    Click Element    xpath=//button[contains(@class,'bell') or contains(@aria-label,'notification') or contains(@aria-label,'แจ้งเตือน')]
-    Sleep    2s
+    Wait Until Element Is Visible    xpath=//button[@aria-label='notification-bell']    timeout=10s
+    Click Element    xpath=//button[@aria-label='notification-bell']
+    Sleep    3s
     Capture Page Screenshot    results/11_manual_bell.png
 
 Test 07: Validate End-To-End Notification History Delivery
@@ -145,9 +158,16 @@ Test 08: Switch To Passenger And Verify Alert Delivery
     Go To     ${WEB_URL}/myTrips
     Sleep     5s
     Capture Page Screenshot    results/13_passenger_mytrips.png
-    ${bell_clicked}=    Run Keyword And Return Status    Click Element    xpath=//button[contains(@class,'bell') or contains(@aria-label,'notification') or contains(@aria-label,'แจ้งเตือน')]
-    Sleep    2s
+    # Click bell icon — hold panel open so notifications are visible
+    Wait Until Element Is Visible    xpath=//button[@aria-label='notification-bell']    timeout=10s
+    Click Element    xpath=//button[@aria-label='notification-bell']
+    Sleep     3s
+    # Wait for notification panel to render
+    Wait Until Element Is Visible    xpath=//*[contains(text(),'การแจ้งเตือน')]    timeout=10s
     Capture Page Screenshot    results/14_passenger_bell.png
+    # Hold notification panel open so it is clearly visible
+    Sleep     8s
+    Capture Page Screenshot    results/14b_passenger_bell_hold.png
 
     Create Session    API    ${BASE_URL}    disable_warnings=True
     ${headers}=    Create Dictionary    Authorization=${PASSENGER_TOKEN}
