@@ -19,8 +19,8 @@ ${BOOKING_ID}        cmm673eqa0001vr9ax7xh0trd
 ${ROUTE_ID}          ${EMPTY}
 ${SCRIPT_DIR}        ${CURDIR}
 
-${DRIVER_TOKEN}       Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1haWx3eGwwMDAwdnI3eHNuOGltZm9jIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3MjUzNjczOCwiZXhwIjoxNzczMTQxNTM4fQ.L323mNvpo8xHrHfWtgrjN4nV-mrg9UteM1pizi3oDrY
-${PASSENGER_TOKEN}    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1haWx3eHgwMDA1dnI3eG9vZ2J5Z2RjIiwicm9sZSI6IlBBU1NFTkdFUiIsImlhdCI6MTc3MjUzNjczOCwiZXhwIjoxNzczMTQxNTM4fQ.bCBpaefhk7EmmtCA7bCXvwWsq1VP7bLEmG4PMH4E6as
+${DRIVER_TOKEN}       Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc3MjU0MDg3MywiZXhwIjoxNzczMTQ1NjczfQ.BaeH5UQJciqe1BDCLiWBC_sQw8axag4var2zV6a8xo4
+${PASSENGER_TOKEN}    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImlhdCI6MTc3MjU0MDg3MywiZXhwIjoxNzczMTQ1NjczfQ.cvShL48uX_rV1uD6D8kS2KZ82gQDvhObhaoPh2pzYxo
 ${DRIVER_RAW}        ${EMPTY}
 ${PASSENGER_RAW}     ${EMPTY}
 
@@ -175,10 +175,17 @@ Setup Test Environment
     Set Suite Variable    ${PASSENGER_TOKEN}    Bearer ${p_raw}
     Set Suite Variable    ${PASSENGER_RAW}      ${p_raw}
     
-    ${headers}=    Create Dictionary    Authorization=Bearer ${d_raw}
-    ${b_res}=    GET On Session    AUTH    /api/bookings/${BOOKING_ID}    headers=${headers}    expected_status=any
-    ${route_id}=    Set Variable If    ${b_res.status_code} == 200    ${b_res.json()['data']['routeId']}    ${EMPTY}
+    ${p_headers}=    Create Dictionary    Authorization=Bearer ${p_raw}
+    ${blist_res}=    GET On Session    AUTH    /api/bookings/me    headers=${p_headers}    expected_status=any
+    ${booking_id}=    Set Variable    ${BOOKING_ID}
+    ${route_id}=     Set Variable    ${EMPTY}
+    Run Keyword If    ${blist_res.status_code} == 200    Run Keywords
+    ...    Set Suite Variable    ${booking_id}    ${blist_res.json()['data'][0]['id']}    AND
+    ...    Set Suite Variable    ${route_id}       ${blist_res.json()['data'][0]['routeId']}
+    Set Suite Variable    ${BOOKING_ID}    ${booking_id}
     Set Suite Variable    ${ROUTE_ID}    ${route_id}
+    Log    Booking ID: ${booking_id}
+    Log    Route ID: ${route_id}
     
     Open Browser    ${WEB_URL}    chrome
     Maximize Browser Window
