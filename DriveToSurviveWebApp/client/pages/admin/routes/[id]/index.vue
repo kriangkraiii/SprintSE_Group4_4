@@ -270,7 +270,7 @@ import buddhistEra from 'dayjs/plugin/buddhistEra'
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 useHead({
     title: 'ดูรายละเอียดเส้นทาง • Admin',
     link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]
@@ -456,7 +456,7 @@ async function fetchRoute() {
             conditions: r.conditions,
             photos: r.vehicle?.photos || [],
             carDetails: r.vehicle
-                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || [])]
+                ? [`${r.vehicle.vehicleModel} (${r.vehicle.vehicleType})`, ...(r.vehicle.amenities || []).map(a => typeof a === 'string' ? a : a.name)]
                 : ['ไม่มีข้อมูลรถ'],
 
             driver: {

@@ -32,7 +32,23 @@
                     </NuxtLink>
                 </div>
 
-                
+
+                <div class="pt-3 mt-3 border-t border-slate-200">
+                    <button @click="toggleSubmenu('settings-menu')"
+                        class="sidebar-item w-full flex items-center justify-between gap-3 px-3 py-2.5 text-primary rounded-lg hover:bg-cta-light">
+                        <div class="flex items-center gap-3">
+                            <i class="w-5 text-center text-slate-400 fas fa-gear"></i>
+                            <span class="sidebar-text">Setting</span>
+                        </div>
+                        <i class="text-xs transition-transform fas fa-chevron-down sidebar-text" id="settings-menu-icon"></i>
+                    </button>
+
+                    <div id="settings-menu" class="hidden mt-1 ml-11 space-y-1 sidebar-text">
+                        <button @click="logout" class="block px-3 py-2 text-sm text-slate-500 hover:text-cta">
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </nav>
         </div>
     </aside>
@@ -53,7 +69,11 @@ const mainMenus = [
 
 const complianceMenus = [
     { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
+    { to: '/admin/cron', label: 'CRON Jobs', icon: 'fas fa-clock' },
     { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
+    { to: '/admin/sprint2', label: 'Chat and Review', icon: 'fas fa-shield-halved' },
+    { to: '/admin/chat-logs', label: 'Chat Logs', icon: 'fas fa-comments' },
+    { to: '/admin/reviews', label: 'Reviews', icon: 'fas fa-star' },
 ]
 
 function toggleSidebar() {

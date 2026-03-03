@@ -212,6 +212,11 @@
                                             title="แก้ไข" aria-label="แก้ไข">
                                             <i class="text-lg fa-regular fa-pen-to-square"></i>
                                         </button>
+                                        <button @click="openSuspendModal(u)"
+                                            class="p-2 text-slate-400 transition-colors cursor-pointer hover:text-amber-600"
+                                            title="ระงับผู้ใช้" aria-label="ระงับผู้ใช้">
+                                            <i class="text-lg fa-solid fa-ban"></i>
+                                        </button>
                                         <button @click="askDelete(u)"
                                             class="p-2 text-slate-400 transition-colors cursor-pointer hover:text-red-600"
                                             title="ลบ" aria-label="ลบ">
@@ -276,6 +281,69 @@
         <ConfirmModal :show="showDelete" :title="`ลบผู้ใช้${deletingUser?.email ? ' : ' + deletingUser.email : ''}`"
             message="การลบนี้เป็นการลบถาวร ข้อมูลทั้งหมดจะถูกลบและไม่สามารถกู้คืนได้ คุณต้องการดำเนินการต่อหรือไม่?"
             confirmText="ลบถาวร" cancelText="ยกเลิก" variant="danger" @confirm="confirmDelete" @cancel="cancelDelete" />
+
+        <!-- Suspend Modal -->
+        <div v-if="showSuspendModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+                <h3 class="text-lg font-semibold text-primary mb-4">
+                    🚫 ระงับผู้ใช้: {{ suspendTarget?.firstName }} {{ suspendTarget?.lastName }}
+                </h3>
+
+                <!-- Status badges -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span :class="suspendTarget?.passengerSuspendedUntil ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
+                        class="px-2 py-1 text-xs rounded-full">
+                        {{ suspendTarget?.passengerSuspendedUntil ? '🔴 Passenger: ระงับ' : '🟢 Passenger: ปกติ' }}
+                    </span>
+                    <span :class="suspendTarget?.driverSuspendedUntil ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'"
+                        class="px-2 py-1 text-xs rounded-full">
+                        {{ suspendTarget?.driverSuspendedUntil ? '🔴 Driver: ระงับ' : '🟢 Driver: ปกติ' }}
+                    </span>
+                </div>
+
+                <!-- Form -->
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-xs text-slate-500">ระงับ Role</label>
+                        <select v-model="suspendRole" class="w-full px-3 py-2 border border-slate-200 rounded-md text-sm">
+                            <option value="passenger">เฉพาะ Passenger</option>
+                            <option value="driver">เฉพาะ Driver</option>
+                            <option value="both">ทั้งสอง Role</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-500">ระยะเวลา</label>
+                        <select v-model="suspendDuration" class="w-full px-3 py-2 border border-slate-200 rounded-md text-sm">
+                            <option :value="7">7 วัน</option>
+                            <option :value="30">30 วัน</option>
+                            <option :value="90">90 วัน</option>
+                            <option :value="365">1 ปี</option>
+                            <option :value="0">ถาวร</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-500">เหตุผล</label>
+                        <input v-model="suspendReason" type="text" placeholder="เหตุผลในการระงับ..."
+                            class="w-full px-3 py-2 border border-slate-200 rounded-md text-sm" />
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-5">
+                    <button @click="executeSuspend"
+                        class="flex-1 px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700">
+                        🚫 ระงับ
+                    </button>
+                    <button @click="executeUnsuspend"
+                        class="flex-1 px-4 py-2 text-sm text-white bg-green-600 rounded-md hover:bg-green-700">
+                        ✅ ปลดระงับ
+                    </button>
+                    <button @click="showSuspendModal = false"
+                        class="px-4 py-2 text-sm text-slate-500 border border-slate-200 rounded-md hover:bg-slate-50">
+                        ปิด
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -293,7 +361,7 @@ import { useToast } from '~/composables/useToast'
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 
 const { toast } = useToast()
 
@@ -557,6 +625,67 @@ async function deleteUser(id) {
     return body
 }
 /* --------------------------------------------- */
+
+/* ---------- Suspend Modal ---------- */
+const showSuspendModal = ref(false)
+const suspendTarget = ref(null)
+const suspendRole = ref('passenger')
+const suspendDuration = ref(7)
+const suspendReason = ref('')
+
+async function openSuspendModal(u) {
+    suspendTarget.value = null
+    suspendRole.value = 'passenger'
+    suspendDuration.value = 7
+    suspendReason.value = ''
+    showSuspendModal.value = true
+    try {
+        const config = useRuntimeConfig()
+        const token = useCookie('token').value
+        const res = await $fetch(`/admin/users/${u.id}/suspension-status`, {
+            baseURL: config.public.apiBase,
+            headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        })
+        suspendTarget.value = res?.data || res
+    } catch {
+        suspendTarget.value = { id: u.id, firstName: u.firstName, lastName: u.lastName, username: u.username, role: u.role }
+    }
+}
+
+async function executeSuspend() {
+    if (!suspendTarget.value) return
+    const config = useRuntimeConfig()
+    const token = useCookie('token').value
+    try {
+        await $fetch(`/admin/users/${suspendTarget.value.id}/suspend`, {
+            method: 'PATCH',
+            baseURL: config.public.apiBase,
+            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            body: { role: suspendRole.value, durationDays: suspendDuration.value, reason: suspendReason.value || 'Admin action' },
+        })
+        toast.success('ระงับผู้ใช้แล้ว', `${suspendTarget.value.firstName} — ${suspendRole.value}`)
+        showSuspendModal.value = false
+        fetchUsers(pagination.page)
+    } catch (err) { toast.error('ผิดพลาด', err?.data?.message || err?.statusMessage || '') }
+}
+
+async function executeUnsuspend() {
+    if (!suspendTarget.value) return
+    const config = useRuntimeConfig()
+    const token = useCookie('token').value
+    try {
+        await $fetch(`/admin/users/${suspendTarget.value.id}/unsuspend`, {
+            method: 'PATCH',
+            baseURL: config.public.apiBase,
+            headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            body: { role: suspendRole.value },
+        })
+        toast.success('ปลดระงับแล้ว')
+        showSuspendModal.value = false
+        fetchUsers(pagination.page)
+    } catch (err) { toast.error('ผิดพลาด', err?.data?.message || err?.statusMessage || '') }
+}
+/* ----------------------------------- */
 
 useHead({
     title: 'TailAdmin Dashboard',

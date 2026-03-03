@@ -32,6 +32,22 @@ export default defineNuxtPlugin(() => {
         try { body = JSON.parse(body) } catch { }
       }
 
+      const status = response?.status
+
+      // 401 → token ไม่ถูกต้อง (e.g. server restart) → ล้าง session แล้ว redirect login
+      if (status === 401 && process.client) {
+        const token = useCookie('token')
+        const user = useCookie('user')
+        token.value = null
+        user.value = null
+        try { localStorage.removeItem('token') } catch {}
+        // redirect ไป login (avoid infinite loop ถ้าอยู่ที่ login อยู่แล้ว)
+        if (!window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login'
+          return
+        }
+      }
+
       const msg =
         body?.message ||
         body?.error?.message ||
@@ -40,7 +56,7 @@ export default defineNuxtPlugin(() => {
         'Request failed'
 
       throw createError({
-        statusCode: response?.status || 500,
+        statusCode: status || 500,
         statusMessage: msg,
         data: body,
       })

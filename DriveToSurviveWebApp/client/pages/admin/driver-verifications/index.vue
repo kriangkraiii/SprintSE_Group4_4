@@ -172,7 +172,18 @@
                                         <div class="text-xs text-slate-400">อัปเดต {{ d(r.updatedAt, true) }}</div>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <div class="flex items-center gap-1">
+                                        <div class="flex items-center gap-2">
+                                            <!-- Quick toggle switch for license verification -->
+                                            <label class="relative inline-flex items-center cursor-pointer" :title="r.status === 'APPROVED' ? 'คลิกเพื่อปฏิเสธ' : 'คลิกเพื่ออนุมัติ'">
+                                                <input type="checkbox"
+                                                    :checked="r.status === 'APPROVED'"
+                                                    @change="toggleLicense(r)"
+                                                    class="sr-only peer" />
+                                                <div class="w-11 h-6 bg-red-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                                <span class="ml-2 text-xs font-medium" :class="r.status === 'APPROVED' ? 'text-green-600' : r.status === 'REJECTED' ? 'text-red-600' : 'text-amber-600'">
+                                                    {{ r.status === 'APPROVED' ? 'อนุมัติ' : r.status === 'REJECTED' ? 'ปฏิเสธ' : 'รอ' }}
+                                                </span>
+                                            </label>
                                             <button @click="onView(r)" class="p-2 text-slate-400 hover:text-emerald-600"
                                                 title="ดูรายละเอียด">
                                                 <i class="text-lg fa-regular fa-eye"></i>
@@ -256,7 +267,7 @@ import { useToast } from '~/composables/useToast'
 
 dayjs.locale('th')
 
-definePageMeta({ middleware: ['admin-auth'] })
+definePageMeta({ middleware: ['admin-auth'], layout: 'admin' })
 useHead({
     title: 'Driver Verifications • Admin',
     link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]
@@ -425,6 +436,26 @@ async function confirmDelete() {
         console.error('Delete DV (admin) error:', err)
         const msg = err?.data?.message || 'ไม่สามารถลบรายการได้'
         toast.error('เกิดข้อผิดพลาด', msg)
+    }
+}
+
+/* ---------- License Toggle ---------- */
+async function toggleLicense(row) {
+    const newStatus = row.status === 'APPROVED' ? 'REJECTED' : 'APPROVED'
+    try {
+        const config = useRuntimeConfig()
+        const token = useCookie('token').value || (process.client ? localStorage.getItem('token') : '')
+        await $fetch(`/driver-verifications/admin/${row.id}`, {
+            baseURL: config.public.apiBase,
+            method: 'PUT',
+            headers: { Accept: 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+            body: { status: newStatus }
+        })
+        row.status = newStatus
+        toast.success(newStatus === 'APPROVED' ? 'อนุมัติใบขับขี่แล้ว' : 'ปฏิเสธใบขับขี่แล้ว')
+    } catch (err) {
+        console.error('Toggle license error:', err)
+        toast.error('เกิดข้อผิดพลาด', err?.data?.message || '')
     }
 }
 

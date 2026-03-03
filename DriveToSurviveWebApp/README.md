@@ -4,11 +4,27 @@
 
 ## 📋 Features
 
-- **Carpooling**: ค้นหาและสร้างการเดินทางร่วมกัน
-- **Real-time Tracking**: ติดตามตำแหน่งแบบเรียลไทม์
-- **Identity Verification**: ยืนยันตัวตนด้วย iApp Thai e-KYC (OCR บัตรประชาชน/ใบขับขี่)
-- **SOS System**: ปุ่มขอความช่วยเหลือฉุกเฉิน
-- **Rating & Reviews**: ระบบให้คะแนนและรีวิวผู้ร่วมเดินทาง
+- **Carpooling & Route Management**:
+  - ค้นหาและสร้างการเดินทางร่วมกัน (Find & Create Trip)
+  - ระบบจัดการรถยนต์ (My Vehicle) พร้อมสิ่งอำนวยความสะดวก
+  - ยืนยันสิทธิ์คนขับอัตโนมัติ (Driver Guard System)
+- **Identity Verification (e-KYC)**:
+  - ยืนยันตัวตนด้วยบัตรประชาชนและใบขับขี่ผ่าน OCR (iApp Thai e-KYC)
+  - ตรวจสอบความถูกต้องของข้อมูลและรูปถ่ายหน้าตรง (Selfie Check)
+  - ระบบอนุมัติคนขับอัตโนมัติ (Auto-Approval Workflow)
+- **Safety & Security**:
+  - **Blacklist System**: ป้องกันผู้ใช้ที่ถูกแบนกลับมาใช้งาน (Hash-based check)
+  - **Session Management**: ระบบ Auto-logout เมื่อไม่มีการใช้งาน 20 นาที
+  - **Real-time Tracking**: ติดตามตำแหน่งผู้ขับขี่และผู้โดยสาร
+  - **SOS System**: ปุ่มขอความช่วยเหลือฉุกเฉิน
+- **Compliance & Privacy**:
+  - **PDPA Support**: สิทธิในการลบข้อมูล (Account Deletion) และ Data Minimization
+  - **Traffic Data Logs**: เก็บ Log การใช้งานตาม พ.ร.บ. คอมพิวเตอร์ฯ 90 วัน
+- **User Experience**:
+  - **Dynamic Roles**: ปรับเปลี่ยนสถานะ Passenger/Driver อัตโนมัติ
+  - **Notification Center**: แจ้งเตือนสถานะการจองและการยืนยันตัวตน
+  - **Forgot Password**: กู้คืนรหัสผ่านด้วย OTP ทางอีเมล
+  - **Rating & Reviews**: ให้คะแนนและรีวิวผู้ร่วมเดินทาง
 
 ## 🛠 Tech Stack
 
@@ -87,6 +103,11 @@ Initialize the database schema using Prisma (run from the `server` directory or 
 cd server
 npx prisma generate
 npx prisma db push
+
+
+ln -s ../.env .env
+npx prisma db push
+
 # OR
 npm run db:migrate
 ```

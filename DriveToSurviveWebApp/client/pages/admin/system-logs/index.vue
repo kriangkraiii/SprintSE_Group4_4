@@ -72,6 +72,42 @@
                     </div>
                 </div>
 
+                <!-- Export Section -->
+                <div class="mb-4 p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-slate-600">
+                                <i class="mr-1 fas fa-download"></i>ส่งออกข้อมูล (พ.ร.บ.คอมพิวเตอร์)
+                            </div>
+                            <div v-if="filters.userId || filters.ipAddress || filters.action || filters.createdFrom || filters.createdTo"
+                                class="mt-1 flex flex-wrap gap-1.5">
+                                <span class="text-[10px] text-slate-400"><i class="fas fa-filter mr-0.5"></i>กรอง:</span>
+                                <span v-if="filters.userId" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">User ID: {{ filters.userId.slice(0, 12) }}...</span>
+                                <span v-if="filters.ipAddress" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">IP: {{ filters.ipAddress }}</span>
+                                <span v-if="filters.action" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">{{ filters.action }}</span>
+                                <span v-if="filters.createdFrom" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">ตั้งแต่: {{ filters.createdFrom }}</span>
+                                <span v-if="filters.createdTo" class="px-1.5 py-0.5 text-[10px] bg-blue-50 text-blue-600 rounded">ถึง: {{ filters.createdTo }}</span>
+                            </div>
+                            <div v-else class="mt-0.5 text-[10px] text-slate-400">ส่งออกทั้งหมด (ไม่มีตัวกรอง)</div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button @click="exportLogs('json')" class="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                📥 Export JSON
+                            </button>
+                            <button @click="exportLogs('csv')" class="px-4 py-2 text-sm text-white bg-green-600 rounded-md hover:bg-green-700">
+                                📥 Export CSV
+                            </button>
+                            <div class="flex items-center gap-1">
+                                <input v-model="exportSessionId" type="text" placeholder="Chat Session ID..."
+                                    class="px-3 py-2 border border-slate-200 rounded-md text-sm w-48" />
+                                <button @click="exportChat" class="px-4 py-2 text-sm text-white bg-amber-600 rounded-md hover:bg-amber-700">
+                                    📥 Export Chat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Bulk Actions -->
                 <div class="flex flex-col gap-3 px-4 py-3 mb-4 bg-white border rounded-lg border-slate-200 sm:flex-row sm:items-center sm:justify-between">
                     <div class="inline-flex items-center gap-2 text-sm text-slate-600">
@@ -220,7 +256,7 @@ import 'dayjs/locale/th'
 
 dayjs.locale('th')
 
-definePageMeta({ middleware: 'admin-auth' })
+definePageMeta({ middleware: 'admin-auth', layout: 'admin' })
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
@@ -426,6 +462,50 @@ const handleDeleteLogs = async () => {
 const cancelDelete = () => {
     showDeleteConfirm.value = false
     pendingDeleteIds.value = []
+}
+
+// ─── Export ──────────────────────────────────────────
+const exportSessionId = ref('')
+
+const exportLogs = async (format) => {
+    try {
+        const params = new URLSearchParams()
+        params.set('format', format)
+        if (filters.createdFrom) params.set('from', new Date(filters.createdFrom).toISOString())
+        if (filters.createdTo) params.set('to', new Date(filters.createdTo).toISOString())
+        if (filters.userId) params.set('userId', filters.userId)
+        if (filters.ipAddress) params.set('ipAddress', filters.ipAddress)
+        if (filters.action) params.set('action', filters.action)
+
+        const res = await $api(`/admin/export/logs?${params.toString()}`, { responseType: format === 'csv' ? 'text' : 'json' })
+
+        const blob = new Blob([format === 'csv' ? res : JSON.stringify(res, null, 2)], {
+            type: format === 'csv' ? 'text/csv;charset=utf-8;' : 'application/json',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `system_logs_${Date.now()}.${format}`
+        a.click()
+        URL.revokeObjectURL(url)
+
+        toast.success('Export สำเร็จ', `ดาวน์โหลดไฟล์ .${format} แล้ว`)
+    } catch (err) { toast.error('Export ล้มเหลว', err?.statusMessage || '') }
+}
+
+const exportChat = async () => {
+    if (!exportSessionId.value) return toast.warning('กรุณาระบุ Session ID')
+    try {
+        const res = await $api(`/admin/export/chat/${exportSessionId.value}`)
+        const blob = new Blob([JSON.stringify(res, null, 2)], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `chat_export_${exportSessionId.value}_${Date.now()}.json`
+        a.click()
+        URL.revokeObjectURL(url)
+        toast.success('Export Chat สำเร็จ', `${res.totalMessages || 0} ข้อความ`)
+    } catch (err) { toast.error('Export ล้มเหลว', err?.statusMessage || '') }
 }
 
 onMounted(fetchLogs)

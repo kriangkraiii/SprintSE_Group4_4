@@ -12,7 +12,13 @@ const baseInclude = {
       lastName: true,
       gender: true,
       profilePicture: true,
-      isVerified: true
+      isVerified: true,
+      driverStats: {
+        select: {
+          avgRating: true,
+          totalReviews: true,
+        }
+      }
     }
   },
   vehicle: {
@@ -37,7 +43,9 @@ const searchRoutes = async (opts) => {
   const hasStart = typeof startNearLat === 'number' && typeof startNearLng === 'number';
   const hasEnd = typeof endNearLat === 'number' && typeof endNearLng === 'number';
 
-  if (hasStart || hasEnd) {
+  // ถ้ามีการระบุจังหวัด ให้ใช้การค้นหาแบบปกติ (กรองตามจังหวัด) แทนการค้นหาด้วยรัศมี
+  // เพื่อให้เจอรถทั้งหมดในจังหวัดนั้นๆ ไม่ใช่แค่ในรัศมี 500m
+  if ((hasStart || hasEnd) && !opts.startProvince && !opts.endProvince) {
     return searchRoutesByEndpointProximity(opts);
   }
 
@@ -56,6 +64,8 @@ const searchRoutes = async (opts) => {
     sortOrder = 'desc',
 
     seatsRequired,
+    startProvince,
+    endProvince,
   } = opts || {};
 
   // รวม startName / endName เข้ากับ q เพื่อค้นหาใน routeSummary (ซึ่งมีชื่อสถานที่ต้นทาง-ปลายทาง)
@@ -72,6 +82,18 @@ const searchRoutes = async (opts) => {
       }
     } : {}),
     ...(typeof seatsRequired === 'number' ? { availableSeats: seatsRequired } : {}),
+    ...(startProvince ? {
+      startLocation: {
+        path: '$.province',
+        equals: startProvince
+      }
+    } : {}),
+    ...(endProvince ? {
+      endLocation: {
+        path: '$.province',
+        equals: endProvince
+      }
+    } : {}),
     ...(searchText ? {
       OR: [
         { routeSummary: { contains: searchText } },
@@ -136,6 +158,9 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
     radiusMeters = 500,
     sortBy = 'createdAt',
     sortOrder = 'desc',
+    startProvince,
+    endProvince,
+    excludeDriverId,
   } = opts;
 
   const offset = (page - 1) * limit;
@@ -150,6 +175,9 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
   const sLng = startNearLng ?? null;
   const eLat = endNearLat ?? null;
   const eLng = endNearLng ?? null;
+  const sProv = startProvince || null;
+  const eProv = endProvince || null;
+  const exDrv = excludeDriverId || null;
 
   // เลือกเฉพาะ id ก่อน เพื่อทำ include รอบสอง
   // ใช้ Haversine (เป็นเมตร) กับ lat/lng ที่ดึงจาก JSON
@@ -176,6 +204,9 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
             SIN(RADIANS(${eLat})) * SIN(RADIANS(CAST(JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.lat')) AS DOUBLE)))
           )) <= ${radiusMeters}
         )
+        AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
+        AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
+        AND (${exDrv} IS NULL OR r.driverId != ${exDrv})
       ORDER BY ${Prisma.raw(`r.\`${sortField}\``)} ${Prisma.raw(sortDir)}
       LIMIT ${limit} OFFSET ${offset}
     `
@@ -205,6 +236,9 @@ const searchRoutesByEndpointProximity = async (opts = {}) => {
             SIN(RADIANS(${eLat})) * SIN(RADIANS(CAST(JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.lat')) AS DOUBLE)))
           )) <= ${radiusMeters}
         )
+        AND (${sProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.startLocation, '$.province')) = ${sProv})
+        AND (${eProv} IS NULL OR JSON_UNQUOTE(JSON_EXTRACT(r.endLocation, '$.province')) = ${eProv})
+        AND (${exDrv} IS NULL OR r.driverId != ${exDrv})
     `
   );
   const total = Number(totalRows?.[0]?.cnt) || 0;
@@ -363,6 +397,36 @@ const cancelRoute = async (routeId, driverId, opts = {}) => {
   return { id: routeId, status: RouteStatus.CANCELLED, cancelledBy: 'DRIVER', cancelledAt: now };
 };
 
+/**
+ * Add a waypoint to an existing route (driver only, AVAILABLE status)
+ */
+const addWaypointToRoute = async (routeId, driverId, waypointData) => {
+  const route = await prisma.route.findUnique({
+    where: { id: routeId },
+    select: { id: true, driverId: true, status: true, waypoints: true },
+  });
+
+  if (!route) throw new ApiError(404, 'Route not found');
+  if (route.driverId !== driverId) throw new ApiError(403, 'Not your route');
+  if (route.status !== 'AVAILABLE') throw new ApiError(400, 'Cannot modify a non-active route');
+
+  const { lat, lng, name, address } = waypointData;
+  if (lat == null || lng == null || !name) {
+    throw new ApiError(400, 'lat, lng, name are required for waypoint');
+  }
+
+  const currentWaypoints = Array.isArray(route.waypoints) ? route.waypoints : [];
+  currentWaypoints.push({ lat: Number(lat), lng: Number(lng), name, address: address || name });
+
+  const updated = await prisma.route.update({
+    where: { id: routeId },
+    data: { waypoints: currentWaypoints },
+    include: baseInclude,
+  });
+
+  return updated;
+};
+
 module.exports = {
   getAllRoutes,
   searchRoutes,
@@ -371,5 +435,6 @@ module.exports = {
   createRoute,
   updateRoute,
   deleteRoute,
-  cancelRoute
+  cancelRoute,
+  addWaypointToRoute,
 };

@@ -22,6 +22,7 @@ body {
   font-family: 'Kanit', sans-serif;
   color: #020617;
   background-color: #F8FAFC;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1,

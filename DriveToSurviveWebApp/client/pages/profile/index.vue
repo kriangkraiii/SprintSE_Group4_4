@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-8">
             <div class="flex w-full overflow-hidden border card border-slate-200">
 
                 <ProfileSidebar />
 
-                <main class="flex-1 p-8">
+                <main class="flex-1 p-4 sm:p-6 lg:p-8">
                     <div>
                         <div class="mb-8 text-center">
                             <div class="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-2xl bg-cta/10">
@@ -122,7 +122,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex justify-end gap-4 pt-6">
+                            <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-6">
                                 <button type="button" @click="resetForm" :disabled="isLoading"
                                     class="px-6 py-3 btn-ghost border border-slate-200 disabled:opacity-50">
                                     ยกเลิก
