@@ -11,7 +11,13 @@ const defaultApiBase = process.env.NODE_ENV === "production" ? productionApiBase
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+
+    timeline: {
+      enabled: true,
+    },
+  },
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || defaultApiBase,
@@ -50,6 +56,11 @@ export default defineNuxtConfig({
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1, maximum-scale=1",
       link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: '/favicon.png'
+        },
         {
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap'

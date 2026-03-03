@@ -1,43 +1,53 @@
 /**
  * SystemLog Middleware — พ.ร.บ.คอมพิวเตอร์ พ.ศ. 2560 มาตรา 26
  *
- * เหตุผล: ผู้ให้บริการต้องเก็บข้อมูลจราจรคอมพิวเตอร์ (Traffic Data)
- * ไม่น้อยกว่า 90 วัน ประกอบด้วย User ID, IP Address, Timestamp, Activity Type
- *
- * Middleware นี้จะ log ทุก request ที่ผ่าน /api/* โดยอัตโนมัติ
- * Log เป็น Immutable — ไม่มี API สำหรับ Update หรือ Delete
+ * Batched writes: สะสม log ใน memory แล้ว flush ทุก 5 วินาที
+ * ลด DB writes 90%+ เทียบกับ create() ทุก request
  */
 
 const prisma = require('../utils/prisma');
 
-const systemLogMiddleware = async (req, res, next) => {
-    // ดำเนินการ request ต่อไปก่อน ไม่ให้ logging block การทำงาน
+const LOG_BUFFER = [];
+const FLUSH_INTERVAL_MS = 5000;
+const MAX_BUFFER_SIZE = 500; // flush ทันทีถ้าเกิน
+
+async function flushLogs() {
+    if (LOG_BUFFER.length === 0) return;
+    const batch = LOG_BUFFER.splice(0, LOG_BUFFER.length);
+    try {
+        await prisma.systemLog.createMany({ data: batch, skipDuplicates: true });
+    } catch (err) {
+        console.error(`[SystemLog] Batch flush failed (${batch.length} records):`, err.message);
+    }
+}
+
+// Flush ทุก 5 วินาที
+const _flushTimer = setInterval(flushLogs, FLUSH_INTERVAL_MS);
+// ป้องกัน timer ค้าง process
+if (_flushTimer.unref) _flushTimer.unref();
+
+const systemLogMiddleware = (req, res, next) => {
     next();
 
-    // Log แบบ fire-and-forget (ไม่ block response)
-    try {
-        const userId = req.user?.sub || null;
+    // เก็บ log ลง buffer (ไม่ block response)
+    const userId = req.user?.sub || null;
+    const ipAddress = req.ip || 'unknown';
 
-        // ดึง IP Address จริงจาก proxy headers
-        const ipAddress =
-            req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-            req.connection?.remoteAddress ||
-            req.ip ||
-            'unknown';
+    LOG_BUFFER.push({
+        userId,
+        ipAddress,
+        action: req.method,
+        resource: req.originalUrl,
+        userAgent: req.headers['user-agent'] || null,
+    });
 
-        await prisma.systemLog.create({
-            data: {
-                userId,
-                ipAddress,
-                action: req.method,          // GET, POST, PUT, DELETE
-                resource: req.originalUrl,   // /api/users/me
-                userAgent: req.headers['user-agent'] || null,
-            },
-        });
-    } catch (err) {
-        // ห้าม crash server เพราะ logging error
-        console.error('[SystemLog] Failed to write log:', err.message);
+    // Force flush ถ้า buffer ใหญ่เกินไป
+    if (LOG_BUFFER.length >= MAX_BUFFER_SIZE) {
+        flushLogs();
     }
 };
+
+// Export flush function สำหรับ graceful shutdown
+systemLogMiddleware.flush = flushLogs;
 
 module.exports = systemLogMiddleware;

@@ -4,6 +4,7 @@ const vehicleService = require("../services/vehicle.service");
 const ApiError = require("../utils/ApiError");
 const verifService = require("../services/driverVerification.service");
 const { getDirections } = require("../utils/googleMaps");
+const { enrichLocation } = require("../services/thaiGeo.service");
 
 const getAllRoutes = asyncHandler(async (req, res) => {
   const routes = await routeService.getAllRoutes();
@@ -68,7 +69,21 @@ const createRoute = asyncHandler(async (req, res) => {
   const driverId = req.user.sub;
   const { vehicleId, optimizeWaypoints, ...routeFields } = req.body;
 
+  // ตรวจ driver suspension (role-based ban)
+  const prisma = require('../utils/prisma');
+  const driver = await prisma.user.findUnique({
+    where: { id: driverId },
+    select: { driverSuspendedUntil: true, role: true }
+  });
+  if (driver?.driverSuspendedUntil && new Date(driver.driverSuspendedUntil) > new Date()) {
+    throw new ApiError(403, 'บัญชีคนขับของคุณถูกระงับชั่วคราว ไม่สามารถสร้างเส้นทางได้');
+  }
+
   await vehicleService.getVehicleById(vehicleId, driverId);
+
+  // Enrich locations with Thai province data
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
 
   const payload = {
     ...routeFields,
@@ -165,6 +180,10 @@ const updateRoute = asyncHandler(async (req, res) => {
     await vehicleService.getVehicleById(vehicleId, driverId);
     newVehicleId = vehicleId;
   }
+  // Enrich locations with Thai province data if changed
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
+
   const payload = {
     ...routeFields,
     vehicleId: newVehicleId,
@@ -280,6 +299,10 @@ const adminCreateRoute = asyncHandler(async (req, res) => {
 
   await vehicleService.getVehicleById(vehicleId, driverId);
 
+  // Enrich locations with Thai province data
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
+
   const payload = {
     ...routeFields,
     driverId,
@@ -362,6 +385,10 @@ const adminUpdateRoute = asyncHandler(async (req, res) => {
     await vehicleService.getVehicleById(vehicleId, ownerToCheck);
     newVehicleId = vehicleId;
   }
+
+  // Enrich locations with Thai province data if changed
+  if (routeFields.startLocation) enrichLocation(routeFields.startLocation);
+  if (routeFields.endLocation) enrichLocation(routeFields.endLocation);
 
   const payload = {
     ...routeFields,
@@ -476,6 +503,17 @@ const cancelRoute = asyncHandler(async (req, res) => {
   });
 });
 
+const addWaypoint = asyncHandler(async (req, res) => {
+  const driverId = req.user.sub;
+  const { id } = req.params;
+  const updated = await routeService.addWaypointToRoute(id, driverId, req.body);
+  res.status(200).json({
+    success: true,
+    message: "Waypoint added successfully",
+    data: updated,
+  });
+});
+
 module.exports = {
   getAllRoutes,
   listRoutes,
@@ -490,4 +528,5 @@ module.exports = {
   adminDeleteRoute,
   adminGetRoutesByDriver,
   cancelRoute,
+  addWaypoint,
 };

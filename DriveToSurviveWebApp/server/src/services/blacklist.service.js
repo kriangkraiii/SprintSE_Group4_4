@@ -29,6 +29,10 @@ const hashNationalId = (rawId) => {
  * ใช้ในขั้นตอนลงทะเบียน/ยืนยันตัวตน
  */
 const checkBlacklist = async (rawNationalId) => {
+    // Skip check if disabled by admin
+    const { isEnabled } = require('../utils/securityConfig');
+    if (!isEnabled('blacklistCheckEnabled')) return null;
+
     const hash = hashNationalId(rawNationalId);
     const entry = await prisma.blacklist.findUnique({
         where: { nationalIdHash: hash },
@@ -39,7 +43,7 @@ const checkBlacklist = async (rawNationalId) => {
 /**
  * เพิ่มรายชื่อเข้า Blacklist (Admin only)
  */
-const addToBlacklist = async (rawNationalId, reason, adminId) => {
+const addToBlacklist = async (rawNationalId, reason, adminId, bannedRole = 'BOTH') => {
     const hash = hashNationalId(rawNationalId);
 
     // เช็คซ้ำ
@@ -54,6 +58,7 @@ const addToBlacklist = async (rawNationalId, reason, adminId) => {
         data: {
             nationalIdHash: hash,
             reason: reason || null,
+            bannedRole: bannedRole || 'BOTH',
             createdByAdminId: adminId,
         },
     });

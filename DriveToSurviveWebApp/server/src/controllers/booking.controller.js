@@ -28,6 +28,8 @@ const createBooking = asyncHandler(async (req, res) => {
   };
 
   const booking = await bookingService.createBooking(payload, passengerId);
+
+  // postBookingActions (chat + email) จะถูกเรียกตอนคนขับ confirm แทน
   res.status(201).json({ success: true, data: booking });
 });
 
@@ -97,11 +99,18 @@ const adminDeleteBooking = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: result });
 });
 
+const getBookingsByRouteId = asyncHandler(async (req, res) => {
+  const { routeId } = req.params;
+  const bookings = await bookingService.getBookingsByRouteId(routeId);
+  res.status(200).json({ success: true, data: bookings });
+});
+
 module.exports = {
   adminListBookings,
   createBooking,
   getMyBookings,
   getBookingById,
+  getBookingsByRouteId,
   updateBookingStatus,
   cancelBooking,
   deleteBooking,
