@@ -147,4 +147,137 @@ const sendReviewReminderEmail = async (to, info) => {
     return transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendOtpEmail, sendArrivalEmail, sendBookingEmail, sendReviewReminderEmail };
+/**
+ * Send email to passenger when booking is confirmed by driver
+ */
+const sendBookingConfirmedEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `✅ การจองของคุณได้รับการยืนยันแล้ว — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.passengerName || 'ผู้โดยสาร'},</p>
+                    <div style="text-align:center;background:#ecfdf5;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">✅</span>
+                        <h2 style="color:#059669;font-size:18px;margin:8px 0;">การจองได้รับการยืนยันแล้ว!</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">คนขับ: <strong>${info.driverName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">เส้นทาง: <strong>${info.routeName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">จำนวนที่นั่ง: <strong>${info.seats || 1} ที่นั่ง</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">กรุณาเตรียมตัวและติดตามตำแหน่งคนขับผ่านแอป</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+/**
+ * Send email to passenger when booking is rejected by driver
+ */
+const sendBookingRejectedEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `❌ คำขอจองถูกปฏิเสธ — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.passengerName || 'ผู้โดยสาร'},</p>
+                    <div style="text-align:center;background:#fef2f2;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">❌</span>
+                        <h2 style="color:#dc2626;font-size:18px;margin:8px 0;">คำขอจองถูกปฏิเสธ</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">เส้นทาง: <strong>${info.routeName || '-'}</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">ขออภัยค่ะ คนขับได้ปฏิเสธคำขอจองของคุณ กรุณาลองเส้นทางอื่น</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+/**
+ * Send email to passenger when driver starts the trip
+ */
+const sendTripStartedEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `🚗 คนขับเริ่มเดินทางแล้ว — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.passengerName || 'ผู้โดยสาร'},</p>
+                    <div style="text-align:center;background:#eff6ff;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">🚗</span>
+                        <h2 style="color:#2563eb;font-size:18px;margin:8px 0;">คนขับเริ่มเดินทางแล้ว!</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">คนขับ: <strong>${info.driverName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">เส้นทาง: <strong>${info.routeName || '-'}</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">กรุณาเตรียมตัวรอ ณ จุดรับ และติดตามตำแหน่งคนขับผ่านแอป</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+/**
+ * Send email to passenger when driver confirms pickup
+ */
+const sendPassengerPickedUpEmail = async (to, info) => {
+    const mailOptions = {
+        from: `"RideSafe" <${process.env.SMTP_USER}>`,
+        to,
+        subject: `👤 คนขับรับคุณขึ้นรถแล้ว — RideSafe`,
+        html: `
+            <div style="font-family:'Source Sans 3',Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#f8fafc;border-radius:12px;">
+                <div style="text-align:center;margin-bottom:24px;">
+                    <h1 style="font-family:Lexend,sans-serif;color:#0F172A;font-size:24px;margin:0;">RideSafe</h1>
+                    <p style="color:#64748b;font-size:14px;margin:8px 0 0;">เดินทางร่วมกันอย่างปลอดภัย</p>
+                </div>
+                <div style="background:white;padding:24px;border-radius:8px;border:1px solid #e2e8f0;">
+                    <p style="color:#0F172A;font-size:16px;margin:0 0 16px;">สวัสดีคุณ ${info.passengerName || 'ผู้โดยสาร'},</p>
+                    <div style="text-align:center;background:#ecfdf5;padding:20px;border-radius:8px;margin-bottom:16px;">
+                        <span style="font-size:28px;">👤</span>
+                        <h2 style="color:#059669;font-size:18px;margin:8px 0;">คนขับยืนยันว่ารับคุณขึ้นรถแล้ว</h2>
+                    </div>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">คนขับ: <strong>${info.driverName || '-'}</strong></p>
+                    <p style="color:#334155;font-size:14px;margin:0 0 8px;">เส้นทาง: <strong>${info.routeName || '-'}</strong></p>
+                    <p style="color:#64748b;font-size:13px;margin:16px 0 0;">ขอให้เดินทางปลอดภัย!</p>
+                </div>
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin:16px 0 0;">© ${new Date().getFullYear()} RideSafe</p>
+            </div>
+        `,
+    };
+    return transporter.sendMail(mailOptions);
+};
+
+module.exports = {
+    sendOtpEmail,
+    sendArrivalEmail,
+    sendBookingEmail,
+    sendReviewReminderEmail,
+    sendBookingConfirmedEmail,
+    sendBookingRejectedEmail,
+    sendTripStartedEmail,
+    sendPassengerPickedUpEmail,
+};

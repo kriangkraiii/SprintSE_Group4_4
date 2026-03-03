@@ -117,6 +117,14 @@ router.patch(
   bookingController.cancelBooking
 );
 
+// PATCH /bookings/:id/boarded — ผู้โดยสารยืนยันว่าขึ้นรถแล้ว
+router.patch(
+  '/:id/boarded',
+  protect,
+  validate({ params: idParamSchema }),
+  bookingController.confirmBoarded
+);
+
 // DELETE /bookings/:id
 router.delete(
   '/:id',

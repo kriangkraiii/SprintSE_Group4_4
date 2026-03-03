@@ -164,6 +164,10 @@ const etaText = ref('')
 const routeInfo = ref(null)
 let routeUpdateThrottle = 0
 
+// GPS Proximity polling (driver only)
+const activeBookingIds = ref([])
+let proximityPollInterval = null
+
 // Toast system for arrival alerts
 const visibleAlerts = ref([])
 let alertTimers = []
@@ -225,18 +229,72 @@ async function fetchPickupLocation() {
     const json = await res.json()
     const bookings = json.data || json
 
-    // Find the first booking with a pickupLocation
+    // Find the first booking with a pickupLocation + collect active bookingIds
     const bookingList = Array.isArray(bookings) ? bookings : [bookings]
+    const ids = []
     for (const b of bookingList) {
-      if (b.pickupLocation?.lat && b.pickupLocation?.lng) {
+      if (b.pickupLocation?.lat && b.pickupLocation?.lng && !pickupInfo.value) {
         pickupInfo.value = b.pickupLocation
         pickupLatLng.value = { lat: b.pickupLocation.lat, lng: b.pickupLocation.lng }
-        break
+      }
+      if (b.id && ['CONFIRMED', 'IN_PROGRESS', 'confirmed', 'in_progress'].includes(b.status)) {
+        ids.push(b.id)
       }
     }
+    activeBookingIds.value = ids
   } catch (err) {
     console.warn('[Tracking] Failed to fetch pickup location:', err.message)
   }
+}
+
+// GPS Proximity polling — sends driver GPS to check arrival thresholds
+function startProximityPolling() {
+  if (proximityPollInterval) return
+  console.log('[Proximity] Starting GPS polling for', activeBookingIds.value.length, 'bookings')
+
+  proximityPollInterval = setInterval(async () => {
+    const pos = myPosition.value
+    if (!pos.lat || !pos.lng) return
+    if (activeBookingIds.value.length === 0) return
+
+    const apiBase = config.public.apiBase || '/api'
+    const baseUrl = apiBase.startsWith('http') ? apiBase : '/api'
+
+    for (const bookingId of activeBookingIds.value) {
+      try {
+        const res = await fetch(`${baseUrl}/arrival-notifications/check`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token.value}`,
+          },
+          body: JSON.stringify({ bookingId, lat: pos.lat, lon: pos.lng }),
+        })
+        if (!res.ok) continue
+        const json = await res.json()
+        const data = json.data
+        // If the API returned a new notification, show it as a toast
+        if (data && data.notified && data.radiusType) {
+          const titles = {
+            FIVE_KM: '🚗 อยู่ห่างจุดรับ ~5 กม.',
+            ONE_KM: '🏃 ใกล้ถึงจุดรับแล้ว ~1 กม.',
+            ZERO_KM: '✅ ถึงจุดรับแล้ว!',
+          }
+          visibleAlerts.value.push({
+            radiusType: data.radiusType,
+            title: titles[data.radiusType] || 'แจ้งเตือนระยะทาง',
+            body: `Booking ${bookingId.slice(0, 8)}...`,
+            timestamp: Date.now(),
+          })
+          setTimeout(() => {
+            visibleAlerts.value = visibleAlerts.value.filter(a => a.timestamp !== Date.now())
+          }, 8000)
+        }
+      } catch (err) {
+        // Silently ignore polling errors
+      }
+    }
+  }, 15000)
 }
 
 // Fetch route details to get start/end coordinates
@@ -387,6 +445,11 @@ function initMap() {
       // Fit map to include pickup
       setTimeout(() => fitAllMarkers(), 2000)
     }
+
+    // Start GPS proximity polling for driver
+    if (userRole.value === 'DRIVER' && activeBookingIds.value.length > 0) {
+      startProximityPolling()
+    }
   })
 
   // Fetch route info for coordinates display
@@ -403,6 +466,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   alertTimers.forEach(t => clearTimeout(t))
+  if (proximityPollInterval) {
+    clearInterval(proximityPollInterval)
+    proximityPollInterval = null
+  }
   stopTracking()
 })
 </script>

@@ -130,6 +130,24 @@ router.delete(
   routeController.deleteRoute
 );
 
+// PATCH /routes/:id/start — คนขับเริ่มเดินทาง
+router.patch(
+  "/:id/start",
+  protect,
+  requireDriverVerified,
+  validate({ params: idParamSchema }),
+  routeController.startTrip
+);
+
+// PATCH /routes/:id/end — คนขับสิ้นสุดเดินทาง
+router.patch(
+  "/:id/end",
+  protect,
+  requireDriverVerified,
+  validate({ params: idParamSchema }),
+  routeController.endTrip
+);
+
 // POST /routes/:id/waypoints — เพิ่มจุดแวะระหว่างทาง
 router.post(
   "/:id/waypoints",
