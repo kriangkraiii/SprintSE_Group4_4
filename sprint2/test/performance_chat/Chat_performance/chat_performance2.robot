@@ -3,16 +3,23 @@ Library    SeleniumLibrary
 
 *** Variables ***
 ${LOGIN_URL}    http://localhost:3000/login
-${CHAT_URL}     http://localhost:3000/chat/cmmarkv6x000evrcxjy352xqw
-${IDENTIFIER}   bow1234
-${PASSWORD}     Thanchanok1234
+${CHAT_URL}     http://localhost:3000/chat/cmmb0myrb000cusc450b390oz
+${IDENTIFIER}   test2
+${PASSWORD}     Cp12345678
 
 *** Test Cases ***
 Test 01: Login And Spam 100 Messages
-    Open Browser    ${LOGIN_URL}    edge
 
+    ${options}=    Evaluate    sys.modules['selenium.webdriver'].EdgeOptions()    sys, selenium.webdriver
+    Call Method    ${options}    add_argument    --inprivate
+
+    Create Webdriver    Edge    options=${options}
+    Go To    ${LOGIN_URL}
+
+    # ---- WAIT FOR PAGE ----
     Wait Until Element Is Visible    css=[data-testid="identifier-input"]    timeout=10s
 
+    # ---- LOGIN (SAFE VERSION) ----
     Click Element    css=[data-testid="identifier-input"]
     Press Keys       css=[data-testid="identifier-input"]    CTRL+A
     Press Keys       css=[data-testid="identifier-input"]    BACKSPACE
@@ -29,6 +36,7 @@ Test 01: Login And Spam 100 Messages
 
     Wait Until Location Does Not Contain    /login    timeout=10s
 
+    # ---- GO TO CHAT ----
     Go To    ${CHAT_URL}
     Wait Until Element Is Visible    css=[data-testid="chat-input"]    timeout=10s
     Wait Until Element Is Enabled    css=[data-testid="chat-input"]    timeout=10s

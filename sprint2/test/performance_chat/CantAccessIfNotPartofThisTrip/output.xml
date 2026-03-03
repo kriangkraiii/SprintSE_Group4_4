@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.11.9 on win32)" generated="2026-03-04T03:14:25.450596" rpa="false" schemaversion="5">
+<suite id="s1" name="CantAccessIfNotPartofThisTrip" source="C:\Users\User\Desktop\Sprint2\SprintSE_Group4_4\sprint2\test\performance_chat\CantAccessIfNotPartofThisTrip\CantAccessIfNotPartofThisTrip.robot">
+<test id="s1-t1" name="Test 01: Access Chat Without Login" line="11">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:25.590467" level="INFO">Opening browser 'edge' to base url 'http://localhost:3000/chat/cmmb0myrb000cusc450b390oz'.</msg>
+<arg>${CHAT_URL}</arg>
+<arg>edge</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T03:14:25.590467" elapsed="1.272124"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T03:14:26.863592" elapsed="0.037098"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-04T03:14:26.900690" elapsed="0.415936"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>PASS - Redirected to login page</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-04T03:14:27.317635" elapsed="0.000000"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T03:14:27.317635" elapsed="2.123585"/>
+</kw>
+<status status="PASS" start="2026-03-04T03:14:25.589468" elapsed="3.851752"/>
+</test>
+<test id="s1-t2" name="Test 02: Access Chat With Login But Not Participant" line="20">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T03:14:29.442223" level="INFO">${options} = &lt;selenium.webdriver.edge.options.Options object at 0x0000015FCFA1E5D0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].EdgeOptions()</arg>
+<arg>sys, selenium.webdriver</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T03:14:29.442223" elapsed="0.000000"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_argument</arg>
+<arg>--inprivate</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="PASS" start="2026-03-04T03:14:29.442223" elapsed="0.001002"/>
+</kw>
+<kw name="Create Webdriver" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:29.443225" level="INFO">Creating an instance of the Edge WebDriver.</msg>
+<arg>Edge</arg>
+<arg>options=${options}</arg>
+<doc>Creates an instance of Selenium WebDriver.</doc>
+<status status="PASS" start="2026-03-04T03:14:29.443225" elapsed="1.074390"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>0.5s</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T03:14:30.517615" elapsed="0.001000"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:30.518615" level="INFO">Opening url 'http://localhost:3000/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T03:14:30.518615" elapsed="0.796891"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:32.102248" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="01-login-page.png"&gt;&lt;img src="01-login-page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>01-login-page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T03:14:31.315506" elapsed="0.786742"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-04T03:14:32.102248" elapsed="1.014061"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:33.116309" level="INFO">Typing text 'kriangkrai.p@kkumail.com' into text field 'css=[data-testid="identifier-input"]'.</msg>
+<arg>css=[data-testid="identifier-input"]</arg>
+<arg>${IDENTIFIER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T03:14:33.116309" elapsed="1.627671"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:34.743980" level="INFO">Typing text 'Cp12345678' into text field 'css=[data-testid="password-input"]'.</msg>
+<arg>css=[data-testid="password-input"]</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T03:14:34.743980" elapsed="1.557352"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:37.066943" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="03-after-password.png"&gt;&lt;img src="03-after-password.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>03-after-password.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T03:14:36.301332" elapsed="0.765611"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:37.066943" level="INFO">Clicking button 'css=[data-testid="login-btn"]'.</msg>
+<arg>css=[data-testid="login-btn"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T03:14:37.066943" elapsed="2.573676"/>
+</kw>
+<kw name="Wait Until Location Does Not Contain" owner="SeleniumLibrary">
+<arg>/login</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL does not contains ``location``.</doc>
+<status status="PASS" start="2026-03-04T03:14:39.640619" elapsed="0.503454"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:40.848727" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="04-after-login.png"&gt;&lt;img src="04-after-login.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>04-after-login.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T03:14:40.144073" elapsed="0.704654"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:40.848727" level="INFO">Opening url 'http://localhost:3000/chat/cmmb0myrb000cusc450b390oz'</msg>
+<arg>${CHAT_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T03:14:40.848727" elapsed="0.552623"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>/chat</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-04T03:14:41.401350" elapsed="0.505219"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:42.490136" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="05-chat-page.png"&gt;&lt;img src="05-chat-page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>05-chat-page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T03:14:41.906569" elapsed="0.583567"/>
+</kw>
+<kw name="Page Should Not Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:42.997956" level="INFO">Current page does not contain element 'css=[data-testid="chat-input"]'.</msg>
+<arg>css=[data-testid="chat-input"]</arg>
+<doc>Verifies that element ``locator`` is not found on the current page.</doc>
+<status status="PASS" start="2026-03-04T03:14:42.491142" elapsed="0.506814"/>
+</kw>
+<kw name="Page Should Not Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:43.508500" level="INFO">Current page does not contain element 'css=[data-testid="send-btn"]'.</msg>
+<arg>css=[data-testid="send-btn"]</arg>
+<doc>Verifies that element ``locator`` is not found on the current page.</doc>
+<status status="PASS" start="2026-03-04T03:14:42.997956" elapsed="0.510544"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T03:14:44.105285" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="06-no-access.png"&gt;&lt;img src="06-no-access.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>06-no-access.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T03:14:43.508500" elapsed="0.597289"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>PASS - User cannot interact with chat</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-03-04T03:14:44.105789" elapsed="0.000000"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T03:14:46.107069" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T03:14:44.106796" elapsed="2.000273"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T03:14:46.107069" elapsed="2.582738"/>
+</kw>
+<status status="PASS" start="2026-03-04T03:14:29.442223" elapsed="19.247584"/>
+</test>
+<status status="PASS" start="2026-03-04T03:14:25.451596" elapsed="23.239214"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="CantAccessIfNotPartofThisTrip" id="s1" pass="2" fail="0" skip="0">CantAccessIfNotPartofThisTrip</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
