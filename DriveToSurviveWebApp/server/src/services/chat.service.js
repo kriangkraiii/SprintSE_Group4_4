@@ -272,8 +272,22 @@ const editMessage = async (messageId, senderId, content) => {
 
     // Initialize metadata if empty, or append to it
     const metadata = (message.metadata && typeof message.metadata === 'object') ? { ...message.metadata } : {};
+
+    // Check and update edit history
+    const editHistory = Array.isArray(metadata.editHistory) ? [...metadata.editHistory] : [];
+    if (editHistory.length >= 3) {
+        throw new ApiError(400, 'สามารถแก้ไขได้สูงสุด 3 ครั้งเท่านั้น');
+    }
+
+    // Save the old content and time before applying the new edit
+    editHistory.push({
+        content: message.content,
+        editedAt: metadata.editedAt || message.createdAt
+    });
+
     metadata.isEdited = true;
     metadata.editedAt = new Date().toISOString();
+    metadata.editHistory = editHistory;
 
     return prisma.chatMessage.update({
         where: { id: messageId },
