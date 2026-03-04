@@ -9,7 +9,6 @@ const createDispute = async (reviewId, driverId, data) => {
     if (!review) throw new ApiError(404, 'Review not found');
     if (review.driverId !== driverId) throw new ApiError(403, 'Not your review to dispute');
 
-    // Check duplicate
     const existing = await prisma.reviewDispute.findUnique({
         where: { reviewId_driverId: { reviewId, driverId } },
     });
@@ -27,6 +26,9 @@ const createDispute = async (reviewId, driverId, data) => {
 
 /**
  * Admin resolves a dispute
+ * Statuses:
+ *   ACKNOWLEDGED — admin has reviewed and acknowledged the dispute
+ *   REJECTED     — admin rejects the dispute (data is kept, category is set)
  */
 const resolveDispute = async (id, adminData) => {
     const dispute = await prisma.reviewDispute.findUnique({
@@ -36,49 +38,20 @@ const resolveDispute = async (id, adminData) => {
     if (!dispute) throw new ApiError(404, 'Dispute not found');
     if (dispute.status !== 'PENDING') throw new ApiError(400, 'Dispute already resolved');
 
-    return prisma.$transaction(async (tx) => {
-        const updated = await tx.reviewDispute.update({
-            where: { id },
-            data: {
-                status: adminData.status, // RESOLVED or REJECTED
-                adminNote: adminData.adminNote || null,
-                resolvedAt: new Date(),
-            },
-        });
+    const updateData = {
+        status: adminData.status,
+        adminNote: adminData.adminNote || null,
+        resolvedAt: new Date(),
+    };
 
-        // If RESOLVED and action is to hide the review
-        if (adminData.status === 'RESOLVED' && adminData.hideReview) {
-            await tx.rideReview.update({
-                where: { id: dispute.reviewId },
-                data: { status: 'HIDDEN' },
-            });
+    // Attach category if provided (useful for REJECTED to organize)
+    if (adminData.category) {
+        updateData.category = adminData.category;
+    }
 
-            // Recalculate driver stats excluding hidden review
-            const reviews = await tx.rideReview.findMany({
-                where: { driverId: dispute.review.driverId, status: 'ACTIVE' },
-                select: { rating: true, tags: true },
-            });
-
-            const totalReviews = reviews.length;
-            const avgRating = totalReviews > 0
-                ? Math.round((reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) * 100) / 100
-                : 0;
-
-            const tagCounts = {};
-            for (const r of reviews) {
-                const tags = r.tags || [];
-                for (const tag of tags) {
-                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-                }
-            }
-
-            await tx.driverStats.update({
-                where: { driverId: dispute.review.driverId },
-                data: { totalReviews, avgRating, tagCounts },
-            });
-        }
-
-        return updated;
+    return prisma.reviewDispute.update({
+        where: { id },
+        data: updateData,
     });
 };
 

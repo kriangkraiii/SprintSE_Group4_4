@@ -32,6 +32,19 @@
       <p class="text-xs font-medium text-blue-600 mb-0.5">ข้อเสนอแนะส่วนตัว:</p>
       <p class="text-sm text-blue-800">{{ review.privateFeedback }}</p>
     </div>
+
+    <!-- Dispute button (driver only) -->
+    <div v-if="showPrivate && !review.isDisputed" class="mt-3 flex justify-end">
+      <button @click="$emit('dispute', review)"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors cursor-pointer">
+        🚩 รายงานข้อพิพาท
+      </button>
+    </div>
+    <div v-else-if="showPrivate && review.isDisputed" class="mt-3 flex justify-end">
+      <span class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded-lg">
+        ⏳ อยู่ระหว่างพิจารณา
+      </span>
+    </div>
   </div>
 </template>
 
@@ -48,6 +61,8 @@ const props = defineProps({
   review: { type: Object, required: true },
   showPrivate: { type: Boolean, default: false },
 })
+
+defineEmits(['dispute'])
 
 const tagLabels = {
   polite: '🤝 สุภาพ',

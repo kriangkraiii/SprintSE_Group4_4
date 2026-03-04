@@ -27,12 +27,12 @@
       <div class="mx-auto max-w-lg bg-white backdrop-blur-sm rounded-2xl shadow-lg p-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <NuxtLink :to="userRole === 'DRIVER' ? '/myRoute' : '/myTrip'"
-              class="p-2 rounded-lg hover:bg-slate-100 transition-colors">
+            <button @click="$router.back()"
+              class="p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
               <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
               </svg>
-            </NuxtLink>
+            </button>
             <div>
               <h2 class="text-sm font-semibold text-primary">ติดตามตำแหน่ง</h2>
               <p class="text-xs text-slate-500">{{ participantCount }} คนกำลังแชร์ตำแหน่ง</p>

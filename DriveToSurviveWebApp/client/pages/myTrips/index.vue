@@ -54,7 +54,7 @@
 
                     <!-- Count Badge -->
                     <span class="ml-auto text-sm text-slate-500">
-                        {{ statusFilter === 'reviews' ? (myReviews.length + pendingBookings.length) + ' รีวิว' : displayedItems.length + ' รายการ' }}
+                        {{ statusFilter === 'reviews' ? (myReviews.length + pendingBookings.length) + ' รีวิว' : getCount(statusFilter) + ' รายการ' }}
                     </span>
                 </div>
             </div>
@@ -84,10 +84,10 @@
                             </div>
                         </div>
 
-                        <!-- Driver: My Routes Section -->
-                        <div v-else-if="role === 'driver' && statusFilter === 'myRoutes'" class="divide-y divide-slate-100">
-                            <div v-if="myRoutes.length === 0" class="p-12 text-center text-slate-400">
-                                <p>ยังไม่มีเส้นทางที่คุณสร้าง</p>
+                        <!-- Driver: My Routes Section (show when 'myRoutes' or 'all' selected) -->
+                        <div v-if="role === 'driver' && (statusFilter === 'myRoutes' || statusFilter === 'all') && myRoutes.length > 0" class="divide-y divide-slate-100">
+                            <div v-if="statusFilter === 'all'" class="px-6 py-3 bg-slate-50/80 border-b border-slate-100">
+                                <h4 class="text-sm font-semibold text-slate-500">🚗 เส้นทางของฉัน ({{ myRoutes.length }})</h4>
                             </div>
                             <div v-for="route in myRoutes" :key="route.id"
                                 class="p-6 transition-colors duration-200 cursor-pointer trip-card hover:bg-slate-50"
@@ -240,8 +240,18 @@
                             </div>
                         </div>
 
+                        <!-- Empty state for myRoutes only -->
+                        <div v-if="role === 'driver' && statusFilter === 'myRoutes' && myRoutes.length === 0" class="p-12 text-center text-slate-400">
+                            <p>ยังไม่มีเส้นทางที่คุณสร้าง</p>
+                        </div>
+
+                        <!-- Driver bookings header when showing 'all' -->
+                        <div v-if="role === 'driver' && statusFilter === 'all' && currentTrips.length > 0" class="px-6 py-3 bg-slate-50/80 border-b border-slate-100">
+                            <h4 class="text-sm font-semibold text-slate-500">คำขอจอง ({{ currentTrips.length }})</h4>
+                        </div>
+
                         <!-- Reviews Section -->
-                        <div v-else-if="statusFilter === 'reviews'" class="p-6">
+                        <div v-if="statusFilter === 'reviews'" class="p-6">
                             <!-- Pending Reviews -->
                             <div v-if="pendingBookings.length" class="mb-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                                 <!-- Header -->
@@ -378,8 +388,8 @@
                         </div>
 
                         <!-- Generic Card List (Passenger bookings OR Driver booking requests) -->
-                        <div v-else class="divide-y divide-slate-100">
-                            <div v-if="displayedItems.length === 0" class="p-12 text-center text-slate-400">
+                        <div v-if="!isLoading && statusFilter !== 'reviews' && !(role === 'driver' && statusFilter === 'myRoutes')" class="divide-y divide-slate-100">
+                            <div v-if="displayedItems.length === 0 && !(role === 'driver' && statusFilter === 'all' && myRoutes.length > 0)" class="p-12 text-center text-slate-400">
                                 <p>ไม่พบรายการในหมวดหมู่นี้</p>
                             </div>
 
@@ -707,7 +717,7 @@ const statusOptions = computed(() => role.value === 'passenger' ? passengerStatu
 const currentTrips = computed(() => role.value === 'passenger' ? passengerTrips.value : driverBookings.value)
 
 const displayedItems = computed(() => {
-    if (role.value === 'driver' && statusFilter.value === 'myRoutes') return myRoutes.value
+    if (role.value === 'driver' && statusFilter.value === 'myRoutes') return []
     if (statusFilter.value === 'all') return currentTrips.value
     return currentTrips.value.filter(t => t.status === statusFilter.value)
 })
@@ -724,7 +734,10 @@ const mapLabel = computed(() => {
 function getCount(status) {
     if (status === 'reviews') return myReviews.value.length + pendingBookings.value.length
     if (role.value === 'driver' && status === 'myRoutes') return myRoutes.value.length
-    if (status === 'all') return currentTrips.value.length
+    if (status === 'all') {
+        if (role.value === 'driver') return currentTrips.value.length + myRoutes.value.length
+        return currentTrips.value.length
+    }
     return currentTrips.value.filter(t => t.status === status).length
 }
 

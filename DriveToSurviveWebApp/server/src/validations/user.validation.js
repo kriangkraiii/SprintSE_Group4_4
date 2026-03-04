@@ -28,6 +28,8 @@ const createUserSchema = Joi.object({
 
 const createAdminUserSchema = Joi.object({
     ...baseCreateUserSchema,
+    // Admin ไม่ต้องยืนยันตัวตนด้วยบัตรประชาชน
+    nationalIdNumber: Joi.string().allow('', null),
     role: Joi.string().valid('ADMIN').default('ADMIN'),
 });
 
