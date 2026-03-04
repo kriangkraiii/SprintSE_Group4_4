@@ -10,8 +10,8 @@ Suite Setup       Setup Test Environment
 Suite Teardown    Teardown And Clean Database
 
 *** Variables ***
-${BASE_URL}          http://localhost:3001
-${WEB_URL}           http://localhost:3000
+${BASE_URL}          https://sparkling-benetta-kraeeeeeew-9ef9bd6d.koyeb.app
+${WEB_URL}           https://csse4469.cpkku.com
 ${DRIVER_EMAIL}      epic2_driver@test.com
 ${PASSENGER_EMAIL}   thanatcha.k@kkumail.com
 ${PASS}              password123
