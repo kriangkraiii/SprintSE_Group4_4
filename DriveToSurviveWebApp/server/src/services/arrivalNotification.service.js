@@ -93,7 +93,7 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
 
     // Send In-App notification
     try {
-        await prisma.notification.create({
+        const arrivalNotif = await prisma.notification.create({
             data: {
                 userId: passenger.id,
                 type: 'ARRIVAL',
@@ -102,6 +102,7 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
                 metadata: { bookingId: booking.id, radiusType, driverLat, driverLon },
             },
         });
+        emitNotification(passenger.id, arrivalNotif);
     } catch {
         appStatus = 'FAILED';
     }

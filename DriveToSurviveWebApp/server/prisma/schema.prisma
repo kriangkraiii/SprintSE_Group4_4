@@ -102,6 +102,7 @@ enum DisputeStatus {
   PENDING
   RESOLVED
   REJECTED
+  ACKNOWLEDGED
 }
 
 enum ReportStatus {
@@ -489,6 +490,7 @@ model ReviewDispute {
   reason    DisputeReason
   detail    String        @db.Text
   status    DisputeStatus @default(PENDING)
+  category  String?
   adminNote String?       @db.Text
   resolvedAt DateTime?
   createdAt DateTime      @default(now())

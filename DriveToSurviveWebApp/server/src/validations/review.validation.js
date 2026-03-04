@@ -16,9 +16,9 @@ const createDisputeSchema = Joi.object({
 });
 
 const resolveDisputeSchema = Joi.object({
-    status: Joi.string().valid('RESOLVED', 'REJECTED').required(),
+    status: Joi.string().valid('ACKNOWLEDGED', 'REJECTED').required(),
     adminNote: Joi.string().max(500).allow('', null).optional(),
-    hideReview: Joi.boolean().default(false),
+    category: Joi.string().max(100).allow('', null).optional(),
 });
 
 const paginationQuery = Joi.object({
@@ -29,7 +29,7 @@ const paginationQuery = Joi.object({
 const disputeListQuery = Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20),
-    status: Joi.string().valid('PENDING', 'RESOLVED', 'REJECTED').optional(),
+    status: Joi.string().valid('PENDING', 'RESOLVED', 'REJECTED', 'ACKNOWLEDGED').optional(),
 });
 
 module.exports = {

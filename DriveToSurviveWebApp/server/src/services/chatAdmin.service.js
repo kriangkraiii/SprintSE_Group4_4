@@ -5,19 +5,35 @@ const getAllSessions = async (filters = {}) => {
     const where = {};
     if (filters.status) where.status = filters.status;
     if (filters.driverId) where.driverId = filters.driverId;
-    if (filters.passengerId) where.passengerId = filters.passengerId;
+    if (filters.participantId) {
+        where.participants = { some: { userId: filters.participantId } };
+    }
 
     const sessions = await prisma.chatSession.findMany({
         where,
         include: {
             driver: { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
-            passenger: { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
+            participants: {
+                include: {
+                    user: { select: { id: true, firstName: true, lastName: true, profilePicture: true } },
+                },
+            },
+            route: {
+                select: { startLocation: true, endLocation: true },
+            },
             _count: { select: { messages: true } },
         },
         orderBy: { createdAt: 'desc' },
         take: filters.limit ? parseInt(filters.limit) : 50,
     });
-    return sessions;
+
+    // Map participants for frontend compatibility
+    return sessions.map(s => ({
+        ...s,
+        passengers: s.participants
+            .filter(p => p.userId !== s.driverId)
+            .map(p => p.user),
+    }));
 };
 
 const getSessionMessages = async (sessionId) => {
@@ -25,7 +41,11 @@ const getSessionMessages = async (sessionId) => {
         where: { id: sessionId },
         include: {
             driver: { select: { id: true, firstName: true, lastName: true } },
-            passenger: { select: { id: true, firstName: true, lastName: true } },
+            participants: {
+                include: {
+                    user: { select: { id: true, firstName: true, lastName: true } },
+                },
+            },
         },
     });
     if (!session) throw new ApiError(404, 'Session not found');
