@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on win32)" generated="2026-03-04T20:41:41.597295" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic3 Review System" source="D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_review_system.robot">
+<kw name="Suite Init" type="SETUP">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-04T20:41:41.769894" level="INFO">Starting process:
+node D:\Soften\SprintSE_Group4_4\sprint2\test/seed-review-test.js</msg>
+<msg time="2026-03-04T20:41:41.776636" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-04T20:41:42.099004" level="INFO">Process completed.</msg>
+<msg time="2026-03-04T20:41:42.099205" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SEED_SCRIPT}</arg>
+<arg>cwd=D:\\Soften\\SprintSE_Group4_4\\sprint2\\test</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-04T20:41:41.769381" elapsed="0.329873"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.100060" level="INFO">[dotenv@17.3.1] injecting env (18) from ..\..\DriveToSurviveWebApp\.env -- tip: ΓÜÖ∩╕Å  suppress all logs with { quiet: true }
+≡ƒî▒ Seeding test data for Epic 3: Review &amp; Rating ...
+  Γ£à Driver: cmmbth0k60000us3ggzxw7huu
+  Γ£à Passenger: cmmbth0km0001us3g0xe0zid9
+  Γ£à Passenger2: cmmbthvog0002usak4kpnx7s0
+  Γ£à Vehicle: cmmbth0l40003us3gnynsyr82
+  Γ£à Route: cmmbth0lm0005us3gfgdcgyr4
+  Γ£à Booking A (for review): cmmc35b020004usn8tw2ie8yw
+  Γ£à Booking B (for dispute): cmmc35b0n0006usn87ist0z71
+  Γ£à Booking C (expired): cmmc35b0x0008usn8897kspk0
+  Γ£à Admin: cmmbo4ou60009us8s80bv0m9o
+  Γ£à Pre-review for dispute: cmmc35b1n000dusn8mvp9dn5t
+  Γ£à Pre-dispute for admin: cmmc35b1z000fusn8yhrcdq14
+
+≡ƒôä Seed output written to D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json
+{
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbthvog0002usak4kpnx7s0",
+  "passenger2Email": "rf_passenger2@test.com",
+  "vehicleId": "cmmbth0l40003us3gnynsyr82",
+  "routeId": "cmmbth0lm0005us3gfgdcgyr4",
+  "bookingAId": "cmmc35b020004usn8tw2ie8yw",
+  "bookingBId": "cmmc35b0n0006usn87ist0z71",
+  "bookingCId": "cmmc35b0x0008usn8897kspk0",
+  "preReviewId": "cmmc35b1n000dusn8mvp9dn5t",
+  "preDisputeId": "cmmc35b1z000fusn8yhrcdq14",
+  "adminId": "cmmbo4ou60009us8s80bv0m9o",
+  "adminEmail": "rf_admin@test.com",
+  "password": "password123"
+}
+
+≡ƒÄë Seed complete!</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.099447" elapsed="0.000698"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.101318" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${result.rc}</arg>
+<arg>0</arg>
+<arg>Seed script failed: ${result.stderr}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.100259" elapsed="0.001127"/>
+</kw>
+<kw name="Load Seed Output">
+<kw name="Get File" owner="OperatingSystem">
+<msg time="2026-03-04T20:41:42.101959" level="INFO" html="true">Getting file '&lt;a href="file://D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json"&gt;D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json&lt;/a&gt;'.</msg>
+<msg time="2026-03-04T20:41:42.110712" level="INFO">${json_str} = {
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbth...</msg>
+<var>${json_str}</var>
+<arg>D:\\Soften\\SprintSE_Group4_4\\sprint2\\test/seed-output.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.101771" elapsed="0.008977"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.111632" level="INFO">${data} = {'driverId': 'cmmbth0k60000us3ggzxw7huu', 'driverEmail': 'rf_driver@test.com', 'passengerId': 'cmmbth0km0001us3g0xe0zid9', 'passengerEmail': 'rf_passenger@test.com', 'passenger2Id': 'cmmbthvog0002usak...</msg>
+<var>${data}</var>
+<arg>__import__('json').loads('''${json_str}''')</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.110974" elapsed="0.000703"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.112371" level="INFO">${BOOKING_A_ID} = cmmc35b020004usn8tw2ie8yw</msg>
+<arg>${BOOKING_A_ID}</arg>
+<arg>${data['bookingAId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.111808" elapsed="0.000609"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.113100" level="INFO">${BOOKING_B_ID} = cmmc35b0n0006usn87ist0z71</msg>
+<arg>${BOOKING_B_ID}</arg>
+<arg>${data['bookingBId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.112539" elapsed="0.000604"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.113625" level="INFO">${BOOKING_C_ID} = cmmc35b0x0008usn8897kspk0</msg>
+<arg>${BOOKING_C_ID}</arg>
+<arg>${data['bookingCId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.113227" elapsed="0.000430"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.114212" level="INFO">${DRIVER_ID} = cmmbth0k60000us3ggzxw7huu</msg>
+<arg>${DRIVER_ID}</arg>
+<arg>${data['driverId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.113733" elapsed="0.000518"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.114735" level="INFO">${PRE_REVIEW_ID} = cmmc35b1n000dusn8mvp9dn5t</msg>
+<arg>${PRE_REVIEW_ID}</arg>
+<arg>${data['preReviewId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.114330" elapsed="0.000434"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.115203" level="INFO">${PRE_DISPUTE_ID} = cmmc35b1z000fusn8yhrcdq14</msg>
+<arg>${PRE_DISPUTE_ID}</arg>
+<arg>${data['preDisputeId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.114833" elapsed="0.000397"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.115527" level="INFO">Loaded seed: A=cmmc35b020004usn8tw2ie8yw B=cmmc35b0n0006usn87ist0z71 C=cmmc35b0x0008usn8897kspk0 preDispute=cmmc35b1z000fusn8yhrcdq14</msg>
+<arg>Loaded seed: A=${BOOKING_A_ID} B=${BOOKING_B_ID} C=${BOOKING_C_ID} preDispute=${PRE_DISPUTE_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.115315" elapsed="0.000243"/>
+</kw>
+<doc>Read seed-output.json and set suite variables</doc>
+<status status="PASS" start="2026-03-04T20:41:42.101574" elapsed="0.014033"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:41:42.115765" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_BASE}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:41:42.115679" elapsed="0.000218"/>
+</kw>
+<kw name="Login And Get Token">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T20:41:42.116567" level="INFO">${payload} = {'email': 'rf_passenger@test.com', 'password': 'password123'}</msg>
+<var>${payload}</var>
+<arg>email=${email}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T20:41:42.116221" elapsed="0.000370"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:41:42.124242" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '61', 'Content-Type': 'application/json'} 
+ body=b'{"email": "rf_passenger@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-04T20:41:42.124337" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=429, reason=Too Many Requests 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '0', 'RateLimit-Reset': '73', 'X-Request-ID': '60b07822-6a06-45fe-ba63-8be909a60406', 'Retry-After': '73', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '179', 'ETag': 'W/"b3-O8I9F8uBbJX7j218G4WerD1R1DA"', 'Date': 'Wed, 04 Mar 2026 13:41:42 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"พยายามเข้าสู่ระบบมากเกินไป กรุณารอ 15 นาทีแล้วลองใหม่"} 
+ </msg>
+<msg time="2026-03-04T20:41:42.124451" level="FAIL">HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/auth/login</arg>
+<arg>json=${payload}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="FAIL" start="2026-03-04T20:41:42.116663" elapsed="0.009334">HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<arg>Login failed for ${email}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126135" elapsed="0.000021"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126221" elapsed="0.000015"/>
+</kw>
+<return>
+<value>${body['data']['token']}</value>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126281" elapsed="0.000026"/>
+</return>
+<var>${p_token}</var>
+<arg>${PASSENGER_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="FAIL" start="2026-03-04T20:41:42.116028" elapsed="0.010426">HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${PASSENGER_TOKEN}</arg>
+<arg>${p_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126597" elapsed="0.000021"/>
+</kw>
+<kw name="Login And Get Token">
+<var>${p2_token}</var>
+<arg>${PASSENGER2_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126784" elapsed="0.000018"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${PASSENGER2_TOKEN}</arg>
+<arg>${p2_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126882" elapsed="0.000012"/>
+</kw>
+<kw name="Login And Get Token">
+<var>${d_token}</var>
+<arg>${DRIVER_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="NOT RUN" start="2026-03-04T20:41:42.126985" elapsed="0.000012"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${DRIVER_TOKEN}</arg>
+<arg>${d_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.127056" elapsed="0.000012"/>
+</kw>
+<kw name="Try Admin Login">
+<var>${admin_token}</var>
+<doc>Single admin login attempt to conserve rate limit</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.127196" elapsed="0.000013"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${ADMIN_TOKEN}</arg>
+<arg>${admin_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2026-03-04T20:41:42.127271" elapsed="0.000011"/>
+</kw>
+<doc>Run seed, create API session, login all users</doc>
+<status status="FAIL" start="2026-03-04T20:41:41.768794" elapsed="0.358559">HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</kw>
+<test id="s1-t1" name="TC-3.8 Passenger Sees Pending Reviews" line="53">
+<doc>GET /reviews/pending returns bookings not yet reviewed</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.127419" elapsed="0.000549">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t2" name="TC-3.1 Create 5-Star Review Successfully" line="68">
+<doc>POST /reviews — 5 stars with positive tags  [POST #1 of 6]</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.128422" elapsed="0.000308">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t3" name="TC-3.12 Driver Creates Dispute Successfully" line="90">
+<doc>POST /reviews/disputes → 201  [POST #2 of 6]</doc>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>High</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.129264" elapsed="0.000409">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t4" name="TC-3.13 Duplicate Dispute Returns 409" line="109">
+<doc>POST /reviews/disputes same review → 409  [POST #3 of 6]</doc>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>Low</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.130040" elapsed="0.000307">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t5" name="TC-3.6 Duplicate Review Returns 409" line="126">
+<doc>POST /reviews same booking again → 409  [POST #4 of 6]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.130676" elapsed="0.000268">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t6" name="TC-3.7 Expired Review Window Returns 410" line="143">
+<doc>Booking completed &gt; 7 days ago → 410  [POST #5 of 6]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.131218" elapsed="0.000253">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t7" name="TC-3.4 Invalid Tag For Rating Returns 400" line="159">
+<doc>Negative tag on 5-star → 400  [POST #6 of 6 — last POST budget]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.131792" elapsed="0.000280">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t8" name="TC-3.10 Review Immutability — No PUT or DELETE Route" line="178">
+<doc>PUT/DELETE /reviews/:id should return 404 (route not found)</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.132359" elapsed="0.000300">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t9" name="TC-3.8b My Reviews Shows Submitted Review" line="188">
+<doc>GET /reviews/me returns the review just created</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.132914" elapsed="0.000305">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t10" name="TC-3.8c Check Has Reviewed Returns True" line="199">
+<doc>GET /reviews/check/:bookingId → reviewed = true</doc>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.133534" elapsed="0.000249">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t11" name="TC-3.9 Verify Pre-Seeded Anonymous Review" line="208">
+<doc>Seed created anonymous-style review for bookingB — verify via GET</doc>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.134149" elapsed="0.000251">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t12" name="TC-3.14a Driver Views Received Reviews" line="217">
+<doc>GET /reviews/my-received</doc>
+<tag>Driver</tag>
+<tag>High</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.134662" elapsed="0.000197">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t13" name="TC-3.14b Driver Stats Public Endpoint" line="228">
+<doc>GET /reviews/driver/:driverId/stats</doc>
+<tag>Driver</tag>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.135135" elapsed="0.000223">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t14" name="TC-4.1a Admin Lists Disputes" line="243">
+<doc>GET /reviews/disputes/admin → 200</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.135717" elapsed="0.000284">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t15" name="TC-4.1b Admin Resolves Dispute — Hide Review" line="255">
+<doc>PATCH /reviews/disputes/:id → RESOLVED (uses pre-seeded dispute)</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.136305" elapsed="0.000288">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t16" name="TC-4.2 Admin Rejects Dispute" line="270">
+<doc>PATCH /reviews/disputes/:id → REJECTED (uses runtime dispute)</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.136867" elapsed="0.000232">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<test id="s1-t17" name="TC-3.14c Driver Stats Updated After Dispute Resolution" line="288">
+<doc>After hiding review, driver stats should update</doc>
+<tag>Driver</tag>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:41:42.137492" elapsed="0.000377">Parent suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</test>
+<kw name="Delete All Sessions" owner="RequestsLibrary" type="TEARDOWN">
+<msg time="2026-03-04T20:41:42.138642" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:41:42.138563" elapsed="0.000136"/>
+</kw>
+<doc>Epic 3 — Ride Review &amp; Rating System API Tests
+Covers TC-3.1 to TC-3.14 and Admin TC-4.1, TC-4.2
+Rate-limit aware: authLimiter = 10 POST/15 min (shared login+reviews+disputes)
+Run:  robot --outputdir results epic3_review_system.robot</doc>
+<status status="FAIL" start="2026-03-04T20:41:41.599441" elapsed="0.539284">Suite setup failed:
+HTTPError: 429 Client Error: Too Many Requests for url: http://localhost:3001/api/auth/login</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="17" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="3" skip="0">Admin</stat>
+<stat pass="0" fail="4" skip="0">Critical</stat>
+<stat pass="0" fail="5" skip="0">Dispute</stat>
+<stat pass="0" fail="5" skip="0">Driver</stat>
+<stat pass="0" fail="8" skip="0">High</stat>
+<stat pass="0" fail="1" skip="0">Low</stat>
+<stat pass="0" fail="4" skip="0">Medium</stat>
+<stat pass="0" fail="12" skip="0">Review</stat>
+<stat pass="0" fail="3" skip="0">Validation</stat>
+</tag>
+<suite>
+<stat name="Epic3 Review System" id="s1" pass="0" fail="17" skip="0">Epic3 Review System</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

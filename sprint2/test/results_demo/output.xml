@@ -1,0 +1,1585 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on win32)" generated="2026-03-04T20:55:05.437846" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic3 Complete" source="D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_complete.robot">
+<kw name="Suite Init" type="SETUP">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-04T20:55:05.810755" level="INFO">Starting process:
+node D:\Soften\SprintSE_Group4_4\sprint2\test/seed-review-test.js</msg>
+<msg time="2026-03-04T20:55:05.815585" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-04T20:55:06.141873" level="INFO">Process completed.</msg>
+<msg time="2026-03-04T20:55:06.142025" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SEED_SCRIPT}</arg>
+<arg>cwd=D:\\Soften\\SprintSE_Group4_4\\sprint2\\test</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-04T20:55:05.810252" elapsed="0.331798"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.142797" level="INFO">[dotenv@17.3.1] injecting env (18) from ..\..\DriveToSurviveWebApp\.env -- tip: ΓÜÖ∩╕Å  enable debug logging with { debug: true }
+≡ƒî▒ Seeding test data for Epic 3: Review &amp; Rating ...
+  Γ£à Driver: cmmbth0k60000us3ggzxw7huu
+  Γ£à Passenger: cmmbth0km0001us3g0xe0zid9
+  Γ£à Passenger2: cmmbthvog0002usak4kpnx7s0
+  Γ£à Vehicle: cmmbth0l40003us3gnynsyr82
+  Γ£à Route: cmmbth0lm0005us3gfgdcgyr4
+  Γ£à Booking A (for review): cmmc3mjej0004us7smlpvlt9n
+  Γ£à Booking B (for dispute): cmmc3mjf80006us7seglsofe7
+  Γ£à Booking C (expired): cmmc3mjfj0008us7swtkosr6w
+  Γ£à Admin: cmmbo4ou60009us8s80bv0m9o
+  Γ£à Pre-review for dispute: cmmc3mjga000dus7si6gz3g5a
+  Γ£à Pre-dispute for admin: cmmc3mjgn000fus7sbqz3dc2g
+
+≡ƒôä Seed output written to D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json
+{
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbthvog0002usak4kpnx7s0",
+  "passenger2Email": "rf_passenger2@test.com",
+  "vehicleId": "cmmbth0l40003us3gnynsyr82",
+  "routeId": "cmmbth0lm0005us3gfgdcgyr4",
+  "bookingAId": "cmmc3mjej0004us7smlpvlt9n",
+  "bookingBId": "cmmc3mjf80006us7seglsofe7",
+  "bookingCId": "cmmc3mjfj0008us7swtkosr6w",
+  "preReviewId": "cmmc3mjga000dus7si6gz3g5a",
+  "preDisputeId": "cmmc3mjgn000fus7sbqz3dc2g",
+  "adminId": "cmmbo4ou60009us8s80bv0m9o",
+  "adminEmail": "rf_admin@test.com",
+  "password": "password123"
+}
+
+≡ƒÄë Seed complete!</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.142248" elapsed="0.000620"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.143711" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${result.rc}</arg>
+<arg>0</arg>
+<arg>Seed script failed: ${result.stderr}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.142998" elapsed="0.000770"/>
+</kw>
+<kw name="Get File" owner="OperatingSystem">
+<msg time="2026-03-04T20:55:06.143978" level="INFO" html="true">Getting file '&lt;a href="file://D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json"&gt;D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json&lt;/a&gt;'.</msg>
+<msg time="2026-03-04T20:55:06.151465" level="INFO">${file_content} = {
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbth...</msg>
+<var>${file_content}</var>
+<arg>${OUTPUT_FILE}</arg>
+<doc>Returns the contents of a specified file.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.143868" elapsed="0.007639"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.152131" level="INFO">${data} = {'driverId': 'cmmbth0k60000us3ggzxw7huu', 'driverEmail': 'rf_driver@test.com', 'passengerId': 'cmmbth0km0001us3g0xe0zid9', 'passengerEmail': 'rf_passenger@test.com', 'passenger2Id': 'cmmbthvog0002usak...</msg>
+<var>${data}</var>
+<arg>json.loads($file_content)</arg>
+<arg>json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.151644" elapsed="0.000515"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.152791" level="INFO">${BOOKING_A_ID} = cmmc3mjej0004us7smlpvlt9n</msg>
+<arg>${BOOKING_A_ID}</arg>
+<arg>${data['bookingAId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.152305" elapsed="0.000529"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.153328" level="INFO">${BOOKING_B_ID} = cmmc3mjf80006us7seglsofe7</msg>
+<arg>${BOOKING_B_ID}</arg>
+<arg>${data['bookingBId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.152926" elapsed="0.000435"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.153797" level="INFO">${BOOKING_C_ID} = cmmc3mjfj0008us7swtkosr6w</msg>
+<arg>${BOOKING_C_ID}</arg>
+<arg>${data['bookingCId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.153440" elapsed="0.000387"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.154446" level="INFO">${DRIVER_ID} = cmmbth0k60000us3ggzxw7huu</msg>
+<arg>${DRIVER_ID}</arg>
+<arg>${data['driverId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.153905" elapsed="0.000590"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:55:06.155192" level="INFO">Seed data loaded: bookingA=cmmc3mjej0004us7smlpvlt9n, bookingB=cmmc3mjf80006us7seglsofe7, bookingC=cmmc3mjfj0008us7swtkosr6w, driver=cmmbth0k60000us3ggzxw7huu</msg>
+<arg>Seed data loaded: bookingA=${BOOKING_A_ID}, bookingB=${BOOKING_B_ID}, bookingC=${BOOKING_C_ID}, driver=${DRIVER_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.154615" elapsed="0.000619"/>
+</kw>
+<doc>Run seed script and load test data IDs</doc>
+<status status="PASS" start="2026-03-04T20:55:05.809085" elapsed="0.346209"/>
+</kw>
+<test id="s1-t1" name="Demo-1 Passenger Login" line="158">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:06.156146" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:55:06.156004" elapsed="0.000287"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:55:06.155797" elapsed="0.000554"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Get Title" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:06.157097" level="INFO">Cannot capture screenshot because no browser is open.</msg>
+<msg time="2026-03-04T20:55:06.157209" level="FAIL">No browser is open.</msg>
+<doc>Returns the title of the current page.</doc>
+<status status="FAIL" start="2026-03-04T20:55:06.157004" elapsed="0.057974">No browser is open.</status>
+</kw>
+<msg time="2026-03-04T20:55:06.215110" level="INFO">${browser_open} = False</msg>
+<var>${browser_open}</var>
+<arg>Get Title</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.156790" elapsed="0.058343"/>
+</kw>
+<if>
+<branch type="IF" condition="not ${browser_open}">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:06.215632" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3003/login'.</msg>
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:06.215446" elapsed="1.063495"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T20:55:07.279333" elapsed="0.058019"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T20:55:07.337693" elapsed="0.000583"/>
+</kw>
+<status status="PASS" start="2026-03-04T20:55:06.215238" elapsed="1.123112"/>
+</branch>
+<status status="PASS" start="2026-03-04T20:55:06.215212" elapsed="1.123204"/>
+</if>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:07.339584" level="INFO">Opening url 'http://localhost:3003/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:07.338629" elapsed="0.682598"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:08.021962" level="INFO">Typing text 'rf_passenger@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:08.021485" elapsed="1.617607"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:09.639484" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:09.639266" elapsed="1.568750"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:11.208407" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:11.208207" elapsed="2.594408"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:16.803428" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:55:16.803497" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:13.802898" elapsed="3.000656"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:55:16.804028" level="INFO">✅ Logged in as passenger</msg>
+<arg>✅ Logged in as passenger</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:55:16.803754" elapsed="0.000331"/>
+</kw>
+<doc>Login as passenger once and reuse session</doc>
+<status status="PASS" start="2026-03-04T20:55:06.156624" elapsed="10.647526"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:17.513430" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_01_passenger_login.png"&gt;&lt;img src="demo_01_passenger_login.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_01_passenger_login.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:55:16.804455" elapsed="0.709072"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:19.514472" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:55:19.514535" level="INFO">Show login success</msg>
+<arg>2s</arg>
+<arg>Show login success</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:17.513805" elapsed="2.000775"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:19.515204" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:55:19.515141" elapsed="0.000124"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:55:19.514929" elapsed="0.000383"/>
+</kw>
+<doc>Passenger logs in via the web UI</doc>
+<tag>Demo</tag>
+<tag>Login</tag>
+<tag>Passenger</tag>
+<status status="PASS" start="2026-03-04T20:55:06.155377" elapsed="13.360034"/>
+</test>
+<test id="s1-t2" name="Demo-2 Passenger Views Review Page" line="165">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:19.516436" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:55:19.516288" elapsed="0.000298"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:55:19.516086" elapsed="0.000564"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:19.516970" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:19.516843" elapsed="0.565875"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:24.083785" level="INFO">Slept 4 seconds.</msg>
+<msg time="2026-03-04T20:55:24.083856" level="INFO">Wait for reviews page to load</msg>
+<arg>4s</arg>
+<arg>Wait for reviews page to load</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:20.083137" elapsed="4.000769"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:24.668148" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_03_reviews_page.png"&gt;&lt;img src="demo_03_reviews_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_03_reviews_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:55:24.084168" elapsed="0.584158"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:25.717660" level="INFO">Current page contains text 'รีวิว'.</msg>
+<arg>รีวิว</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-04T20:55:24.670030" elapsed="1.047786"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:27.718973" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:55:27.719031" level="INFO">Let viewer see the page</msg>
+<arg>2s</arg>
+<arg>Let viewer see the page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:25.718248" elapsed="2.000827"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:27.719641" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:55:27.719580" elapsed="0.000218"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:55:27.719376" elapsed="0.000477"/>
+</kw>
+<doc>Passenger navigates to /reviews and sees pending reviews</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T20:55:19.515747" elapsed="8.204201"/>
+</test>
+<test id="s1-t3" name="Demo-3 Passenger Creates Review" line="174">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:27.721067" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:55:27.720922" elapsed="0.000281"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:55:27.720728" elapsed="0.000542"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:27.721575" level="INFO">Opening url 'http://localhost:3003/reviews/create?bookingId=cmmc3mjej0004us7smlpvlt9n'</msg>
+<arg>${BASE_URL}/reviews/create?bookingId=${BOOKING_A_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:27.721418" elapsed="0.550264"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:32.272638" level="INFO">Slept 4 seconds.</msg>
+<msg time="2026-03-04T20:55:32.272721" level="INFO">Wait for create review page</msg>
+<arg>4s</arg>
+<arg>Wait for create review page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:28.271946" elapsed="4.000837"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:32.845562" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_04_create_review_page.png"&gt;&lt;img src="demo_04_create_review_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_04_create_review_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:55:32.273104" elapsed="0.572546"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:34.846697" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:55:34.846761" level="INFO">Show empty form</msg>
+<arg>2s</arg>
+<arg>Show empty form</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:32.845886" elapsed="2.000919"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:37.847943" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:55:37.848029" level="INFO">Wait for StarRating to render</msg>
+<arg>3s</arg>
+<arg>Wait for StarRating to render</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:34.847052" elapsed="3.001033"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:38.356511" level="INFO">${star_buttons} = [&lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.C6CA82C4967CB15014907B0B2CB9F6D7.e.73")&gt;, &lt;selenium.webdriv...</msg>
+<var>${star_buttons}</var>
+<arg>xpath=//button[contains(@class,'cursor-pointer')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:37.848331" elapsed="0.508229"/>
+</kw>
+<if>
+<branch type="IF" condition="len($star_buttons) &gt;= 5">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:38.357676" level="INFO">Clicking element '&lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.C6CA82C4967CB15014907B0B2CB9F6D7.e.77")&gt;'.</msg>
+<msg time="2026-03-04T20:55:38.937052" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-1.png"&gt;&lt;img src="selenium-screenshot-1.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T20:55:38.937212" level="FAIL">ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff69d0faa55
+	0x7ff69ce58630
+	0x7ff69cbed546
+	0x7ff69cc49bd4
+	0x7ff69cc3b426
+	0x7ff69cc719da
+	0x7ff69cc3aca6
+	0x7ff69cc9591c
+	0x7ff69cc39098
+	0x7ff69cc39f83
+	0x7ff69d127810
+	0x7ff69d121afd
+	0x7ff69d142c1a
+	0x7ff69ce73345
+	0x7ff69ce7b81c
+	0x7ff69ce61924
+	0x7ff69ce61ad6
+	0x7ff69ce47e47
+	0x7ffacec5e8d7
+	0x7ffad014c53c
+</msg>
+<arg>${star_buttons}[4]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-04T20:55:38.357407" elapsed="0.673660">ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff69d0faa55
+	0x7ff69ce58630
+	0x7ff69cbed546
+	0x7ff69cc49bd4
+	0x7ff69cc3b426
+	0x7ff69cc719da
+	0x7ff69cc3aca6
+	0x7ff69cc9591c
+	0x7ff69cc39098
+	0x7ff69cc39f83
+	0x7ff69d127810
+	0x7ff69d121afd
+	0x7ff69d142c1a
+	0x7ff69ce73345
+	0x7ff69ce7b81c
+	0x7ff69ce61924
+	0x7ff69ce61ad6
+	0x7ff69ce47e47
+	0x7ffacec5e8d7
+	0x7ffad014c53c
+</status>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show 5th star selected via Selenium</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.031304" elapsed="0.000050"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Star rating successful via Selenium</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.031662" elapsed="0.000056"/>
+</kw>
+<status status="FAIL" start="2026-03-04T20:55:38.356849" elapsed="0.674974">ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff69d0faa55
+	0x7ff69ce58630
+	0x7ff69cbed546
+	0x7ff69cc49bd4
+	0x7ff69cc3b426
+	0x7ff69cc719da
+	0x7ff69cc3aca6
+	0x7ff69cc9591c
+	0x7ff69cc39098
+	0x7ff69cc39f83
+	0x7ff69d127810
+	0x7ff69d121afd
+	0x7ff69d142c1a
+	0x7ff69ce73345
+	0x7ff69ce7b81c
+	0x7ff69ce61924
+	0x7ff69ce61ad6
+	0x7ff69ce47e47
+	0x7ffacec5e8d7
+	0x7ffad014c53c
+</status>
+</branch>
+<branch type="ELSE">
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${all_buttons}</var>
+<arg>xpath=//button</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032027" elapsed="0.000048"/>
+</kw>
+<if>
+<branch type="IF" condition="len($all_buttons) &gt;= 5">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${all_buttons}[4]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032301" elapsed="0.000037"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show 5th star selected via index</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032438" elapsed="0.000028"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Star rating successful via index</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032573" elapsed="0.000029"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032181" elapsed="0.000462"/>
+</branch>
+<branch type="ELSE">
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<arg>var buttons = document.querySelectorAll('button');</arg>
+<arg>if(buttons.length &gt;= 5) {</arg>
+<arg>buttons[4].click();</arg>
+<arg>console.log('Clicked 5th button via simple JavaScript');</arg>
+<arg>}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032828" elapsed="0.000031"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show 5th star selected via JavaScript</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032967" elapsed="0.000025"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Star rating successful via JavaScript</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.033083" elapsed="0.000024"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032689" elapsed="0.000456"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:55:39.032155" elapsed="0.001029"/>
+</if>
+<status status="NOT RUN" start="2026-03-04T20:55:39.031892" elapsed="0.001323"/>
+</branch>
+<status status="FAIL" start="2026-03-04T20:55:38.356798" elapsed="0.676451">ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff69d0faa55
+	0x7ff69ce58630
+	0x7ff69cbed546
+	0x7ff69cc49bd4
+	0x7ff69cc3b426
+	0x7ff69cc719da
+	0x7ff69cc3aca6
+	0x7ff69cc9591c
+	0x7ff69cc39098
+	0x7ff69cc39f83
+	0x7ff69d127810
+	0x7ff69d121afd
+	0x7ff69d142c1a
+	0x7ff69ce73345
+	0x7ff69ce7b81c
+	0x7ff69ce61924
+	0x7ff69ce61ad6
+	0x7ff69ce47e47
+	0x7ffacec5e8d7
+	0x7ffad014c53c
+</status>
+</if>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${tag_buttons}</var>
+<arg>xpath=//button[contains(text(),'สุภาพ') or contains(text(),'polite')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.033757" elapsed="0.000035"/>
+</kw>
+<if>
+<branch type="IF" condition="len($tag_buttons) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${tag_buttons}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.034286" elapsed="0.000027"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show tag selected</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.034399" elapsed="0.000022"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:55:39.034169" elapsed="0.000289"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:55:39.034143" elapsed="0.000348"/>
+</if>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<var>${comment_field}</var>
+<arg>xpath=//textarea</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.035218" elapsed="0.000111"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>${comment_field}</arg>
+<arg>บริการดีเยี่ยม คนขับสุภาพ ขับรถปลอดภัยมาก แนะนำเลยครับ</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.036067" elapsed="0.000073"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show comment filled</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.036369" elapsed="0.000032"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_05_review_filled.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.036658" elapsed="0.000036"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Let viewer read the review</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.036933" elapsed="0.000028"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<var>${submit_btn}</var>
+<arg>xpath=//button[contains(text(),'ส่งรีวิว') or contains(text(),'Submit')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.037219" elapsed="0.000026"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${submit_btn}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.037511" elapsed="0.000027"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>4s</arg>
+<arg>Wait for submission</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.037844" elapsed="0.000028"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_06_review_submitted.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.038014" elapsed="0.000020"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show submission result</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:39.038237" elapsed="0.000027"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:39.038949" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:55:39.038838" elapsed="0.000220"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:55:39.038623" elapsed="0.000527"/>
+</kw>
+<doc>Passenger clicks to create a review for a completed booking</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T20:55:27.720344" elapsed="11.318958">ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=145.0.7632.117); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception
+Stacktrace:
+Symbols not available. Dumping unresolved backtrace:
+	0x7ff69d0faa55
+	0x7ff69ce58630
+	0x7ff69cbed546
+	0x7ff69cc49bd4
+	0x7ff69cc3b426
+	0x7ff69cc719da
+	0x7ff69cc3aca6
+	0x7ff69cc9591c
+	0x7ff69cc39098
+	0x7ff69cc39f83
+	0x7ff69d127810
+	0x7ff69d121afd
+	0x7ff69d142c1a
+	0x7ff69ce73345
+	0x7ff69ce7b81c
+	0x7ff69ce61924
+	0x7ff69ce61ad6
+	0x7ff69ce47e47
+	0x7ffacec5e8d7
+	0x7ffad014c53c
+</status>
+</test>
+<test id="s1-t4" name="Demo-4 Passenger Sees Submitted Review" line="235">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:39.041331" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:55:39.041107" elapsed="0.000388"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:55:39.040797" elapsed="0.000793"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:39.041967" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:39.041838" elapsed="0.562886"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:42.605480" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:55:42.605566" level="INFO">Wait for reviews page</msg>
+<arg>3s</arg>
+<arg>Wait for reviews page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:39.605035" elapsed="3.000580"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:43.115434" level="INFO">${my_reviews_tab} = &lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.5A8E2C87A9DC424D95962BC9342B2A9D.e.90")&gt;</msg>
+<var>${my_reviews_tab}</var>
+<arg>xpath=//button[contains(text(),'เขียน') or contains(text(),'written')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:42.605865" elapsed="0.509638"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:43.116086" level="INFO">Clicking element '&lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.5A8E2C87A9DC424D95962BC9342B2A9D.e.90")&gt;'.</msg>
+<arg>${my_reviews_tab}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:43.115840" elapsed="0.535815"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:46.652290" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:55:46.652380" level="INFO">Wait for my reviews</msg>
+<arg>3s</arg>
+<arg>Wait for my reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:43.651921" elapsed="3.000525"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:47.250861" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_07_my_reviews.png"&gt;&lt;img src="demo_07_my_reviews.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_07_my_reviews.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:55:46.652782" elapsed="0.598174"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:49.251546" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:55:49.251616" level="INFO">Show my reviews</msg>
+<arg>2s</arg>
+<arg>Show my reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:47.251180" elapsed="2.000493"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:49.252499" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:55:49.252404" elapsed="0.000161"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:55:49.252095" elapsed="0.000530"/>
+</kw>
+<doc>After submitting, passenger sees their review in "My Reviews"</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T20:55:39.040199" elapsed="10.212676"/>
+</test>
+<test id="s1-t5" name="Demo-5 Driver Login" line="249">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:55:49.254125" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:55:49.253971" elapsed="0.000279"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:55:49.253761" elapsed="0.000558"/>
+</kw>
+<kw name="Login As Driver">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Get Title" owner="SeleniumLibrary">
+<doc>Returns the title of the current page.</doc>
+<status status="PASS" start="2026-03-04T20:55:49.255027" elapsed="0.504774"/>
+</kw>
+<msg time="2026-03-04T20:55:49.760080" level="INFO">${browser_open} = True</msg>
+<var>${browser_open}</var>
+<arg>Get Title</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T20:55:49.254785" elapsed="0.505331"/>
+</kw>
+<if>
+<branch type="IF" condition="not ${browser_open}">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:49.760671" elapsed="0.000080"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:49.760956" elapsed="0.000026"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="NOT RUN" start="2026-03-04T20:55:49.761044" elapsed="0.000015"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:55:49.760254" elapsed="0.000828"/>
+</branch>
+<status status="PASS" start="2026-03-04T20:55:49.760211" elapsed="0.000916"/>
+</if>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:49.761558" level="INFO">Opening url 'http://localhost:3003/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:55:49.761223" elapsed="0.553611"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:50.315398" level="INFO">Typing text 'rf_driver@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${DRIVER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:50.315091" elapsed="1.564784"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:51.880250" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:51.880030" elapsed="1.565078"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:53.445549" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:55:53.445321" elapsed="2.559451"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:55:59.005490" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:55:59.005582" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:56.004988" elapsed="3.000656"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:55:59.006197" level="INFO">✅ Logged in as driver</msg>
+<arg>✅ Logged in as driver</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:55:59.005854" elapsed="0.000426"/>
+</kw>
+<doc>Login as driver for dispute tests</doc>
+<status status="PASS" start="2026-03-04T20:55:49.254590" elapsed="9.751796"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:55:59.695100" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_08_driver_login.png"&gt;&lt;img src="demo_08_driver_login.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_08_driver_login.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:55:59.006858" elapsed="0.688367"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:01.695936" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:01.696000" level="INFO">Show driver login success</msg>
+<arg>2s</arg>
+<arg>Show driver login success</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:55:59.695502" elapsed="2.000543"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:01.696629" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:01.696568" elapsed="0.000114"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:01.696368" elapsed="0.000359"/>
+</kw>
+<doc>Driver logs in to see received reviews</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>Login</tag>
+<status status="PASS" start="2026-03-04T20:55:49.253372" elapsed="12.443436"/>
+</test>
+<test id="s1-t6" name="Demo-6 Driver Views Received Reviews" line="256">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:01.697876" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:01.697728" elapsed="0.000256"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:01.697521" elapsed="0.000522"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:01.698392" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:01.698231" elapsed="0.543536"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:05.242876" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:05.242940" level="INFO">Wait for reviews page</msg>
+<arg>3s</arg>
+<arg>Wait for reviews page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:02.242082" elapsed="3.000902"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:05.751949" level="INFO">${received_tab} = &lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.8C989C5A3A56D192981F1219EDE5E1B9.e.130")&gt;</msg>
+<var>${received_tab}</var>
+<arg>xpath=//button[contains(text(),'ได้รับ') or contains(text(),'received')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:05.243318" elapsed="0.508674"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:05.752444" level="INFO">Clicking element '&lt;selenium.webdriver.remote.webelement.WebElement (session="6f999a004e54fdddfb2ec260de791346", element="f.101D4652DB71A782EFB897DB617BA760.d.8C989C5A3A56D192981F1219EDE5E1B9.e.130")&gt;'.</msg>
+<arg>${received_tab}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:05.752249" elapsed="0.546893"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:09.300110" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:09.300172" level="INFO">Wait for received reviews</msg>
+<arg>3s</arg>
+<arg>Wait for received reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:06.299404" elapsed="3.000810"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:09.887174" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_09_driver_reviews.png"&gt;&lt;img src="demo_09_driver_reviews.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_09_driver_reviews.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:09.300441" elapsed="0.586833"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:11.888243" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:11.888326" level="INFO">Show driver received reviews</msg>
+<arg>2s</arg>
+<arg>Show driver received reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:09.887503" elapsed="2.000886"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:11.889214" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:11.889093" elapsed="0.000208"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:11.888861" elapsed="0.000531"/>
+</kw>
+<doc>Driver navigates to reviews page and sees reviews received</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T20:56:01.697109" elapsed="10.192442"/>
+</test>
+<test id="s1-t7" name="Demo-7 Driver Views Public Stats Page" line="270">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:11.890523" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:11.890384" elapsed="0.000250"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:11.890206" elapsed="0.000486"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:11.890982" level="INFO">Opening url 'http://localhost:3003/reviews/driver/cmmbth0k60000us3ggzxw7huu'</msg>
+<arg>${BASE_URL}/reviews/driver/${DRIVER_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:11.890846" elapsed="0.550914"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:15.442634" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:15.442702" level="INFO">Wait for stats page</msg>
+<arg>3s</arg>
+<arg>Wait for stats page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:12.442020" elapsed="3.000734"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:16.019121" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_10_driver_stats.png"&gt;&lt;img src="demo_10_driver_stats.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_10_driver_stats.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:15.443066" elapsed="0.576154"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:18.020047" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:18.020128" level="INFO">Show driver public stats</msg>
+<arg>2s</arg>
+<arg>Show driver public stats</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:16.019452" elapsed="2.000735"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:18.020914" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:18.020840" elapsed="0.000153"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:18.020571" elapsed="0.000478"/>
+</kw>
+<doc>View the driver's public stats page</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>Stats</tag>
+<status status="PASS" start="2026-03-04T20:56:11.889898" elapsed="6.131266"/>
+</test>
+<test id="s1-t8" name="Demo-8 Admin Login" line="279">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:18.022150" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:18.022007" elapsed="0.000278"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:18.021813" elapsed="0.000555"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Get Title" owner="SeleniumLibrary">
+<doc>Returns the title of the current page.</doc>
+<status status="PASS" start="2026-03-04T20:56:18.023126" elapsed="0.504183"/>
+</kw>
+<msg time="2026-03-04T20:56:18.527450" level="INFO">${browser_open} = True</msg>
+<var>${browser_open}</var>
+<arg>Get Title</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T20:56:18.022890" elapsed="0.504585"/>
+</kw>
+<if>
+<branch type="IF" condition="not ${browser_open}">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:18.527765" elapsed="0.000024"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:18.527864" elapsed="0.000017"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:18.527938" elapsed="0.000014"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:18.527555" elapsed="0.000421"/>
+</branch>
+<status status="PASS" start="2026-03-04T20:56:18.527535" elapsed="0.000468"/>
+</if>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:18.528172" level="INFO">Opening url 'http://localhost:3003/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:18.528056" elapsed="0.546470"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:19.074952" level="INFO">Typing text 'rf_admin@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:19.074708" elapsed="1.553838"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:20.628949" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:20.628722" elapsed="1.554282"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:22.183583" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:22.183287" elapsed="2.566509"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:27.750515" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:27.750581" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:24.749955" elapsed="3.000674"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:56:27.750981" level="INFO">✅ Logged in as admin</msg>
+<arg>✅ Logged in as admin</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:56:27.750767" elapsed="0.000262"/>
+</kw>
+<doc>Login as admin for admin tests</doc>
+<status status="PASS" start="2026-03-04T20:56:18.022681" elapsed="9.728408"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:28.432891" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_11_admin_login.png"&gt;&lt;img src="demo_11_admin_login.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_11_admin_login.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:27.751273" elapsed="0.681717"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:30.434246" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:30.434311" level="INFO">Show admin login success</msg>
+<arg>2s</arg>
+<arg>Show admin login success</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:28.433246" elapsed="2.001109"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:30.435046" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:30.434955" elapsed="0.000144"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:30.434709" elapsed="0.000441"/>
+</kw>
+<doc>Admin logs in to manage disputes</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Login</tag>
+<status status="PASS" start="2026-03-04T20:56:18.021486" elapsed="12.413762"/>
+</test>
+<test id="s1-t9" name="Demo-9 Admin Views Disputes Dashboard" line="286">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:30.436109" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:30.435979" elapsed="0.000237"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:30.435814" elapsed="0.000464"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:30.436585" level="INFO">Opening url 'http://localhost:3003/admin/sprint2'</msg>
+<arg>${BASE_URL}/admin/sprint2</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:30.436461" elapsed="0.600024"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:34.037154" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:34.037214" level="INFO">Wait for admin page</msg>
+<arg>3s</arg>
+<arg>Wait for admin page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:31.036793" elapsed="3.000466"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:34.601058" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_12_admin_disputes.png"&gt;&lt;img src="demo_12_admin_disputes.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_12_admin_disputes.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:34.037515" elapsed="0.563697"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:36.602114" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:36.602175" level="INFO">Show admin disputes dashboard</msg>
+<arg>2s</arg>
+<arg>Show admin disputes dashboard</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:34.601477" elapsed="2.000746"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:36.602807" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:36.602746" elapsed="0.000109"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:36.602541" elapsed="0.000359"/>
+</kw>
+<doc>Admin navigates to Sprint 2 admin disputes page</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<status status="PASS" start="2026-03-04T20:56:30.435525" elapsed="6.167461"/>
+</test>
+<test id="s1-t10" name="Demo-10 Admin Resolves a Dispute" line="295">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:36.603916" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:36.603788" elapsed="0.000230"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:36.603629" elapsed="0.000446"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:37.112575" level="INFO">${resolve_buttons} = []</msg>
+<var>${resolve_buttons}</var>
+<arg>xpath=//button[contains(text(),'Resolve') or contains(text(),'แก้ไข')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:36.604238" elapsed="0.508385"/>
+</kw>
+<if>
+<branch type="IF" condition="len($resolve_buttons) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${resolve_buttons}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113242" elapsed="0.000042"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Wait for resolve modal</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113399" elapsed="0.000023"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_13_resolve_modal.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113514" elapsed="0.000018"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show resolve options</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113587" elapsed="0.000016"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${confirm_btn}</var>
+<arg>xpath=//button[contains(text(),'Confirm') or contains(text(),'ยืนยัน')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113665" elapsed="0.000017"/>
+</kw>
+<if>
+<branch type="IF" condition="len($confirm_btn) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${confirm_btn}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113798" elapsed="0.000016"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for resolution</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113868" elapsed="0.000015"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113735" elapsed="0.000178"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113722" elapsed="0.000218"/>
+</if>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_14_dispute_resolved.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.113999" elapsed="0.000021"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show resolved dispute</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:37.114078" elapsed="0.000016"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:37.112910" elapsed="0.001208"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:56:37.114400" level="INFO">No disputes to resolve</msg>
+<arg>No disputes to resolve</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:56:37.114201" elapsed="0.000235"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:37.675777" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_13_no_disputes.png"&gt;&lt;img src="demo_13_no_disputes.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_13_no_disputes.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:37.114526" elapsed="0.561361"/>
+</kw>
+<status status="PASS" start="2026-03-04T20:56:37.114142" elapsed="0.561816"/>
+</branch>
+<status status="PASS" start="2026-03-04T20:56:37.112872" elapsed="0.563129"/>
+</if>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:37.676812" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:37.676707" elapsed="0.000188"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:37.676396" elapsed="0.000568"/>
+</kw>
+<doc>Admin clicks resolve button on a dispute</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<status status="PASS" start="2026-03-04T20:56:36.603341" elapsed="1.073794"/>
+</test>
+<test id="s1-t11" name="Demo-11 Driver Creates Dispute" line="321">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:37.678499" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:37.678311" elapsed="0.000328"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:37.678089" elapsed="0.000621"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:37.679025" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:37.678889" elapsed="0.561500"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:41.241461" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T20:56:41.241548" level="INFO">Wait for reviews page</msg>
+<arg>3s</arg>
+<arg>Wait for reviews page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:38.240686" elapsed="3.000911"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:41.832351" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_15_driver_reviews_page.png"&gt;&lt;img src="demo_15_driver_reviews_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_15_driver_reviews_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:41.241913" elapsed="0.590536"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:43.833730" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:43.833796" level="INFO">Show driver's received reviews</msg>
+<arg>2s</arg>
+<arg>Show driver's received reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:41.832693" elapsed="2.001150"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:44.342581" level="INFO">${dispute_buttons} = []</msg>
+<var>${dispute_buttons}</var>
+<arg>xpath=//button[contains(text(),'รายงานข้อพิพาท') or contains(text(),'Dispute') or contains(text(),'รายงาน')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T20:56:43.834106" elapsed="0.508537"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-03-04T20:56:44.343583" level="INFO">Length is 0.</msg>
+<msg time="2026-03-04T20:56:44.343694" level="INFO">${dispute_count} = 0</msg>
+<var>${dispute_count}</var>
+<arg>${dispute_buttons}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-03-04T20:56:44.343012" elapsed="0.000709"/>
+</kw>
+<if>
+<branch type="IF" condition="${dispute_count} &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${dispute_buttons}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344175" elapsed="0.000027"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Wait for dispute modal</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344282" elapsed="0.000019"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_16_dispute_form.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344374" elapsed="0.000018"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show dispute form</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344462" elapsed="0.000017"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${reason_selectors}</var>
+<arg>xpath=//select | //input[@type='radio']</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344547" elapsed="0.000016"/>
+</kw>
+<if>
+<branch type="IF" condition="len($reason_selectors) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${reason_selectors}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344703" elapsed="0.000022"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show reason selected</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344787" elapsed="0.000016"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344619" elapsed="0.000210"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344604" elapsed="0.000257"/>
+</if>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${detail_fields}</var>
+<arg>xpath=//textarea | //input[@type='text']</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344921" elapsed="0.000019"/>
+</kw>
+<if>
+<branch type="IF" condition="len($detail_fields) &gt; 0">
+<kw name="Input Text" owner="SeleniumLibrary">
+<arg>${detail_fields}[0]</arg>
+<arg>ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ บริการดีเยี่ยม</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345057" elapsed="0.000019"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show dispute detail filled</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345154" elapsed="0.000022"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344991" elapsed="0.000211"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:56:44.344980" elapsed="0.000249"/>
+</if>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_17_dispute_filled.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345290" elapsed="0.000022"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Let viewer read the dispute</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345393" elapsed="0.000025"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${submit_buttons}</var>
+<arg>xpath=//button[contains(text(),'ส่ง') or contains(text(),'Submit') or contains(text(),'ยืนยัน')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345514" elapsed="0.000021"/>
+</kw>
+<if>
+<branch type="IF" condition="len($submit_buttons) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${submit_buttons}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345714" elapsed="0.000028"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for dispute submission</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345841" elapsed="0.000029"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345616" elapsed="0.000298"/>
+</branch>
+<status status="NOT RUN" start="2026-03-04T20:56:44.345599" elapsed="0.000359"/>
+</if>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_18_dispute_submitted.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.346046" elapsed="0.000022"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.346136" elapsed="0.000018"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Driver dispute created successfully</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T20:56:44.346228" elapsed="0.000021"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T20:56:44.343961" elapsed="0.002322"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:56:44.347173" level="INFO">⚠️ No dispute buttons found</msg>
+<arg>⚠️ No dispute buttons found</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:56:44.346387" elapsed="0.000878"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:44.925058" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_16_no_dispute_options.png"&gt;&lt;img src="demo_16_no_dispute_options.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_16_no_dispute_options.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:44.347388" elapsed="0.577796"/>
+</kw>
+<status status="PASS" start="2026-03-04T20:56:44.346314" elapsed="0.578953"/>
+</branch>
+<status status="PASS" start="2026-03-04T20:56:44.343924" elapsed="0.581376"/>
+</if>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:44.925890" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:44.925827" elapsed="0.000113"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:44.925606" elapsed="0.000381"/>
+</kw>
+<doc>Driver navigates to their reviews and creates a dispute</doc>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<status status="PASS" start="2026-03-04T20:56:37.677508" elapsed="7.248621"/>
+</test>
+<test id="s1-t12" name="Demo-12 Final Summary Screenshot" line="373">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:44.927066" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T20:56:44.926931" elapsed="0.000309"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T20:56:44.926762" elapsed="0.000545"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:44.927597" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:44.927468" elapsed="0.551361"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:47.480247" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:47.480307" level="INFO">Wait for reviews page</msg>
+<arg>2s</arg>
+<arg>Wait for reviews page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:45.479423" elapsed="2.000929"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:48.076891" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_19_final_reviews.png"&gt;&lt;img src="demo_19_final_reviews.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_19_final_reviews.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:47.480622" elapsed="0.596368"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:48.077347" level="INFO">Opening url 'http://localhost:3003/admin/sprint2'</msg>
+<arg>${BASE_URL}/admin/sprint2</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T20:56:48.077211" elapsed="0.546119"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T20:56:50.624190" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T20:56:50.624257" level="INFO">Wait for admin page</msg>
+<arg>2s</arg>
+<arg>Wait for admin page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T20:56:48.623659" elapsed="2.000647"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T20:56:51.184426" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_20_final_admin.png"&gt;&lt;img src="demo_20_final_admin.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_20_final_admin.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T20:56:50.624595" elapsed="0.559923"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T20:56:51.185000" level="INFO">✅ Epic 3 Review &amp; Rating System Demo Complete!</msg>
+<arg>✅ Epic 3 Review &amp; Rating System Demo Complete!</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T20:56:51.184767" elapsed="0.000274"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T20:56:51.185550" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T20:56:51.185492" elapsed="0.000104"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T20:56:51.185300" elapsed="0.000339"/>
+</kw>
+<doc>Take final screenshots showing the complete system</doc>
+<tag>Demo</tag>
+<tag>Summary</tag>
+<status status="PASS" start="2026-03-04T20:56:44.926453" elapsed="6.259318"/>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T20:56:51.186243" elapsed="2.599255"/>
+</kw>
+<doc>Epic 3 Review &amp; Rating System - Complete Test Suite (API + Selenium + Validation)</doc>
+<status status="FAIL" start="2026-03-04T20:55:05.439864" elapsed="108.345747"/>
+</suite>
+<statistics>
+<total>
+<stat pass="11" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="3" fail="0" skip="0">Admin</stat>
+<stat pass="11" fail="1" skip="0">Demo</stat>
+<stat pass="3" fail="0" skip="0">Dispute</stat>
+<stat pass="4" fail="0" skip="0">Driver</stat>
+<stat pass="3" fail="0" skip="0">Login</stat>
+<stat pass="3" fail="1" skip="0">Passenger</stat>
+<stat pass="3" fail="1" skip="0">Review</stat>
+<stat pass="1" fail="0" skip="0">Stats</stat>
+<stat pass="1" fail="0" skip="0">Summary</stat>
+</tag>
+<suite>
+<stat name="Epic3 Complete" id="s1" pass="11" fail="1" skip="0">Epic3 Complete</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-04T20:55:05.433410" level="WARN">Error in file 'D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_complete.robot' on line 807: The '[Return]' setting is deprecated. Use the 'RETURN' statement instead.</msg>
+</errors>
+</robot>
