@@ -11,7 +11,7 @@ Suite Teardown    Teardown And Clean Database
 
 *** Variables ***
 ${BASE_URL}          http://localhost:3001
-${WEB_URL}           http://localhost:3000
+${WEB_URL}           http://localhost:3003
 ${DRIVER_EMAIL}      epic2_driver@test.com
 ${PASSENGER_EMAIL}   thanatcha.k@kkumail.com
 ${PASS}              password123
