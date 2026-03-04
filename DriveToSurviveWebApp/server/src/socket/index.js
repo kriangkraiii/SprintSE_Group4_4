@@ -25,14 +25,19 @@ const { verifyToken } = require('../utils/jwt');
 const onlineUsers = new Map();
 
 function initSocketIO(httpServer) {
+    const defaultOrigins = [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:3003',
+        'https://amazing-crisp-9bcb1a.netlify.app',
+    ];
+    const envOrigins = (process.env.CORS_ORIGINS || '')
+        .split(',').map(o => o.trim()).filter(Boolean);
+    const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
     const io = new Server(httpServer, {
         cors: {
-            origin: [
-                'http://localhost:3000',
-                'http://localhost:3001',
-                'http://localhost:3003',
-                'https://amazing-crisp-9bcb1a.netlify.app',
-            ],
+            origin: allowedOrigins,
             credentials: true,
         },
         pingInterval: 25000,

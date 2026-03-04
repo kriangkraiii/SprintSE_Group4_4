@@ -321,6 +321,7 @@ import { useAuth } from '~/composables/useAuth'
 import { useDriverStatus } from '~/composables/useDriverStatus'
 import { useChat } from '~/composables/useChat'
 import { useDarkMode } from '~/composables/useDarkMode'
+import { playNotificationSound } from '~/composables/useNotificationSound'
 
 const { token, user, logout } = useAuth()
 const { isDriverVerified, fetchDriverStatus } = useDriverStatus()
@@ -475,6 +476,8 @@ function handleNewNotification(notif) {
         createdAt: notif.createdAt || Date.now(),
         readAt: notif.readAt || null
     })
+    // 🔊 เล่นเสียงแจ้งเตือนทุกครั้งที่มีข้อความใหม่เข้ามา
+    playNotificationSound()
 }
 
 onMounted(() => {

@@ -443,7 +443,7 @@ const updateBookingStatus = async (id, status, userId) => {
   const booking = await prisma.booking.findUnique({
     where: { id },
     include: {
-      route: { include: { driver: true, startLocation: true, endLocation: true } },
+      route: { include: { driver: true } },
       passenger: true,
     },
   });
@@ -471,7 +471,7 @@ const updateBookingStatus = async (id, status, userId) => {
         data: routeUpdates,
       });
 
-      await tx.notification.create({
+      const rejectedNotif = await tx.notification.create({
         data: {
           userId: booking.passengerId,
           type: 'BOOKING',
@@ -480,12 +480,13 @@ const updateBookingStatus = async (id, status, userId) => {
           metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'REJECTED' }
         }
       });
+      emitNotification(booking.passengerId, rejectedNotif);
 
     }
 
     if (status === BookingStatus.CONFIRMED) {
       // 🔔 แจ้งเตือน Passenger เมื่อถูกยืนยัน
-      await tx.notification.create({
+      const confirmedNotif = await tx.notification.create({
         data: {
           userId: booking.passengerId,
           type: 'BOOKING',
@@ -494,11 +495,12 @@ const updateBookingStatus = async (id, status, userId) => {
           metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'CONFIRMED' }
         }
       });
+      emitNotification(booking.passengerId, confirmedNotif);
     }
 
     if (status === BookingStatus.IN_PROGRESS) {
       // 🔔 แจ้งเตือน Passenger ว่าคนขับรับแล้ว
-      await tx.notification.create({
+      const inProgressNotif = await tx.notification.create({
         data: {
           userId: booking.passengerId,
           type: 'BOOKING',
@@ -507,6 +509,7 @@ const updateBookingStatus = async (id, status, userId) => {
           metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'IN_PROGRESS' }
         }
       });
+      emitNotification(booking.passengerId, inProgressNotif);
     }
 
     if (status === BookingStatus.COMPLETED) {
@@ -515,7 +518,7 @@ const updateBookingStatus = async (id, status, userId) => {
         where: { id },
         data: { completedAt: new Date() }
       });
-      await tx.notification.create({
+      const completedNotif = await tx.notification.create({
         data: {
           userId: booking.passengerId,
           type: 'BOOKING',
@@ -524,6 +527,7 @@ const updateBookingStatus = async (id, status, userId) => {
           metadata: { kind: 'BOOKING_STATUS', bookingId: id, routeId: booking.route.id, status: 'COMPLETED' }
         }
       });
+      emitNotification(booking.passengerId, completedNotif);
     }
 
     // Fire-and-forget: create group chat + send email when confirmed
@@ -584,7 +588,7 @@ const confirmBoarded = async (bookingId, passengerId) => {
     });
 
     // Notify driver
-    await tx.notification.create({
+    const boardedNotif = await tx.notification.create({
       data: {
         userId: booking.route.driverId,
         type: 'BOOKING',
@@ -593,6 +597,7 @@ const confirmBoarded = async (bookingId, passengerId) => {
         metadata: { kind: 'PASSENGER_BOARDED', bookingId, routeId: booking.route.id }
       }
     });
+    emitNotification(booking.route.driverId, boardedNotif);
 
     return updated;
   });
@@ -637,7 +642,7 @@ const cancelBooking = async (id, passengerId, opts = {}) => {
     });
 
     if (wasConfirmed) {
-      await tx.notification.create({
+      const cancelNotif = await tx.notification.create({
         data: {
           userId: passengerId,
           type: 'SYSTEM',
@@ -646,6 +651,7 @@ const cancelBooking = async (id, passengerId, opts = {}) => {
           metadata: { kind: 'PASSENGER_CONFIRMED_CANCEL', bookingId: id },
         },
       });
+      emitNotification(passengerId, cancelNotif);
     }
 
     return updatedBooking;

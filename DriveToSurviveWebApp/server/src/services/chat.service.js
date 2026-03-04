@@ -1,8 +1,8 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 const { filterContent } = require('../utils/contentFilter');
+const { cronConfig } = require('../config/cronConfig');
 
-const RETENTION_DAYS = 90;
 const UNSEND_WINDOW_MINUTES = 5;
 
 /**
@@ -28,7 +28,7 @@ const createSession = async (routeId, userId) => {
     if (!route) throw new ApiError(404, 'Route not found');
 
     const retentionExpiresAt = new Date();
-    retentionExpiresAt.setDate(retentionExpiresAt.getDate() + RETENTION_DAYS);
+    retentionExpiresAt.setDate(retentionExpiresAt.getDate() + cronConfig.retentionDays);
 
     // สร้าง participant list — ป้องกัน duplicate เมื่อ driver === userId
     const participantCreates = [{ userId: route.driverId }];
@@ -96,7 +96,7 @@ const endSession = async (routeId) => {
 
     const now = new Date();
     const chatExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const readOnlyExpiresAt = new Date(now.getTime() + 8 * 24 * 60 * 60 * 1000);
+    const readOnlyExpiresAt = new Date(now.getTime() + (1 + cronConfig.chatReadOnlyDays) * 24 * 60 * 60 * 1000);
 
     const updated = await prisma.chatSession.update({
         where: { id: session.id },
@@ -431,6 +431,6 @@ module.exports = {
     shareLocation,
     getMySessions,
     isParticipant,
-    RETENTION_DAYS,
+    get RETENTION_DAYS() { return cronConfig.retentionDays; },
     UNSEND_WINDOW_MINUTES,
 };

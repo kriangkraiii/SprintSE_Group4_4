@@ -1,5 +1,6 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
+const { emitNotification } = require('../socket/emitter');
 
 const NO_SHOW_TIMEOUT_MINUTES = 20;
 
@@ -62,7 +63,7 @@ const executeNoShow = async (bookingId, driverId) => {
     });
 
     // Create notification for passenger
-    await prisma.notification.create({
+    const noShowNotif = await prisma.notification.create({
         data: {
             userId: booking.passengerId,
             type: 'SYSTEM',
@@ -70,6 +71,7 @@ const executeNoShow = async (bookingId, driverId) => {
             body: `การจอง ${bookingId} ถูกยกเลิกเนื่องจากไม่มาตามนัด (No-Show)`,
         },
     });
+    emitNotification(booking.passengerId, noShowNotif);
 
     // Log to SystemLog
     await prisma.systemLog.create({

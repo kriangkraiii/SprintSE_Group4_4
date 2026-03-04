@@ -20,23 +20,23 @@
 
         <!-- Loading Skeleton -->
         <div v-if="isLoading && !stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <div v-for="i in 8" :key="i" class="bg-white rounded-xl border border-slate-200 p-5 animate-pulse">
-            <div class="h-3 bg-slate-200 rounded w-1/2 mb-3"></div>
-            <div class="h-8 bg-slate-200 rounded w-2/3 mb-2"></div>
-            <div class="h-2 bg-slate-100 rounded w-1/3"></div>
+          <div v-for="i in 8" :key="i" class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5 animate-pulse">
+            <div class="h-3 bg-slate-200 dark:bg-gray-700 rounded w-1/2 mb-3"></div>
+            <div class="h-8 bg-slate-200 dark:bg-gray-700 rounded w-2/3 mb-2"></div>
+            <div class="h-2 bg-slate-100 dark:bg-gray-600 rounded w-1/3"></div>
           </div>
         </div>
 
         <!-- Error -->
-        <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6 text-center">
-          <p class="text-red-600">{{ error }}</p>
+        <div v-if="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 mb-6 text-center">
+          <p class="text-red-600 dark:text-red-400">{{ error }}</p>
           <button @click="fetchStats" class="mt-3 text-sm text-cta hover:underline cursor-pointer">ลองใหม่</button>
         </div>
 
         <template v-if="stats">
           <!-- Stat Cards Row 1: Main Metrics -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">ผู้ใช้ทั้งหมด</p>
@@ -51,7 +51,7 @@
               </div>
             </div>
 
-            <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">เส้นทางทั้งหมด</p>
@@ -66,7 +66,7 @@
               </div>
             </div>
 
-            <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">การจองทั้งหมด</p>
@@ -81,7 +81,7 @@
               </div>
             </div>
 
-            <div class="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">รายได้รวม</p>
@@ -100,7 +100,7 @@
           <!-- Row 2: Booking Breakdown + Driver Stats + Quick Stats -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
             <!-- Booking Status Breakdown -->
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
               <h3 class="text-sm font-semibold text-primary mb-4">📋 สถานะการจอง</h3>
               <div class="space-y-3">
                 <div class="flex items-center justify-between">
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Driver Verification -->
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
               <h3 class="text-sm font-semibold text-primary mb-4">🪪 คนขับ</h3>
               <div class="space-y-3">
                 <div class="flex items-center justify-between">
@@ -175,22 +175,22 @@
             </div>
 
             <!-- Quick Stats -->
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
               <h3 class="text-sm font-semibold text-primary mb-4">📈 สรุปข้อมูล</h3>
               <div class="grid grid-cols-2 gap-3">
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-3 text-center">
                   <p class="text-2xl font-bold text-primary">{{ stats.overview.totalVehicles }}</p>
                   <p class="text-xs text-slate-400 mt-1">🚗 รถยนต์</p>
                 </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-3 text-center">
                   <p class="text-2xl font-bold text-primary">{{ stats.overview.totalReviews }}</p>
                   <p class="text-xs text-slate-400 mt-1">⭐ รีวิว</p>
                 </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-3 text-center">
                   <p class="text-2xl font-bold text-primary">{{ stats.overview.newUsersWeek }}</p>
                   <p class="text-xs text-slate-400 mt-1">👤 ผู้ใช้ใหม่ (7 วัน)</p>
                 </div>
-                <div class="bg-slate-50 rounded-lg p-3 text-center">
+                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-3 text-center">
                   <p class="text-2xl font-bold text-primary">{{ stats.overview.totalNotifications }}</p>
                   <p class="text-xs text-slate-400 mt-1">🔔 แจ้งเตือน</p>
                 </div>
@@ -201,7 +201,7 @@
           <!-- Row 3: Trend Charts (7-day) -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             <!-- Booking Trend -->
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
               <h3 class="text-sm font-semibold text-primary mb-4">📅 การจอง 7 วันล่าสุด</h3>
               <div v-if="stats.charts.recentBookings.length" class="flex items-end gap-1 h-32">
                 <div v-for="(d, i) in stats.charts.recentBookings" :key="i"
@@ -216,7 +216,7 @@
             </div>
 
             <!-- User Trend -->
-            <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
               <h3 class="text-sm font-semibold text-primary mb-4">👤 ผู้ใช้ใหม่ 7 วันล่าสุด</h3>
               <div v-if="stats.charts.recentUsers.length" class="flex items-end gap-1 h-32">
                 <div v-for="(d, i) in stats.charts.recentUsers" :key="i"
@@ -232,7 +232,7 @@
           </div>
 
           <!-- Row 4: Quick Actions -->
-          <div class="bg-white rounded-xl border border-slate-200 p-5">
+          <div class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 p-5">
             <h3 class="text-sm font-semibold text-primary mb-4">⚡ การดำเนินการด่วน</h3>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <NuxtLink to="/admin/users"
@@ -343,7 +343,16 @@ async function fetchStats() {
     stats.value = res?.data || res
   } catch (err) {
     console.error('Dashboard fetch error:', err)
-    error.value = err?.data?.message || err?.statusMessage || 'ไม่สามารถโหลดข้อมูลได้'
+    const status = err?.response?.status || err?.status || err?.statusCode
+    if (status === 401 || status === 403) {
+      error.value = 'ไม่มีสิทธิ์เข้าถึง — กรุณาเข้าสู่ระบบใหม่'
+    } else if (status >= 500) {
+      error.value = `เซิร์ฟเวอร์ผิดพลาด (${status}) — ${err?.data?.message || 'ลองรีเฟรชอีกครั้ง'}`
+    } else if (err?.message?.includes('fetch') || err?.message?.includes('ECONNREFUSED')) {
+      error.value = 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ — ตรวจสอบว่า Backend กำลังทำงานอยู่'
+    } else {
+      error.value = err?.data?.message || err?.statusMessage || 'ไม่สามารถโหลดข้อมูลได้'
+    }
   } finally {
     isLoading.value = false
   }
