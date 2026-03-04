@@ -1,6 +1,7 @@
 /**
  * Admin Dashboard Statistics Service
  * Aggregates key metrics for the admin dashboard
+ * Uses Prisma API instead of raw SQL for reliability across environments
  */
 const prisma = require('../utils/prisma');
 
@@ -9,6 +10,7 @@ async function getDashboardStats() {
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
+  // ── Core counts (all in parallel) ──
   const [
     totalUsers,
     newUsersToday,
@@ -28,6 +30,7 @@ async function getDashboardStats() {
     totalChatSessions,
     activeChatSessions,
     totalNotifications,
+    avgRating,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { createdAt: { gte: todayStart } } }),
@@ -47,38 +50,20 @@ async function getDashboardStats() {
     prisma.chatSession.count(),
     prisma.chatSession.count({ where: { status: 'ACTIVE' } }),
     prisma.notification.count(),
+    prisma.rideReview.aggregate({ _avg: { rating: true } }),
   ]);
 
-  // Recent bookings (last 7 days, grouped by day)
-  const recentBookings = await prisma.$queryRaw`
-    SELECT DATE(createdAt) as date, COUNT(*) as count
-    FROM Booking
-    WHERE createdAt >= ${weekAgo}
-    GROUP BY DATE(createdAt)
-    ORDER BY date ASC
-  `;
+  // ── Charts: 7-day trends (Prisma-safe, no raw SQL) ──
+  const recentBookings = await buildDailyChart(
+    prisma.booking, weekAgo
+  );
 
-  // Recent users (last 7 days, grouped by day)
-  const recentUsers = await prisma.$queryRaw`
-    SELECT DATE(createdAt) as date, COUNT(*) as count
-    FROM User
-    WHERE createdAt >= ${weekAgo}
-    GROUP BY DATE(createdAt)
-    ORDER BY date ASC
-  `;
+  const recentUsers = await buildDailyChart(
+    prisma.user, weekAgo
+  );
 
-  // Revenue estimate (sum of pricePerSeat * numberOfSeats for completed/confirmed bookings)
-  const revenueResult = await prisma.$queryRaw`
-    SELECT COALESCE(SUM(b.numberOfSeats * r.pricePerSeat), 0) as totalRevenue
-    FROM Booking b
-    JOIN Route r ON b.routeId = r.id
-    WHERE b.status IN ('CONFIRMED', 'COMPLETED')
-  `;
-
-  // Average rating
-  const avgRating = await prisma.rideReview.aggregate({
-    _avg: { rating: true },
-  });
+  // ── Revenue (Prisma-safe) ──
+  const revenue = await calculateRevenue();
 
   return {
     overview: {
@@ -106,23 +91,76 @@ async function getDashboardStats() {
       approved: approvedDrivers,
     },
     charts: {
-      recentBookings: recentBookings.map(r => ({
-        date: r.date,
-        count: Number(r.count),
-      })),
-      recentUsers: recentUsers.map(r => ({
-        date: r.date,
-        count: Number(r.count),
-      })),
+      recentBookings,
+      recentUsers,
     },
     revenue: {
-      total: Number(revenueResult[0]?.totalRevenue || 0),
+      total: revenue,
     },
     ratings: {
-      average: avgRating._avg?.rating ? Number(Number(avgRating._avg.rating).toFixed(1)) : 0,
+      average: avgRating._avg?.rating
+        ? Number(Number(avgRating._avg.rating).toFixed(1))
+        : 0,
       totalReviews,
     },
   };
+}
+
+/**
+ * Build a 7-day chart using Prisma groupBy instead of raw SQL DATE()
+ * Falls back to empty array on error
+ */
+async function buildDailyChart(model, since) {
+  try {
+    // Fetch records from the last 7 days
+    const records = await model.findMany({
+      where: { createdAt: { gte: since } },
+      select: { createdAt: true },
+    });
+
+    // Group by date in JS (avoids raw SQL DATE() compatibility issues)
+    const buckets = {};
+    for (const r of records) {
+      const key = r.createdAt.toISOString().slice(0, 10); // YYYY-MM-DD
+      buckets[key] = (buckets[key] || 0) + 1;
+    }
+
+    // Fill missing days with 0
+    const result = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      result.push({ date: key, count: buckets[key] || 0 });
+    }
+    return result;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Calculate revenue using Prisma instead of raw SQL JOIN
+ * Falls back to 0 on error
+ */
+async function calculateRevenue() {
+  try {
+    const completedBookings = await prisma.booking.findMany({
+      where: { status: { in: ['CONFIRMED', 'COMPLETED'] } },
+      select: {
+        numberOfSeats: true,
+        route: { select: { pricePerSeat: true } },
+      },
+    });
+
+    return completedBookings.reduce(
+      (sum, b) => sum + b.numberOfSeats * (b.route?.pricePerSeat || 0),
+      0
+    );
+  } catch {
+    return 0;
+  }
 }
 
 module.exports = { getDashboardStats };

@@ -3,6 +3,7 @@ const { Prisma } = require('@prisma/client');
 const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyDriverSuspension } = require('./penalty.service');
+const { emitNotification } = require('../socket/emitter');
 
 const baseInclude = {
   driver: {
@@ -386,7 +387,8 @@ const cancelRoute = async (routeId, driverId, opts = {}) => {
       }));
       // ทำ bulk insert ทีละก้อน
       for (const n of notiData) {
-        await tx.notification.create({ data: n });
+        const created = await tx.notification.create({ data: n });
+        emitNotification(n.userId, created);
       }
     }
   });
@@ -436,8 +438,6 @@ const startTrip = async (routeId, driverId) => {
     where: { id: routeId },
     include: {
       driver: { select: { firstName: true, lastName: true } },
-      startLocation: true,
-      endLocation: true,
       bookings: {
         where: { status: BookingStatus.CONFIRMED },
         include: { passenger: { select: { id: true, firstName: true, lastName: true, email: true } } }
@@ -458,7 +458,7 @@ const startTrip = async (routeId, driverId) => {
 
     // Notify all confirmed passengers
     for (const b of route.bookings) {
-      await tx.notification.create({
+      const notif = await tx.notification.create({
         data: {
           userId: b.passengerId,
           type: 'BOOKING',
@@ -467,6 +467,7 @@ const startTrip = async (routeId, driverId) => {
           metadata: { kind: 'TRIP_STARTED', routeId, bookingId: b.id }
         }
       });
+      emitNotification(b.passengerId, notif);
     }
 
     return updated;
@@ -494,8 +495,6 @@ const endTrip = async (routeId, driverId) => {
     where: { id: routeId },
     include: {
       driver: { select: { firstName: true, lastName: true } },
-      startLocation: true,
-      endLocation: true,
       bookings: {
         where: { status: { in: [BookingStatus.CONFIRMED, BookingStatus.IN_PROGRESS] } },
         include: { passenger: { select: { id: true, firstName: true, lastName: true, email: true } } }
@@ -527,7 +526,7 @@ const endTrip = async (routeId, driverId) => {
       });
 
       for (const b of route.bookings) {
-        await tx.notification.create({
+        const notif = await tx.notification.create({
           data: {
             userId: b.passengerId,
             type: 'BOOKING',
@@ -536,6 +535,7 @@ const endTrip = async (routeId, driverId) => {
             metadata: { kind: 'TRIP_ENDED', routeId, bookingId: b.id }
           }
         });
+        emitNotification(b.passengerId, notif);
       }
     }
 

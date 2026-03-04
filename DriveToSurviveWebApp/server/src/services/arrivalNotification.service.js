@@ -91,11 +91,9 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
     let emailStatus = 'SENT';
     let appStatus = 'SENT';
 
-    let savedNotification = null;
-
     // Send In-App notification
     try {
-        savedNotification = await prisma.notification.create({
+        const arrivalNotif = await prisma.notification.create({
             data: {
                 userId: passenger.id,
                 type: 'ARRIVAL',
@@ -104,6 +102,7 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
                 metadata: { bookingId: booking.id, radiusType, driverLat, driverLon },
             },
         });
+        emitNotification(passenger.id, arrivalNotif);
     } catch {
         appStatus = 'FAILED';
     }
@@ -164,17 +163,12 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
     }
 
     // Also push to passenger's personal notification feed
-    if (savedNotification) {
-        emitNotification(passenger.id, savedNotification);
-    } else {
-        emitNotification(passenger.id, {
-            type: 'ARRIVAL',
-            title: msg.title,
-            body: msg.body,
-            metadata: { bookingId: booking.id, radiusType },
-            createdAt: new Date(),
-        });
-    }
+    emitNotification(passenger.id, {
+        type: 'ARRIVAL',
+        title: msg.title,
+        body: msg.body,
+        metadata: { bookingId: booking.id, radiusType },
+    });
 
     return notification;
 };

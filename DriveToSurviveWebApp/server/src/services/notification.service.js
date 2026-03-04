@@ -1,5 +1,6 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
+const { emitNotification } = require('../socket/emitter');
 
 const baseSelect = {
     id: true,
@@ -145,6 +146,10 @@ const createNotificationByAdmin = async (payload) => {
         data: payload,
         select: baseSelect,
     });
+
+    // Push real-time notification to user
+    emitNotification(payload.userId, created);
+
     return created;
 };
 

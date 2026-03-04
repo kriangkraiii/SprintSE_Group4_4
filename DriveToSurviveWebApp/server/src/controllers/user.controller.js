@@ -111,7 +111,11 @@ const createUser = asyncHandler(async (req, res) => {
 
 const createAdminUser = asyncHandler(async (req, res) => {
     const userData = req.body;
-    await uploadIdentityImages(req, userData);
+
+    // Admin accounts don't require identity images — only upload if files are provided
+    if (req.files && req.files.nationalIdPhotoUrl && req.files.selfiePhotoUrl) {
+        await uploadIdentityImages(req, userData);
+    }
 
     userData.role = 'ADMIN';
     userData.createdByAdmin = true;

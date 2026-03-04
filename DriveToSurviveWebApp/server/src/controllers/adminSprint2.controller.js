@@ -69,15 +69,16 @@ const exportChatSession = asyncHandler(async (req, res) => {
 
 const cron = require('node-cron');
 const prisma = require('../utils/prisma');
+const { cronConfig, setRetentionDays, setChatReadOnlyDays, setAdminLogRetentionDays } = require('../config/cronConfig');
 
 // Runtime state for CRON jobs (resets on server restart)
 const cronState = {
     retentionPurge: {
         name: 'retentionPurge',
-        label: 'Retention Purge (90 วัน)',
+        label: 'Retention Purge',
         schedule: 'ทุกวัน 02:00 UTC (09:00 เวลาไทย)',
         currentSchedule: '0 2 * * *',
-        description: 'ลบข้อมูลแชท, บันทึกเสียง และ archive session ที่เกิน 90 วัน (พ.ร.บ.คอมพิวเตอร์)',
+        description: 'ลบข้อมูลแชท, บันทึกเสียง และ archive session ที่เกินกำหนด (พ.ร.บ.คอมพิวเตอร์)',
         task: null, // node-cron task reference
     },
     chatLifecycle: {
@@ -85,7 +86,7 @@ const cronState = {
         label: 'Chat Lifecycle',
         schedule: 'ทุกชั่วโมง',
         currentSchedule: '3600000',
-        description: 'เปลี่ยนสถานะ Chat Session: ENDED → READ_ONLY (24 ชม.) → ARCHIVED (7 วัน)',
+        description: 'เปลี่ยนสถานะ Chat Session: ENDED → READ_ONLY → ARCHIVED + ลบ Log หมดอายุ',
         intervalId: null, // setInterval reference
     },
 };
@@ -137,7 +138,18 @@ const getCronStatus = asyncHandler(async (req, res) => {
         },
     ];
 
-    res.json({ success: true, data: jobs });
+    res.json({
+        success: true,
+        data: jobs,
+        config: {
+            retentionDays: cronConfig.retentionDays,
+            retentionDaysMin: cronConfig.retentionDaysMin,
+            chatReadOnlyDays: cronConfig.chatReadOnlyDays,
+            chatReadOnlyDaysMin: cronConfig.chatReadOnlyDaysMin,
+            adminLogRetentionDays: cronConfig.adminLogRetentionDays,
+            adminLogRetentionDaysMin: cronConfig.adminLogRetentionDaysMin,
+        },
+    });
 });
 
 const triggerCronJob = asyncHandler(async (req, res) => {
@@ -207,6 +219,63 @@ const updateCronSchedule = asyncHandler(async (req, res) => {
     res.status(400).json({ success: false, message: `Unknown CRON job: ${jobName}` });
 });
 
+// ─── Duration Config Update ──────────────────────────────
+
+const updateDurationConfig = asyncHandler(async (req, res) => {
+    const { retentionDays, chatReadOnlyDays, adminLogRetentionDays } = req.body;
+
+    const result = {};
+
+    if (retentionDays !== undefined) {
+        const val = setRetentionDays(retentionDays);
+        result.retentionDays = val;
+        if (Number(retentionDays) < cronConfig.retentionDaysMin) {
+            result.retentionDaysWarning = `ค่าขั้นต่ำ ${cronConfig.retentionDaysMin} วัน ตาม พ.ร.บ.คอมพิวเตอร์ จึงตั้งค่าเป็น ${val} วัน`;
+        }
+    }
+
+    if (chatReadOnlyDays !== undefined) {
+        const val = setChatReadOnlyDays(chatReadOnlyDays);
+        result.chatReadOnlyDays = val;
+        if (Number(chatReadOnlyDays) < cronConfig.chatReadOnlyDaysMin) {
+            result.chatReadOnlyDaysWarning = `ค่าขั้นต่ำ ${cronConfig.chatReadOnlyDaysMin} วัน จึงตั้งค่าเป็น ${val} วัน`;
+        }
+    }
+
+    if (adminLogRetentionDays !== undefined) {
+        const val = setAdminLogRetentionDays(adminLogRetentionDays);
+        result.adminLogRetentionDays = val;
+        if (Number(adminLogRetentionDays) < cronConfig.adminLogRetentionDaysMin) {
+            result.adminLogRetentionDaysWarning = `ค่าขั้นต่ำ ${cronConfig.adminLogRetentionDaysMin} วัน จึงตั้งค่าเป็น ${val} วัน`;
+        }
+    }
+
+    // Audit log
+    await prisma.systemLog.create({
+        data: {
+            action: 'CRON_CONFIG_UPDATE',
+            entity: 'CronConfig',
+            entityId: 'admin',
+            performedBy: req.user?.sub || 'ADMIN',
+            detail: JSON.stringify(result),
+        },
+    }).catch(() => {});
+
+    res.json({
+        success: true,
+        message: 'อัปเดตค่ากำหนดเรียบร้อย',
+        data: result,
+        config: {
+            retentionDays: cronConfig.retentionDays,
+            retentionDaysMin: cronConfig.retentionDaysMin,
+            chatReadOnlyDays: cronConfig.chatReadOnlyDays,
+            chatReadOnlyDaysMin: cronConfig.chatReadOnlyDaysMin,
+            adminLogRetentionDays: cronConfig.adminLogRetentionDays,
+            adminLogRetentionDaysMin: cronConfig.adminLogRetentionDaysMin,
+        },
+    });
+});
+
 module.exports = {
     suspendUser,
     unsuspendUser,
@@ -217,4 +286,5 @@ module.exports = {
     getCronStatus,
     triggerCronJob,
     updateCronSchedule,
+    updateDurationConfig,
 };

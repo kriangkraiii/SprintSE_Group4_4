@@ -1,4 +1,5 @@
 const prisma = require("../utils/prisma");
+const { emitNotification } = require('../socket/emitter');
 
 const PASSENGER_CANCEL_LIMIT = 3; // ≥ 3 ครั้งใน 30 วัน
 const DRIVER_CANCEL_LIMIT = 2;
@@ -50,7 +51,7 @@ async function checkAndApplyPassengerSuspension(passengerId, opts = {}) {
     });
 
     try {
-      await prisma.notification.create({
+      const suspendNotif = await prisma.notification.create({
         data: {
           userId: passengerId,
           type: "SYSTEM",
@@ -63,6 +64,7 @@ async function checkAndApplyPassengerSuspension(passengerId, opts = {}) {
           },
         },
       });
+      emitNotification(passengerId, suspendNotif);
     } catch (_) { }
   }
 }
@@ -91,7 +93,7 @@ async function checkAndApplyDriverSuspension(driverId, opts = {}) {
     });
 
     try {
-      await prisma.notification.create({
+      const driverSuspendNotif = await prisma.notification.create({
         data: {
           userId: driverId,
           type: "SYSTEM",
@@ -105,6 +107,7 @@ async function checkAndApplyDriverSuspension(driverId, opts = {}) {
           },
         },
       });
+      emitNotification(driverId, driverSuspendNotif);
     } catch (_) { }
   }
 }

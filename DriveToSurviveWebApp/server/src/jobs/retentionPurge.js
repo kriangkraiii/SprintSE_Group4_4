@@ -9,10 +9,10 @@
 
 const cron = require('node-cron');
 const prisma = require('../utils/prisma');
-
-const RETENTION_DAYS = 90;
+const { cronConfig } = require('../config/cronConfig');
 
 async function purgeExpiredData() {
+    const RETENTION_DAYS = cronConfig.retentionDays;
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - RETENTION_DAYS);
 
@@ -103,4 +103,4 @@ function startRetentionCron() {
     console.log('[RetentionPurge] Cron job scheduled (daily 02:00 UTC)');
 }
 
-module.exports = { startRetentionCron, purgeExpiredData, RETENTION_DAYS };
+module.exports = { startRetentionCron, purgeExpiredData };

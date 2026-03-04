@@ -185,10 +185,10 @@ const createUser = async (data) => {
         lastName: data.lastName,
         phoneNumber: data.phoneNumber,
         gender: data.gender,
-        nationalIdNumber: data.nationalIdNumber,
-        nationalIdExpiryDate: new Date(data.nationalIdExpiryDate), // แปลง string เป็น Date object
-        nationalIdPhotoUrl: data.nationalIdPhotoUrl, // URL จาก Cloudinary
-        selfiePhotoUrl: data.selfiePhotoUrl, // URL จาก Cloudinary
+        ...(data.nationalIdNumber && { nationalIdNumber: data.nationalIdNumber }),
+        ...(data.nationalIdExpiryDate && { nationalIdExpiryDate: new Date(data.nationalIdExpiryDate) }),
+        ...(data.nationalIdPhotoUrl && { nationalIdPhotoUrl: data.nationalIdPhotoUrl }),
+        ...(data.selfiePhotoUrl && { selfiePhotoUrl: data.selfiePhotoUrl }),
         role: finalRole,
         // ข้อมูล OCR จากบัตรประชาชน
         ...(data.nationalIdBackPhotoUrl && { nationalIdBackPhotoUrl: data.nationalIdBackPhotoUrl }),

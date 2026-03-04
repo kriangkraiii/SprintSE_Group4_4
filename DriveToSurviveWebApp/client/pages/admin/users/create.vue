@@ -99,58 +99,11 @@
                                 </div>
                             </div>
 
-                            <!-- National ID -->
-                            <div>
-                                <h3 class="mb-3 text-sm font-semibold text-primary">บัตรประชาชน</h3>
-                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">เลขบัตรประชาชน
-                                            *</label>
-                                        <input v-model.trim="form.nationalIdNumber" type="text" placeholder="13 หลัก"
-                                            class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
-                                    </div>
-                                    <div>
-                                        <label class="block mb-1 text-xs font-medium text-slate-500">วันหมดอายุบัตร
-                                            *</label>
-                                        <input v-model="form.nationalIdExpiryDate" type="date"
-                                            class="w-full px-3 py-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-cta" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- อัปโหลดรูปภาพ (ย้ายมาล่างสุด) -->
-                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                                <div>
-                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปบัตรประชาชน *</label>
-                                    <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md cursor-pointer hover:border-cta"
-                                        @click="pick('idCardInput')">
-                                        <div v-if="idPreview" class="flex items-center justify-center">
-                                            <img :src="idPreview" class="rounded max-h-82" />
-                                        </div>
-                                        <div v-else class="text-slate-400">
-                                            <i class="text-3xl fa-regular fa-image"></i>
-                                            <p class="mt-1 text-sm">กดเพื่อเลือกรูปภาพ</p>
-                                        </div>
-                                    </div>
-                                    <input ref="idCardInput" type="file" accept=".jpg,.jpeg,.png" class="hidden"
-                                        @change="onFile($event, 'id')" />
-                                </div>
-
-                                <div>
-                                    <label class="block mb-1 text-xs font-medium text-slate-500">รูปถ่ายใบหน้า (Selfie)
-                                        *</label>
-                                    <div class="p-4 text-center border-2 border-slate-200 border-dashed rounded-md cursor-pointer hover:border-cta"
-                                        @click="pick('selfieInput')">
-                                        <div v-if="selfiePreview" class="flex items-center justify-center">
-                                            <img :src="selfiePreview" class="rounded max-h-82" />
-                                        </div>
-                                        <div v-else class="text-slate-400">
-                                            <i class="text-3xl fa-regular fa-image"></i>
-                                            <p class="mt-1 text-sm">กดเพื่อเลือกรูปภาพ</p>
-                                        </div>
-                                    </div>
-                                    <input ref="selfieInput" type="file" accept=".jpg,.jpeg,.png" class="hidden"
-                                        @change="onFile($event, 'selfie')" />
+                            <!-- หมายเหตุ: บัญชี ADMIN ไม่จำเป็นต้องใส่ข้อมูลบัตรประชาชนและรูปภาพ -->
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <div class="flex items-center gap-2 text-sm text-blue-700">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>บัญชี ADMIN ไม่จำเป็นต้องยืนยันตัวตนด้วยบัตรประชาชน</span>
                                 </div>
                             </div>
                         </div>
@@ -373,8 +326,7 @@ async function postForm(url, formData, token) {
 async function handleSubmit() {
     if (
         !form.email || !form.username || !form.password || !form.firstName || !form.lastName ||
-        !form.phoneNumber || !form.gender || !form.nationalIdNumber || !form.nationalIdExpiryDate ||
-        !form.nationalIdPhotoUrl || !form.selfiePhotoUrl
+        !form.phoneNumber || !form.gender
     ) {
         toast.error('กรอกข้อมูลไม่ครบ', 'โปรดกรอกข้อมูลที่มี * ให้ครบถ้วน')
         return
@@ -390,10 +342,6 @@ async function handleSubmit() {
         fd.append('lastName', form.lastName)
         fd.append('phoneNumber', form.phoneNumber)
         fd.append('gender', form.gender.toUpperCase())
-        fd.append('nationalIdNumber', form.nationalIdNumber)
-        fd.append('nationalIdExpiryDate', toISODate(form.nationalIdExpiryDate))
-        fd.append('nationalIdPhotoUrl', form.nationalIdPhotoUrl)
-        fd.append('selfiePhotoUrl', form.selfiePhotoUrl)
         fd.append('role', 'ADMIN')
 
         // token (cookie -> localStorage)
