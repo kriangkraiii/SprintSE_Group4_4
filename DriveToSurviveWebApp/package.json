@@ -10,6 +10,7 @@
     "dev:server": "cd server && npm run dev",
     "build": "cd client && npm run build",
     "install:all": "cd client && npm install && cd ../server && npm install",
+    "demo:epic2": "bash ../sprint2/test/epic2/demo-epic2.sh",
     "lint": "cd client && npm run lint",
     "postinstall": "cd client && npm run postinstall",
     "start": "node src/index.js"
