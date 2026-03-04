@@ -14,7 +14,7 @@
  *         → ยิง Socket.IO location-update (Real-Time Map) + API notification พร้อมกัน
  */
 
-const BASE_URL = process.argv[2] || 'https://sparkling-benetta-kraeeeeeew-9ef9bd6d.koyeb.app';
+const BASE_URL = process.argv[2] || 'http://localhost:3001';
 const DRIVER_TOKEN = process.argv[3];
 const BOOKING_ID = process.argv[4];
 const SOCKET_MODE = process.argv.includes('--socket');
