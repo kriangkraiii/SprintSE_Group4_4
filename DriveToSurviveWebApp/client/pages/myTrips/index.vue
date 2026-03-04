@@ -243,26 +243,50 @@
                         <!-- Reviews Section -->
                         <div v-else-if="statusFilter === 'reviews'" class="p-6">
                             <!-- Pending Reviews -->
-                            <div v-if="pendingBookings.length" class="p-4 mb-6 bg-amber-50 border border-amber-200 rounded-xl">
-                                <h4 class="text-base font-semibold text-amber-800 mb-3 flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                                    รอเขียนรีวิว ({{ pendingBookings.length }})
-                                </h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div v-for="booking in pendingBookings" :key="booking.id"
-                                        class="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-100">
-                                        <div>
-                                            <p class="text-sm font-medium text-primary">
-                                                {{ booking.route?.startLocation?.name || 'ต้นทาง' }} → {{ booking.route?.endLocation?.name || 'ปลายทาง' }}
-                                            </p>
-                                            <p class="text-xs text-slate-500 mt-0.5">
-                                                คนขับ: {{ booking.route?.driver?.firstName || 'ไม่ระบุ' }}
-                                            </p>
+                            <div v-if="pendingBookings.length" class="mb-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                                <!-- Header -->
+                                <div class="px-5 py-4 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100/60">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                         </div>
-                                        <NuxtLink :to="`/reviews/create?bookingId=${booking.id}`"
-                                            class="px-3 py-1.5 text-sm text-white bg-cta rounded-lg hover:bg-cta-hover transition-colors whitespace-nowrap">
-                                            เขียนรีวิว
-                                        </NuxtLink>
+                                        <div>
+                                            <h4 class="text-base font-semibold text-slate-800">รอเขียนรีวิว</h4>
+                                            <p class="text-xs text-slate-500">คุณมี {{ pendingBookings.length }} ทริปที่ยังไม่ได้รีวิว</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Cards -->
+                                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div v-for="booking in pendingBookings" :key="booking.id"
+                                        class="group relative p-4 bg-white rounded-xl border border-slate-100 hover:border-amber-200 hover:shadow-md transition-all duration-200 cursor-pointer">
+                                        <!-- Route timeline -->
+                                        <div class="flex items-start gap-3 mb-3">
+                                            <div class="flex flex-col items-center gap-0.5 pt-0.5">
+                                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100"></div>
+                                                <div class="w-0.5 h-6 bg-slate-200"></div>
+                                                <div class="w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-red-100"></div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-slate-800 truncate">{{ booking.route?.startLocation?.name || 'ต้นทาง' }}</p>
+                                                <div class="h-3"></div>
+                                                <p class="text-sm font-medium text-slate-800 truncate">{{ booking.route?.endLocation?.name || 'ปลายทาง' }}</p>
+                                            </div>
+                                        </div>
+                                        <!-- Driver info + CTA -->
+                                        <div class="flex items-center justify-between pt-3 border-t border-slate-50">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                                                    <svg class="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                                </div>
+                                                <span class="text-xs text-slate-500">{{ booking.route?.driver?.firstName || 'ไม่ระบุ' }}</span>
+                                            </div>
+                                            <NuxtLink :to="`/reviews/create?bookingId=${booking.id}`"
+                                                class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-amber-500 rounded-xl hover:bg-amber-600 shadow-sm hover:shadow transition-all duration-200" @click.stop>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                                                เขียนรีวิว
+                                            </NuxtLink>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -277,7 +301,18 @@
                                 <button @click="reviewTab = 'received'"
                                     :class="['flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
                                         reviewTab === 'received' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
-                                    รีวิวที่ได้รับ
+                                    รีวิวที่ได้รับ ({{ driverReviewsList.length }})
+                                </button>
+                                <!-- Private Feedback tab — DRIVER only -->
+                                <button v-if="isDriver" @click="reviewTab = 'private'"
+                                    :class="['flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
+                                        reviewTab === 'private' ? 'bg-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100']">
+                                    ความเห็นส่วนตัว
+                                    <span v-if="privateFeedbacks.length"
+                                        class="ml-1.5 inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded-full"
+                                        :class="reviewTab === 'private' ? 'bg-white text-slate-700' : 'bg-slate-200 text-slate-700'">
+                                        {{ privateFeedbacks.length }}
+                                    </span>
                                 </button>
                             </div>
 
@@ -307,6 +342,36 @@
                                     </div>
                                     <div v-else class="space-y-4 text-left">
                                         <ReviewCard v-for="review in driverReviewsList" :key="review.id" :review="review" :showPrivate="true" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 🔒 Private Feedback Inbox (Driver only) -->
+                            <div v-if="reviewTab === 'private' && isDriver">
+                                <div v-if="isPrivateLoading" class="p-12 text-center text-slate-400">
+                                    <p>กำลังโหลด...</p>
+                                </div>
+
+                                <div v-else-if="privateFeedbacks.length === 0"
+                                    class="p-12 bg-white border border-slate-200 rounded-xl text-center">
+                                    <p class="text-slate-500 font-medium">ยังไม่มีความเห็นส่วนตัว</p>
+                                    <p class="text-xs text-slate-400 mt-1">ผู้โดยสารสามารถฝากข้อความถึงคุณโดยตรงตอนเขียนรีวิว</p>
+                                </div>
+
+                                <div v-else class="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+                                    <div v-for="review in privateFeedbacks" :key="review.id" class="flex items-start gap-3 px-5 py-4">
+                                        <div class="shrink-0 mt-0.5 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-sm font-semibold text-slate-500">
+                                            {{ review.isAnonymous ? '?' : (review.displayName || 'P').charAt(0).toUpperCase() }}
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between gap-2 mb-1">
+                                                <span class="text-sm font-medium text-slate-700">
+                                                    {{ review.isAnonymous ? 'ผู้โดยสารนิรนาม' : (review.displayName || 'ผู้โดยสาร') }}
+                                                </span>
+                                                <span class="text-xs text-slate-400 shrink-0">{{ formatPrivateDate(review.createdAt) }}</span>
+                                            </div>
+                                            <p class="text-sm text-slate-600 leading-relaxed">{{ review.privateFeedback }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -501,7 +566,39 @@
                             <h3 class="text-lg font-semibold text-[#383838]">แผนที่เส้นทาง</h3>
                             <p class="mt-1 text-sm text-slate-500">{{ mapLabel || 'คลิกที่รายการเพื่อดูเส้นทาง' }}</p>
                         </div>
-                        <div ref="mapContainer" id="map" class="h-96"></div>
+                        <div class="relative">
+                            <div ref="mapContainer" id="map" class="h-96"></div>
+
+                            <!-- Locate Me FAB -->
+                            <button
+                                @click="handleLocateMe"
+                                :disabled="!geo.hasGps.value"
+                                :title="!geo.hasGps.value ? 'อุปกรณ์ไม่รองรับ GPS' : 'ตำแหน่งของฉัน'"
+                                class="absolute bottom-16 right-4 z-20 w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                                :class="geo.isActive.value
+                                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'">
+                                <svg v-if="geo.isLocating.value" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3" />
+                                    <path d="M12 2v4m0 12v4m-10-10h4m12 0h4" />
+                                </svg>
+                            </button>
+
+                            <!-- Realtime location badge -->
+                            <div v-if="geo.isActive.value" class="absolute bottom-4 left-4 z-10">
+                                <div class="flex items-center gap-2 px-3 py-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 text-xs">
+                                    <span class="relative flex h-2.5 w-2.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                    </span>
+                                    <span class="text-gray-600">ตำแหน่งของคุณ</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -550,6 +647,7 @@ import {
     useRouteMap, cleanAddr, formatDistance, formatDuration,
     getStatusBadge, CANCEL_REASONS, reasonLabel
 } from '~/composables/useRouteMap'
+import { useGeolocation } from '~/composables/useGeolocation'
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
@@ -557,10 +655,12 @@ dayjs.extend(buddhistEra)
 const { $api } = useNuxtApp()
 const { toast } = useToast()
 const { createSession: createChatSession } = useChat()
-const { fetchMyReviews, fetchPendingReviews, fetchDriverReviews: fetchDriverReviewsAPI, fetchDriverStats: fetchDriverStatsAPI } = useReview()
+const { fetchMyReviews, fetchPendingReviews, fetchDriverReviews: fetchDriverReviewsAPI, fetchDriverStats: fetchDriverStatsAPI, fetchMyReceivedReviews } = useReview()
 const { user } = useAuth()
 const router = useRouter()
-const { initializeMap, waitMapReady, reverseGeocode, extractNameParts, updateMap, mapReady } = useRouteMap()
+const { initializeMap, waitMapReady, reverseGeocode, extractNameParts, updateMap, mapReady, getMap } = useRouteMap()
+const geo = useGeolocation()
+let locationMarkerObj = null
 
 // --- Core State ---
 const role = ref('passenger')
@@ -988,6 +1088,30 @@ async function handleConfirmAction() {
     }
 }
 
+// --- Locate Me (GPS) ---
+async function handleLocateMe() {
+    if (geo.isLocating.value || !geo.hasGps.value) return
+    toast.info('กำลังค้นหาตำแหน่ง', 'กรุณารอสักครู่...')
+    const result = await geo.locate()
+    if (result.isDefault) {
+        if (geo.permissionDenied.value) {
+            toast.warning('GPS ถูกปิดกั้น', 'กรุณาเปิด GPS หรือค้นหาที่อยู่ด้วยตนเอง')
+        } else {
+            toast.error('ไม่พบตำแหน่ง GPS', 'ไม่สามารถหาตำแหน่ง GPS ได้')
+        }
+        return
+    }
+    const map = getMap()
+    if (map) {
+        map.panTo({ lat: result.lat, lng: result.lng })
+        map.setZoom(18)
+        if (locationMarkerObj?.marker) locationMarkerObj.marker.setMap(null)
+        if (locationMarkerObj?.circle) locationMarkerObj.circle.setMap(null)
+        locationMarkerObj = geo.renderLocationMarker(map, result.lat, result.lng, result.accuracy)
+    }
+    toast.success('พบตำแหน่งแล้ว', `ความแม่นยำ: ~${Math.round(result.accuracy || 0)}m`)
+}
+
 // --- Chat ---
 const isChatLoading = ref(false)
 async function openChat(item) {
@@ -1031,10 +1155,17 @@ function getPickupNavUrl(pickup) {
 // --- Reviews ---
 const reviewTab = ref('my')
 const isReviewLoading = ref(false)
+const isPrivateLoading = ref(false)
 const myReviews = ref([])
 const pendingBookings = ref([])
 const driverReviewsList = ref([])
 const driverStats = ref(null)
+
+const isDriver = computed(() => user.value?.role === 'DRIVER')
+const privateFeedbacks = computed(() =>
+    driverReviewsList.value.filter(r => r.privateFeedback && r.privateFeedback.trim() !== '')
+)
+const formatPrivateDate = (date) => dayjs(date).format('D MMM BBBB')
 
 async function loadMyReviews() {
     isReviewLoading.value = true
@@ -1054,11 +1185,14 @@ async function loadPendingReviews() {
 
 async function loadDriverReviewsData() {
     if (!user.value?.id) return
+    isPrivateLoading.value = true
     try {
-        const result = await fetchDriverReviewsAPI(user.value.id)
+        // Use authenticated endpoint that includes privateFeedback
+        const result = await fetchMyReceivedReviews()
         driverReviewsList.value = result?.data || result || []
         driverStats.value = await fetchDriverStatsAPI(user.value.id)
     } catch { driverReviewsList.value = [] }
+    finally { isPrivateLoading.value = false }
 }
 
 const copyEmail = async (email) => {
@@ -1102,7 +1236,7 @@ watch([role, statusFilter], ([, newFilter]) => {
 })
 
 watch(reviewTab, (tab) => {
-    if (tab === 'received' && driverReviewsList.value.length === 0) {
+    if ((tab === 'received' || tab === 'private') && driverReviewsList.value.length === 0) {
         loadDriverReviewsData()
     }
 })

@@ -39,4 +39,7 @@ router.post('/cron/:jobName/trigger', controller.triggerCronJob);
 // PUT /admin/cron/:jobName/schedule — update a CRON job schedule
 router.put('/cron/:jobName/schedule', controller.updateCronSchedule);
 
+// PUT /admin/cron/config — update duration config (retention, lifecycle, log days)
+router.put('/cron/config', controller.updateDurationConfig);
+
 module.exports = router;

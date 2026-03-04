@@ -3,6 +3,25 @@
     <!-- Map -->
     <div ref="mapEl" class="absolute inset-0 z-0"></div>
 
+    <!-- Locate Me FAB -->
+    <button
+      @click="handleLocateMe"
+      :disabled="!geo.hasGps.value"
+      :title="!geo.hasGps.value ? 'อุปกรณ์ไม่รองรับ GPS' : 'ตำแหน่งของฉัน'"
+      class="absolute bottom-52 right-4 z-20 w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+      :class="geo.isActive.value
+        ? 'bg-blue-500 text-white hover:bg-blue-600'
+        : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'">
+      <svg v-if="geo.isLocating.value" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+      </svg>
+      <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 2v4m0 12v4m-10-10h4m12 0h4" />
+      </svg>
+    </button>
+
     <!-- Top bar -->
     <div class="absolute top-0 left-0 right-0 z-10 p-4">
       <div class="mx-auto max-w-lg bg-white backdrop-blur-sm rounded-2xl shadow-lg p-4">
@@ -127,6 +146,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocationTracking } from '~/composables/useLocationTracking'
 import { useAuth } from '~/composables/useAuth'
+import { useGeolocation } from '~/composables/useGeolocation'
 
 definePageMeta({ middleware: 'auth', layout: false })
 useHead({ title: 'ติดตามตำแหน่ง — Ride' })
@@ -157,6 +177,8 @@ const participantCount = computed(() => participants.size)
 const mapEl = ref(null)
 let map = null
 let myMarker = null
+const geo = useGeolocation()
+let locationMarkerObj = null
 
 const pickupInfo = ref(null)
 const pickupLatLng = ref(null)
@@ -210,6 +232,20 @@ function fitAllMarkers() {
   })
   if (pickupLatLng.value) bounds.extend(pickupLatLng.value)
   map.fitBounds(bounds, { top: 120, bottom: 200, left: 40, right: 40 })
+}
+
+// --- Locate Me (GPS) ---
+async function handleLocateMe() {
+  if (geo.isLocating.value || !geo.hasGps.value) return
+  const result = await geo.locate()
+  if (result.isDefault) return
+  if (map) {
+    map.panTo({ lat: result.lat, lng: result.lng })
+    map.setZoom(16)
+    if (locationMarkerObj?.marker) locationMarkerObj.marker.setMap(null)
+    if (locationMarkerObj?.circle) locationMarkerObj.circle.setMap(null)
+    locationMarkerObj = geo.renderLocationMarker(map, result.lat, result.lng, result.accuracy)
+  }
 }
 
 // Fetch booking data to get pickup location
