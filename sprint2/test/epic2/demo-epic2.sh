@@ -14,7 +14,7 @@ echo "Running the seed script to prepare Driver, Passenger, Route, and Booking..
 echo ""
 
 # Navigate to server to run the seeding script
-cd ../../DriveToSurviveWebApp/server
+cd ../../../DriveToSurviveWebApp/server
 node scripts/seed-epic2-test.js
 
 echo ""
@@ -42,9 +42,24 @@ fi
 # Run the test!
 robot --console verbose epic2_arrival_notification.robot
 
+# Store exit code
+TEST_EXIT_CODE=$?
+
 echo ""
 echo "=========================================================="
-echo "🌟 Section 3: Generating Test Report"
+echo "🌟 Section 3: Cleanup (Removing Test Data)"
+echo "=========================================================="
+echo "Cleaning up test data (Driver, Passenger, Routes, Bookings)..."
+echo ""
+
+cd ../../../DriveToSurviveWebApp/server
+node scripts/seed-epic2-test.js --cleanup
+
+cd "$TEST_DIR"
+
+echo ""
+echo "=========================================================="
+echo "🌟 Section 4: Generating Test Report"
 echo "=========================================================="
 echo "Opening the detailed HTML test report in your browser..."
 
