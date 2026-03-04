@@ -1,0 +1,1786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on win32)" generated="2026-03-04T13:57:24.816036" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic3 Review System" source="D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_review_system.robot">
+<kw name="Suite Init" type="SETUP">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-04T13:57:24.964760" level="INFO">Starting process:
+node D:\Soften\SprintSE_Group4_4\sprint2\test/seed-review-test.js</msg>
+<msg time="2026-03-04T13:57:24.969189" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-04T13:57:25.352250" level="INFO">Process completed.</msg>
+<msg time="2026-03-04T13:57:25.352479" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SEED_SCRIPT}</arg>
+<arg>cwd=D:\\Soften\\SprintSE_Group4_4\\sprint2\\test</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-04T13:57:24.964426" elapsed="0.388178"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.353841" level="INFO">[dotenv@17.3.1] injecting env (18) from ..\..\DriveToSurviveWebApp\.env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+≡ƒî▒ Seeding test data for Epic 3: Review &amp; Rating ...
+  Γ£à Driver: cmmbn3e3l0000ustcufll04hr
+  Γ£à Passenger: cmmbn3e5e0001ustcpcer46vz
+  Γ£à Passenger2: cmmbn3e5r0002ustcu0ln0kfi
+  Γ£à Vehicle: cmmbn3e660004ustcj9i3x6vm
+  Γ£à Route: cmmbn3e6l0006ustcae4ajutw
+  Γ£à Booking A (for review): cmmbopec90004usjs3aua37qz
+  Γ£à Booking B (for dispute): cmmbopecu0006usjsg1msw0c9
+  Γ£à Booking C (expired): cmmboped60008usjsb6fux41o
+  Γ£à Admin: cmmbo4ou60009us8s80bv0m9o
+  Γ£à Pre-review for dispute: cmmbopeew000dusjsgw1sc2zu
+  Γ£à Pre-dispute for admin: cmmbopefc000fusjsm42zfo9h
+
+≡ƒôä Seed output written to D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json
+{
+  "driverId": "cmmbn3e3l0000ustcufll04hr",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbn3e5e0001ustcpcer46vz",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbn3e5r0002ustcu0ln0kfi",
+  "passenger2Email": "rf_passenger2@test.com",
+  "vehicleId": "cmmbn3e660004ustcj9i3x6vm",
+  "routeId": "cmmbn3e6l0006ustcae4ajutw",
+  "bookingAId": "cmmbopec90004usjs3aua37qz",
+  "bookingBId": "cmmbopecu0006usjsg1msw0c9",
+  "bookingCId": "cmmboped60008usjsb6fux41o",
+  "preReviewId": "cmmbopeew000dusjsgw1sc2zu",
+  "preDisputeId": "cmmbopefc000fusjsm42zfo9h",
+  "adminId": "cmmbo4ou60009us8s80bv0m9o",
+  "adminEmail": "rf_admin@test.com",
+  "password": "password123"
+}
+
+≡ƒÄë Seed complete!</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.352876" elapsed="0.001074"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.355443" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${result.rc}</arg>
+<arg>0</arg>
+<arg>Seed script failed: ${result.stderr}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.354110" elapsed="0.001419"/>
+</kw>
+<kw name="Load Seed Output">
+<kw name="Get File" owner="OperatingSystem">
+<msg time="2026-03-04T13:57:25.356259" level="INFO" html="true">Getting file '&lt;a href="file://D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json"&gt;D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json&lt;/a&gt;'.</msg>
+<msg time="2026-03-04T13:57:25.365299" level="INFO">${json_str} = {
+  "driverId": "cmmbn3e3l0000ustcufll04hr",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbn3e5e0001ustcpcer46vz",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbn3...</msg>
+<var>${json_str}</var>
+<arg>D:\\Soften\\SprintSE_Group4_4\\sprint2\\test/seed-output.json</arg>
+<doc>Returns the contents of a specified file.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.356097" elapsed="0.009251"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.366165" level="INFO">${data} = {'driverId': 'cmmbn3e3l0000ustcufll04hr', 'driverEmail': 'rf_driver@test.com', 'passengerId': 'cmmbn3e5e0001ustcpcer46vz', 'passengerEmail': 'rf_passenger@test.com', 'passenger2Id': 'cmmbn3e5r0002ustc...</msg>
+<var>${data}</var>
+<arg>__import__('json').loads('''${json_str}''')</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.365566" elapsed="0.000639"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.366963" level="INFO">${BOOKING_A_ID} = cmmbopec90004usjs3aua37qz</msg>
+<arg>${BOOKING_A_ID}</arg>
+<arg>${data['bookingAId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.366367" elapsed="0.000637"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.367561" level="INFO">${BOOKING_B_ID} = cmmbopecu0006usjsg1msw0c9</msg>
+<arg>${BOOKING_B_ID}</arg>
+<arg>${data['bookingBId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.367100" elapsed="0.000514"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.368074" level="INFO">${BOOKING_C_ID} = cmmboped60008usjsb6fux41o</msg>
+<arg>${BOOKING_C_ID}</arg>
+<arg>${data['bookingCId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.367691" elapsed="0.000412"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.368567" level="INFO">${DRIVER_ID} = cmmbn3e3l0000ustcufll04hr</msg>
+<arg>${DRIVER_ID}</arg>
+<arg>${data['driverId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.368174" elapsed="0.000419"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.369040" level="INFO">${PRE_REVIEW_ID} = cmmbopeew000dusjsgw1sc2zu</msg>
+<arg>${PRE_REVIEW_ID}</arg>
+<arg>${data['preReviewId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.368670" elapsed="0.000397"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.369515" level="INFO">${PRE_DISPUTE_ID} = cmmbopefc000fusjsm42zfo9h</msg>
+<arg>${PRE_DISPUTE_ID}</arg>
+<arg>${data['preDisputeId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.369135" elapsed="0.000406"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.369811" level="INFO">Loaded seed: A=cmmbopec90004usjs3aua37qz B=cmmbopecu0006usjsg1msw0c9 C=cmmboped60008usjsb6fux41o preDispute=cmmbopefc000fusjsm42zfo9h</msg>
+<arg>Loaded seed: A=${BOOKING_A_ID} B=${BOOKING_B_ID} C=${BOOKING_C_ID} preDispute=${PRE_DISPUTE_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.369605" elapsed="0.000234"/>
+</kw>
+<doc>Read seed-output.json and set suite variables</doc>
+<status status="PASS" start="2026-03-04T13:57:25.355818" elapsed="0.014064"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.370019" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_BASE}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T13:57:25.369942" elapsed="0.000213"/>
+</kw>
+<kw name="Login And Get Token">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.370812" level="INFO">${payload} = {'email': 'rf_passenger@test.com', 'password': 'password123'}</msg>
+<var>${payload}</var>
+<arg>email=${email}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.370471" elapsed="0.000370"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.483518" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '61', 'Content-Type': 'application/json'} 
+ body=b'{"email": "rf_passenger@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-04T13:57:25.483615" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '9', 'RateLimit-Reset': '900', 'X-Request-ID': 'ac2dfa9f-ea29-4961-809b-ec9f8fa57083', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '622', 'ETag': 'W/"26e-zYHpaS6s6pxqUzvPCvbbbXqrmzk"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q","user":{"id":"cmmbn3e5e0001ustcpcer46vz","firstName":"RobotPassenger","lastName":"Test","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"PASSENGER","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-04T13:57:25.483718" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/auth/login</arg>
+<arg>json=${payload}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.370929" elapsed="0.112806"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.484368" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<arg>Login failed for ${email}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.483843" elapsed="0.000576"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.484851" level="INFO">${body} = {'success': True, 'message': 'Login successful', 'data': {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjY...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.484517" elapsed="0.000354"/>
+</kw>
+<return>
+<value>${body['data']['token']}</value>
+<status status="PASS" start="2026-03-04T13:57:25.484912" elapsed="0.000038"/>
+</return>
+<msg time="2026-03-04T13:57:25.485239" level="INFO">${p_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4k...</msg>
+<var>${p_token}</var>
+<arg>${PASSENGER_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="PASS" start="2026-03-04T13:57:25.370299" elapsed="0.114959"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.485549" level="INFO">${PASSENGER_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4k...</msg>
+<arg>${PASSENGER_TOKEN}</arg>
+<arg>${p_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.485346" elapsed="0.000231"/>
+</kw>
+<kw name="Login And Get Token">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.486081" level="INFO">${payload} = {'email': 'rf_passenger2@test.com', 'password': 'password123'}</msg>
+<var>${payload}</var>
+<arg>email=${email}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.485855" elapsed="0.000244"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.548264" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '62', 'Content-Type': 'application/json'} 
+ body=b'{"email": "rf_passenger2@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-04T13:57:25.548337" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '8', 'RateLimit-Reset': '900', 'X-Request-ID': '18ca1177-329f-4c4b-9b48-28c15b05a314', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '623', 'ETag': 'W/"26f-zWy98P/jOCJyYWtJVtOhtaeP3tk"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.HChP8hQE9DJi2MtvT7Pfif6Z86vB5D5rqUgxzEH0e9w","user":{"id":"cmmbn3e5r0002ustcu0ln0kfi","firstName":"RobotPassenger2","lastName":"Test","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"PASSENGER","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-04T13:57:25.548443" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/auth/login</arg>
+<arg>json=${payload}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.486159" elapsed="0.062304"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.549059" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<arg>Login failed for ${email}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.548569" elapsed="0.000532"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.549456" level="INFO">${body} = {'success': True, 'message': 'Login successful', 'data': {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjY...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.549183" elapsed="0.000292"/>
+</kw>
+<return>
+<value>${body['data']['token']}</value>
+<status status="PASS" start="2026-03-04T13:57:25.549513" elapsed="0.000051"/>
+</return>
+<msg time="2026-03-04T13:57:25.549861" level="INFO">${p2_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.HChP8hQE9DJi2M...</msg>
+<var>${p2_token}</var>
+<arg>${PASSENGER2_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="PASS" start="2026-03-04T13:57:25.485691" elapsed="0.064187"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.550157" level="INFO">${PASSENGER2_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.HChP8hQE9DJi2M...</msg>
+<arg>${PASSENGER2_TOKEN}</arg>
+<arg>${p2_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.549957" elapsed="0.000225"/>
+</kw>
+<kw name="Login And Get Token">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.550901" level="INFO">${payload} = {'email': 'rf_driver@test.com', 'password': 'password123'}</msg>
+<var>${payload}</var>
+<arg>email=${email}</arg>
+<arg>password=${password}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.550548" elapsed="0.000375"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.614367" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '58', 'Content-Type': 'application/json'} 
+ body=b'{"email": "rf_driver@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-04T13:57:25.614444" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '7', 'RateLimit-Reset': '900', 'X-Request-ID': '4c9f5026-8c13-433e-9f14-f3cd3d7d0c70', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '612', 'ETag': 'W/"264-M8szNhjTTSz1eIYWlZ9HPRlGo74"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5zjMDBSw1LTVUT4DJRR9IIbj7o","user":{"id":"cmmbn3e3l0000ustcufll04hr","firstName":"RobotDriver","lastName":"Test","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"DRIVER","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-04T13:57:25.614538" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/auth/login</arg>
+<arg>json=${payload}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.550996" elapsed="0.063559"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.615372" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<arg>Login failed for ${email}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.614659" elapsed="0.000789"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.615942" level="INFO">${body} = {'success': True, 'message': 'Login successful', 'data': {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.615582" elapsed="0.000389"/>
+</kw>
+<return>
+<value>${body['data']['token']}</value>
+<status status="PASS" start="2026-03-04T13:57:25.616015" elapsed="0.000031"/>
+</return>
+<msg time="2026-03-04T13:57:25.616344" level="INFO">${d_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5...</msg>
+<var>${d_token}</var>
+<arg>${DRIVER_EMAIL}</arg>
+<arg>${PASSWORD}</arg>
+<status status="PASS" start="2026-03-04T13:57:25.550315" elapsed="0.066046"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.616668" level="INFO">${DRIVER_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5...</msg>
+<arg>${DRIVER_TOKEN}</arg>
+<arg>${d_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.616447" elapsed="0.000248"/>
+</kw>
+<kw name="Try Admin Login">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.617240" level="INFO">${payload} = {'email': 'rf_admin@test.com', 'password': 'password123'}</msg>
+<var>${payload}</var>
+<arg>email=${ADMIN_EMAIL_ENV}</arg>
+<arg>password=${PASSWORD}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.616976" elapsed="0.000283"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.679004" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '57', 'Content-Type': 'application/json'} 
+ body=b'{"email": "rf_admin@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-04T13:57:25.679078" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '6', 'RateLimit-Reset': '900', 'X-Request-ID': 'ecaf85b3-abc1-4a14-95ea-bdc7cf0a8fb5', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '609', 'ETag': 'W/"261-vNfBfMmaUnlqfsp3jCxs66Pudv0"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSobhrV9NBFgYHV8bmKUt8sdSXDI","user":{"id":"cmmbo4ou60009us8s80bv0m9o","firstName":"RobotAdmin","lastName":"Test","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"ADMIN","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-04T13:57:25.679169" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/auth/login</arg>
+<arg>json=${payload}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.617329" elapsed="0.061857"/>
+</kw>
+<if>
+<branch type="IF" condition="${resp.status_code} == 200">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.679961" level="INFO">${body} = {'success': True, 'message': 'Login successful', 'data': {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.679660" elapsed="0.000322"/>
+</kw>
+<return>
+<value>${body['data']['token']}</value>
+<status status="PASS" start="2026-03-04T13:57:25.680019" elapsed="0.000025"/>
+</return>
+<status status="PASS" start="2026-03-04T13:57:25.679274" elapsed="0.000791"/>
+</branch>
+<status status="PASS" start="2026-03-04T13:57:25.679251" elapsed="0.000834"/>
+</if>
+<kw name="Log" owner="BuiltIn">
+<arg>WARNING: Admin login failed (${ADMIN_EMAIL_ENV}) — admin tests will be skipped</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T13:57:25.680164" elapsed="0.000014"/>
+</kw>
+<return>
+<value>${EMPTY}</value>
+<status status="NOT RUN" start="2026-03-04T13:57:25.680205" elapsed="0.000008"/>
+</return>
+<msg time="2026-03-04T13:57:25.680502" level="INFO">${admin_token} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSob...</msg>
+<var>${admin_token}</var>
+<doc>Single admin login attempt to conserve rate limit</doc>
+<status status="PASS" start="2026-03-04T13:57:25.616855" elapsed="0.063664"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.680801" level="INFO">${ADMIN_TOKEN} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSob...</msg>
+<arg>${ADMIN_TOKEN}</arg>
+<arg>${admin_token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.680592" elapsed="0.000235"/>
+</kw>
+<doc>Run seed, create API session, login all users</doc>
+<status status="PASS" start="2026-03-04T13:57:24.963968" elapsed="0.716896"/>
+</kw>
+<test id="s1-t1" name="TC-3.8 Passenger Sees Pending Reviews" line="53">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.681833" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.681561" elapsed="0.000298"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:25.681901" elapsed="0.000030"/>
+</return>
+<msg time="2026-03-04T13:57:25.682043" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:25.681349" elapsed="0.000717"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.691701" level="INFO">GET Request : url=http://localhost:3001/api/reviews/pending 
+ path_url=/api/reviews/pending 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:25.691784" level="INFO">GET Response : url=http://localhost:3001/api/reviews/pending 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '195', 'RateLimit-Reset': '900', 'X-Request-ID': 'c7e03ad0-d445-40c2-a91c-85be892f3339', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '347', 'ETag': 'W/"15b-FD7KHaoAluplXUkCOgnMlUM7Los"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":[{"id":"cmmbopec90004usjs3aua37qz","completedAt":"2026-03-03T06:57:25.207Z","route":{"driver":{"firstName":"RobotDriver","profilePicture":null},"startLocation":{"lat":13.7563,"lng":100.5018,"address":"กรุงเทพมหานคร"},"endLocation":{"lat":13.861,"lng":100.5115,"address":"นนทบุรี"}}}]} 
+ </msg>
+<msg time="2026-03-04T13:57:25.692055" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/pending</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.682303" elapsed="0.009788"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.693392" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.692436" elapsed="0.001024"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.694193" level="INFO">${body} = {'success': True, 'data': [{'id': 'cmmbopec90004usjs3aua37qz', 'completedAt': '2026-03-03T06:57:25.207Z', 'route': {'driver': {'firstName': 'RobotDriver', 'profilePicture': None}, 'startLocation': {'l...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.693729" elapsed="0.000495"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.694410" elapsed="0.000492"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.695671" level="INFO">Length is 1.</msg>
+<msg time="2026-03-04T13:57:25.695734" level="INFO">${count} = 1</msg>
+<var>${count}</var>
+<arg>${body['data']}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.695060" elapsed="0.000689"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${count} &gt;= 1</arg>
+<arg>Passenger should have at least 1 pending review</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.695889" elapsed="0.000282"/>
+</kw>
+<doc>GET /reviews/pending returns bookings not yet reviewed</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:25.680910" elapsed="0.015403"/>
+</test>
+<test id="s1-t2" name="TC-3.1 Create 5-Star Review Successfully" line="68">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.697379" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.697116" elapsed="0.000284"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:25.697440" elapsed="0.000027"/>
+</return>
+<msg time="2026-03-04T13:57:25.697551" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:25.696923" elapsed="0.000644"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.697869" level="INFO">${tags} = ['polite', 'safe_driving']</msg>
+<var>${tags}</var>
+<arg>polite</arg>
+<arg>safe_driving</arg>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.697696" elapsed="0.000188"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.698471" level="INFO">${payload} = {'bookingId': 'cmmbopec90004usjs3aua37qz', 'rating': 5, 'tags': ['polite', 'safe_driving'], 'comment': 'คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย'}</msg>
+<var>${payload}</var>
+<arg>bookingId=${BOOKING_A_ID}</arg>
+<arg>rating=${5}</arg>
+<arg>tags=${tags}</arg>
+<arg>comment=คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.698004" elapsed="0.000490"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:25.732075" level="INFO">POST Request : url=http://localhost:3001/api/reviews 
+ path_url=/api/reviews 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '330', 'Content-Type': 'application/json'} 
+ body=b'{"bookingId": "cmmbopec90004usjs3aua37qz", "rating": 5, "tags": ["polite", "safe_driving"], "comment": "\\u0e04\\u0e19\\u0e02\\u0e31\\u0e1a\\u0e2a\\u0e38\\u0e20\\u0e32\\u0e1e\\u0e21\\u0e32\\u0e01\\u0e04\\u0e23\\u0e31\\u0e1a \\u0e02\\u0e31\\u0e1a\\u0e23\\u0e16\\u0e1b\\u0e25\\u0e2d\\u0e14\\u0e20\\u0e31\\u0e22 \\u0e41\\u0e19\\u0e30\\u0e19\\u0e33\\u0e40\\u0e25\\u0e22"}' 
+ </msg>
+<msg time="2026-03-04T13:57:25.732156" level="INFO">POST Response : url=http://localhost:3001/api/reviews 
+ status=201, reason=Created 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '5', 'RateLimit-Reset': '900', 'X-Request-ID': 'd0ff8f21-2dc5-4f46-be0b-6bebdb7b6f05', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '480', 'ETag': 'W/"1e0-Tlk5nGxMDa/ZTlcxd9401psWXBk"', 'Date': 'Wed, 04 Mar 2026 06:57:25 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbopeqb0001us8cn9v3d7kg","bookingId":"cmmbopec90004usjs3aua37qz","passengerId":"cmmbn3e5e0001ustcpcer46vz","driverId":"cmmbn3e3l0000ustcufll04hr","rating":5,"tags":["polite","safe_driving"],"comment":"คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย","privateFeedback":null,"isAnonymous":false,"displayName":"RobotPassenger","status":"ACTIVE","createdAt":"2026-03-04T06:57:25.715Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:25.732254" level="INFO">${resp} = &lt;Response [201]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.698618" elapsed="0.033652"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.733201" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>201</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.732500" elapsed="0.000764"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.733929" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbopeqb0001us8cn9v3d7kg', 'bookingId': 'cmmbopec90004usjs3aua37qz', 'passengerId': 'cmmbn3e5e0001ustcpcer46vz', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'rating': 5...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.733494" elapsed="0.000466"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.734167" elapsed="0.000589"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.735352" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${body['data']['rating']}</arg>
+<arg>5</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.734909" elapsed="0.000491"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.735970" level="INFO">${REVIEW_ID} = cmmbopeqb0001us8cn9v3d7kg</msg>
+<arg>${REVIEW_ID}</arg>
+<arg>${body['data']['id']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.735548" elapsed="0.000452"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:25.736368" level="INFO">Review created: cmmbopeqb0001us8cn9v3d7kg</msg>
+<arg>Review created: ${REVIEW_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.736185" elapsed="0.000211"/>
+</kw>
+<doc>POST /reviews — 5 stars with positive tags  [POST #1 of 6]</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:25.696564" elapsed="0.039946"/>
+</test>
+<test id="s1-t3" name="TC-3.12 Driver Creates Dispute Successfully" line="90">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${REVIEW_ID}' == '${EMPTY}'</arg>
+<arg>No review to dispute</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.737007" elapsed="0.000541"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.738730" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T13:57:25.737885" elapsed="2.000975"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.739696" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.739421" elapsed="0.000298"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:27.739756" elapsed="0.000028"/>
+</return>
+<msg time="2026-03-04T13:57:27.739865" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>${DRIVER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:27.739176" elapsed="0.000703"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.740272" level="INFO">${payload} = {'reviewId': 'cmmbopeqb0001us8cn9v3d7kg', 'reason': 'INACCURATE', 'detail': 'ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ'}</msg>
+<var>${payload}</var>
+<arg>reviewId=${REVIEW_ID}</arg>
+<arg>reason=INACCURATE</arg>
+<arg>detail=ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.740023" elapsed="0.000270"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:27.756532" level="INFO">POST Request : url=http://localhost:3001/api/reviews/disputes 
+ path_url=/api/reviews/disputes 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5zjMDBSw1LTVUT4DJRR9IIbj7o', 'Content-Length': '404', 'Content-Type': 'application/json'} 
+ body=b'{"reviewId": "cmmbopeqb0001us8cn9v3d7kg", "reason": "INACCURATE", "detail": "\\u0e1c\\u0e39\\u0e49\\u0e42\\u0e14\\u0e22\\u0e2a\\u0e32\\u0e23\\u0e43\\u0e2b\\u0e49\\u0e02\\u0e49\\u0e2d\\u0e21\\u0e39\\u0e25\\u0e1c\\u0e34\\u0e14\\u0e1e\\u0e25\\u0e32\\u0e14 \\u0e1c\\u0e21\\u0e21\\u0e32\\u0e15\\u0e23\\u0e07\\u0e40\\u0e27\\u0e25\\u0e32\\u0e15\\u0e32\\u0e21\\u0e19\\u0e31\\u0e14\\u0e17\\u0e38\\u0e01\\u0e04\\u0e23\\u0e31\\u0e49\\u0e07\\u0e04\\u0e23\\u0e31\\u0e1a"}' 
+ </msg>
+<msg time="2026-03-04T13:57:27.756627" level="INFO">POST Response : url=http://localhost:3001/api/reviews/disputes 
+ status=201, reason=Created 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '4', 'RateLimit-Reset': '898', 'X-Request-ID': '1ae5333e-75c9-4e81-890c-4cd121a415f2', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '426', 'ETag': 'W/"1aa-PupJate0e56xpvoy4jv2KITILrM"', 'Date': 'Wed, 04 Mar 2026 06:57:27 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbopgaq0003us8c74skxgr6","reviewId":"cmmbopeqb0001us8cn9v3d7kg","driverId":"cmmbn3e3l0000ustcufll04hr","reason":"INACCURATE","detail":"ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T06:57:27.746Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:27.756745" level="INFO">${resp} = &lt;Response [201]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/disputes</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.740414" elapsed="0.016348"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.757625" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>201</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.757029" elapsed="0.000650"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.758392" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbopgaq0003us8c74skxgr6', 'reviewId': 'cmmbopeqb0001us8cn9v3d7kg', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'reason': 'INACCURATE', 'detail': 'ผู้โดยสารให้ข้อมูลผิด...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.758013" elapsed="0.000404"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.758603" elapsed="0.000596"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['data']['reason']}</arg>
+<arg>INACCURATE</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.759371" elapsed="0.000455"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['data']['status']}</arg>
+<arg>PENDING</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.760045" elapsed="0.000439"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.761080" level="INFO">${DISPUTE_ID} = cmmbopgaq0003us8c74skxgr6</msg>
+<arg>${DISPUTE_ID}</arg>
+<arg>${body['data']['id']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.760634" elapsed="0.000478"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:27.761394" level="INFO">Dispute created: cmmbopgaq0003us8c74skxgr6</msg>
+<arg>Dispute created: ${DISPUTE_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.761234" elapsed="0.000188"/>
+</kw>
+<doc>POST /reviews/disputes → 201  [POST #2 of 6]</doc>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>High</tag>
+<status status="PASS" start="2026-03-04T13:57:25.736720" elapsed="2.024814"/>
+</test>
+<test id="s1-t4" name="TC-3.13 Duplicate Dispute Returns 409" line="109">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${DISPUTE_ID}' == '${EMPTY}'</arg>
+<arg>No dispute created yet</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.762026" elapsed="0.000470"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T13:57:29.763179" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T13:57:27.762620" elapsed="2.000640"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:29.764103" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.763847" elapsed="0.000276"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:29.764159" elapsed="0.000025"/>
+</return>
+<msg time="2026-03-04T13:57:29.764258" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>${DRIVER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:29.763618" elapsed="0.000655"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:29.764645" level="INFO">${payload} = {'reviewId': 'cmmbopeqb0001us8cn9v3d7kg', 'reason': 'FAKE_REVIEW', 'detail': 'ทดสอบการส่งแก้ต่างซ้ำ ซึ่งต้องไม่อนุญาตให้ทำได้'}</msg>
+<var>${payload}</var>
+<arg>reviewId=${REVIEW_ID}</arg>
+<arg>reason=FAKE_REVIEW</arg>
+<arg>detail=ทดสอบการส่งแก้ต่างซ้ำ ซึ่งต้องไม่อนุญาตให้ทำได้</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.764407" elapsed="0.000257"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:29.769946" level="INFO">POST Request : url=http://localhost:3001/api/reviews/disputes 
+ path_url=/api/reviews/disputes 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5zjMDBSw1LTVUT4DJRR9IIbj7o', 'Content-Length': '357', 'Content-Type': 'application/json'} 
+ body=b'{"reviewId": "cmmbopeqb0001us8cn9v3d7kg", "reason": "FAKE_REVIEW", "detail": "\\u0e17\\u0e14\\u0e2a\\u0e2d\\u0e1a\\u0e01\\u0e32\\u0e23\\u0e2a\\u0e48\\u0e07\\u0e41\\u0e01\\u0e49\\u0e15\\u0e48\\u0e32\\u0e07\\u0e0b\\u0e49\\u0e33 \\u0e0b\\u0e36\\u0e48\\u0e07\\u0e15\\u0e49\\u0e2d\\u0e07\\u0e44\\u0e21\\u0e48\\u0e2d\\u0e19\\u0e38\\u0e0d\\u0e32\\u0e15\\u0e43\\u0e2b\\u0e49\\u0e17\\u0e33\\u0e44\\u0e14\\u0e49"}' 
+ </msg>
+<msg time="2026-03-04T13:57:29.770023" level="INFO">POST Response : url=http://localhost:3001/api/reviews/disputes 
+ status=409, reason=Conflict 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '3', 'RateLimit-Reset': '896', 'X-Request-ID': 'e5decbc8-621c-46ee-8e86-69160f368986', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '58', 'ETag': 'W/"3a-d+kQdlfgbtDr5H1cM0auj49Bfuc"', 'Date': 'Wed, 04 Mar 2026 06:57:29 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Already disputed","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:29.770124" level="INFO">${resp} = &lt;Response [409]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/disputes</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=409</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.764783" elapsed="0.005359"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:29.770901" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>409</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.770334" elapsed="0.000636"/>
+</kw>
+<doc>POST /reviews/disputes same review → 409  [POST #3 of 6]</doc>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>Low</tag>
+<status status="PASS" start="2026-03-04T13:57:27.761748" elapsed="2.009453"/>
+</test>
+<test id="s1-t5" name="TC-3.6 Duplicate Review Returns 409" line="126">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${REVIEW_ID}' == '${EMPTY}'</arg>
+<arg>Review not created yet</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.771930" elapsed="0.000592"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T13:57:31.772949" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T13:57:29.772680" elapsed="2.000349"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:31.773768" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.773512" elapsed="0.000276"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:31.773823" elapsed="0.000027"/>
+</return>
+<msg time="2026-03-04T13:57:31.773930" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:31.773277" elapsed="0.000668"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-03-04T13:57:31.774257" level="INFO">${tags} = ['polite']</msg>
+<var>${tags}</var>
+<arg>polite</arg>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.774078" elapsed="0.000196"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:31.774824" level="INFO">${payload} = {'bookingId': 'cmmbopec90004usjs3aua37qz', 'rating': 5, 'tags': ['polite'], 'comment': 'duplicate attempt'}</msg>
+<var>${payload}</var>
+<arg>bookingId=${BOOKING_A_ID}</arg>
+<arg>rating=${5}</arg>
+<arg>tags=${tags}</arg>
+<arg>comment=duplicate attempt</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.774395" elapsed="0.000447"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:31.780629" level="INFO">POST Request : url=http://localhost:3001/api/reviews 
+ path_url=/api/reviews 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '107', 'Content-Type': 'application/json'} 
+ body=b'{"bookingId": "cmmbopec90004usjs3aua37qz", "rating": 5, "tags": ["polite"], "comment": "duplicate attempt"}' 
+ </msg>
+<msg time="2026-03-04T13:57:31.780709" level="INFO">POST Response : url=http://localhost:3001/api/reviews 
+ status=409, reason=Conflict 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '2', 'RateLimit-Reset': '894', 'X-Request-ID': '1414bcd8-6f89-4489-b744-c5c8102fc333', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '58', 'ETag': 'W/"3a-eRCP5HOU5cYYDC+hRpJ4VKFmwqI"', 'Date': 'Wed, 04 Mar 2026 06:57:31 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Already reviewed","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:31.780812" level="INFO">${resp} = &lt;Response [409]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.774962" elapsed="0.005867"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${resp.status_code} == 409</arg>
+<arg>Expected 409 but got ${resp.status_code}</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.781021" elapsed="0.000964"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:31.782399" level="INFO">${body} = {'success': False, 'message': 'Already reviewed', 'data': None}</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.782138" elapsed="0.000280"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body['message']}</arg>
+<arg>reviewed</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.782536" elapsed="0.000544"/>
+</kw>
+<doc>POST /reviews same booking again → 409  [POST #4 of 6]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="PASS" start="2026-03-04T13:57:29.771553" elapsed="2.011713"/>
+</test>
+<test id="s1-t6" name="TC-3.7 Expired Review Window Returns 410" line="143">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T13:57:33.784791" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T13:57:31.784135" elapsed="2.000741"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:33.785752" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.785486" elapsed="0.000286"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:33.785811" elapsed="0.000033"/>
+</return>
+<msg time="2026-03-04T13:57:33.785928" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:33.785186" elapsed="0.000758"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-03-04T13:57:33.786335" level="INFO">${tags} = ['polite']</msg>
+<var>${tags}</var>
+<arg>polite</arg>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.786119" elapsed="0.000235"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:33.786932" level="INFO">${payload} = {'bookingId': 'cmmboped60008usjsb6fux41o', 'rating': 5, 'tags': ['polite'], 'comment': 'attempt to review expired booking'}</msg>
+<var>${payload}</var>
+<arg>bookingId=${BOOKING_C_ID}</arg>
+<arg>rating=${5}</arg>
+<arg>tags=${tags}</arg>
+<arg>comment=attempt to review expired booking</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.786487" elapsed="0.000482"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:33.791977" level="INFO">POST Request : url=http://localhost:3001/api/reviews 
+ path_url=/api/reviews 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '123', 'Content-Type': 'application/json'} 
+ body=b'{"bookingId": "cmmboped60008usjsb6fux41o", "rating": 5, "tags": ["polite"], "comment": "attempt to review expired booking"}' 
+ </msg>
+<msg time="2026-03-04T13:57:33.792094" level="INFO">POST Response : url=http://localhost:3001/api/reviews 
+ status=410, reason=Gone 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '1', 'RateLimit-Reset': '892', 'X-Request-ID': 'd8f17192-7de7-44b0-aa55-295971a0a820', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '72', 'ETag': 'W/"48-NpdBUi+Sn/GaHGmFw9xiNHkU2yY"', 'Date': 'Wed, 04 Mar 2026 06:57:33 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Review period expired (7 days)","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:33.792208" level="INFO">${resp} = &lt;Response [410]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.787098" elapsed="0.005128"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${resp.status_code} == 410</arg>
+<arg>Expected 410 but got ${resp.status_code}</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.792440" elapsed="0.001278"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:33.794251" level="INFO">${body} = {'success': False, 'message': 'Review period expired (7 days)', 'data': None}</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.793959" elapsed="0.000313"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body['message']}</arg>
+<arg>expired</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.794458" elapsed="0.000510"/>
+</kw>
+<doc>Booking completed &gt; 7 days ago → 410  [POST #5 of 6]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="PASS" start="2026-03-04T13:57:31.783698" elapsed="2.011454"/>
+</test>
+<test id="s1-t7" name="TC-3.4 Invalid Tag For Rating Returns 400" line="159">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.796380" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T13:57:33.796074" elapsed="2.000397"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.797351" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.797066" elapsed="0.000306"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.797413" elapsed="0.000046"/>
+</return>
+<msg time="2026-03-04T13:57:35.797552" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.796776" elapsed="0.000794"/>
+</kw>
+<kw name="Create List" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.797932" level="INFO">${tags} = ['reckless_driving']</msg>
+<var>${tags}</var>
+<arg>reckless_driving</arg>
+<doc>Returns a list containing given items.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.797731" elapsed="0.000220"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.798551" level="INFO">${payload} = {'bookingId': 'cmmboped60008usjsb6fux41o', 'rating': 5, 'tags': ['reckless_driving'], 'comment': 'ทดสอบ tag ผิดประเภท'}</msg>
+<var>${payload}</var>
+<arg>bookingId=${BOOKING_C_ID}</arg>
+<arg>rating=${5}</arg>
+<arg>tags=${tags}</arg>
+<arg>comment=ทดสอบ tag ผิดประเภท</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.798081" elapsed="0.000491"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.803124" level="INFO">POST Request : url=http://localhost:3001/api/reviews 
+ path_url=/api/reviews 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '189', 'Content-Type': 'application/json'} 
+ body=b'{"bookingId": "cmmboped60008usjsb6fux41o", "rating": 5, "tags": ["reckless_driving"], "comment": "\\u0e17\\u0e14\\u0e2a\\u0e2d\\u0e1a tag \\u0e1c\\u0e34\\u0e14\\u0e1b\\u0e23\\u0e30\\u0e40\\u0e20\\u0e17"}' 
+ </msg>
+<msg time="2026-03-04T13:57:35.803198" level="INFO">POST Response : url=http://localhost:3001/api/reviews 
+ status=410, reason=Gone 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10;w=900', 'RateLimit-Limit': '10', 'RateLimit-Remaining': '0', 'RateLimit-Reset': '890', 'X-Request-ID': 'bd4dbe1a-e63c-4b73-927c-7319a42df9a4', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '72', 'ETag': 'W/"48-NpdBUi+Sn/GaHGmFw9xiNHkU2yY"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Review period expired (7 days)","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:35.803307" level="INFO">${resp} = &lt;Response [410]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.798695" elapsed="0.004629"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${resp.status_code} == 400 or ${resp.status_code} == 410 or ${resp.status_code} == 429</arg>
+<arg>Expected 400/410/429 but got ${resp.status_code}</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.803526" elapsed="0.001385"/>
+</kw>
+<doc>Negative tag on 5-star → 400  [POST #6 of 6 — last POST budget]</doc>
+<tag>High</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="PASS" start="2026-03-04T13:57:33.795702" elapsed="2.009368"/>
+</test>
+<test id="s1-t8" name="TC-3.10 Review Immutability — No PUT or DELETE Route" line="178">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.806068" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.805833" elapsed="0.000253"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.806119" elapsed="0.000025"/>
+</return>
+<msg time="2026-03-04T13:57:35.806219" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.805645" elapsed="0.000589"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.806709" level="INFO">${payload} = {'rating': 3}</msg>
+<var>${payload}</var>
+<arg>rating=${3}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.806352" elapsed="0.000375"/>
+</kw>
+<kw name="PUT On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.809329" level="INFO">PUT Request : url=http://localhost:3001/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ path_url=/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '13', 'Content-Type': 'application/json'} 
+ body=b'{"rating": 3}' 
+ </msg>
+<msg time="2026-03-04T13:57:35.809408" level="INFO">PUT Response : url=http://localhost:3001/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ status=404, reason=Not Found 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '188', 'RateLimit-Reset': '890', 'X-Request-ID': '1c31b88c-378c-4ad1-b082-5afd80ca9882', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '91', 'ETag': 'W/"5b-Lqyy85WsE6hNRigbcjgWvRF1evM"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Cannot PUT /api/reviews/cmmbopeqb0001us8cn9v3d7kg","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:35.809518" level="INFO">${resp_put} = &lt;Response [404]&gt;</msg>
+<var>${resp_put}</var>
+<arg>api</arg>
+<arg>/reviews/${REVIEW_ID}</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a PUT request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.806840" elapsed="0.002698"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${resp_put.status_code} == 404 or ${resp_put.status_code} == 405</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.809744" elapsed="0.001012"/>
+</kw>
+<kw name="DELETE On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.812805" level="INFO">DELETE Request : url=http://localhost:3001/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ path_url=/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.812873" level="INFO">DELETE Response : url=http://localhost:3001/api/reviews/cmmbopeqb0001us8cn9v3d7kg 
+ status=404, reason=Not Found 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '187', 'RateLimit-Reset': '890', 'X-Request-ID': '9bc20c4f-a9bc-42db-ae82-d037487481e6', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '94', 'ETag': 'W/"5e-xZ8gz6oNetYkrUVWEsQ1FvWOPvU"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":false,"message":"Cannot DELETE /api/reviews/cmmbopeqb0001us8cn9v3d7kg","data":null} 
+ </msg>
+<msg time="2026-03-04T13:57:35.812954" level="INFO">${resp_del} = &lt;Response [404]&gt;</msg>
+<var>${resp_del}</var>
+<arg>api</arg>
+<arg>/reviews/${REVIEW_ID}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a DELETE request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.810931" elapsed="0.002039"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${resp_del.status_code} == 404 or ${resp_del.status_code} == 405</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.813185" elapsed="0.000940"/>
+</kw>
+<doc>PUT/DELETE /reviews/:id should return 404 (route not found)</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.805284" elapsed="0.008994"/>
+</test>
+<test id="s1-t9" name="TC-3.8b My Reviews Shows Submitted Review" line="188">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.815309" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.815076" elapsed="0.000254"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.815365" elapsed="0.000024"/>
+</return>
+<msg time="2026-03-04T13:57:35.815471" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.814869" elapsed="0.000620"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.823109" level="INFO">GET Request : url=http://localhost:3001/api/reviews/me 
+ path_url=/api/reviews/me 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.823190" level="INFO">GET Response : url=http://localhost:3001/api/reviews/me 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '186', 'RateLimit-Reset': '890', 'X-Request-ID': 'b8715992-0a73-4ee6-885e-64742b447b43', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '559', 'ETag': 'W/"22f-iperzlYy+gzAHKwWNPQMNdkn52g"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":[{"id":"cmmbopeqb0001us8cn9v3d7kg","bookingId":"cmmbopec90004usjs3aua37qz","driverId":"cmmbn3e3l0000ustcufll04hr","rating":5,"tags":["polite","safe_driving"],"comment":"คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย","privateFeedback":null,"isAnonymous":false,"displayName":"RobotPassenger","status":"ACTIVE","createdAt":"2026-03-04T06:57:25.715Z","driver":{"firstName":"RobotDriver","profilePicture":null}}],"pagination":{"page":1,"limit":20,"total":1,"totalPages":1}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.823284" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/me</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.815643" elapsed="0.007656"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.824061" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.823512" elapsed="0.000615"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.824801" level="INFO">${body} = {'success': True, 'data': [{'id': 'cmmbopeqb0001us8cn9v3d7kg', 'bookingId': 'cmmbopec90004usjs3aua37qz', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'rating': 5, 'tags': ['polite', 'safe_driving'], 'comm...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.824397" elapsed="0.000428"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.824998" elapsed="0.000481"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.826120" level="INFO">Length is 1.</msg>
+<msg time="2026-03-04T13:57:35.826173" level="INFO">${count} = 1</msg>
+<var>${count}</var>
+<arg>${body['data']}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.825632" elapsed="0.000559"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${count} &gt;= 1</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.826368" elapsed="0.000239"/>
+</kw>
+<doc>GET /reviews/me returns the review just created</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.814513" elapsed="0.012265"/>
+</test>
+<test id="s1-t10" name="TC-3.8c Check Has Reviewed Returns True" line="199">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.827910" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.827690" elapsed="0.000241"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.827965" elapsed="0.000024"/>
+</return>
+<msg time="2026-03-04T13:57:35.828072" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.827507" elapsed="0.000580"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.832002" level="INFO">GET Request : url=http://localhost:3001/api/reviews/check/cmmbopec90004usjs3aua37qz 
+ path_url=/api/reviews/check/cmmbopec90004usjs3aua37qz 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNWUwMDAxdXN0Y3BjZXI0NnZ6Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.XTqs4svpXthL4kvqa4tLKoLRUTEj9ToBzCTpGTs2y-Q'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.832075" level="INFO">GET Response : url=http://localhost:3001/api/reviews/check/cmmbopec90004usjs3aua37qz 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '185', 'RateLimit-Reset': '890', 'X-Request-ID': 'b74df9e9-646e-41c3-a43f-cba53b1bb112', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '41', 'ETag': 'W/"29-B+U8CXgeg6AdzuwX2Q7aVbQalFI"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"reviewed":true}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.832180" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/check/${BOOKING_A_ID}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.828202" elapsed="0.003995"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.832907" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.832417" elapsed="0.000535"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.833550" level="INFO">${body} = {'success': True, 'data': {'reviewed': True}}</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.833156" elapsed="0.000419"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['data']['reviewed']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.833750" elapsed="0.000463"/>
+</kw>
+<doc>GET /reviews/check/:bookingId → reviewed = true</doc>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.827178" elapsed="0.007174"/>
+</test>
+<test id="s1-t11" name="TC-3.9 Verify Pre-Seeded Anonymous Review" line="208">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.835528" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.835295" elapsed="0.000257"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.835598" elapsed="0.000031"/>
+</return>
+<msg time="2026-03-04T13:57:35.835738" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3N...</msg>
+<var>${headers}</var>
+<arg>${PASSENGER2_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.835097" elapsed="0.000657"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.843958" level="INFO">GET Request : url=http://localhost:3001/api/reviews/booking/cmmbopecu0006usjsg1msw0c9 
+ path_url=/api/reviews/booking/cmmbopecu0006usjsg1msw0c9 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlNXIwMDAydXN0Y3UwbG4wa2ZpIiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.HChP8hQE9DJi2MtvT7Pfif6Z86vB5D5rqUgxzEH0e9w'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.844046" level="INFO">GET Response : url=http://localhost:3001/api/reviews/booking/cmmbopecu0006usjsg1msw0c9 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '184', 'RateLimit-Reset': '890', 'X-Request-ID': '723bff01-cb0f-498b-bd01-5231c0e9bd84', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '354', 'ETag': 'W/"162-FGP58QPhEj1e7v7ye3Ic0ALb14g"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbopeew000dusjsgw1sc2zu","bookingId":"cmmbopecu0006usjsg1msw0c9","rating":2,"tags":["late_arrival"],"comment":"คนขับมาสายมาก รอนานเลยครับ","privateFeedback":null,"isAnonymous":false,"displayName":"RobotPassenger2","status":"ACTIVE","createdAt":"2026-03-04T06:57:25.304Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.844150" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/booking/${BOOKING_B_ID}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.835883" elapsed="0.008284"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.845057" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.844442" elapsed="0.000670"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.845712" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbopeew000dusjsgw1sc2zu', 'bookingId': 'cmmbopecu0006usjsg1msw0c9', 'rating': 2, 'tags': ['late_arrival'], 'comment': 'คนขับมาสายมาก รอนานเลยครับ', 'privateFeedback...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.845330" elapsed="0.000409"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.845925" elapsed="0.000521"/>
+</kw>
+<doc>Seed created anonymous-style review for bookingB — verify via GET</doc>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.834744" elapsed="0.011847"/>
+</test>
+<test id="s1-t12" name="TC-3.14a Driver Views Received Reviews" line="217">
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.847972" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.847649" elapsed="0.000349"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.848047" elapsed="0.000032"/>
+</return>
+<msg time="2026-03-04T13:57:35.848192" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyM...</msg>
+<var>${headers}</var>
+<arg>${DRIVER_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.847382" elapsed="0.000831"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.854983" level="INFO">GET Request : url=http://localhost:3001/api/reviews/my-received 
+ path_url=/api/reviews/my-received 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibjNlM2wwMDAwdXN0Y3VmbGwwNGhyIiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjYwNzM3NywiaWF0IjoxNzcyNjA3NDQ1LCJleHAiOjE3NzMyMTIyNDV9.UHzIsoPt47Id1NYXf5zjMDBSw1LTVUT4DJRR9IIbj7o'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.855102" level="INFO">GET Response : url=http://localhost:3001/api/reviews/my-received 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '183', 'RateLimit-Reset': '890', 'X-Request-ID': 'bbdc6293-7fb3-4329-959a-fdb5c5600316', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '712', 'ETag': 'W/"2c8-S1Xg8uU0+KepH0+RjfnKimgv2CQ"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":[{"id":"cmmbopeqb0001us8cn9v3d7kg","rating":5,"tags":["polite","safe_driving"],"comment":"คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย","privateFeedback":null,"isAnonymous":false,"displayName":"RobotPassenger","status":"ACTIVE","createdAt":"2026-03-04T06:57:25.715Z"},{"id":"cmmbopeew000dusjsgw1sc2zu","rating":2,"tags":["late_arrival"],"comment":"คนขับมาสายมาก รอนานเลยครับ","privateFeedback":null,"isAnonymous":false,"displayName":"RobotPassenger2","status":"ACTIVE","createdAt":"2026-03-04T06:57:25.304Z"}],"pagination":{"page":1,"limit":20,"total":2,"totalPages":1}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.855255" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/my-received</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.848373" elapsed="0.006911"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.856336" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.855579" elapsed="0.000830"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.856973" level="INFO">${body} = {'success': True, 'data': [{'id': 'cmmbopeqb0001us8cn9v3d7kg', 'rating': 5, 'tags': ['polite', 'safe_driving'], 'comment': 'คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย', 'privateFeedback': None, 'isAnonym...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.856636" elapsed="0.000360"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.857161" elapsed="0.000492"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.858203" level="INFO">Length is 2.</msg>
+<msg time="2026-03-04T13:57:35.858255" level="INFO">${count} = 2</msg>
+<var>${count}</var>
+<arg>${body['data']}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.857784" elapsed="0.000485"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${count} &gt;= 1</arg>
+<arg>Driver should have at least 1 received review</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.858391" elapsed="0.000253"/>
+</kw>
+<doc>GET /reviews/my-received</doc>
+<tag>Driver</tag>
+<tag>High</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.846980" elapsed="0.011814"/>
+</test>
+<test id="s1-t13" name="TC-3.14b Driver Stats Public Endpoint" line="228">
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.862704" level="INFO">GET Request : url=http://localhost:3001/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ path_url=/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.862783" level="INFO">GET Response : url=http://localhost:3001/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '182', 'RateLimit-Reset': '890', 'X-Request-ID': 'f3cf19a2-cb93-400b-94b3-7c42dc3e2bed', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '224', 'ETag': 'W/"e0-nzEd72Y8mahwmG/G7GRaZq/pO/8"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbn3e8a000eustcnmp4c72u","driverId":"cmmbn3e3l0000ustcufll04hr","totalRides":0,"totalReviews":2,"avgRating":5,"tagCounts":{"polite":2,"safe_driving":2},"updatedAt":"2026-03-04T06:57:25.720Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.862875" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/driver/${DRIVER_ID}/stats</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.859391" elapsed="0.003499"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.863612" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.863122" elapsed="0.000535"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.864094" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbn3e8a000eustcnmp4c72u', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'totalRides': 0, 'totalReviews': 2, 'avgRating': 5, 'tagCounts': {'polite': 2, 'safe_driving': 2}...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.863818" elapsed="0.000297"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.864250" elapsed="0.000427"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${body['data']['totalReviews']} &gt;= 1</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.864801" elapsed="0.000569"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${body['data']['avgRating']} &gt; 0</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.865487" elapsed="0.000381"/>
+</kw>
+<doc>GET /reviews/driver/:driverId/stats</doc>
+<tag>Driver</tag>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.859124" elapsed="0.006857"/>
+</test>
+<test id="s1-t14" name="TC-4.1a Admin Lists Disputes" line="243">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${ADMIN_TOKEN}' == '${EMPTY}'</arg>
+<arg>Admin login failed</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.866561" elapsed="0.000495"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.867676" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.867446" elapsed="0.000253"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.867737" elapsed="0.000027"/>
+</return>
+<msg time="2026-03-04T13:57:35.867852" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>${ADMIN_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.867256" elapsed="0.000615"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.878811" level="INFO">GET Request : url=http://localhost:3001/api/reviews/disputes/admin 
+ path_url=/api/reviews/disputes/admin 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSobhrV9NBFgYHV8bmKUt8sdSXDI'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.878897" level="INFO">GET Response : url=http://localhost:3001/api/reviews/disputes/admin 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '181', 'RateLimit-Reset': '890', 'X-Request-ID': '8c80ec41-b778-4253-9ee5-2c26075b4676', 'Content-Type': 'application/json; charset=utf-8', 'ETag': 'W/"1181-NImhSWhT0oOJAYIEg3HQPMDUT+M"', 'Content-Encoding': 'gzip', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'} 
+ body={"success":true,"data":[{"id":"cmmbopgaq0003us8c74skxgr6","reviewId":"cmmbopeqb0001us8cn9v3d7kg","driverId":"cmmbn3e3l0000ustcufll04hr","reason":"INACCURATE","detail":"ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T06:57:27.746Z","review":{"id":"cmmbopeqb0001us8cn9v3d7kg","rating":5,"comment":"คนขับสุภาพมากครับ ขับรถปลอดภัย แนะนำเลย","displayName":"RobotPassenger"},"driver":{"id":"cmmbn3e3l0000ustcufll04hr","firstName":"RobotDriver"}},{"id":"cmmbopefc000fusjsm42zfo9h","reviewId":"cmmbopeew000dusjsgw1sc2zu","driverId":"cmmbn3e3l0000ustcufll04hr","reason":"INACCURATE","detail":"ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T06:57:25.320Z","review":{"id":"cmmbopeew000dusjsgw1sc2zu","rating":2,"comment":"คนขับมาสายมาก รอนานเลยครับ","displayName":"RobotPassenger2"},"driver":{"id":"cmmbn3e3l0000ustcufll04hr","firstName":"RobotDriver"}},{"id":"cmmbapox00005usvwrtlva3s8","reviewId":"cmma3swpi000lusgowbt0f4wt","driverId":"cmma1p6dp0000usbc1hyavrbt","reason":"INACCURATE","detail":"มีความเข้าใจผิดเกี่ยวกับเวลาที่มาถึง ผู้โดยสารบอกว่ามาสาย แต่จริงๆ แล้วมาตรงเวลาตามนัด และได้แจ้งผู้โดยสารล่วงหน้าแล้วว่าจะมาถึงตรงเวลา","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T00:25:44.292Z","review":{"id":"cmma3swpi000lusgowbt0f4wt","rating":5,"comment":"สุดยอดไปเลยครับ คนขับสุภาพ รถหรู ขับรถปลอดภัย จะใช้บริการอีกแน่นอนครับ","displayName":"Anonymous Passenger"},"driver":{"id":"cmma1p6dp0000usbc1hyavrbt","firstName":"สมชาย"}},{"id":"cmmbapown0003usvwrzqgoxs4","reviewId":"cmma3swp9000jusgoszggss3d","driverId":"cmma1p6fn0001usbcc2wz15z6","reason":"WRONG_PERSON","detail":"ผู้โดยสารกล่าวหาว่าขับรถเร็วเกินไป แต่จริงๆ แล้วขับรถตามความเร็วที่กำหนด และสภาพถนนดี ไม่มีการบ่นนัยและให้ความสำคัญกับความปลอดภัยเป็นอันดับแรก","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T00:25:44.279Z","review":{"id":"cmma3swp9000jusgoszggss3d","rating":4,"comment":"คนขับดีครับ รถสะอาด แต่มาสายไปนิดหน่อย แต่โดยรวมโอเคครับ","displayName":"วิชัย ใจกล้า"},"driver":{"id":"cmma1p6fn0001usbcc2wz15z6","firstName":"สมศรี"}},{"id":"cmmbapow90001usvws5zb6it3","reviewId":"cmma3swoy000husgopqflmxev","driverId":"cmma1p6dp0000usbc1hyavrbt","reason":"FAKE_REVIEW","detail":"ผู้โดยสารให้คะแนนต่ำเกินไป แม้ว่าบริการดีเยี่ยม ขับรถปลอดภัย มาตรงเวลา และรถสะอาด ควรได้รับคะแนน 5 ดาว ไม่ใช่ 3 ดาว","status":"PENDING","adminNote":null,"resolvedAt":null,"createdAt":"2026-03-04T00:25:44.265Z","review":{"id":"cmma3swoy000husgopqflmxev","rating":5,"comment":"คุณครับคนขับสุภาพมาก รถสะอาด ขับรถปลอดภัย มาถึงตรงเวลาพอดี เดินทางสะดวกสบายมากครับ แนะนำเลยครับ","displayName":"มานี เดินทาง"},"driver":{"id":"cmma1p6dp0000usbc1hyavrbt","firstName":"สมชาย"}}],"pagination":{"page":1,"limit":20,"total":5,"totalPages":1}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.879028" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/disputes/admin</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.868007" elapsed="0.011046"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.880071" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.879294" elapsed="0.000835"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.880699" level="INFO">${body} = {'success': True, 'data': [{'id': 'cmmbopgaq0003us8c74skxgr6', 'reviewId': 'cmmbopeqb0001us8cn9v3d7kg', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'reason': 'INACCURATE', 'detail': 'ผู้โดยสารให้ข้อมูลผิ...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.880314" elapsed="0.000409"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['success']}</arg>
+<arg>${True}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.880861" elapsed="0.000483"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.881904" level="INFO">Length is 5.</msg>
+<msg time="2026-03-04T13:57:35.881958" level="INFO">${count} = 5</msg>
+<var>${count}</var>
+<arg>${body['data']}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.881471" elapsed="0.000505"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${count} &gt;= 1</arg>
+<arg>Admin should see at least 1 dispute</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.882093" elapsed="0.000248"/>
+</kw>
+<doc>GET /reviews/disputes/admin → 200</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="PASS" start="2026-03-04T13:57:35.866262" elapsed="0.016191"/>
+</test>
+<test id="s1-t15" name="TC-4.1b Admin Resolves Dispute — Hide Review" line="255">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${ADMIN_TOKEN}' == '${EMPTY}' or '${PRE_DISPUTE_ID}' == '${EMPTY}'</arg>
+<arg>Admin or dispute not available</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.883133" elapsed="0.000915"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.884724" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.884479" elapsed="0.000266"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.884781" elapsed="0.000031"/>
+</return>
+<msg time="2026-03-04T13:57:35.884897" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>${ADMIN_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.884270" elapsed="0.000643"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.885356" level="INFO">${payload} = {'status': 'RESOLVED', 'adminNote': 'ตรวจสอบแล้ว คนขับมาตรงเวลาจริง ซ่อนรีวิวนี้', 'hideReview': True}</msg>
+<var>${payload}</var>
+<arg>status=RESOLVED</arg>
+<arg>adminNote=ตรวจสอบแล้ว คนขับมาตรงเวลาจริง ซ่อนรีวิวนี้</arg>
+<arg>hideReview=${True}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.885061" elapsed="0.000318"/>
+</kw>
+<kw name="PATCH On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.914261" level="INFO">PATCH Request : url=http://localhost:3001/api/reviews/disputes/cmmbopefc000fusjsm42zfo9h 
+ path_url=/api/reviews/disputes/cmmbopefc000fusjsm42zfo9h 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSobhrV9NBFgYHV8bmKUt8sdSXDI', 'Content-Length': '307', 'Content-Type': 'application/json'} 
+ body=b'{"status": "RESOLVED", "adminNote": "\\u0e15\\u0e23\\u0e27\\u0e08\\u0e2a\\u0e2d\\u0e1a\\u0e41\\u0e25\\u0e49\\u0e27 \\u0e04\\u0e19\\u0e02\\u0e31\\u0e1a\\u0e21\\u0e32\\u0e15\\u0e23\\u0e07\\u0e40\\u0e27\\u0e25\\u0e32\\u0e08\\u0e23\\u0e34\\u0e07 \\u0e0b\\u0e48\\u0e2d\\u0e19\\u0e23\\u0e35\\u0e27\\u0e34\\u0e27\\u0e19\\u0e35\\u0e49", "hideReview": true}' 
+ </msg>
+<msg time="2026-03-04T13:57:35.914394" level="INFO">PATCH Response : url=http://localhost:3001/api/reviews/disputes/cmmbopefc000fusjsm42zfo9h 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '180', 'RateLimit-Reset': '890', 'X-Request-ID': '4fb1d6ad-b669-42c4-b854-fbadef2883c4', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '572', 'ETag': 'W/"23c-6cRMF1efEJSUoIp6qHxVVLzAly8"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbopefc000fusjsm42zfo9h","reviewId":"cmmbopeew000dusjsgw1sc2zu","driverId":"cmmbn3e3l0000ustcufll04hr","reason":"INACCURATE","detail":"ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ","status":"RESOLVED","adminNote":"ตรวจสอบแล้ว คนขับมาตรงเวลาจริง ซ่อนรีวิวนี้","resolvedAt":"2026-03-04T06:57:35.891Z","createdAt":"2026-03-04T06:57:25.320Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.914551" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/disputes/${PRE_DISPUTE_ID}</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a PATCH request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.885650" elapsed="0.028933"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.915701" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.914904" elapsed="0.000893"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.916458" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbopefc000fusjsm42zfo9h', 'reviewId': 'cmmbopeew000dusjsgw1sc2zu', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'reason': 'INACCURATE', 'detail': 'ผู้โดยสารให้ข้อมูลผิด...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.916034" elapsed="0.000460"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['data']['status']}</arg>
+<arg>RESOLVED</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.916814" elapsed="0.000950"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.918228" level="INFO">Pre-seeded dispute cmmbopefc000fusjsm42zfo9h resolved — review hidden</msg>
+<arg>Pre-seeded dispute ${PRE_DISPUTE_ID} resolved — review hidden</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.917994" elapsed="0.000271"/>
+</kw>
+<doc>PATCH /reviews/disputes/:id → RESOLVED (uses pre-seeded dispute)</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="PASS" start="2026-03-04T13:57:35.882762" elapsed="0.035641"/>
+</test>
+<test id="s1-t16" name="TC-4.2 Admin Rejects Dispute" line="270">
+<kw name="Skip If" owner="BuiltIn" type="SETUP">
+<arg>'${ADMIN_TOKEN}' == '${EMPTY}' or '${DISPUTE_ID}' == '${EMPTY}'</arg>
+<arg>Admin or dispute not available</arg>
+<doc>Skips the rest of the current test if the ``condition`` is True.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.919041" elapsed="0.000747"/>
+</kw>
+<kw name="Auth Header">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.920645" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>Authorization=Bearer ${token}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.920206" elapsed="0.000475"/>
+</kw>
+<return>
+<value>${headers}</value>
+<status status="PASS" start="2026-03-04T13:57:35.920735" elapsed="0.000035"/>
+</return>
+<msg time="2026-03-04T13:57:35.920871" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxM...</msg>
+<var>${headers}</var>
+<arg>${ADMIN_TOKEN}</arg>
+<status status="PASS" start="2026-03-04T13:57:35.919995" elapsed="0.000896"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.921363" level="INFO">${payload} = {'status': 'REJECTED', 'adminNote': 'ตรวจสอบแล้ว รีวิวมีข้อเท็จจริง ปฏิเสธการแก้ต่าง'}</msg>
+<var>${payload}</var>
+<arg>status=REJECTED</arg>
+<arg>adminNote=ตรวจสอบแล้ว รีวิวมีข้อเท็จจริง ปฏิเสธการแก้ต่าง</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.921071" elapsed="0.000313"/>
+</kw>
+<kw name="PATCH On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.938508" level="INFO">PATCH Request : url=http://localhost:3001/api/reviews/disputes/cmmbopgaq0003us8c74skxgr6 
+ path_url=/api/reviews/disputes/cmmbopgaq0003us8c74skxgr6 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1ibzRvdTYwMDA5dXM4czgwYnYwbTlvIiwicm9sZSI6IkFETUlOIiwiYm9vdEVwb2NoIjoxNzcyNjA3Mzc3LCJpYXQiOjE3NzI2MDc0NDUsImV4cCI6MTc3MzIxMjI0NX0.SbPA_I3ncxQX2iEfSobhrV9NBFgYHV8bmKUt8sdSXDI', 'Content-Length': '311', 'Content-Type': 'application/json'} 
+ body=b'{"status": "REJECTED", "adminNote": "\\u0e15\\u0e23\\u0e27\\u0e08\\u0e2a\\u0e2d\\u0e1a\\u0e41\\u0e25\\u0e49\\u0e27 \\u0e23\\u0e35\\u0e27\\u0e34\\u0e27\\u0e21\\u0e35\\u0e02\\u0e49\\u0e2d\\u0e40\\u0e17\\u0e47\\u0e08\\u0e08\\u0e23\\u0e34\\u0e07 \\u0e1b\\u0e0f\\u0e34\\u0e40\\u0e2a\\u0e18\\u0e01\\u0e32\\u0e23\\u0e41\\u0e01\\u0e49\\u0e15\\u0e48\\u0e32\\u0e07"}' 
+ </msg>
+<msg time="2026-03-04T13:57:35.938620" level="INFO">PATCH Response : url=http://localhost:3001/api/reviews/disputes/cmmbopgaq0003us8c74skxgr6 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '179', 'RateLimit-Reset': '890', 'X-Request-ID': '93016d72-3d90-4ba1-ba33-7ce2723b677c', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '584', 'ETag': 'W/"248-bhJJGaoqsSk19uRAt/roOhHlQSs"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbopgaq0003us8c74skxgr6","reviewId":"cmmbopeqb0001us8cn9v3d7kg","driverId":"cmmbn3e3l0000ustcufll04hr","reason":"INACCURATE","detail":"ผู้โดยสารให้ข้อมูลผิดพลาด ผมมาตรงเวลาตามนัดทุกครั้งครับ","status":"REJECTED","adminNote":"ตรวจสอบแล้ว รีวิวมีข้อเท็จจริง ปฏิเสธการแก้ต่าง","resolvedAt":"2026-03-04T06:57:35.926Z","createdAt":"2026-03-04T06:57:27.746Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.938757" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/disputes/${DISPUTE_ID}</arg>
+<arg>json=${payload}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a PATCH request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.921766" elapsed="0.017017"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.939530" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.939020" elapsed="0.000554"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.940101" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbopgaq0003us8c74skxgr6', 'reviewId': 'cmmbopeqb0001us8cn9v3d7kg', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'reason': 'INACCURATE', 'detail': 'ผู้โดยสารให้ข้อมูลผิด...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.939752" elapsed="0.000373"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${body['data']['status']}</arg>
+<arg>REJECTED</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.940429" elapsed="0.000489"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.941275" level="INFO">Runtime dispute cmmbopgaq0003us8c74skxgr6 rejected</msg>
+<arg>Runtime dispute ${DISPUTE_ID} rejected</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.941093" elapsed="0.000215"/>
+</kw>
+<doc>PATCH /reviews/disputes/:id → REJECTED (uses runtime dispute)</doc>
+<tag>Admin</tag>
+<tag>Dispute</tag>
+<tag>High</tag>
+<status status="PASS" start="2026-03-04T13:57:35.918699" elapsed="0.022752"/>
+</test>
+<test id="s1-t17" name="TC-3.14c Driver Stats Updated After Dispute Resolution" line="288">
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-04T13:57:35.945653" level="INFO">GET Request : url=http://localhost:3001/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ path_url=/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-03-04T13:57:35.945737" level="INFO">GET Response : url=http://localhost:3001/api/reviews/driver/cmmbn3e3l0000ustcufll04hr/stats 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '200;w=900', 'RateLimit-Limit': '200', 'RateLimit-Remaining': '178', 'RateLimit-Reset': '890', 'X-Request-ID': '4810ea6c-16c2-4a27-b5cd-1995ef309a88', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '224', 'ETag': 'W/"e0-WiHBpvmqW88bXcXCy0jsJ9S1ric"', 'Date': 'Wed, 04 Mar 2026 06:57:35 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmbn3e8a000eustcnmp4c72u","driverId":"cmmbn3e3l0000ustcufll04hr","totalRides":0,"totalReviews":1,"avgRating":5,"tagCounts":{"polite":1,"safe_driving":1},"updatedAt":"2026-03-04T06:57:35.902Z"}} 
+ </msg>
+<msg time="2026-03-04T13:57:35.945832" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>api</arg>
+<arg>/reviews/driver/${DRIVER_ID}/stats</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.942286" elapsed="0.003563"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.946636" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${resp.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.946093" elapsed="0.000595"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.947182" level="INFO">${body} = {'success': True, 'data': {'id': 'cmmbn3e8a000eustcnmp4c72u', 'driverId': 'cmmbn3e3l0000ustcufll04hr', 'totalRides': 0, 'totalReviews': 1, 'avgRating': 5, 'tagCounts': {'polite': 1, 'safe_driving': 1}...</msg>
+<var>${body}</var>
+<arg>$resp.json()</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.946871" elapsed="0.000331"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T13:57:35.947999" level="INFO">Updated stats: totalReviews=1 avgRating=5</msg>
+<arg>Updated stats: totalReviews=${body['data']['totalReviews']} avgRating=${body['data']['avgRating']}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T13:57:35.947354" elapsed="0.000683"/>
+</kw>
+<doc>After hiding review, driver stats should update</doc>
+<tag>Driver</tag>
+<tag>Medium</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T13:57:35.941853" elapsed="0.006318"/>
+</test>
+<kw name="Delete All Sessions" owner="RequestsLibrary" type="TEARDOWN">
+<msg time="2026-03-04T13:57:35.948795" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T13:57:35.948720" elapsed="0.000158"/>
+</kw>
+<doc>Epic 3 — Ride Review &amp; Rating System API Tests
+Covers TC-3.1 to TC-3.14 and Admin TC-4.1, TC-4.2
+Rate-limit aware: authLimiter = 10 POST/15 min (shared login+reviews+disputes)
+Run:  robot --outputdir results epic3_review_system.robot</doc>
+<status status="PASS" start="2026-03-04T13:57:24.817824" elapsed="11.131094"/>
+</suite>
+<statistics>
+<total>
+<stat pass="17" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="3" fail="0" skip="0">Admin</stat>
+<stat pass="4" fail="0" skip="0">Critical</stat>
+<stat pass="5" fail="0" skip="0">Dispute</stat>
+<stat pass="5" fail="0" skip="0">Driver</stat>
+<stat pass="8" fail="0" skip="0">High</stat>
+<stat pass="1" fail="0" skip="0">Low</stat>
+<stat pass="4" fail="0" skip="0">Medium</stat>
+<stat pass="12" fail="0" skip="0">Review</stat>
+<stat pass="3" fail="0" skip="0">Validation</stat>
+</tag>
+<suite>
+<stat name="Epic3 Review System" id="s1" pass="17" fail="0" skip="0">Epic3 Review System</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

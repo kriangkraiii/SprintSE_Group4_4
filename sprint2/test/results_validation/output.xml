@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on win32)" generated="2026-03-04T19:57:27.690428" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic3 Validation Tests" source="D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_validation_tests.robot">
+<kw name="Suite Init" type="SETUP">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-04T19:57:27.989514" level="INFO">Starting process:
+node D:\Soften\SprintSE_Group4_4\sprint2\test/seed-review-test.js</msg>
+<msg time="2026-03-04T19:57:27.995304" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-04T19:57:28.292740" level="INFO">Process completed.</msg>
+<msg time="2026-03-04T19:57:28.292901" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SEED_SCRIPT}</arg>
+<arg>cwd=D:\\Soften\\SprintSE_Group4_4\\sprint2\\test</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-04T19:57:27.989001" elapsed="0.303931"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.293593" level="INFO">[dotenv@17.3.1] injecting env (18) from ..\..\DriveToSurviveWebApp\.env -- tip: ΓÜÖ∩╕Å  load multiple .env files with { path: ['.env.local', '.env'] }
+≡ƒî▒ Seeding test data for Epic 3: Review &amp; Rating ...
+  Γ£à Driver: cmmbth0k60000us3ggzxw7huu
+  Γ£à Passenger: cmmbth0km0001us3g0xe0zid9
+  Γ£à Passenger2: cmmbthvog0002usak4kpnx7s0
+  Γ£à Vehicle: cmmbth0l40003us3gnynsyr82
+  Γ£à Route: cmmbth0lm0005us3gfgdcgyr4
+  Γ£à Booking A (for review): cmmc1kfbb0004usg0mjpk85ay
+  Γ£à Booking B (for dispute): cmmc1kfbx0006usg0tktrf6z3
+  Γ£à Booking C (expired): cmmc1kfc90008usg0oyjunhwq
+  Γ£à Admin: cmmbo4ou60009us8s80bv0m9o
+  Γ£à Pre-review for dispute: cmmc1kfcz000dusg0zogltz85
+  Γ£à Pre-dispute for admin: cmmc1kfdb000fusg00sk8we5k
+
+≡ƒôä Seed output written to D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json
+{
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbthvog0002usak4kpnx7s0",
+  "passenger2Email": "rf_passenger2@test.com",
+  "vehicleId": "cmmbth0l40003us3gnynsyr82",
+  "routeId": "cmmbth0lm0005us3gfgdcgyr4",
+  "bookingAId": "cmmc1kfbb0004usg0mjpk85ay",
+  "bookingBId": "cmmc1kfbx0006usg0tktrf6z3",
+  "bookingCId": "cmmc1kfc90008usg0oyjunhwq",
+  "preReviewId": "cmmc1kfcz000dusg0zogltz85",
+  "preDisputeId": "cmmc1kfdb000fusg00sk8we5k",
+  "adminId": "cmmbo4ou60009us8s80bv0m9o",
+  "adminEmail": "rf_admin@test.com",
+  "password": "password123"
+}
+
+≡ƒÄë Seed complete!</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.293107" elapsed="0.000552"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.294370" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${result.rc}</arg>
+<arg>0</arg>
+<arg>Seed script failed: ${result.stderr}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.293763" elapsed="0.000678"/>
+</kw>
+<kw name="Get File" owner="OperatingSystem">
+<msg time="2026-03-04T19:57:28.294673" level="INFO" html="true">Getting file '&lt;a href="file://D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json"&gt;D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json&lt;/a&gt;'.</msg>
+<msg time="2026-03-04T19:57:28.301344" level="INFO">${file_content} = {
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbth...</msg>
+<var>${file_content}</var>
+<arg>${OUTPUT_FILE}</arg>
+<doc>Returns the contents of a specified file.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.294555" elapsed="0.006832"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.302138" level="INFO">${data} = {'driverId': 'cmmbth0k60000us3ggzxw7huu', 'driverEmail': 'rf_driver@test.com', 'passengerId': 'cmmbth0km0001us3g0xe0zid9', 'passengerEmail': 'rf_passenger@test.com', 'passenger2Id': 'cmmbthvog0002usak...</msg>
+<var>${data}</var>
+<arg>json.loads($file_content)</arg>
+<arg>json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.301525" elapsed="0.000653"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.302835" level="INFO">${BOOKING_A_ID} = cmmc1kfbb0004usg0mjpk85ay</msg>
+<arg>${BOOKING_A_ID}</arg>
+<arg>${data['bookingAId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.302343" elapsed="0.000534"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.303456" level="INFO">${DRIVER_ID} = cmmbth0k60000us3ggzxw7huu</msg>
+<arg>${DRIVER_ID}</arg>
+<arg>${data['driverId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.302986" elapsed="0.000518"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:57:28.303874" level="INFO">Seed data loaded: bookingA=cmmc1kfbb0004usg0mjpk85ay, driver=cmmbth0k60000us3ggzxw7huu</msg>
+<arg>Seed data loaded: bookingA=${BOOKING_A_ID}, driver=${DRIVER_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.303604" elapsed="0.000320"/>
+</kw>
+<doc>Run seed script and load test data IDs</doc>
+<status status="PASS" start="2026-03-04T19:57:27.987887" elapsed="0.316099"/>
+</kw>
+<test id="s1-t1" name="TC-3.15 Low Rating Without Tags - Submit Disabled" line="36">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T19:57:28.304918" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T19:57:28.304774" elapsed="0.000289"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T19:57:28.304577" elapsed="0.000553"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:28.305699" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3003/login'.</msg>
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:57:28.305529" elapsed="1.334414"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T19:57:29.640223" elapsed="0.049152"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T19:57:29.689609" elapsed="0.000399"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:29.691096" level="INFO">Typing text 'rf_passenger@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:29.690292" elapsed="1.696485"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:31.387159" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:31.386949" elapsed="1.561142"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:32.948455" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:32.948275" elapsed="2.554986"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:57:38.504184" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:57:38.504247" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:57:35.503434" elapsed="3.000858"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:57:38.504628" level="INFO">✅ Logged in as passenger</msg>
+<arg>✅ Logged in as passenger</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:57:38.504422" elapsed="0.000244"/>
+</kw>
+<doc>Login as passenger once and reuse session</doc>
+<status status="PASS" start="2026-03-04T19:57:28.305347" elapsed="10.199371"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:38.505148" level="INFO">Opening url 'http://localhost:3003/reviews/create?bookingId=cmmc1kfbb0004usg0mjpk85ay'</msg>
+<arg>${BASE_URL}/reviews/create?bookingId=${BOOKING_A_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:57:38.504948" elapsed="0.562357"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:57:42.068445" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:57:42.068508" level="INFO">Wait for create review page</msg>
+<arg>3s</arg>
+<arg>Wait for create review page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:57:39.067611" elapsed="3.000941"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:57:45.069598" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:57:45.069672" level="INFO">Wait for StarRating to render</msg>
+<arg>3s</arg>
+<arg>Wait for StarRating to render</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:57:42.068827" elapsed="3.000892"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:45.070904" level="INFO">Executing JavaScript:
+// Find star rating buttons by multiple criteriavar starButtons = [];var allButtons = document.querySelectorAll('button, [role="button"], .star, .rating-star');// Look for buttons with star-related attributes or classesfor(var i = 0; i &lt; allButtons.length; i++) {var btn = allButtons[i];var hasStarClass = btn.className &amp;&amp; (btn.className.includes('star') || btn.className.includes('rating') || btn.className.includes('cursor-pointer'));var hasStarAttr = btn.getAttribute('data-star') || btn.getAttribute('data-rating');var hasStarText = btn.textContent &amp;&amp; (btn.textContent.includes('★') || btn.textContent.includes('star'));if(hasStarClass || hasStarAttr || hasStarText) {starButtons.push(btn);}}// Click the 2nd star if availableif(starButtons.length &gt;= 2) {console.log('Found', starButtons.length, 'star buttons, clicking 2nd');starButtons[1].click();starButtons[1].dispatchEvent(new Event('click', { bubbles: true }));} else {console.log('Only found', starButtons.length, 'star buttons');}
+Without any arguments.</msg>
+<arg>// Find star rating buttons by multiple criteria</arg>
+<arg>var starButtons = [];</arg>
+<arg>var allButtons = document.querySelectorAll('button, [role="button"], .star, .rating-star');</arg>
+<arg>// Look for buttons with star-related attributes or classes</arg>
+<arg>for(var i = 0; i &lt; allButtons.length; i++) {</arg>
+<arg>var btn = allButtons[i];</arg>
+<arg>var hasStarClass = btn.className &amp;&amp; (btn.className.includes('star') || btn.className.includes('rating') || btn.className.includes('cursor-pointer'));</arg>
+<arg>var hasStarAttr = btn.getAttribute('data-star') || btn.getAttribute('data-rating');</arg>
+<arg>var hasStarText = btn.textContent &amp;&amp; (btn.textContent.includes('★') || btn.textContent.includes('star'));</arg>
+<arg>if(hasStarClass || hasStarAttr || hasStarText) {</arg>
+<arg>starButtons.push(btn);</arg>
+<arg>}</arg>
+<arg>}</arg>
+<arg>// Click the 2nd star if available</arg>
+<arg>if(starButtons.length &gt;= 2) {</arg>
+<arg>console.log('Found', starButtons.length, 'star buttons, clicking 2nd');</arg>
+<arg>starButtons[1].click();</arg>
+<arg>starButtons[1].dispatchEvent(new Event('click', { bubbles: true }));</arg>
+<arg>} else {</arg>
+<arg>console.log('Only found', starButtons.length, 'star buttons');</arg>
+<arg>}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T19:57:45.070030" elapsed="0.504844"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:57:48.576665" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:57:48.576747" level="INFO">Show 2nd star selected with enhanced JavaScript</msg>
+<arg>3s</arg>
+<arg>Show 2nd star selected with enhanced JavaScript</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:57:45.575265" elapsed="3.001546"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:49.109247" level="INFO">${submit_btn} = [&lt;selenium.webdriver.remote.webelement.WebElement (session="62b686ae4344fa673855263ec691d1de", element="f.6D9AE64758FE347B955E192885B5171D.d.0AB39E0A2F35337482C67514F762C54E.e.60")&gt;]</msg>
+<var>${submit_btn}</var>
+<arg>xpath=//button[contains(text(),'ส่งรีวิว') or contains(text(),'Submit')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:48.577144" elapsed="0.532149"/>
+</kw>
+<if>
+<branch type="IF" condition="len($submit_btn) &gt; 0">
+<kw name="Get Element Attribute" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:49.616116" level="INFO">${disabled} = true</msg>
+<var>${disabled}</var>
+<arg>${submit_btn}[0]</arg>
+<arg>disabled</arg>
+<doc>Returns the value of ``attribute`` from the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:49.109776" elapsed="0.506385"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${disabled}</arg>
+<arg>true</arg>
+<arg>Submit button should be disabled for low rating without tags</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-03-04T19:57:49.616312" elapsed="0.000334"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:57:49.616884" level="INFO">✅ Submit button is disabled as expected</msg>
+<arg>✅ Submit button is disabled as expected</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:57:49.616748" elapsed="0.000170"/>
+</kw>
+<status status="PASS" start="2026-03-04T19:57:49.109523" elapsed="0.507428"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:57:49.109490" elapsed="0.507508"/>
+</if>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:50.188864" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="validation_low_rating_no_tags.png"&gt;&lt;img src="validation_low_rating_no_tags.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>validation_low_rating_no_tags.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T19:57:49.617259" elapsed="0.571707"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T19:57:50.189235" elapsed="2.612978"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T19:57:52.803156" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T19:57:52.803048" elapsed="0.000202"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T19:57:52.802679" elapsed="0.000673"/>
+</kw>
+<doc>Rating 1-3 stars without tags should disable submit button</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="PASS" start="2026-03-04T19:57:28.304058" elapsed="24.499463"/>
+</test>
+<test id="s1-t2" name="TC-3.16 Low Rating With Negative Tags - Comment Required" line="88">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T19:57:52.804721" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T19:57:52.804543" elapsed="0.000318"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T19:57:52.804363" elapsed="0.000565"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:52.805549" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3003/login'.</msg>
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:57:52.805362" elapsed="1.413111"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T19:57:54.218709" elapsed="0.555489"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T19:57:54.774354" elapsed="0.000210"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:54.774836" level="INFO">Typing text 'rf_passenger@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:54.774674" elapsed="1.584504"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:56.359538" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:56.359341" elapsed="1.556162"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:57:57.916055" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:57:57.915811" elapsed="2.577895"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:03.494361" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:03.494424" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:00.493909" elapsed="3.000561"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:58:03.494812" level="INFO">✅ Logged in as passenger</msg>
+<arg>✅ Logged in as passenger</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:58:03.494605" elapsed="0.000242"/>
+</kw>
+<doc>Login as passenger once and reuse session</doc>
+<status status="PASS" start="2026-03-04T19:57:52.805152" elapsed="10.689746"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:03.495342" level="INFO">Opening url 'http://localhost:3003/reviews/create?bookingId=cmmc1kfbb0004usg0mjpk85ay'</msg>
+<arg>${BASE_URL}/reviews/create?bookingId=${BOOKING_A_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:58:03.495137" elapsed="0.564918"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:07.061640" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:07.061732" level="INFO">Wait for create review page</msg>
+<arg>3s</arg>
+<arg>Wait for create review page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:04.060558" elapsed="3.001240"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:10.062562" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:10.062624" level="INFO">Wait for StarRating to render</msg>
+<arg>3s</arg>
+<arg>Wait for StarRating to render</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:07.062086" elapsed="3.000590"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:10.063405" level="INFO">Executing JavaScript:
+// Find star rating buttons by multiple criteriavar starButtons = [];var allButtons = document.querySelectorAll('button, [role="button"], .star, .rating-star');// Look for buttons with star-related attributes or classesfor(var i = 0; i &lt; allButtons.length; i++) {var btn = allButtons[i];var hasStarClass = btn.className &amp;&amp; (btn.className.includes('star') || btn.className.includes('rating') || btn.className.includes('cursor-pointer'));var hasStarAttr = btn.getAttribute('data-star') || btn.getAttribute('data-rating');var hasStarText = btn.textContent &amp;&amp; (btn.textContent.includes('★') || btn.textContent.includes('star'));if(hasStarClass || hasStarAttr || hasStarText) {starButtons.push(btn);}}// Click the 1st star if availableif(starButtons.length &gt;= 1) {console.log('Found', starButtons.length, 'star buttons, clicking 1st');starButtons[0].click();starButtons[0].dispatchEvent(new Event('click', { bubbles: true }));} else {console.log('No star buttons found');}
+Without any arguments.</msg>
+<arg>// Find star rating buttons by multiple criteria</arg>
+<arg>var starButtons = [];</arg>
+<arg>var allButtons = document.querySelectorAll('button, [role="button"], .star, .rating-star');</arg>
+<arg>// Look for buttons with star-related attributes or classes</arg>
+<arg>for(var i = 0; i &lt; allButtons.length; i++) {</arg>
+<arg>var btn = allButtons[i];</arg>
+<arg>var hasStarClass = btn.className &amp;&amp; (btn.className.includes('star') || btn.className.includes('rating') || btn.className.includes('cursor-pointer'));</arg>
+<arg>var hasStarAttr = btn.getAttribute('data-star') || btn.getAttribute('data-rating');</arg>
+<arg>var hasStarText = btn.textContent &amp;&amp; (btn.textContent.includes('★') || btn.textContent.includes('star'));</arg>
+<arg>if(hasStarClass || hasStarAttr || hasStarText) {</arg>
+<arg>starButtons.push(btn);</arg>
+<arg>}</arg>
+<arg>}</arg>
+<arg>// Click the 1st star if available</arg>
+<arg>if(starButtons.length &gt;= 1) {</arg>
+<arg>console.log('Found', starButtons.length, 'star buttons, clicking 1st');</arg>
+<arg>starButtons[0].click();</arg>
+<arg>starButtons[0].dispatchEvent(new Event('click', { bubbles: true }));</arg>
+<arg>} else {</arg>
+<arg>console.log('No star buttons found');</arg>
+<arg>}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-04T19:58:10.062949" elapsed="0.505620"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:13.569711" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:13.569808" level="INFO">Show 1st star selected with enhanced JavaScript</msg>
+<arg>3s</arg>
+<arg>Show 1st star selected with enhanced JavaScript</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:10.568863" elapsed="3.001008"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:14.080996" level="INFO">${negative_tags} = []</msg>
+<var>${negative_tags}</var>
+<arg>xpath=//button[contains(text(),'ขับรถเร็ว') or contains(text(),'reckless') or contains(text(),'late_arrival')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:13.570230" elapsed="0.510809"/>
+</kw>
+<if>
+<branch type="IF" condition="len($negative_tags) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${negative_tags}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:14.081505" elapsed="0.000026"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show negative tag selected</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:14.081600" elapsed="0.000016"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:14.081259" elapsed="0.000384"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:14.081230" elapsed="0.000446"/>
+</if>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:14.589711" level="INFO">${comment_fields} = [&lt;selenium.webdriver.remote.webelement.WebElement (session="ac522f4c0af8177d0d6f1ede7a8e4212", element="f.DBF77AAD20FF7FB25A2D1C85EDDC90C9.d.72BD3F17C480182BB7CDF6541A3FEEE8.e.51")&gt;, &lt;selenium.webdriv...</msg>
+<var>${comment_fields}</var>
+<arg>xpath=//textarea</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:14.081870" elapsed="0.507884"/>
+</kw>
+<if>
+<branch type="IF" condition="len($comment_fields) &gt; 0">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:14.590467" level="INFO">Typing text 'ไม่ดี' into text field '&lt;selenium.webdriver.remote.webelement.WebElement (session="ac522f4c0af8177d0d6f1ede7a8e4212", element="f.DBF77AAD20FF7FB25A2D1C85EDDC90C9.d.72BD3F17C480182BB7CDF6541A3FEEE8.e.51")&gt;'.</msg>
+<arg>${comment_fields}[0]</arg>
+<arg>ไม่ดี</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:14.590255" elapsed="1.100426"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:17.691689" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T19:58:17.691752" level="INFO">Show short comment</msg>
+<arg>2s</arg>
+<arg>Show short comment</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:15.690836" elapsed="2.000960"/>
+</kw>
+<status status="PASS" start="2026-03-04T19:58:14.590025" elapsed="3.101826"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:14.589995" elapsed="3.101892"/>
+</if>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:18.200568" level="INFO">${submit_btn} = [&lt;selenium.webdriver.remote.webelement.WebElement (session="ac522f4c0af8177d0d6f1ede7a8e4212", element="f.DBF77AAD20FF7FB25A2D1C85EDDC90C9.d.72BD3F17C480182BB7CDF6541A3FEEE8.e.61")&gt;]</msg>
+<var>${submit_btn}</var>
+<arg>xpath=//button[contains(text(),'ส่งรีวิว') or contains(text(),'Submit')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:17.692120" elapsed="0.508514"/>
+</kw>
+<if>
+<branch type="IF" condition="len($submit_btn) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:18.201608" level="INFO">Clicking element '&lt;selenium.webdriver.remote.webelement.WebElement (session="ac522f4c0af8177d0d6f1ede7a8e4212", element="f.DBF77AAD20FF7FB25A2D1C85EDDC90C9.d.72BD3F17C480182BB7CDF6541A3FEEE8.e.61")&gt;'.</msg>
+<arg>${submit_btn}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:18.201318" elapsed="0.547091"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:21.749160" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:21.749226" level="INFO">Wait for error message</msg>
+<arg>3s</arg>
+<arg>Wait for error message</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:18.748642" elapsed="3.000630"/>
+</kw>
+<status status="PASS" start="2026-03-04T19:58:18.200962" elapsed="3.548366"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:18.200920" elapsed="3.548446"/>
+</if>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:24.390424" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-7.png"&gt;&lt;img src="selenium-screenshot-7.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T19:58:24.390610" level="FAIL">Page should have contained text 'กรุณาแสดงความคิดเห็นเพิ่มเติมอย่างน้อย 10 ตัวอักษร' but did not.</msg>
+<arg>กรุณาแสดงความคิดเห็นเพิ่มเติมอย่างน้อย 10 ตัวอักษร</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="FAIL" start="2026-03-04T19:58:21.749891" elapsed="2.642615">Page should have contained text 'กรุณาแสดงความคิดเห็นเพิ่มเติมอย่างน้อย 10 ตัวอักษร' but did not.</status>
+</kw>
+<msg time="2026-03-04T19:58:24.392651" level="INFO">${error_found} = False</msg>
+<var>${error_found}</var>
+<arg>Page Should Contain</arg>
+<arg>กรุณาแสดงความคิดเห็นเพิ่มเติมอย่างน้อย 10 ตัวอักษร</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T19:58:21.749598" elapsed="2.643077"/>
+</kw>
+<if>
+<branch type="IF" condition="${error_found}">
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Thai error message shown for short comment</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:24.393056" elapsed="0.000026"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:24.392896" elapsed="0.000222"/>
+</branch>
+<branch type="ELSE">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:27.015347" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-8.png"&gt;&lt;img src="selenium-screenshot-8.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T19:58:27.015518" level="FAIL">Page should have contained text 'comment must be at least' but did not.</msg>
+<arg>comment must be at least</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="FAIL" start="2026-03-04T19:58:24.393482" elapsed="2.622895">Page should have contained text 'comment must be at least' but did not.</status>
+</kw>
+<msg time="2026-03-04T19:58:27.016565" level="INFO">${error_found} = False</msg>
+<var>${error_found}</var>
+<arg>Page Should Contain</arg>
+<arg>comment must be at least</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T19:58:24.393232" elapsed="2.623369"/>
+</kw>
+<if>
+<branch type="IF" condition="${error_found}">
+<kw name="Log" owner="BuiltIn">
+<arg>✅ English error message shown for short comment</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:27.016959" elapsed="0.000035"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:27.016735" elapsed="0.000337"/>
+</branch>
+<branch type="ELSE">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:29.662087" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-9.png"&gt;&lt;img src="selenium-screenshot-9.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T19:58:29.662223" level="FAIL">Page should have contained text '10 characters' but did not.</msg>
+<arg>10 characters</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="FAIL" start="2026-03-04T19:58:27.017663" elapsed="2.645083">Page should have contained text '10 characters' but did not.</status>
+</kw>
+<msg time="2026-03-04T19:58:29.662880" level="INFO">${error_found} = False</msg>
+<var>${error_found}</var>
+<arg>Page Should Contain</arg>
+<arg>10 characters</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T19:58:27.017253" elapsed="2.645647"/>
+</kw>
+<if>
+<branch type="IF" condition="${error_found}">
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Generic error message shown for short comment</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:29.663109" elapsed="0.000022"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:29.662981" elapsed="0.000181"/>
+</branch>
+<branch type="ELSE">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:32.293285" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-10.png"&gt;&lt;img src="selenium-screenshot-10.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-04T19:58:32.293413" level="FAIL">Page should have contained text 'ตัวอักษร' but did not.</msg>
+<arg>ตัวอักษร</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="FAIL" start="2026-03-04T19:58:29.663505" elapsed="2.630477">Page should have contained text 'ตัวอักษร' but did not.</status>
+</kw>
+<msg time="2026-03-04T19:58:32.294111" level="INFO">${error_found} = False</msg>
+<var>${error_found}</var>
+<arg>Page Should Contain</arg>
+<arg>ตัวอักษร</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T19:58:29.663261" elapsed="2.630871"/>
+</kw>
+<if>
+<branch type="IF" condition="${error_found}">
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Partial Thai error message shown for short comment</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:32.294342" elapsed="0.000028"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:32.294212" elapsed="0.000189"/>
+</branch>
+<branch type="ELSE">
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:32.801065" level="INFO">${submit_btn} = [&lt;selenium.webdriver.remote.webelement.WebElement (session="ac522f4c0af8177d0d6f1ede7a8e4212", element="f.DBF77AAD20FF7FB25A2D1C85EDDC90C9.d.72BD3F17C480182BB7CDF6541A3FEEE8.e.61")&gt;]</msg>
+<var>${submit_btn}</var>
+<arg>xpath=//button[contains(text(),'ส่งรีวิว') or contains(text(),'Submit')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:32.294534" elapsed="0.506595"/>
+</kw>
+<if>
+<branch type="IF" condition="len($submit_btn) &gt; 0">
+<kw name="Get Element Attribute" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:33.308675" level="INFO">${disabled} = true</msg>
+<var>${disabled}</var>
+<arg>${submit_btn}[0]</arg>
+<arg>disabled</arg>
+<doc>Returns the value of ``attribute`` from the element ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:32.801553" elapsed="0.507247"/>
+</kw>
+<if>
+<branch type="IF" condition="$disabled == 'true'">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:58:33.310255" level="INFO">✅ Submit button still disabled - validation working</msg>
+<arg>✅ Submit button still disabled - validation working</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:58:33.310003" elapsed="0.000297"/>
+</kw>
+<status status="PASS" start="2026-03-04T19:58:33.309680" elapsed="0.000665"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log" owner="BuiltIn">
+<arg>⚠️ Submit button enabled - validation may not be working</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:33.310484" elapsed="0.000022"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T19:58:33.310380" elapsed="0.000155"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:33.309381" elapsed="0.001178"/>
+</if>
+<status status="PASS" start="2026-03-04T19:58:32.801286" elapsed="0.509293"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:32.801260" elapsed="0.509343"/>
+</if>
+<status status="PASS" start="2026-03-04T19:58:32.294431" elapsed="1.016184"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:32.294191" elapsed="1.016445"/>
+</if>
+<status status="PASS" start="2026-03-04T19:58:29.663189" elapsed="3.647460"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:29.662961" elapsed="3.647711"/>
+</if>
+<status status="PASS" start="2026-03-04T19:58:27.017117" elapsed="6.293571"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:27.016700" elapsed="6.294006"/>
+</if>
+<status status="PASS" start="2026-03-04T19:58:24.393150" elapsed="8.917567"/>
+</branch>
+<status status="PASS" start="2026-03-04T19:58:24.392866" elapsed="8.917867"/>
+</if>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:33.886046" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="validation_short_comment_error.png"&gt;&lt;img src="validation_short_comment_error.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>validation_short_comment_error.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T19:58:33.310985" elapsed="0.575150"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-04T19:58:33.886407" elapsed="2.578257"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T19:58:36.465333" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T19:58:36.465272" elapsed="0.000114"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T19:58:36.465075" elapsed="0.000357"/>
+</kw>
+<doc>Rating 1-2 stars with negative tags requires minimum comment length</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="PASS" start="2026-03-04T19:57:52.803990" elapsed="43.661551"/>
+</test>
+<test id="s1-t3" name="TC-3.17 High Rating Hides Negative Tags" line="185">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T19:58:36.466523" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T19:58:36.466355" elapsed="0.000322"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T19:58:36.466171" elapsed="0.000576"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:36.467354" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3003/login'.</msg>
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:58:36.467174" elapsed="1.378504"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T19:58:37.845968" elapsed="0.532734"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T19:58:38.378903" elapsed="0.000226"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:38.379376" level="INFO">Typing text 'rf_passenger@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:38.379223" elapsed="1.610062"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:39.990122" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:39.989695" elapsed="1.561702"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:41.551726" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T19:58:41.551560" elapsed="2.564485"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T19:58:47.116787" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T19:58:47.116853" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T19:58:44.116226" elapsed="3.000668"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T19:58:47.117241" level="INFO">✅ Logged in as passenger</msg>
+<arg>✅ Logged in as passenger</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T19:58:47.117026" elapsed="0.000253"/>
+</kw>
+<doc>Login as passenger once and reuse session</doc>
+<status status="PASS" start="2026-03-04T19:58:36.466964" elapsed="10.650369"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T19:58:47.117675" level="INFO">Opening url 'http://localhost:3003/reviews/create?bookingId=cmmc1kfbb0004usg0mjpk85ay'</msg>
+<arg>${BASE_URL}/reviews/create?bookingId=${BOOKING_A_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T19:58:47.117507" elapsed="0.556076"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for create review page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="FAIL" start="2026-03-04T19:58:47.673989" elapsed="0.544085">Execution terminated by signal</status>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for StarRating to render</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.218413" elapsed="0.000054"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<arg>// Find star rating buttons by multiple criteria</arg>
+<arg>var starButtons = [];</arg>
+<arg>var allButtons = document.querySelectorAll('button, [role="button"], .star, .rating-star');</arg>
+<arg>// Look for buttons with star-related attributes or classes</arg>
+<arg>for(var i = 0; i &lt; allButtons.length; i++) {</arg>
+<arg>var btn = allButtons[i];</arg>
+<arg>var hasStarClass = btn.className &amp;&amp; (btn.className.includes('star') || btn.className.includes('rating') || btn.className.includes('cursor-pointer'));</arg>
+<arg>var hasStarAttr = btn.getAttribute('data-star') || btn.getAttribute('data-rating');</arg>
+<arg>var hasStarText = btn.textContent &amp;&amp; (btn.textContent.includes('★') || btn.textContent.includes('star'));</arg>
+<arg>if(hasStarClass || hasStarAttr || hasStarText) {</arg>
+<arg>starButtons.push(btn);</arg>
+<arg>}</arg>
+<arg>}</arg>
+<arg>// Click the 5th star if available</arg>
+<arg>if(starButtons.length &gt;= 5) {</arg>
+<arg>console.log('Found', starButtons.length, 'star buttons, clicking 5th');</arg>
+<arg>starButtons[4].click();</arg>
+<arg>starButtons[4].dispatchEvent(new Event('click', { bubbles: true }));</arg>
+<arg>} else {</arg>
+<arg>console.log('Only found', starButtons.length, 'star buttons');</arg>
+<arg>}</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.218717" elapsed="0.000041"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Show 5th star selected with enhanced JavaScript</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.218968" elapsed="0.000032"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for tags to update</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.219133" elapsed="0.000022"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${negative_tags}</var>
+<arg>xpath=//button[contains(text(),'ขับรถเร็ว') or contains(text(),'reckless') or contains(text(),'late_arrival') or contains(text(),'rude')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.219295" elapsed="0.000024"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<var>${negative_count}</var>
+<arg>${negative_tags}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.219508" elapsed="0.000020"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${negative_count} == 0</arg>
+<arg>Negative tags should not be visible for 5-star rating</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.219640" elapsed="0.000019"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Negative tags hidden for high rating</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.219765" elapsed="0.000022"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<var>${positive_tags}</var>
+<arg>xpath=//button[contains(text(),'สุภาพ') or contains(text(),'polite') or contains(text(),'ขับปลอดภัย') or contains(text(),'safe') or contains(text(),'on_time') or contains(text(),'friendly')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.220011" elapsed="0.000039"/>
+</kw>
+<kw name="Get Length" owner="BuiltIn">
+<var>${positive_count}</var>
+<arg>${positive_tags}</arg>
+<doc>Returns and logs the length of the given item as an integer.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.220276" elapsed="0.000036"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${positive_count} &gt; 0</arg>
+<arg>Positive tags should be visible for 5-star rating</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.220473" elapsed="0.000030"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>✅ Positive tags shown for high rating (${positive_count} tags found)</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.220753" elapsed="0.000026"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>validation_high_rating_tags.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.221019" elapsed="0.000023"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="NOT RUN" start="2026-03-04T19:58:48.221389" elapsed="0.000028"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T19:58:48.221987" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T19:58:48.221914" elapsed="0.000128"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T19:58:48.221672" elapsed="0.000417"/>
+</kw>
+<doc>Rating 4-5 stars should not show negative tags</doc>
+<tag>Critical</tag>
+<tag>Review</tag>
+<tag>Validation</tag>
+<status status="FAIL" start="2026-03-04T19:58:36.465869" elapsed="11.756305">Execution terminated by signal</status>
+</test>
+<test id="s1-t4" name="TC-3.18 Anonymous Review Creation" line="244">
+<doc>Create review with anonymous option enabled</doc>
+<tag>Anonymous</tag>
+<tag>Critical</tag>
+<tag>Review</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T19:58:48.222737" elapsed="0.000348">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t5" name="TC-3.19 Review Immutability - No Edit/Delete" line="363">
+<doc>Submitted reviews should be read-only with no edit/delete buttons</doc>
+<tag>Critical</tag>
+<tag>Immutability</tag>
+<tag>Review</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T19:58:48.223943" elapsed="0.000912">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t6" name="TC-3.20 Driver Dispute Creation UI" line="394">
+<doc>Driver can create dispute through UI with success notification</doc>
+<tag>Critical</tag>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T19:58:48.225407" elapsed="0.000335">Test execution stopped due to a fatal error.</status>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<msg time="2026-03-04T19:58:52.315007" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+<msg time="2026-03-04T19:58:56.413171" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+<msg time="2026-03-04T19:59:00.487853" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T19:58:48.226435" elapsed="16.338479"/>
+</kw>
+<doc>Epic 3 Review System Validation Tests - Edge Cases and UI Validation</doc>
+<status status="FAIL" start="2026-03-04T19:57:27.692525" elapsed="96.872525"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="4" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat info="combined" combined="NOT robot:exit" pass="2" fail="1" skip="0">NOT robot:exit</stat>
+<stat pass="0" fail="1" skip="0">Anonymous</stat>
+<stat pass="2" fail="4" skip="0">Critical</stat>
+<stat pass="0" fail="1" skip="0">Dispute</stat>
+<stat pass="0" fail="1" skip="0">Driver</stat>
+<stat pass="0" fail="1" skip="0">Immutability</stat>
+<stat pass="2" fail="3" skip="0">Review</stat>
+<stat pass="2" fail="1" skip="0">Validation</stat>
+</tag>
+<suite>
+<stat name="Epic3 Validation Tests" id="s1" pass="2" fail="4" skip="0">Epic3 Validation Tests</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-04T19:58:52.315007" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+<msg time="2026-03-04T19:58:56.413171" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+<msg time="2026-03-04T19:59:00.487853" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=56924): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/125c83905daffb3436e0ca5171622485</msg>
+</errors>
+</robot>
