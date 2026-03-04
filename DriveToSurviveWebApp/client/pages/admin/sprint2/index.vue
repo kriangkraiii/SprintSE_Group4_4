@@ -21,7 +21,7 @@
               'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-colors',
               activeTab === tab.key ? 'bg-cta text-white' : 'text-slate-500 hover:text-primary hover:bg-slate-50'
             ]">
-            {{ tab.icon }} {{ tab.label }}
+            {{ tab.icon }} {{ tab.label }} ({{ tabCount(tab.key) }})
           </button>
         </div>
 
@@ -147,6 +147,12 @@ const tabs = [
   { key: 'disputes', icon: '📋', label: 'Review Disputes' },
   { key: 'reports', icon: '🚨', label: 'Chat Reports' },
 ]
+
+const tabCount = (key) => {
+  if (key === 'disputes') return disputes.value.length
+  if (key === 'reports') return reports.value.length
+  return 0
+}
 
 const activeTab = ref('disputes')
 const isLoading = ref(false)

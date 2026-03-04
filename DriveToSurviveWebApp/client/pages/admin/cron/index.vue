@@ -100,6 +100,72 @@
                     </div>
                 </div>
 
+                <!-- Duration Configuration -->
+                <div class="mt-8 bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                            <i class="fas fa-sliders text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-semibold text-primary">ตั้งค่าระยะเวลา</h2>
+                            <p class="text-sm text-slate-500 mt-0.5">กำหนดระยะเวลาการจัดเก็บข้อมูลแชทและ Log</p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 py-5 space-y-5">
+                        <!-- Retention Purge Days -->
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                            <div class="flex-1">
+                                <label class="text-sm font-medium text-primary">ลบข้อมูลถาวร (Retention Purge)</label>
+                                <p class="text-xs text-slate-400 mt-0.5">ลบข้อมูลแชทที่เก่ากว่าจำนวนวันที่กำหนด ตาม พ.ร.บ.คอมพิวเตอร์ พ.ศ.2560</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input v-model.number="durationConfig.retentionDays" type="number" :min="90"
+                                    class="w-24 px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-purple-400 focus:outline-none text-center" />
+                                <span class="text-sm text-slate-500">วัน</span>
+                                <span class="px-2 py-0.5 text-xs bg-red-50 text-red-600 rounded-full font-medium">ขั้นต่ำ 90</span>
+                            </div>
+                        </div>
+
+                        <!-- Chat Read-Only Days -->
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-3 border-t border-slate-100">
+                            <div class="flex-1">
+                                <label class="text-sm font-medium text-primary">แชทอ่านอย่างเดียว (Chat Lifecycle)</label>
+                                <p class="text-xs text-slate-400 mt-0.5">ผู้ใช้ดูแชทย้อนหลังได้กี่วันหลังจากสิ้นสุดการเดินทาง</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input v-model.number="durationConfig.chatReadOnlyDays" type="number" :min="3"
+                                    class="w-24 px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-purple-400 focus:outline-none text-center" />
+                                <span class="text-sm text-slate-500">วัน</span>
+                                <span class="px-2 py-0.5 text-xs bg-amber-50 text-amber-600 rounded-full font-medium">ขั้นต่ำ 3</span>
+                            </div>
+                        </div>
+
+                        <!-- Admin Log Retention Days -->
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-3 border-t border-slate-100">
+                            <div class="flex-1">
+                                <label class="text-sm font-medium text-primary">เก็บ Log แอดมิน (Admin Log Retention)</label>
+                                <p class="text-xs text-slate-400 mt-0.5">แอดมินดู Log แชทย้อนหลังได้กี่วันหลังจาก Archive</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input v-model.number="durationConfig.adminLogRetentionDays" type="number" :min="9"
+                                    class="w-24 px-3 py-2 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-purple-400 focus:outline-none text-center" />
+                                <span class="text-sm text-slate-500">วัน</span>
+                                <span class="px-2 py-0.5 text-xs bg-blue-50 text-blue-600 rounded-full font-medium">ขั้นต่ำ 9</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save button -->
+                    <div class="px-6 py-4 border-t border-slate-100 flex justify-end">
+                        <button @click="saveDurationConfig" :disabled="savingConfig"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 disabled:opacity-50 transition-colors">
+                            <i class="fas" :class="savingConfig ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                            {{ savingConfig ? 'กำลังบันทึก...' : 'บันทึกการตั้งค่า' }}
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Info box -->
                 <div class="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                     <div class="flex items-start gap-2">
@@ -108,8 +174,9 @@
                             <p class="font-semibold mb-1">หมายเหตุ</p>
                             <ul class="list-disc list-inside space-y-0.5 text-xs">
                                 <li>การเปลี่ยนกำหนดการจะมีผลทันทีจนกว่า server จะ restart</li>
-                                <li>Retention Purge ลบข้อมูลที่เกิน 90 วัน ตาม พ.ร.บ.คอมพิวเตอร์ พ.ศ.2560</li>
-                                <li>Chat Lifecycle จัดการสถานะ session: ENDED → READ_ONLY (24 ชม.) → ARCHIVED (7 วัน)</li>
+                                <li>Retention Purge ลบข้อมูลที่เกินจำนวนวันที่ตั้งไว้ ตาม พ.ร.บ.คอมพิวเตอร์ พ.ศ.2560 (ขั้นต่ำ 90 วัน)</li>
+                                <li>Chat Lifecycle จัดการสถานะ session: ENDED → READ_ONLY → ARCHIVED ตามจำนวนวันที่ตั้งไว้</li>
+                                <li>Admin Log Retention เก็บ Log แชทให้แอดมินดูย้อนหลังก่อนลบ (ขั้นต่ำ 9 วัน)</li>
                                 <li>ปุ่ม "รันตอนนี้" จะรัน CRON job ทันทีโดยไม่ต้องรอกำหนดการ</li>
                             </ul>
                         </div>
@@ -143,6 +210,13 @@ const loading = ref(false)
 const jobs = ref([])
 const triggering = ref(null)
 const updatingSchedule = ref(null)
+const savingConfig = ref(false)
+
+const durationConfig = reactive({
+    retentionDays: 90,
+    chatReadOnlyDays: 3,
+    adminLogRetentionDays: 9,
+})
 
 const editSchedules = reactive({
     retentionPurge: '',
@@ -174,6 +248,12 @@ const fetchCronStatus = async () => {
         const res = await $api('/admin/cron/status')
         const data = Array.isArray(res) ? res : (res?.data || [])
         jobs.value = data
+        // Load duration config if available
+        if (res?.config) {
+            durationConfig.retentionDays = res.config.retentionDays || 90
+            durationConfig.chatReadOnlyDays = res.config.chatReadOnlyDays || 3
+            durationConfig.adminLogRetentionDays = res.config.adminLogRetentionDays || 9
+        }
         // Set current schedule in dropdowns
         data.forEach(job => {
             if (job.currentSchedule) {
@@ -189,6 +269,32 @@ const fetchCronStatus = async () => {
         toast.error('โหลดข้อมูล CRON ล้มเหลว', err?.data?.message || '')
     } finally {
         loading.value = false
+    }
+}
+
+const saveDurationConfig = async () => {
+    savingConfig.value = true
+    try {
+        const res = await $api('/admin/cron/config', {
+            method: 'PUT',
+            body: {
+                retentionDays: durationConfig.retentionDays,
+                chatReadOnlyDays: durationConfig.chatReadOnlyDays,
+                adminLogRetentionDays: durationConfig.adminLogRetentionDays,
+            },
+        })
+        // Update local state with server-enforced values
+        if (res.config) {
+            durationConfig.retentionDays = res.config.retentionDays
+            durationConfig.chatReadOnlyDays = res.config.chatReadOnlyDays
+            durationConfig.adminLogRetentionDays = res.config.adminLogRetentionDays
+        }
+        const warnings = res.warnings?.length ? ` (${res.warnings.join(', ')})` : ''
+        toast.success('บันทึกการตั้งค่าสำเร็จ', (res.message || '') + warnings)
+    } catch (err) {
+        toast.error('บันทึกการตั้งค่าล้มเหลว', err?.data?.message || err?.message || '')
+    } finally {
+        savingConfig.value = false
     }
 }
 

@@ -97,6 +97,7 @@ const tripMenus = [
 const systemMenus = [
     { to: '/admin/system-logs', label: 'System Logs', icon: 'fas fa-file-lines' },
     { to: '/admin/cron', label: 'CRON Jobs', icon: 'fas fa-clock' },
+    { to: '/admin/chat-sessions', label: 'Chat Sessions', icon: 'fas fa-message' },
     { to: '/admin/blacklist', label: 'Blacklist', icon: 'fas fa-ban' },
     { to: '/admin/security-settings', label: 'ตั้งค่าความปลอดภัย', icon: 'fas fa-shield-halved' },
 ]

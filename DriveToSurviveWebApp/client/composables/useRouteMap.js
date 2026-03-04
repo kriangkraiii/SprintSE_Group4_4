@@ -272,6 +272,7 @@ export function useRouteMap() {
         extractNameParts,
         getPlaceName,
         updateMap,
+        getMap: () => gmap,
     }
 }
 
