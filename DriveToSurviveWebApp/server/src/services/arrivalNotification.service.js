@@ -91,9 +91,11 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
     let emailStatus = 'SENT';
     let appStatus = 'SENT';
 
+    let savedNotification = null;
+
     // Send In-App notification
     try {
-        await prisma.notification.create({
+        savedNotification = await prisma.notification.create({
             data: {
                 userId: passenger.id,
                 type: 'ARRIVAL',
@@ -162,12 +164,17 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
     }
 
     // Also push to passenger's personal notification feed
-    emitNotification(passenger.id, {
-        type: 'ARRIVAL',
-        title: msg.title,
-        body: msg.body,
-        metadata: { bookingId: booking.id, radiusType },
-    });
+    if (savedNotification) {
+        emitNotification(passenger.id, savedNotification);
+    } else {
+        emitNotification(passenger.id, {
+            type: 'ARRIVAL',
+            title: msg.title,
+            body: msg.body,
+            metadata: { bookingId: booking.id, radiusType },
+            createdAt: new Date(),
+        });
+    }
 
     return notification;
 };

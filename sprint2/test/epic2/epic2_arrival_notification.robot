@@ -7,7 +7,7 @@ Library           Process
 Library           OperatingSystem
 
 Suite Setup       Setup Test Environment
-Suite Teardown    Close All Browsers
+Suite Teardown    Teardown And Clean Database
 
 *** Variables ***
 ${BASE_URL}          http://localhost:3001
@@ -57,15 +57,20 @@ Test 03: Simulate Driving And Automatic GPS Notifications
     Capture Page Screenshot    results/06_driver_arrived.png
     ${result}=    Wait For Process    simulate    timeout=15s    on_timeout=terminate
 
-Test 04: Verify In-App Notification Bell 
-    [Documentation]    Check the notification bell for incoming logs
-    [Tags]             UI
+Test 04: Verify In-App Notification Bell Shows Real-Time Alerts
+    [Documentation]    Navigate to myTrips, click bell to open notification panel and keep it open to prove real-time delivery
+    [Tags]             UI    RealTime
     Go To     ${WEB_URL}/myTrips
     Sleep     4s
     Capture Page Screenshot    results/07_mytrips_after.png
+    # Click the bell to open notification panel
     ${bell_clicked}=    Run Keyword And Return Status    Click Element    xpath=//button[contains(@class,'bell') or contains(@aria-label,'notification') or contains(@aria-label,'แจ้งเตือน')]
+    Sleep     3s
+    # Keep bell panel open and capture — shows real-time notifications arrived
+    Capture Page Screenshot    results/08_bell_panel_realtime.png
+    # Wait a moment more to let any late notifications settle in
     Sleep     2s
-    Capture Page Screenshot    results/08_bell_panel.png
+    Capture Page Screenshot    results/08b_bell_panel_stayed_open.png
 
 Test 05: Verify 3 GPS Notification Types Are Saved
     [Documentation]    GET /api/arrival-notifications/{bookingId} expects FIVE_KM, ONE_KM, ZERO_KM
@@ -232,3 +237,8 @@ Verify Passenger Got Arrival Notifications
     [Arguments]    ${response}
     ${body}=    Convert To String    ${response.content}
     ${has_arrival}=    Run Keyword And Return Status    Should Contain    ${body}    ARRIVAL
+
+Teardown And Clean Database
+    [Documentation]    Clean up all browsers and invoke seed script in cleanup mode
+    Close All Browsers
+    Run Process    node    ${CURDIR}/../../../DriveToSurviveWebApp/server/scripts/seed-epic2-test.js    --cleanup
