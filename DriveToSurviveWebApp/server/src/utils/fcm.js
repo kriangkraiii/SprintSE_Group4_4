@@ -15,7 +15,7 @@ const prisma = require('./prisma');
 let fcmEnabled = false;
 
 try {
-    const serviceAccountPath = path.resolve(__dirname, '../../../secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json');
+    const serviceAccountPath = path.resolve(__dirname, '../../secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json');
 
     if (fs.existsSync(serviceAccountPath)) {
         const serviceAccount = require(serviceAccountPath);
@@ -25,8 +25,8 @@ try {
         fcmEnabled = true;
         console.log('✅ Firebase Admin SDK initialized (FCM enabled)');
     } else {
-        console.warn('⚠️  firebase-service-account.json not found — FCM push disabled');
-        console.warn('   Place your Service Account key at: server/firebase-service-account.json');
+        console.warn('⚠️  Service Account key not found — FCM push disabled');
+        console.warn(`   Expected at: ${serviceAccountPath}`);
     }
 } catch (err) {
     console.error('❌ Firebase Admin init failed:', err.message);
