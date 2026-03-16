@@ -1,0 +1,1 @@
+import{u as s,o as a,c as t,a as n,b as c,ad as o}from"./DPmdzAvY.js";const l={class:"min-h-screen bg-slate-50"},i={__name:"admin",setup(_){return s({link:[{rel:"stylesheet",href:"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"}]}),(r,m)=>{const e=o;return a(),t("div",null,[n("main",l,[c(e)])])}}};export{i as default};

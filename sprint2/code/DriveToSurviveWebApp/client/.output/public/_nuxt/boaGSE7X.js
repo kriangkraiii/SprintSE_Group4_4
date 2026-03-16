@@ -1,0 +1,1 @@
+function s(n){if(!n||!n.address_components)return null;const e=n.address_components.find(r=>r.types.includes("administrative_area_level_1"));return e?e.long_name:null}function t(n){return(n||"").replace(/,?\s*(Thailand|ไทย|ประเทศ)\s*$/i,"").replace(/\s{2,}/g," ").trim()}function i(n){return n.replace(/^[A-Z0-9]+\+[A-Z0-9]+\s+/,"")}export{t as a,s as g,i as s};
