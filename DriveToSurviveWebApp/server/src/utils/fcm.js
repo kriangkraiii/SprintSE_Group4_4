@@ -12,21 +12,34 @@ const fs = require('fs');
 const prisma = require('./prisma');
 
 // ── Initialize Firebase Admin SDK ──────────────────────────
+// Priority: ENV vars → JSON file fallback
 let fcmEnabled = false;
 
 try {
-    const serviceAccountPath = path.resolve(__dirname, '../../secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json');
+    const projectId = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
-    if (fs.existsSync(serviceAccountPath)) {
-        const serviceAccount = require(serviceAccountPath);
+    if (projectId && clientEmail && privateKey) {
+        // ✅ Use env vars (works with Koyeb / auto-deploy)
         admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
+            credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
         });
         fcmEnabled = true;
-        console.log('✅ Firebase Admin SDK initialized (FCM enabled)');
+        console.log('✅ Firebase Admin SDK initialized from ENV vars (FCM enabled)');
     } else {
-        console.warn('⚠️  Service Account key not found — FCM push disabled');
-        console.warn(`   Expected at: ${serviceAccountPath}`);
+        // Fallback: try JSON file
+        const serviceAccountPath = path.resolve(__dirname, '../../secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json');
+        if (fs.existsSync(serviceAccountPath)) {
+            const serviceAccount = require(serviceAccountPath);
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+            });
+            fcmEnabled = true;
+            console.log('✅ Firebase Admin SDK initialized from JSON file (FCM enabled)');
+        } else {
+            console.warn('⚠️  FCM disabled — set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env');
+        }
     }
 } catch (err) {
     console.error('❌ Firebase Admin init failed:', err.message);

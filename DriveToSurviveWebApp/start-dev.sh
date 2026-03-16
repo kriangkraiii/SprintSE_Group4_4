@@ -35,14 +35,17 @@ sleep 2
 echo ""
 echo "🔥 Firebase Cloud Messaging (FCM) Status:"
 
-# Check Service Account Key
-SA_FILE="secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json"
-if [ -f "$SA_FILE" ]; then
-    echo "   ✅ Service Account Key: $SA_FILE"
-else
-    echo "   ❌ Service Account Key: NOT FOUND"
-    echo "      → Download from Firebase Console → Project Settings → Service Accounts"
-    echo "      → Save as: $SA_FILE"
+# Check Firebase env vars (replaces JSON file)
+if [ -f ".env" ]; then
+    FB_PID=$(grep "^FIREBASE_PROJECT_ID=" .env | cut -d'=' -f2)
+    FB_EMAIL=$(grep "^FIREBASE_CLIENT_EMAIL=" .env | cut -d'=' -f2)
+    FB_KEY=$(grep "^FIREBASE_PRIVATE_KEY=" .env | head -1)
+    if [ -n "$FB_PID" ] && [ -n "$FB_EMAIL" ] && [ -n "$FB_KEY" ]; then
+        echo "   ✅ Service Account: configured via ENV vars (project: $FB_PID)"
+    else
+        echo "   ❌ Service Account ENV vars incomplete"
+        echo "      → Set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env"
+    fi
 fi
 
 # Check VAPID Key in .env
