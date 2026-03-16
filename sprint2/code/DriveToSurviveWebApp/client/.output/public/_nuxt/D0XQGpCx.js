@@ -1,0 +1,1 @@
+import{C as e,c as t,o as s}from"./DPmdzAvY.js";const c={class:"min-h-screen flex items-center justify-center text-slate-400"},i={__name:"index",setup(n){return e("/myTrips",{}),(a,r)=>(s(),t("div",c,"กำลังนำทาง..."))}};export{i as default};
