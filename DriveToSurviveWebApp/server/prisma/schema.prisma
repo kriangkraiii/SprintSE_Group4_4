@@ -162,6 +162,7 @@ model User {
   driverVerification DriverVerification?
   vehicles           Vehicle[]
   notification       Notification[]
+  fcmTokens          FcmToken[]   // Sprint 3: multi-device push tokens
   createdRoutes      Route[]   @relation("DriverRoutes")
   bookings           Booking[] @relation("PassengerBookings")
 
@@ -207,6 +208,20 @@ model DriverVerification {
   @@index([createdAt])
   @@index([licenseIssueDate])
   @@index([licenseExpiryDate])
+}
+
+// ─── Sprint 3: FCM Push Notification Tokens (Multi-device) ──
+
+model FcmToken {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token      String   @unique @db.VarChar(500)
+  deviceName String?  @db.VarChar(100) // e.g. "iPhone 15", "iPad Pro"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Notification {

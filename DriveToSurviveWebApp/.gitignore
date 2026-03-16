@@ -26,3 +26,7 @@ logs
 # Prisma
 server/prisma/*.db
 dist/build
+
+# Firebase Service Account (Sprint 3)
+firebase-service-account.json
+*-firebase-adminsdk-*.json
