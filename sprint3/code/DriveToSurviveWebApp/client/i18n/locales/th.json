@@ -1,0 +1,28 @@
+{
+    "welcome": "ยินดีต้อนรับ",
+    "home": {
+        "hero_badge": "ยืนยันตัวตนทุกคน ปลอดภัยทุกเที่ยว",
+        "hero_title": "เดินทางร่วมกัน",
+        "hero_subtitle": "อย่างปลอดภัย",
+        "hero_description": "Drive To Survive — แพลตฟอร์มแชร์เส้นทางที่เน้นความปลอดภัยเป็นอันดับหนึ่ง ยืนยันตัวตนด้วย eKYC ติดตามเรียลไทม์ และปุ่ม SOS ในทุกเที่ยวเดินทาง",
+        "find_trip": "ค้นหาเส้นทาง",
+        "get_started": "เริ่มต้นใช้งาน",
+        "about_us": "เกี่ยวกับเรา",
+        "trust_ekyc": "eKYC ยืนยันตัวตน",
+        "trust_gps": "GPS เรียลไทม์",
+        "trust_pdpa": "PDPA Compliant",
+        "mock_start": "จุดเริ่มต้น",
+        "mock_start_val": "ม.สงขลานครินทร์",
+        "mock_end": "จุดหมายปลายทาง",
+        "mock_end_val": "สนามบินหาดใหญ่",
+        "mock_passengers": "3 ผู้โดยสาร",
+        "links_important": "ลิงก์สำคัญ",
+        "links_create_trip": "สร้างเส้นทาง",
+        "links_register": "สมัครสมาชิก",
+        "policies": "นโยบาย",
+        "terms": "ข้อตกลงและเงื่อนไข",
+        "privacy": "นโยบายความเป็นส่วนตัว",
+        "footer_desc": "แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย สำหรับทุกคน",
+        "copyright": "Drive To Survive — เดินทางร่วมกันอย่างปลอดภัย"
+    }
+}
