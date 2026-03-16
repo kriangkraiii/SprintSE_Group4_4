@@ -1,0 +1,46 @@
+
+Running 10 tests using 1 worker
+
+  ✓   1 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:37:9 › Real-time Chat Tests (Refactored) › Scenario 1 : Basic Chat (4.9s)
+  ✓   2 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:62:9 › Real-time Chat Tests (Refactored) › Scenario 2 : Quick reply feature (4.4s)
+  ✓   3 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:91:9 › Real-time Chat Tests (Refactored) › Scenario 3 : Create new quick reply and send (5.0s)
+  ✓   4 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:131:9 › Real-time Chat Tests (Refactored) › Scenario 4 : Delete quick reply (16.3s)
+  ✘   5 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:174:9 › Real-time Chat Tests (Refactored) › Scenario 5 : Add image (rejecting .pdf) (16.8s)
+  -   6 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:216:9 › Real-time Chat Tests (Refactored) › Scenario 6 : Shared Direction
+  -   7 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:257:9 › Real-time Chat Tests (Refactored) › Scenario 7 : Stop Shared Direction
+  -   8 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:296:9 › Real-time Chat Tests (Refactored) › Scenario 8 : Empty Message
+  -   9 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:318:9 › Real-time Chat Tests (Refactored) › Scenario 9 : Refresh Page
+  -  10 [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:386:9 › Real-time Chat Tests (Refactored) › Scenario 10 : Disconnected
+
+
+  1) [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:174:9 › Real-time Chat Tests (Refactored) › Scenario 5 : Add image (rejecting .pdf) 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: locator('div.divide-y > a').first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 15000ms[22m
+    [2m  - waiting for locator('div.divide-y > a').first()[22m
+
+
+      20 |     await expect(page.locator('text="รายการแชท"').first()).toBeVisible({ timeout: 15000 });
+      21 |     const chatRoomQuery = 'div.divide-y > a';
+    > 22 |     await expect(page.locator(chatRoomQuery).first()).toBeVisible({ timeout: 15000 });
+         |                                                       ^
+      23 |     await page.click(chatRoomQuery, { force: true });
+      24 |     await expect(page.locator('textarea')).toBeVisible({ timeout: 15000 });
+      25 | }
+        at enterChat (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:22:55)
+        at setupUser (C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:29:5)
+        at C:\Ride\SprintSE_Group4_4\sprint2\test\robot_tests\realtime-chat.spec.ts:180:9
+
+    Error Context: test-results\realtime-chat-Real-time-Ch-b9579--5-Add-image-rejecting-pdf--custom-browser-test\error-context.md
+
+  1 failed
+    [custom-browser-test] › sprint2\test\robot_tests\realtime-chat.spec.ts:174:9 › Real-time Chat Tests (Refactored) › Scenario 5 : Add image (rejecting .pdf) 
+  5 did not run
+  4 passed (48.5s)
