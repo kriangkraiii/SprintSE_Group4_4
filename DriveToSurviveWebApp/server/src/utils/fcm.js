@@ -7,12 +7,9 @@
  */
 
 const admin = require('firebase-admin');
-const path = require('path');
-const fs = require('fs');
 const prisma = require('./prisma');
 
-// ── Initialize Firebase Admin SDK ──────────────────────────
-// Priority: ENV vars → JSON file fallback
+// ── Initialize Firebase Admin SDK (from ENV vars) ──────────
 let fcmEnabled = false;
 
 try {
@@ -21,25 +18,13 @@ try {
     const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
     if (projectId && clientEmail && privateKey) {
-        // ✅ Use env vars (works with Koyeb / auto-deploy)
         admin.initializeApp({
             credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
         });
         fcmEnabled = true;
-        console.log('✅ Firebase Admin SDK initialized from ENV vars (FCM enabled)');
+        console.log('✅ Firebase Admin SDK initialized (FCM enabled)');
     } else {
-        // Fallback: try JSON file
-        const serviceAccountPath = path.resolve(__dirname, '../../secp-a5a40-firebase-adminsdk-fbsvc-c145fe5da1.json');
-        if (fs.existsSync(serviceAccountPath)) {
-            const serviceAccount = require(serviceAccountPath);
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
-            });
-            fcmEnabled = true;
-            console.log('✅ Firebase Admin SDK initialized from JSON file (FCM enabled)');
-        } else {
-            console.warn('⚠️  FCM disabled — set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env');
-        }
+        console.warn('⚠️  FCM disabled — set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env');
     }
 } catch (err) {
     console.error('❌ Firebase Admin init failed:', err.message);
