@@ -1,0 +1,28 @@
+{
+    "welcome": "Welcome",
+    "home": {
+        "hero_badge": "Verified Identity, Safe Every Trip",
+        "hero_title": "Travel Together",
+        "hero_subtitle": "Safely",
+        "hero_description": "Drive To Survive — A carpooling platform prioritizing safety. Validated with eKYC, real-time tracking, and SOS button on every trip.",
+        "find_trip": "Find Trip",
+        "get_started": "Get Started",
+        "about_us": "About Us",
+        "trust_ekyc": "eKYC Verified",
+        "trust_gps": "Real-time GPS",
+        "trust_pdpa": "PDPA Compliant",
+        "mock_start": "Origin",
+        "mock_start_val": "Prince of Songkla University",
+        "mock_end": "Destination",
+        "mock_end_val": "Hat Yai Airport",
+        "mock_passengers": "3 Passengers",
+        "links_important": "Important Links",
+        "links_create_trip": "Create Trip",
+        "links_register": "Register",
+        "policies": "Policies",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "footer_desc": "Safe carpooling platform for everyone",
+        "copyright": "Drive To Survive — Travel Together Safely"
+    }
+}

@@ -1,0 +1,57 @@
+/**
+ * GPS Utilities — Haversine formula for distance calculation
+ * Used for arrival notification radius thresholds
+ */
+
+const EARTH_RADIUS_KM = 6371;
+
+/**
+ * Calculate distance between two GPS coordinates using Haversine formula
+ * @param {number} lat1 - Latitude of point 1
+ * @param {number} lon1 - Longitude of point 1
+ * @param {number} lat2 - Latitude of point 2
+ * @param {number} lon2 - Longitude of point 2
+ * @returns {number} Distance in kilometers
+ */
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = (deg) => (deg * Math.PI) / 180;
+
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return EARTH_RADIUS_KM * c;
+};
+
+/**
+ * GPS radius thresholds (in km) for arrival notifications
+ */
+const RADIUS_THRESHOLDS = [
+    { type: 'FIVE_KM', distance: 5 },
+    { type: 'ONE_KM', distance: 1 },
+    { type: 'ZERO_KM', distance: 0.1 }, // ~100m for "arrived"
+];
+
+/**
+ * Determine which radius thresholds have been crossed
+ * @param {number} distanceKm - Current distance in km
+ * @returns {string[]} Array of crossed radius types (e.g., ['FIVE_KM', 'ONE_KM'])
+ */
+const getCrossedRadii = (distanceKm) => {
+    return RADIUS_THRESHOLDS
+        .filter(t => distanceKm <= t.distance)
+        .map(t => t.type);
+};
+
+module.exports = {
+    haversineDistance,
+    getCrossedRadii,
+    RADIUS_THRESHOLDS,
+    EARTH_RADIUS_KM,
+};
