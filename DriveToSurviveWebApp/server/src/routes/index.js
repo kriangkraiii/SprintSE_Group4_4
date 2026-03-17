@@ -20,8 +20,11 @@ const placeRoutes = require('./place.routes');
 const geoRoutes = require('./geo.routes');
 const dashboardRoutes = require('./dashboard.routes');
 const securityConfigRoutes = require('./securityConfig.routes');
+<<<<<<< HEAD
 // Sprint 3
 const fcmRoutes = require('./fcm.routes');
+=======
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
 const router = express.Router();
 
 router.use('/auth', authRoutes);
@@ -45,8 +48,11 @@ router.use('/places', placeRoutes);
 router.use('/geo', geoRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/security-config', securityConfigRoutes);
+<<<<<<< HEAD
 // Sprint 3
 router.use('/fcm', fcmRoutes);
+=======
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
 
 
 module.exports = router;

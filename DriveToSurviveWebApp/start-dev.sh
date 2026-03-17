@@ -31,6 +31,7 @@ for PORT in 3001 3000 24678; do
 done
 sleep 2
 
+<<<<<<< HEAD
 # ─── Sprint 3: Firebase / FCM Status Check ───────────────
 echo ""
 echo "🔥 Firebase Cloud Messaging (FCM) Status:"
@@ -74,6 +75,8 @@ fi
 
 echo ""
 
+=======
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
 # ─── Backend: Express API + Socket.IO + CRON ─────────────
 echo "📦 Starting Express API + Socket.IO on port 3001..."
 cd server
@@ -92,6 +95,7 @@ CLIENT_PID=$!
 cd ..
 
 echo ""
+<<<<<<< HEAD
 echo "┌───────────────────────────────────────────────────────────┐"
 echo "│  ✅ All Services Running                                  │"
 echo "├───────────────────────────────────────────────────────────┤"
@@ -108,6 +112,22 @@ echo "│  🔔 FCM Push: check server logs for status                │"
 echo "├───────────────────────────────────────────────────────────┤"
 echo "│  Press Ctrl+C to stop all services                        │"
 echo "└───────────────────────────────────────────────────────────┘"
+=======
+echo "┌─────────────────────────────────────────────────┐"
+echo "│  ✅ All Services Running                        │"
+echo "├─────────────────────────────────────────────────┤"
+echo "│  💻 Client (Nuxt):     http://localhost:3000    │"
+echo "│  📦 Server (Express):  http://localhost:3001    │"
+echo "│  🔌 WebSocket (WS):    ws://localhost:3001      │"
+echo "│  📖 Swagger Docs:      http://localhost:3001/documentation │"
+echo "├─────────────────────────────────────────────────┤"
+echo "│  ⏰ CRON Jobs:                                  │"
+echo "│     • Retention Purge — daily 02:00 UTC         │"
+echo "│     • Chat Lifecycle  — every hour              │"
+echo "├─────────────────────────────────────────────────┤"
+echo "│  Press Ctrl+C to stop all services              │"
+echo "└─────────────────────────────────────────────────┘"
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
 echo ""
 
 # Wait for all background processes

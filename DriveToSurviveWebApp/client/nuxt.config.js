@@ -21,8 +21,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || defaultApiBase,
+<<<<<<< HEAD
       googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
       firebaseVapidKey: process.env.FIREBASE_VAPID_KEY || "",
+=======
+      googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
     },
   },
   devServer: {

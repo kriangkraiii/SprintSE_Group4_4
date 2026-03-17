@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on win32)" generated="2026-03-04T21:21:18.600404" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic3 Complete" source="D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_complete.robot">
+<kw name="Suite Init" type="SETUP">
+<kw name="Run Process" owner="Process">
+<msg time="2026-03-04T21:21:19.001397" level="INFO">Starting process:
+node D:\Soften\SprintSE_Group4_4\sprint2\test/seed-review-test.js</msg>
+<msg time="2026-03-04T21:21:19.005815" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-04T21:21:19.868565" level="INFO">Process completed.</msg>
+<msg time="2026-03-04T21:21:19.868811" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>node</arg>
+<arg>${SEED_SCRIPT}</arg>
+<arg>cwd=D:\\Soften\\SprintSE_Group4_4\\sprint2\\test</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.000977" elapsed="0.867885"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.869943" level="INFO">[dotenv@17.3.1] injecting env (18) from ..\..\DriveToSurviveWebApp\.env -- tip: ≡ƒñû agentic secret storage: https://dotenvx.com/as2
+≡ƒî▒ Seeding test data for Epic 3: Review &amp; Rating ...
+  Γ£à Driver: cmmbth0k60000us3ggzxw7huu
+  Γ£à Passenger: cmmbth0km0001us3g0xe0zid9
+  Γ£à Passenger2: cmmbthvog0002usak4kpnx7s0
+  Γ£à Vehicle: cmmbth0l40003us3gnynsyr82
+  Γ£à Route: cmmbth0lm0005us3gfgdcgyr4
+  Γ£à Booking A (for review): cmmc4k9n10004us48q4ke4jkc
+  Γ£à Booking B (for dispute): cmmc4k9ns0006us48iwmcz8uj
+  Γ£à Booking C (expired): cmmc4k9o70008us485jshkkry
+  Γ£à Admin: cmmbo4ou60009us8s80bv0m9o
+  Γ£à Pre-review for dispute: cmmc4k9pj000dus48ohdj2f8w
+  Γ£à Pre-dispute for admin: cmmc4k9q2000fus48r12barjv
+
+≡ƒôä Seed output written to D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json
+{
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbthvog0002usak4kpnx7s0",
+  "passenger2Email": "rf_passenger2@test.com",
+  "vehicleId": "cmmbth0l40003us3gnynsyr82",
+  "routeId": "cmmbth0lm0005us3gfgdcgyr4",
+  "bookingAId": "cmmc4k9n10004us48q4ke4jkc",
+  "bookingBId": "cmmc4k9ns0006us48iwmcz8uj",
+  "bookingCId": "cmmc4k9o70008us485jshkkry",
+  "preReviewId": "cmmc4k9pj000dus48ohdj2f8w",
+  "preDisputeId": "cmmc4k9q2000fus48r12barjv",
+  "adminId": "cmmbo4ou60009us8s80bv0m9o",
+  "adminEmail": "rf_admin@test.com",
+  "password": "password123"
+}
+
+≡ƒÄë Seed complete!</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.869120" elapsed="0.000921"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.871407" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<arg>${result.rc}</arg>
+<arg>0</arg>
+<arg>Seed script failed: ${result.stderr}</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.870208" elapsed="0.001290"/>
+</kw>
+<kw name="Get File" owner="OperatingSystem">
+<msg time="2026-03-04T21:21:19.871892" level="INFO" html="true">Getting file '&lt;a href="file://D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json"&gt;D:\Soften\SprintSE_Group4_4\sprint2\test\seed-output.json&lt;/a&gt;'.</msg>
+<msg time="2026-03-04T21:21:19.881329" level="INFO">${file_content} = {
+  "driverId": "cmmbth0k60000us3ggzxw7huu",
+  "driverEmail": "rf_driver@test.com",
+  "passengerId": "cmmbth0km0001us3g0xe0zid9",
+  "passengerEmail": "rf_passenger@test.com",
+  "passenger2Id": "cmmbth...</msg>
+<var>${file_content}</var>
+<arg>${OUTPUT_FILE}</arg>
+<doc>Returns the contents of a specified file.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.871671" elapsed="0.009699"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.882409" level="INFO">${data} = {'driverId': 'cmmbth0k60000us3ggzxw7huu', 'driverEmail': 'rf_driver@test.com', 'passengerId': 'cmmbth0km0001us3g0xe0zid9', 'passengerEmail': 'rf_passenger@test.com', 'passenger2Id': 'cmmbthvog0002usak...</msg>
+<var>${data}</var>
+<arg>json.loads($file_content)</arg>
+<arg>json</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.881573" elapsed="0.000874"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.883105" level="INFO">${BOOKING_A_ID} = cmmc4k9n10004us48q4ke4jkc</msg>
+<arg>${BOOKING_A_ID}</arg>
+<arg>${data['bookingAId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.882578" elapsed="0.000577"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.883892" level="INFO">${BOOKING_B_ID} = cmmc4k9ns0006us48iwmcz8uj</msg>
+<arg>${BOOKING_B_ID}</arg>
+<arg>${data['bookingBId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.883271" elapsed="0.000687"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.884684" level="INFO">${BOOKING_C_ID} = cmmc4k9o70008us485jshkkry</msg>
+<arg>${BOOKING_C_ID}</arg>
+<arg>${data['bookingCId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.884106" elapsed="0.000653"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.885688" level="INFO">${DRIVER_ID} = cmmbth0k60000us3ggzxw7huu</msg>
+<arg>${DRIVER_ID}</arg>
+<arg>${data['driverId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.884993" elapsed="0.000757"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T21:21:19.886293" level="INFO">Seed data loaded: bookingA=cmmc4k9n10004us48q4ke4jkc, bookingB=cmmc4k9ns0006us48iwmcz8uj, bookingC=cmmc4k9o70008us485jshkkry, driver=cmmbth0k60000us3ggzxw7huu</msg>
+<arg>Seed data loaded: bookingA=${BOOKING_A_ID}, bookingB=${BOOKING_B_ID}, bookingC=${BOOKING_C_ID}, driver=${DRIVER_ID}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.885919" elapsed="0.000432"/>
+</kw>
+<doc>Run seed script and load test data IDs</doc>
+<status status="PASS" start="2026-03-04T21:21:19.000117" elapsed="0.886320"/>
+</kw>
+<test id="s1-t1" name="Demo-1 Passenger Login" line="158">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T21:21:19.887574" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T21:21:19.887387" elapsed="0.000421"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T21:21:19.887135" elapsed="0.000793"/>
+</kw>
+<kw name="Login As Passenger">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Get Title" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:19.889111" level="INFO">Cannot capture screenshot because no browser is open.</msg>
+<msg time="2026-03-04T21:21:19.889229" level="FAIL">No browser is open.</msg>
+<doc>Returns the title of the current page.</doc>
+<status status="FAIL" start="2026-03-04T21:21:19.888970" elapsed="0.003416">No browser is open.</status>
+</kw>
+<msg time="2026-03-04T21:21:19.892599" level="INFO">${browser_open} = False</msg>
+<var>${browser_open}</var>
+<arg>Get Title</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.888575" elapsed="0.004066"/>
+</kw>
+<if>
+<branch type="IF" condition="not ${browser_open}">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:19.893486" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3003/login'.</msg>
+<arg>${BASE_URL}/login</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-04T21:21:19.893204" elapsed="1.139005"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-04T21:21:21.032479" elapsed="0.037142"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-04T21:21:21.069831" elapsed="0.000462"/>
+</kw>
+<status status="PASS" start="2026-03-04T21:21:19.892828" elapsed="1.177538"/>
+</branch>
+<status status="PASS" start="2026-03-04T21:21:19.892780" elapsed="1.177660"/>
+</if>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:21.070751" level="INFO">Opening url 'http://localhost:3003/login'</msg>
+<arg>${BASE_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T21:21:21.070572" elapsed="0.604351"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:21.675677" level="INFO">Typing text 'rf_passenger@test.com' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${PASSENGER_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:21.675131" elapsed="1.608358"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:23.284325" level="INFO">Typing text 'password123' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:23.283761" elapsed="1.611939"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:24.896151" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:24.895909" elapsed="2.616104"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:30.513077" level="INFO">Slept 3 seconds.</msg>
+<msg time="2026-03-04T21:21:30.513138" level="INFO">Wait for redirect</msg>
+<arg>3s</arg>
+<arg>Wait for redirect</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:27.512180" elapsed="3.001001"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T21:21:30.513525" level="INFO">✅ Logged in as passenger</msg>
+<arg>✅ Logged in as passenger</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T21:21:30.513313" elapsed="0.000250"/>
+</kw>
+<doc>Login as passenger once and reuse session</doc>
+<status status="PASS" start="2026-03-04T21:21:19.888300" elapsed="10.625318"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:31.196643" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_01_passenger_login.png"&gt;&lt;img src="demo_01_passenger_login.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_01_passenger_login.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:21:30.513860" elapsed="0.682937"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:33.197699" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:33.197780" level="INFO">Show login success</msg>
+<arg>2s</arg>
+<arg>Show login success</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:31.197177" elapsed="2.000657"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T21:21:33.198756" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T21:21:33.198676" elapsed="0.000175"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T21:21:33.198391" elapsed="0.000534"/>
+</kw>
+<doc>Passenger logs in via the web UI</doc>
+<tag>Demo</tag>
+<tag>Login</tag>
+<tag>Passenger</tag>
+<status status="PASS" start="2026-03-04T21:21:19.886535" elapsed="13.312587"/>
+</test>
+<test id="s1-t2" name="Demo-2 Passenger Views Review Page" line="165">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T21:21:33.201429" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T21:21:33.201228" elapsed="0.000367"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T21:21:33.200947" elapsed="0.000724"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:33.202063" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T21:21:33.201902" elapsed="0.603076"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:37.809440" level="INFO">Slept 4 seconds.</msg>
+<msg time="2026-03-04T21:21:37.809504" level="INFO">Wait for reviews page to load</msg>
+<arg>4s</arg>
+<arg>Wait for reviews page to load</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:33.807053" elapsed="4.002495"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:38.394420" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_03_reviews_page.png"&gt;&lt;img src="demo_03_reviews_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_03_reviews_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:21:37.809821" elapsed="0.584712"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:39.414346" level="INFO">Current page contains text 'รีวิว'.</msg>
+<arg>รีวิว</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-04T21:21:38.394779" elapsed="1.019797"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:41.415970" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:41.416068" level="INFO">Let viewer see the page</msg>
+<arg>2s</arg>
+<arg>Let viewer see the page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:39.414958" elapsed="2.001173"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T21:21:41.416876" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T21:21:41.416807" elapsed="0.000121"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T21:21:41.416559" elapsed="0.000414"/>
+</kw>
+<doc>Passenger navigates to /reviews and sees pending reviews</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T21:21:33.200076" elapsed="8.217021"/>
+</test>
+<test id="s1-t3" name="Demo-3 Passenger Creates Review" line="174">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T21:21:41.418086" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T21:21:41.417948" elapsed="0.000239"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T21:21:41.417776" elapsed="0.000465"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:41.418548" level="INFO">Opening url 'http://localhost:3003/reviews/create?bookingId=cmmc4k9n10004us48q4ke4jkc'</msg>
+<arg>${BASE_URL}/reviews/create?bookingId=${BOOKING_A_ID}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-04T21:21:41.418377" elapsed="0.553823"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:45.973418" level="INFO">Slept 4 seconds.</msg>
+<msg time="2026-03-04T21:21:45.973484" level="INFO">Wait for create review page</msg>
+<arg>4s</arg>
+<arg>Wait for create review page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:41.972655" elapsed="4.000875"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:46.543160" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_04_create_review_page.png"&gt;&lt;img src="demo_04_create_review_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_04_create_review_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:21:45.973813" elapsed="0.569490"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:48.544297" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:48.544377" level="INFO">Show empty form</msg>
+<arg>2s</arg>
+<arg>Show empty form</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:46.543614" elapsed="2.000823"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T21:21:48.547087" level="INFO">⚠️ Skipping star rating due to ElementNotInteractable issue</msg>
+<arg>⚠️ Skipping star rating due to ElementNotInteractable issue</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T21:21:48.545811" elapsed="0.001403"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-04T21:21:48.548088" level="INFO">📝 Star rating will be fixed in future version</msg>
+<arg>📝 Star rating will be fixed in future version</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-04T21:21:48.547571" elapsed="0.000607"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:49.154119" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_04_star_rating_skipped.png"&gt;&lt;img src="demo_04_star_rating_skipped.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_04_star_rating_skipped.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:21:48.548533" elapsed="0.605803"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:51.155245" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:51.155348" level="INFO">Show star rating area</msg>
+<arg>2s</arg>
+<arg>Show star rating area</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:49.154714" elapsed="2.000694"/>
+</kw>
+<kw name="Get WebElements" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:51.667741" level="INFO">${tag_buttons} = []</msg>
+<var>${tag_buttons}</var>
+<arg>xpath=//button[contains(text(),'สุภาพ') or contains(text(),'polite')]</arg>
+<doc>Returns a list of WebElement objects matching the ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:51.155879" elapsed="0.511903"/>
+</kw>
+<if>
+<branch type="IF" condition="len($tag_buttons) &gt; 0">
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${tag_buttons}[0]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T21:21:51.668556" elapsed="0.000027"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show tag selected</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T21:21:51.668657" elapsed="0.000017"/>
+</kw>
+<status status="NOT RUN" start="2026-03-04T21:21:51.668088" elapsed="0.000639"/>
+</branch>
+<status status="PASS" start="2026-03-04T21:21:51.668053" elapsed="0.000712"/>
+</if>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:52.177731" level="INFO">${comment_field} = &lt;selenium.webdriver.remote.webelement.WebElement (session="0387905ab0b45973621084dbed395ffb", element="f.8763B76B626EEE0C0028CB47148EACCE.d.CC72298982BBAC3BCD713222C501EBB6.e.76")&gt;</msg>
+<var>${comment_field}</var>
+<arg>xpath=//textarea</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:51.668934" elapsed="0.508842"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:52.178927" level="INFO">Typing text 'บริการดีเยี่ยม คนขับสุภาพ ขับรถปลอดภัยมาก แนะนำเลยครับ' into text field '&lt;selenium.webdriver.remote.webelement.WebElement (session="0387905ab0b45973621084dbed395ffb", element="f.8763B76B626EEE0C0028CB47148EACCE.d.CC72298982BBAC3BCD713222C501EBB6.e.76")&gt;'.</msg>
+<arg>${comment_field}</arg>
+<arg>บริการดีเยี่ยม คนขับสุภาพ ขับรถปลอดภัยมาก แนะนำเลยครับ</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:52.178274" elapsed="1.102305"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:55.281488" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:55.281552" level="INFO">Show comment filled</msg>
+<arg>2s</arg>
+<arg>Show comment filled</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:53.280907" elapsed="2.000688"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:55.875171" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_05_review_filled.png"&gt;&lt;img src="demo_05_review_filled.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_05_review_filled.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:21:55.281844" elapsed="0.593470"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:21:57.876528" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:21:57.876591" level="INFO">Let viewer read the review</msg>
+<arg>2s</arg>
+<arg>Let viewer read the review</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:55.875693" elapsed="2.000940"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:58.386020" level="INFO">${submit_btn} = &lt;selenium.webdriver.remote.webelement.WebElement (session="0387905ab0b45973621084dbed395ffb", element="f.8763B76B626EEE0C0028CB47148EACCE.d.CC72298982BBAC3BCD713222C501EBB6.e.87")&gt;</msg>
+<var>${submit_btn}</var>
+<arg>xpath=//button[contains(text(),'ส่งรีวิว') or contains(text(),'Submit')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:57.876864" elapsed="0.509241"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:21:58.386804" level="INFO">Clicking element '&lt;selenium.webdriver.remote.webelement.WebElement (session="0387905ab0b45973621084dbed395ffb", element="f.8763B76B626EEE0C0028CB47148EACCE.d.CC72298982BBAC3BCD713222C501EBB6.e.87")&gt;'.</msg>
+<arg>${submit_btn}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-04T21:21:58.386544" elapsed="0.540495"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:22:02.927737" level="INFO">Slept 4 seconds.</msg>
+<msg time="2026-03-04T21:22:02.927821" level="INFO">Wait for submission</msg>
+<arg>4s</arg>
+<arg>Wait for submission</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:21:58.927293" elapsed="4.000575"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:22:03.499962" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="demo_06_review_submitted.png"&gt;&lt;img src="demo_06_review_submitted.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>demo_06_review_submitted.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-04T21:22:02.928206" elapsed="0.571873"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-04T21:22:05.500955" level="INFO">Slept 2 seconds.</msg>
+<msg time="2026-03-04T21:22:05.501019" level="INFO">Show submission result</msg>
+<arg>2s</arg>
+<arg>Show submission result</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-04T21:22:03.500341" elapsed="2.000722"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T21:22:05.501645" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T21:22:05.501586" elapsed="0.000108"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T21:22:05.501383" elapsed="0.000356"/>
+</kw>
+<doc>Passenger clicks to create a review for a completed booking</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="PASS" start="2026-03-04T21:21:41.417468" elapsed="24.084388"/>
+</test>
+<test id="s1-t4" name="Demo-4 Passenger Sees Submitted Review" line="211">
+<kw name="Test Init" type="SETUP">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-04T21:22:05.503067" level="INFO">Creating Session using : alias=api, url=http://localhost:3001/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<arg>api</arg>
+<arg>${API_URL}</arg>
+<arg>verify=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-04T21:22:05.502904" elapsed="0.000277"/>
+</kw>
+<doc>Create API session for each test</doc>
+<status status="PASS" start="2026-03-04T21:22:05.502646" elapsed="0.000601"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-04T21:22:05.503563" level="INFO">Opening url 'http://localhost:3003/reviews'</msg>
+<msg time="2026-03-04T21:22:06.026369" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:10.117488" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:14.192213" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:18.274422" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=51550): Max retries exceeded with url: /session/0387905ab0b45973621084dbed395ffb/screenshot (Caused by NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))</msg>
+<arg>${BASE_URL}/reviews</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="FAIL" start="2026-03-04T21:22:05.503441" elapsed="12.771304">Execution terminated by signal</status>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for reviews page</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.274968" elapsed="0.000030"/>
+</kw>
+<kw name="Get WebElement" owner="SeleniumLibrary">
+<var>${my_reviews_tab}</var>
+<arg>xpath=//button[contains(text(),'เขียน') or contains(text(),'written')]</arg>
+<doc>Returns the first WebElement matching the given ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.275134" elapsed="0.000022"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>${my_reviews_tab}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.275283" elapsed="0.000019"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<arg>Wait for my reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.275405" elapsed="0.000018"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>demo_07_my_reviews.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.275533" elapsed="0.000016"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<arg>Show my reviews</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-04T21:22:18.275644" elapsed="0.000015"/>
+</kw>
+<kw name="Test Cleanup" type="TEARDOWN">
+<kw name="Delete All Sessions" owner="RequestsLibrary">
+<msg time="2026-03-04T21:22:18.276149" level="INFO">Deleting All Sessions</msg>
+<doc>Removes all the session objects</doc>
+<status status="PASS" start="2026-03-04T21:22:18.276093" elapsed="0.000104"/>
+</kw>
+<doc>Clean up after each test</doc>
+<status status="PASS" start="2026-03-04T21:22:18.275890" elapsed="0.000349"/>
+</kw>
+<doc>After submitting, passenger sees their review in "My Reviews"</doc>
+<tag>Demo</tag>
+<tag>Passenger</tag>
+<tag>Review</tag>
+<status status="FAIL" start="2026-03-04T21:22:05.502272" elapsed="12.774040">Execution terminated by signal</status>
+</test>
+<test id="s1-t5" name="Demo-5 Driver Login" line="225">
+<doc>Driver logs in to see received reviews</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>Login</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.276649" elapsed="0.000310">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t6" name="Demo-6 Driver Views Received Reviews" line="232">
+<doc>Driver navigates to reviews page and sees reviews received</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>Review</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.277415" elapsed="0.000325">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t7" name="Demo-7 Driver Views Public Stats Page" line="246">
+<doc>View the driver's public stats page</doc>
+<tag>Demo</tag>
+<tag>Driver</tag>
+<tag>robot:exit</tag>
+<tag>Stats</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.278113" elapsed="0.000282">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t8" name="Demo-8 Admin Login" line="255">
+<doc>Admin logs in to manage disputes</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Login</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.278722" elapsed="0.000263">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t9" name="Demo-9 Admin Views Disputes Dashboard" line="262">
+<doc>Admin navigates to Sprint 2 admin disputes page</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.279295" elapsed="0.000275">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t10" name="Demo-10 Admin Resolves a Dispute" line="271">
+<doc>Admin clicks resolve button on a dispute</doc>
+<tag>Admin</tag>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.279864" elapsed="0.000251">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t11" name="Demo-11 Driver Creates Dispute" line="297">
+<doc>Driver navigates to their reviews and creates a dispute</doc>
+<tag>Demo</tag>
+<tag>Dispute</tag>
+<tag>Driver</tag>
+<tag>robot:exit</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.280458" elapsed="0.000263">Test execution stopped due to a fatal error.</status>
+</test>
+<test id="s1-t12" name="Demo-12 Final Summary Screenshot" line="349">
+<doc>Take final screenshots showing the complete system</doc>
+<tag>Demo</tag>
+<tag>robot:exit</tag>
+<tag>Summary</tag>
+<status status="FAIL" start="2026-03-04T21:22:18.281129" elapsed="0.000276">Test execution stopped due to a fatal error.</status>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<msg time="2026-03-04T21:22:22.364078" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+<msg time="2026-03-04T21:22:26.476314" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+<msg time="2026-03-04T21:22:30.557200" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-04T21:22:18.282141" elapsed="16.369472"/>
+</kw>
+<doc>Epic 3 Review &amp; Rating System - Complete Test Suite (API + Selenium + Validation)</doc>
+<status status="FAIL" start="2026-03-04T21:21:18.602261" elapsed="76.049458"/>
+</suite>
+<statistics>
+<total>
+<stat pass="3" fail="9" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat info="combined" combined="NOT robot:exit" pass="3" fail="1" skip="0">NOT robot:exit</stat>
+<stat pass="0" fail="3" skip="0">Admin</stat>
+<stat pass="3" fail="9" skip="0">Demo</stat>
+<stat pass="0" fail="3" skip="0">Dispute</stat>
+<stat pass="0" fail="4" skip="0">Driver</stat>
+<stat pass="1" fail="2" skip="0">Login</stat>
+<stat pass="3" fail="1" skip="0">Passenger</stat>
+<stat pass="2" fail="2" skip="0">Review</stat>
+<stat pass="0" fail="1" skip="0">Stats</stat>
+<stat pass="0" fail="1" skip="0">Summary</stat>
+</tag>
+<suite>
+<stat name="Epic3 Complete" id="s1" pass="3" fail="9" skip="0">Epic3 Complete</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-04T21:21:18.594033" level="WARN">Error in file 'D:\Soften\SprintSE_Group4_4\sprint2\test\epic3_complete.robot' on line 783: The '[Return]' setting is deprecated. Use the 'RETURN' statement instead.</msg>
+<msg time="2026-03-04T21:22:06.026369" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:10.117488" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:14.192213" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb/screenshot</msg>
+<msg time="2026-03-04T21:22:18.274422" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: HTTPConnectionPool(host='localhost', port=51550): Max retries exceeded with url: /session/0387905ab0b45973621084dbed395ffb/screenshot (Caused by NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))</msg>
+<msg time="2026-03-04T21:22:22.364078" level="WARN">Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+<msg time="2026-03-04T21:22:26.476314" level="WARN">Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+<msg time="2026-03-04T21:22:30.557200" level="WARN">Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError("HTTPConnection(host='localhost', port=51550): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it")': /session/0387905ab0b45973621084dbed395ffb</msg>
+</errors>
+</robot>

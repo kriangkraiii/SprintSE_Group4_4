@@ -1,0 +1,1468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.3 on darwin)" generated="2026-03-03T23:54:09.220246" rpa="false" schemaversion="5">
+<suite id="s1" name="Epic2 Arrival Notification" source="/Users/conan/Documents/GitHub/SprintSE_Group4_4/sprint2/test/robot/epic2_arrival_notification.robot">
+<kw name="Setup Test Environment" type="SETUP">
+<kw name="Create Directory" owner="OperatingSystem">
+<msg time="2026-03-03T23:54:09.405412" level="INFO" html="true">Directory '&lt;a href="file:///Users/conan/Documents/GitHub/SprintSE_Group4_4/sprint2/test/robot/results"&gt;/Users/conan/Documents/GitHub/SprintSE_Group4_4/sprint2/test/robot/results&lt;/a&gt;' already exists.</msg>
+<arg>/Users/conan/Documents/GitHub/SprintSE_Group4_4/sprint2/test/robot/results</arg>
+<doc>Creates the specified directory.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.405291" elapsed="0.000169"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:54:09.405898" level="INFO">Creating Session using : alias=AUTH, url=http://localhost:3001, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>AUTH</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-03T23:54:09.405547" elapsed="0.000618"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.406784" level="INFO">${d_body} = {'email': 'epic2_driver@test.com', 'password': 'password123'}</msg>
+<var>${d_body}</var>
+<arg>email=${DRIVER_EMAIL}</arg>
+<arg>password=${PASS}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.406368" elapsed="0.000435"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:54:09.566091" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '61', 'Content-Type': 'application/json'} 
+ body=b'{"email": "epic2_driver@test.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-03T23:54:09.566212" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9984', 'RateLimit-Reset': '358', 'X-Request-ID': '994493c2-652e-43c1-b08f-2967620fe63c', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '608', 'ETag': 'W/"260-IJgrCHf+Y2nzsBOMjtDIWXeCtP0"', 'Date': 'Tue, 03 Mar 2026 16:54:09 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ","user":{"id":"cmmal2j1j0000vrr1yywr4vwu","firstName":"Driver","lastName":"Epic2","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"DRIVER","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-03T23:54:09.566333" level="INFO">${d_res} = &lt;Response [200]&gt;</msg>
+<var>${d_res}</var>
+<arg>AUTH</arg>
+<arg>/api/auth/login</arg>
+<arg>json=${d_body}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.406876" elapsed="0.159479"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.567033" level="INFO">${d_raw} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85y...</msg>
+<var>${d_raw}</var>
+<arg>${d_res.json()['data']['token']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.566487" elapsed="0.000566"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.567370" level="INFO">${DRIVER_TOKEN} = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z-...</msg>
+<arg>${DRIVER_TOKEN}</arg>
+<arg>Bearer ${d_raw}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.567158" elapsed="0.000238"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.567668" level="INFO">${DRIVER_RAW} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85y...</msg>
+<arg>${DRIVER_RAW}</arg>
+<arg>${d_raw}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.567473" elapsed="0.000223"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.567970" level="INFO">${p_body} = {'email': 'thanatcha.k@kkumail.com', 'password': 'password123'}</msg>
+<var>${p_body}</var>
+<arg>email=${PASSENGER_EMAIL}</arg>
+<arg>password=${PASS}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.567760" elapsed="0.000229"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:54:09.647222" level="INFO">POST Request : url=http://localhost:3001/api/auth/login 
+ path_url=/api/auth/login 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '63', 'Content-Type': 'application/json'} 
+ body=b'{"email": "thanatcha.k@kkumail.com", "password": "password123"}' 
+ </msg>
+<msg time="2026-03-03T23:54:09.647318" level="INFO">POST Response : url=http://localhost:3001/api/auth/login 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9983', 'RateLimit-Reset': '358', 'X-Request-ID': '61d75692-b9be-4967-834f-a30c6686ed37', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '618', 'ETag': 'W/"26a-LL/t17n7rfC0/CPlOVOnXIO0RuE"', 'Date': 'Tue, 03 Mar 2026 16:54:09 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"message":"Login successful","data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.Sbv59JQaJ4sArsLy2MPMFZ9wdYcnRieRsz07ZqqUHqI","user":{"id":"cmmal2j200005vrr1ncl1bfpw","firstName":"Passenger","lastName":"Epic2","profilePicture":null,"nationalIdBackPhotoUrl":null,"nationalIdBackNumber":null,"nationalIdOcrData":null,"role":"PASSENGER","verifiedByOcr":false,"otpExpiry":null,"deletedAt":null,"passengerSuspendedUntil":null,"driverSuspendedUntil":null}}} 
+ </msg>
+<msg time="2026-03-03T23:54:09.647435" level="INFO">${p_res} = &lt;Response [200]&gt;</msg>
+<var>${p_res}</var>
+<arg>AUTH</arg>
+<arg>/api/auth/login</arg>
+<arg>json=${p_body}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.568052" elapsed="0.079400"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.648064" level="INFO">${p_raw} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.Sbv59JQaJ4sArs...</msg>
+<var>${p_raw}</var>
+<arg>${p_res.json()['data']['token']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.647576" elapsed="0.000508"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.648354" level="INFO">${PASSENGER_TOKEN} = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.Sbv59JQ...</msg>
+<arg>${PASSENGER_TOKEN}</arg>
+<arg>Bearer ${p_raw}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.648169" elapsed="0.000210"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.648581" level="INFO">${PASSENGER_RAW} = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.Sbv59JQaJ4sArs...</msg>
+<arg>${PASSENGER_RAW}</arg>
+<arg>${p_raw}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.648441" elapsed="0.000161"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.649181" level="INFO">${p_headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3N...</msg>
+<var>${p_headers}</var>
+<arg>Authorization=Bearer ${p_raw}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.648659" elapsed="0.000544"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:54:09.710192" level="INFO">GET Request : url=http://localhost:3001/api/bookings/me 
+ path_url=/api/bookings/me 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMjAwMDA1dnJyMW5jbDFiZnB3Iiwicm9sZSI6IlBBU1NFTkdFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.Sbv59JQaJ4sArsLy2MPMFZ9wdYcnRieRsz07ZqqUHqI'} 
+ body=None 
+ </msg>
+<msg time="2026-03-03T23:54:09.710282" level="INFO">GET Response : url=http://localhost:3001/api/bookings/me 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9969', 'RateLimit-Reset': '309', 'X-Request-ID': 'd8895053-f562-472c-82b0-4ef191a2d2e4', 'Content-Type': 'application/json; charset=utf-8', 'ETag': 'W/"705-fBkJaEYPaybfSbS/YlRjfp0dEnA"', 'Content-Encoding': 'gzip', 'Date': 'Tue, 03 Mar 2026 16:54:09 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'} 
+ body={"success":true,"data":[{"id":"cmm673eqa0001vr9ax7xh0trd","routeId":"cmmal2j220007vrr1rb2voi5j","passengerId":"cmmal2j200005vrr1ncl1bfpw","numberOfSeats":1,"status":"CONFIRMED","cancelledAt":null,"cancelledBy":null,"cancelReason":null,"pickupLocation":{"lat":16.4735,"lng":102.8226,"address":"SC09 อาคารวิทยวิภาส คณะวิทยาศาสตร์ มหาวิทยาลัยขอนแก่น"},"dropoffLocation":{"lat":16.4322,"lng":102.8236,"address":"เซ็นทรัล ขอนแก่น"},"completedAt":null,"noShowDeadline":null,"createdAt":"2026-03-03T12:27:53.214Z","route":{"id":"cmmal2j220007vrr1rb2voi5j","driverId":"cmmal2j1j0000vrr1yywr4vwu","vehicleId":"cmmal2j1z0004vrr17br3y3z0","startLocation":{"lat":16.4735,"lng":102.8226,"name":"มหาวิทยาลัยขอนแก่น (SC09)","address":"SC09 อาคารวิทยวิภาส คณะวิทยาศาสตร์"},"endLocation":{"lat":16.4322,"lng":102.8236,"name":"เซ็นทรัล ขอนแก่น","address":"เซ็นทรัล ขอนแก่น"},"departureTime":"2026-03-04T12:27:53.210Z","availableSeats":3,"pricePerSeat":50,"conditions":null,"status":"AVAILABLE","cancelledAt":null,"cancelledBy":null,"routePolyline":null,"distanceMeters":null,"durationSeconds":null,"routeSummary":null,"distance":null,"duration":null,"waypoints":null,"landmarks":null,"steps":null,"createdAt":"2026-03-03T12:27:53.211Z","updatedAt":"2026-03-03T12:27:53.211Z","driver":{"id":"cmmal2j1j0000vrr1yywr4vwu","firstName":"Driver","lastName":"Epic2","gender":null,"profilePicture":null,"isVerified":true,"driverStats":null},"vehicle":{"vehicleModel":"Toyota Camry","vehicleType":"SEDAN","photos":null,"amenities":[]}},"reviews":[]}]} 
+ </msg>
+<msg time="2026-03-03T23:54:09.710384" level="INFO">${blist_res} = &lt;Response [200]&gt;</msg>
+<var>${blist_res}</var>
+<arg>AUTH</arg>
+<arg>/api/bookings/me</arg>
+<arg>headers=${p_headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.649275" elapsed="0.061124"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.710719" level="INFO">${booking_id} = cmm673eqa0001vr9ax7xh0trd</msg>
+<var>${booking_id}</var>
+<arg>${BOOKING_ID}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.710512" elapsed="0.000221"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.711094" level="INFO">${route_id} = </msg>
+<var>${route_id}</var>
+<arg>${EMPTY}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.710794" elapsed="0.000313"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Run Keywords" owner="BuiltIn">
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.712158" level="INFO">${booking_id} = cmm673eqa0001vr9ax7xh0trd</msg>
+<arg>${booking_id}</arg>
+<arg>${blist_res.json()['data'][0]['id']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.711795" elapsed="0.000390"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.712544" level="INFO">${route_id} = cmmal2j220007vrr1rb2voi5j</msg>
+<arg>${route_id}</arg>
+<arg>${blist_res.json()['data'][0]['routeId']}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.712251" elapsed="0.000314"/>
+</kw>
+<arg>Set Suite Variable</arg>
+<arg>${booking_id}</arg>
+<arg>${blist_res.json()['data'][0]['id']}</arg>
+<arg>AND</arg>
+<arg>Set Suite Variable</arg>
+<arg>${route_id}</arg>
+<arg>${blist_res.json()['data'][0]['routeId']}</arg>
+<doc>Executes all the given keywords in a sequence.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.711594" elapsed="0.001011"/>
+</kw>
+<arg>${blist_res.status_code} == 200</arg>
+<arg>Run Keywords</arg>
+<arg>Set Suite Variable</arg>
+<arg>${booking_id}</arg>
+<arg>${blist_res.json()['data'][0]['id']}</arg>
+<arg>AND</arg>
+<arg>Set Suite Variable</arg>
+<arg>${route_id}</arg>
+<arg>${blist_res.json()['data'][0]['routeId']}</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.711165" elapsed="0.001471"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.712807" level="INFO">${BOOKING_ID} = cmm673eqa0001vr9ax7xh0trd</msg>
+<arg>${BOOKING_ID}</arg>
+<arg>${booking_id}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.712692" elapsed="0.000132"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.713011" level="INFO">${ROUTE_ID} = cmmal2j220007vrr1rb2voi5j</msg>
+<arg>${ROUTE_ID}</arg>
+<arg>${route_id}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.712869" elapsed="0.000161"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.713182" level="INFO">Booking ID: cmm673eqa0001vr9ax7xh0trd</msg>
+<arg>Booking ID: ${booking_id}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.713077" elapsed="0.000126"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-03-03T23:54:09.713344" level="INFO">Route ID: cmmal2j220007vrr1rb2voi5j</msg>
+<arg>Route ID: ${route_id}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.713250" elapsed="0.000113"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:09.713570" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3000'.</msg>
+<arg>${WEB_URL}</arg>
+<arg>chrome</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:54:09.713441" elapsed="7.517025"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-03T23:54:17.248917" elapsed="0.057426"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:19.317428" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:17.306488" elapsed="2.012503"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-03-03T23:54:19.322608" elapsed="0.055479"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:19.379284" level="INFO">Opening url 'http://localhost:3000/login'</msg>
+<arg>${WEB_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:54:19.378229" elapsed="0.117930"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:21.499155" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:19.496303" elapsed="2.004332"/>
+</kw>
+<kw name="Add Cookie" owner="SeleniumLibrary">
+<arg>token</arg>
+<arg>${p_raw}</arg>
+<arg>path=/</arg>
+<doc>Adds a cookie to your current session.</doc>
+<status status="PASS" start="2026-03-03T23:54:21.502311" elapsed="0.023245"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:21.526009" level="INFO">Opening url 'http://localhost:3000/myTrips'</msg>
+<arg>${WEB_URL}/myTrips</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:54:21.525773" elapsed="0.168475"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:27.704336" level="INFO">Slept 6 seconds.</msg>
+<arg>6s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:21.694687" elapsed="6.014853"/>
+</kw>
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:27.731308" level="INFO">${url} = http://localhost:3000/myTrips</msg>
+<var>${url}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-03-03T23:54:27.711766" elapsed="0.019580"/>
+</kw>
+<kw name="Should Not Contain" owner="BuiltIn">
+<arg>${url}</arg>
+<arg>/login</arg>
+<doc>Fails if ``container`` contains ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:54:27.731469" elapsed="0.004272"/>
+</kw>
+<doc>Retrieves API Tokens, gets target Route UUID, and initializes browser</doc>
+<status status="PASS" start="2026-03-03T23:54:09.404793" elapsed="18.331487"/>
+</kw>
+<test id="s1-t1" name="Test 01: Ensure MyTrips Page Loads With Valid Booking" line="29">
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:28.051428" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/01_mytrips_page.png"&gt;&lt;img src="results/01_mytrips_page.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/01_mytrips_page.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:54:27.738108" elapsed="0.313404"/>
+</kw>
+<doc>Verify login and valid bookings in MyTrips</doc>
+<tag>Setup</tag>
+<status status="PASS" start="2026-03-03T23:54:27.736420" elapsed="0.315249"/>
+</test>
+<test id="s1-t2" name="Test 02: Open GPS Tracking Dashboard From MyTrips" line="34">
+<kw name="Try Click Tracking Button">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<arg>timeout=8s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.053496" elapsed="0.023922"/>
+</kw>
+<msg time="2026-03-03T23:54:28.077547" level="INFO">${ok1} = True</msg>
+<var>${ok1}</var>
+<arg>Wait Until Element Is Visible</arg>
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<arg>timeout=8s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.053217" elapsed="0.024350"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:28.079422" level="INFO">Clicking element 'xpath=//a[contains(.,'ติดตามตำแหน่ง')]'.</msg>
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.078879" elapsed="0.150732"/>
+</kw>
+<arg>${ok1}</arg>
+<arg>Click Element</arg>
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.078171" elapsed="0.152245"/>
+</kw>
+<kw name="Return From Keyword If" owner="BuiltIn">
+<msg time="2026-03-03T23:54:28.232732" level="INFO">Returning from the enclosing user keyword.</msg>
+<arg>${ok1}</arg>
+<arg>${True}</arg>
+<doc>Returns from the enclosing user keyword if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.231312" elapsed="0.002097"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${ok2}</var>
+<arg>Wait Until Element Is Visible</arg>
+<arg>xpath=//a[contains(@href,'/tracking/')]</arg>
+<arg>timeout=5s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.233736" elapsed="0.000034"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${ok2}</arg>
+<arg>Click Element</arg>
+<arg>xpath=//a[contains(@href,'/tracking/')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.233947" elapsed="0.000016"/>
+</kw>
+<kw name="Return From Keyword If" owner="BuiltIn">
+<arg>${ok2}</arg>
+<arg>${True}</arg>
+<doc>Returns from the enclosing user keyword if ``condition`` is true.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.234061" elapsed="0.000029"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${ok3}</var>
+<arg>Click Element</arg>
+<arg>xpath=//div[contains(@class,'trip-card')][1]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.234145" elapsed="0.000013"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.234260" elapsed="0.000041"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<var>${ok4}</var>
+<arg>Wait Until Element Is Visible</arg>
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<arg>timeout=5s</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.234857" elapsed="0.000023"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${ok4}</arg>
+<arg>Click Element</arg>
+<arg>xpath=//a[contains(.,'ติดตามตำแหน่ง')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.235929" elapsed="0.000023"/>
+</kw>
+<kw name="Return From Keyword If" owner="BuiltIn">
+<arg>${ok4}</arg>
+<arg>${True}</arg>
+<doc>Returns from the enclosing user keyword if ``condition`` is true.</doc>
+<status status="NOT RUN" start="2026-03-03T23:54:28.236075" elapsed="0.000065"/>
+</kw>
+<return>
+<value>${False}</value>
+<status status="NOT RUN" start="2026-03-03T23:54:28.236256" elapsed="0.000077"/>
+</return>
+<msg time="2026-03-03T23:54:28.236875" level="INFO">${clicked} = True</msg>
+<var>${clicked}</var>
+<doc>Attempts to locate the tracking element using various strategies</doc>
+<status status="PASS" start="2026-03-03T23:54:28.052667" elapsed="0.184311"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>not ${clicked}</arg>
+<arg>Navigate To Tracking Directly</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.237127" elapsed="0.003312"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:35.248483" level="INFO">Slept 7 seconds.</msg>
+<arg>7s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:28.240931" elapsed="7.010782"/>
+</kw>
+<kw name="Get Location" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:35.279148" level="INFO">${url} = http://localhost:3000/tracking/cmmal2j220007vrr1rb2voi5j</msg>
+<var>${url}</var>
+<doc>Returns the current browser window URL.</doc>
+<status status="PASS" start="2026-03-03T23:54:35.254954" elapsed="0.024235"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${url}</arg>
+<arg>/tracking/</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:54:35.279724" elapsed="0.000840"/>
+</kw>
+<kw name="Execute Javascript" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:35.285926" level="INFO">Executing JavaScript:
+window.scrollTo(0, 0)
+Without any arguments.</msg>
+<arg>window.scrollTo(0, 0)</arg>
+<doc>Executes the given JavaScript code with possible arguments.</doc>
+<status status="PASS" start="2026-03-03T23:54:35.280997" elapsed="0.012334"/>
+</kw>
+<kw name="Press Keys" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:35.302830" level="INFO">Sending key(s) ('-', '-', '-') to page.</msg>
+<msg time="2026-03-03T23:54:35.303580" level="INFO">Sending key -</msg>
+<msg time="2026-03-03T23:54:35.469310" level="INFO">Sending key -</msg>
+<msg time="2026-03-03T23:54:35.491000" level="INFO">Sending key -</msg>
+<arg>NONE</arg>
+<arg>-</arg>
+<arg>-</arg>
+<arg>-</arg>
+<doc>Simulates the user pressing key(s) to an element or on the active browser.</doc>
+<status status="PASS" start="2026-03-03T23:54:35.296749" elapsed="0.215138"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:36.514837" level="INFO">Slept 1 second.</msg>
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:35.512310" elapsed="1.004154"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:36.961822" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/02_tracking_loaded.png"&gt;&lt;img src="results/02_tracking_loaded.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/02_tracking_loaded.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:54:36.519612" elapsed="0.442921"/>
+</kw>
+<doc>Click "Tracking" to navigate to active map</doc>
+<tag>Critical</tag>
+<status status="PASS" start="2026-03-03T23:54:28.051852" elapsed="8.912573"/>
+</test>
+<test id="s1-t3" name="Test 03: Simulate Driving And Automatic GPS Notifications" line="48">
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:37.292763" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/03_driver_start.png"&gt;&lt;img src="results/03_driver_start.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/03_driver_start.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:54:36.965969" elapsed="0.326885"/>
+</kw>
+<kw name="Start Process" owner="Process">
+<msg time="2026-03-03T23:54:37.300918" level="INFO">Starting process:
+node /Users/conan/Documents/GitHub/SprintSE_Group4_4/sprint2/test/robot/simulate-driving.js http://localhost:3001 "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ" cmm673eqa0001vr9ax7xh0trd --socket cmmal2j220007vrr1rb2voi5j</msg>
+<msg time="2026-03-03T23:54:37.315175" level="INFO">${sim} = &lt;Popen: returncode: None args: ['node', '/Users/conan/Documents/GitHub/Sprin...&gt;</msg>
+<var>${sim}</var>
+<arg>node</arg>
+<arg>${SCRIPT_DIR}/simulate-driving.js</arg>
+<arg>${BASE_URL}</arg>
+<arg>${DRIVER_TOKEN}</arg>
+<arg>${BOOKING_ID}</arg>
+<arg>--socket</arg>
+<arg>${ROUTE_ID}</arg>
+<arg>alias=simulate</arg>
+<doc>Starts a new process on background.</doc>
+<status status="PASS" start="2026-03-03T23:54:37.295883" elapsed="0.019411"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:54:55.327651" level="INFO">Slept 18 seconds.</msg>
+<arg>18s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:37.316031" elapsed="18.015520"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:54:55.688761" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/04_driver_near_5km.png"&gt;&lt;img src="results/04_driver_near_5km.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/04_driver_near_5km.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:54:55.335887" elapsed="0.352953"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:55:07.708799" level="INFO">Slept 12 seconds.</msg>
+<arg>12s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:54:55.688998" elapsed="12.059175"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:08.163265" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/05_driver_near_1km.png"&gt;&lt;img src="results/05_driver_near_1km.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/05_driver_near_1km.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:55:07.758325" elapsed="0.405025"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:55:23.414425" level="INFO">Slept 15 seconds.</msg>
+<arg>15s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:55:08.163507" elapsed="15.409075"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:25.787103" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/06_driver_arrived.png"&gt;&lt;img src="results/06_driver_arrived.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/06_driver_arrived.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:55:23.607287" elapsed="2.185673"/>
+</kw>
+<kw name="Wait For Process" owner="Process">
+<msg time="2026-03-03T23:55:25.818188" level="INFO">Waiting for process to complete.</msg>
+<msg time="2026-03-03T23:55:25.829792" level="INFO">Process completed.</msg>
+<msg time="2026-03-03T23:55:25.830343" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>simulate</arg>
+<arg>timeout=15s</arg>
+<arg>on_timeout=terminate</arg>
+<doc>Waits for the process to complete or to reach the given timeout.</doc>
+<status status="PASS" start="2026-03-03T23:55:25.802817" elapsed="0.027569"/>
+</kw>
+<doc>Run simulate-driving.js to trigger FIVE_KM, ONE_KM, ZERO_KM</doc>
+<tag>Critical</tag>
+<tag>RealTime</tag>
+<status status="PASS" start="2026-03-03T23:54:36.965167" elapsed="48.866730"/>
+</test>
+<test id="s1-t4" name="Test 04: Verify In-App Notification Bell" line="64">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:25.840961" level="INFO">Opening url 'http://localhost:3000/myTrips'</msg>
+<arg>${WEB_URL}/myTrips</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:55:25.838229" elapsed="0.571864"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:55:30.432121" level="INFO">Slept 4 seconds.</msg>
+<arg>4s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:55:26.418458" elapsed="4.015113"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:30.834783" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/07_mytrips_after.png"&gt;&lt;img src="results/07_mytrips_after.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/07_mytrips_after.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:55:30.438018" elapsed="0.397181"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:41.697616" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-30.png"&gt;&lt;img src="selenium-screenshot-30.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-03T23:55:41.703196" level="FAIL">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</msg>
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-03T23:55:30.838249" elapsed="10.998526">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</status>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.838113" elapsed="0.000234"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.838622" elapsed="0.000073"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'การแจ้งเตือน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.838886" elapsed="0.000025"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/08_bell_panel.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.839196" elapsed="0.000088"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>8s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.839555" elapsed="0.000019"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/08b_bell_panel_hold.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:55:41.839833" elapsed="0.000179"/>
+</kw>
+<doc>Check the notification bell for incoming logs</doc>
+<tag>UI</tag>
+<status status="FAIL" start="2026-03-03T23:55:25.834830" elapsed="16.006912">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</status>
+</test>
+<test id="s1-t5" name="Test 05: Verify 3 GPS Notification Types Are Saved" line="81">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:55:41.851733" level="INFO">Creating Session using : alias=API, url=http://localhost:3001, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>API</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-03T23:55:41.844676" elapsed="0.010574"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:55:41.857725" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxN...</msg>
+<var>${headers}</var>
+<arg>Authorization=${DRIVER_TOKEN}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:55:41.855597" elapsed="0.002172"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:55:42.135584" level="INFO">GET Request : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ path_url=/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ'} 
+ body=None 
+ </msg>
+<msg time="2026-03-03T23:55:42.136094" level="INFO">GET Response : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9917', 'RateLimit-Reset': '217', 'X-Request-ID': '9d847457-9a19-4077-8ace-fad6223424a8', 'Content-Type': 'application/json; charset=utf-8', 'ETag': 'W/"4c4-K3Pctl3HNVRsYUFHUMkNqsueFvo"', 'Content-Encoding': 'gzip', 'Date': 'Tue, 03 Mar 2026 16:55:42 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'} 
+ body={"success":true,"data":[{"id":"cmmal3cvy0003vrraodqpptfg","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"FIVE_KM","driverLat":16.4322,"driverLon":102.8236,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:31.870Z"},{"id":"cmmal3xx60007vrrazraxy0ar","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ONE_KM","driverLat":16.4655,"driverLon":102.8255,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:59.131Z"},{"id":"cmmal4gmr000bvrrazhesbyb0","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ZERO_KM","driverLat":16.4735,"driverLon":102.8226,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:29:23.379Z"},{"id":"cmmau1tju0003vrswq7uom9ar","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"MANUAL","driverLat":null,"driverLon":null,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T16:39:16.697Z"}]} 
+ </msg>
+<msg time="2026-03-03T23:55:42.137083" level="INFO">${res} = &lt;Response [200]&gt;</msg>
+<var>${res}</var>
+<arg>API</arg>
+<arg>/api/arrival-notifications/${BOOKING_ID}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:55:41.857961" elapsed="0.279365"/>
+</kw>
+<kw name="Convert To String" owner="BuiltIn">
+<msg time="2026-03-03T23:55:42.142952" level="INFO">${body} = {"success":true,"data":[{"id":"cmmal3cvy0003vrraodqpptfg","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"FIVE_KM...</msg>
+<var>${body}</var>
+<arg>${res.content}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.140197" elapsed="0.002778"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<kw name="Verify Three Notifications">
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>FIVE_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.145444" elapsed="0.000759"/>
+</kw>
+<msg time="2026-03-03T23:55:42.146314" level="INFO">${has_five} = True</msg>
+<var>${has_five}</var>
+<arg>Should Contain</arg>
+<arg>${body}</arg>
+<arg>FIVE_KM</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.145237" elapsed="0.001094"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>ONE_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.147109" elapsed="0.000783"/>
+</kw>
+<msg time="2026-03-03T23:55:42.148225" level="INFO">${has_one} = True</msg>
+<var>${has_one}</var>
+<arg>Should Contain</arg>
+<arg>${body}</arg>
+<arg>ONE_KM</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.146698" elapsed="0.001659"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>ZERO_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.148790" elapsed="0.000203"/>
+</kw>
+<msg time="2026-03-03T23:55:42.149080" level="INFO">${has_zero} = True</msg>
+<var>${has_zero}</var>
+<arg>Should Contain</arg>
+<arg>${body}</arg>
+<arg>ZERO_KM</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.148587" elapsed="0.000512"/>
+</kw>
+<arg>${body}</arg>
+<status status="PASS" start="2026-03-03T23:55:42.144816" elapsed="0.004335"/>
+</kw>
+<arg>${res.status_code} == 200</arg>
+<arg>Verify Three Notifications</arg>
+<arg>${body}</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.143171" elapsed="0.006011"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:42.431721" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/09_history_verified.png"&gt;&lt;img src="results/09_history_verified.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/09_history_verified.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.149407" elapsed="0.282392"/>
+</kw>
+<doc>GET /api/arrival-notifications/{bookingId} expects FIVE_KM, ONE_KM, ZERO_KM</doc>
+<tag>Critical</tag>
+<status status="PASS" start="2026-03-03T23:55:41.843303" elapsed="0.588633"/>
+</test>
+<test id="s1-t6" name="Test 06: Trigger Manual Arrival Notification" line="91">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:55:47.439275" level="INFO">Slept 5 seconds.</msg>
+<arg>5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:55:42.432416" elapsed="5.015729"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:55:47.460043" level="INFO">Creating Session using : alias=API, url=http://localhost:3001, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>API</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-03T23:55:47.454235" elapsed="0.007002"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:55:47.462384" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxN...</msg>
+<var>${headers}</var>
+<arg>Authorization=${DRIVER_TOKEN}</arg>
+<arg>Content-Type=application/json</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:55:47.461550" elapsed="0.000853"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:55:47.462753" level="INFO">${body} = {'bookingId': 'cmm673eqa0001vr9ax7xh0trd'}</msg>
+<var>${body}</var>
+<arg>bookingId=${BOOKING_ID}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:55:47.462551" elapsed="0.000216"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:55:51.834761" level="INFO">POST Request : url=http://localhost:3001/api/arrival-notifications/manual 
+ path_url=/api/arrival-notifications/manual 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ', 'Content-Type': 'application/json', 'Content-Length': '42'} 
+ body=b'{"bookingId": "cmm673eqa0001vr9ax7xh0trd"}' 
+ </msg>
+<msg time="2026-03-03T23:55:51.835758" level="INFO">POST Response : url=http://localhost:3001/api/arrival-notifications/manual 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9915', 'RateLimit-Reset': '211', 'X-Request-ID': '499faa98-20dd-401d-969f-bb4b79fca14e', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '316', 'ETag': 'W/"13c-Cz6aJKmbDODvfW2reY7Ob6+QZxI"', 'Date': 'Tue, 03 Mar 2026 16:55:51 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5'} 
+ body={"success":true,"data":{"id":"cmmaun5cv0003vr2649cmrf6w","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"MANUAL","driverLat":null,"driverLon":null,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T16:55:51.773Z"}} 
+ </msg>
+<msg time="2026-03-03T23:55:51.843338" level="INFO">${res} = &lt;Response [200]&gt;</msg>
+<var>${res}</var>
+<arg>API</arg>
+<arg>/api/arrival-notifications/manual</arg>
+<arg>json=${body}</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:55:47.462868" elapsed="4.380683"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${res.status_code} == 200 or ${res.status_code} == 201</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-03-03T23:55:51.851551" elapsed="0.036047"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:51.892037" level="INFO">Opening url 'http://localhost:3000/myTrips'</msg>
+<arg>${WEB_URL}/myTrips</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:55:51.890299" elapsed="0.661703"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:55:56.609535" level="INFO">Slept 4 seconds.</msg>
+<arg>4s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:55:52.570240" elapsed="4.048983"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:55:57.510775" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/10_after_manual_trigger.png"&gt;&lt;img src="results/10_after_manual_trigger.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/10_after_manual_trigger.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:55:56.636543" elapsed="0.875425"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:56:08.990239" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-31.png"&gt;&lt;img src="selenium-screenshot-31.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-03T23:56:09.013938" level="FAIL">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</msg>
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="FAIL" start="2026-03-03T23:55:57.519253" elapsed="11.571300">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</status>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:09.097496" elapsed="0.000713"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:09.100925" elapsed="0.000228"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/11_manual_bell.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:09.101577" elapsed="0.000030"/>
+</kw>
+<doc>POST /api/arrival-notifications/manual</doc>
+<tag>Critical</tag>
+<status status="FAIL" start="2026-03-03T23:55:42.432137" elapsed="26.676506">Element 'xpath=//button[@aria-label='notification-bell']' not visible after 10 seconds.</status>
+</test>
+<test id="s1-t7" name="Test 07: Validate End-To-End Notification History Delivery" line="109">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:56:09.132769" level="INFO">Creating Session using : alias=API, url=http://localhost:3001, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>API</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-03T23:56:09.121262" elapsed="0.026350"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:56:09.157711" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxN...</msg>
+<var>${headers}</var>
+<arg>Authorization=${DRIVER_TOKEN}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.148832" elapsed="0.008912"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:56:09.531611" level="INFO">GET Request : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ path_url=/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ'} 
+ body=None 
+ </msg>
+<msg time="2026-03-03T23:56:09.532497" level="INFO">GET Response : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9911', 'RateLimit-Reset': '189', 'X-Request-ID': 'f131627e-0d9c-45c4-b33c-d44759df339a', 'Content-Type': 'application/json; charset=utf-8', 'ETag': 'W/"4c4-nn5wi0X3bTtNu6QLIVWzixK/ssU"', 'Content-Encoding': 'gzip', 'Date': 'Tue, 03 Mar 2026 16:56:09 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'} 
+ body={"success":true,"data":[{"id":"cmmal3cvy0003vrraodqpptfg","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"FIVE_KM","driverLat":16.4322,"driverLon":102.8236,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:31.870Z"},{"id":"cmmal3xx60007vrrazraxy0ar","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ONE_KM","driverLat":16.4655,"driverLon":102.8255,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:59.131Z"},{"id":"cmmal4gmr000bvrrazhesbyb0","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ZERO_KM","driverLat":16.4735,"driverLon":102.8226,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:29:23.379Z"},{"id":"cmmaun5cv0003vr2649cmrf6w","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"MANUAL","driverLat":null,"driverLon":null,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T16:55:51.773Z"}]} 
+ </msg>
+<msg time="2026-03-03T23:56:09.533239" level="INFO">${res} = &lt;Response [200]&gt;</msg>
+<var>${res}</var>
+<arg>API</arg>
+<arg>/api/arrival-notifications/${BOOKING_ID}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=any</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.157925" elapsed="0.375350"/>
+</kw>
+<kw name="Convert To String" owner="BuiltIn">
+<msg time="2026-03-03T23:56:09.536853" level="INFO">${body} = {"success":true,"data":[{"id":"cmmal3cvy0003vrraodqpptfg","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"FIVE_KM...</msg>
+<var>${body}</var>
+<arg>${res.content}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.533738" elapsed="0.003139"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>FIVE_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.537684" elapsed="0.003828"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>ONE_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.542126" elapsed="0.000442"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>ZERO_KM</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.542875" elapsed="0.000290"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${body}</arg>
+<arg>MANUAL</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.543298" elapsed="0.000635"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:56:10.443837" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/12_all_4_verified.png"&gt;&lt;img src="results/12_all_4_verified.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/12_all_4_verified.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:56:09.544213" elapsed="0.902128"/>
+</kw>
+<doc>Verify all 4 events exist and email states are recorded</doc>
+<tag>Critical</tag>
+<status status="PASS" start="2026-03-03T23:56:09.114383" elapsed="1.336838"/>
+</test>
+<test id="s1-t8" name="Test 07b: Validate Email Delivery Status For All Occurrences" line="122">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:56:10.454687" level="INFO">Creating Session using : alias=API, url=http://localhost:3001, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>API</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-03-03T23:56:10.452961" elapsed="0.004309"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.459631" level="INFO">${headers} = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxN...</msg>
+<var>${headers}</var>
+<arg>Authorization=${DRIVER_TOKEN}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.457782" elapsed="0.001869"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-03-03T23:56:10.498408" level="INFO">GET Request : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ path_url=/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ headers={'User-Agent': 'python-requests/2.32.5', 'Accept-Encoding': 'gzip, deflate, zstd', 'Accept': '*/*', 'Connection': 'keep-alive', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbW1hbDJqMWowMDAwdnJyMXl5d3I0dnd1Iiwicm9sZSI6IkRSSVZFUiIsImJvb3RFcG9jaCI6MTc3MjU1NjIzNywiaWF0IjoxNzcyNTU2ODQ5LCJleHAiOjE3NzMxNjE2NDl9.MDkH-a5M7z--VLp85ylI6BHsICn-T9TjhGde8zI6yUQ'} 
+ body=None 
+ </msg>
+<msg time="2026-03-03T23:56:10.498543" level="INFO">GET Response : url=http://localhost:3001/api/arrival-notifications/cmm673eqa0001vr9ax7xh0trd 
+ status=200, reason=OK 
+ headers={'Content-Security-Policy': "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests", 'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Resource-Policy': 'same-origin', 'Origin-Agent-Cluster': '?1', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Content-Type-Options': 'nosniff', 'X-DNS-Prefetch-Control': 'off', 'X-Download-Options': 'noopen', 'X-Frame-Options': 'SAMEORIGIN', 'X-Permitted-Cross-Domain-Policies': 'none', 'X-XSS-Protection': '0', 'Vary': 'Origin, Accept-Encoding', 'Access-Control-Allow-Credentials': 'true', 'RateLimit-Policy': '10000;w=900', 'RateLimit-Limit': '10000', 'RateLimit-Remaining': '9910', 'RateLimit-Reset': '188', 'X-Request-ID': '966c7138-7a81-4b13-803f-6743bcad015c', 'Content-Type': 'application/json; charset=utf-8', 'ETag': 'W/"4c4-nn5wi0X3bTtNu6QLIVWzixK/ssU"', 'Content-Encoding': 'gzip', 'Date': 'Tue, 03 Mar 2026 16:56:10 GMT', 'Connection': 'keep-alive', 'Keep-Alive': 'timeout=5', 'Transfer-Encoding': 'chunked'} 
+ body={"success":true,"data":[{"id":"cmmal3cvy0003vrraodqpptfg","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"FIVE_KM","driverLat":16.4322,"driverLon":102.8236,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:31.870Z"},{"id":"cmmal3xx60007vrrazraxy0ar","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ONE_KM","driverLat":16.4655,"driverLon":102.8255,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:28:59.131Z"},{"id":"cmmal4gmr000bvrrazhesbyb0","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"ZERO_KM","driverLat":16.4735,"driverLon":102.8226,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T12:29:23.379Z"},{"id":"cmmaun5cv0003vr2649cmrf6w","bookingId":"cmm673eqa0001vr9ax7xh0trd","driverId":"cmmal2j1j0000vrr1yywr4vwu","passengerId":"cmmal2j200005vrr1ncl1bfpw","radiusType":"MANUAL","driverLat":null,"driverLon":null,"appStatus":"SENT","emailStatus":"SENT","triggeredAt":"2026-03-03T16:55:51.773Z"}]} 
+ </msg>
+<msg time="2026-03-03T23:56:10.498665" level="INFO">${res} = &lt;Response [200]&gt;</msg>
+<var>${res}</var>
+<arg>API</arg>
+<arg>/api/arrival-notifications/${BOOKING_ID}</arg>
+<arg>headers=${headers}</arg>
+<arg>expected_status=200</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.459770" elapsed="0.038912"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.515369" level="INFO">${json} = {'success': True, 'data': [{'id': 'cmmal3cvy0003vrraodqpptfg', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusTyp...</msg>
+<var>${json}</var>
+<arg>${res.json()}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.499205" elapsed="0.016381"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.519805" level="INFO">${data} = [{'id': 'cmmal3cvy0003vrraodqpptfg', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusType': 'FIVE_KM', 'driverLat'...</msg>
+<var>${data}</var>
+<arg>${json['data']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.516098" elapsed="0.003744"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.522562" level="INFO">${email_sent_count} = 0</msg>
+<var>${email_sent_count}</var>
+<arg>${0}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.520012" elapsed="0.002609"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.523426" level="INFO">${email_failed_count} = 0</msg>
+<var>${email_failed_count}</var>
+<arg>${0}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.523011" elapsed="0.000434"/>
+</kw>
+<for flavor="IN">
+<iter>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.548465" level="INFO">${type} = FIVE_KM</msg>
+<var>${type}</var>
+<arg>${notif['radiusType']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.547322" elapsed="0.001169"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.550771" level="INFO">${app} = SENT</msg>
+<var>${app}</var>
+<arg>${notif['appStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.548583" elapsed="0.002306"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.556202" level="INFO">${email} = SENT</msg>
+<var>${email}</var>
+<arg>${notif['emailStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.551331" elapsed="0.004893"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${app}</arg>
+<arg>SENT</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.556310" elapsed="0.000250"/>
+</kw>
+<kw name="Should Not Be Empty" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.584460" level="INFO">Length is 4.</msg>
+<arg>${email}</arg>
+<doc>Verifies that the given item is not empty.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.556654" elapsed="0.028840"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.628303" level="INFO">${is_sent} = 1</msg>
+<var>${is_sent}</var>
+<arg>1 if '${email}' == 'SENT' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.586106" elapsed="0.042348"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.637314" level="INFO">${is_failed} = 0</msg>
+<var>${is_failed}</var>
+<arg>1 if '${email}' == 'FAILED' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.628921" elapsed="0.008431"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.639432" level="INFO">${email_sent_count} = 1</msg>
+<var>${email_sent_count}</var>
+<arg>${email_sent_count} + ${is_sent}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.638502" elapsed="0.000950"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.640151" level="INFO">${email_failed_count} = 0</msg>
+<var>${email_failed_count}</var>
+<arg>${email_failed_count} + ${is_failed}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.639576" elapsed="0.000595"/>
+</kw>
+<var name="${notif}">{'id': 'cmmal3cvy0003vrraodqpptfg', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusType': 'FIVE_KM', 'driverLat':...</var>
+<status status="PASS" start="2026-03-03T23:56:10.545679" elapsed="0.094572"/>
+</iter>
+<iter>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.640957" level="INFO">${type} = ONE_KM</msg>
+<var>${type}</var>
+<arg>${notif['radiusType']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.640454" elapsed="0.000522"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.650236" level="INFO">${app} = SENT</msg>
+<var>${app}</var>
+<arg>${notif['appStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.641085" elapsed="0.009197"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.652739" level="INFO">${email} = SENT</msg>
+<var>${email}</var>
+<arg>${notif['emailStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.651016" elapsed="0.001745"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${app}</arg>
+<arg>SENT</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.652936" elapsed="0.001657"/>
+</kw>
+<kw name="Should Not Be Empty" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.660551" level="INFO">Length is 4.</msg>
+<arg>${email}</arg>
+<doc>Verifies that the given item is not empty.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.656930" elapsed="0.005989"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.667784" level="INFO">${is_sent} = 1</msg>
+<var>${is_sent}</var>
+<arg>1 if '${email}' == 'SENT' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.663159" elapsed="0.004656"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.675115" level="INFO">${is_failed} = 0</msg>
+<var>${is_failed}</var>
+<arg>1 if '${email}' == 'FAILED' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.673099" elapsed="0.002051"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.676098" level="INFO">${email_sent_count} = 2</msg>
+<var>${email_sent_count}</var>
+<arg>${email_sent_count} + ${is_sent}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.675254" elapsed="0.000863"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.679167" level="INFO">${email_failed_count} = 0</msg>
+<var>${email_failed_count}</var>
+<arg>${email_failed_count} + ${is_failed}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.678089" elapsed="0.001178"/>
+</kw>
+<var name="${notif}">{'id': 'cmmal3xx60007vrrazraxy0ar', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusType': 'ONE_KM', 'driverLat': ...</var>
+<status status="PASS" start="2026-03-03T23:56:10.640391" elapsed="0.038983"/>
+</iter>
+<iter>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.686349" level="INFO">${type} = ZERO_KM</msg>
+<var>${type}</var>
+<arg>${notif['radiusType']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.683871" elapsed="0.002560"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.692486" level="INFO">${app} = SENT</msg>
+<var>${app}</var>
+<arg>${notif['appStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.686893" elapsed="0.005623"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.694035" level="INFO">${email} = SENT</msg>
+<var>${email}</var>
+<arg>${notif['emailStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.692967" elapsed="0.001091"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${app}</arg>
+<arg>SENT</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.694735" elapsed="0.000183"/>
+</kw>
+<kw name="Should Not Be Empty" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.696284" level="INFO">Length is 4.</msg>
+<arg>${email}</arg>
+<doc>Verifies that the given item is not empty.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.695067" elapsed="0.013283"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.716859" level="INFO">${is_sent} = 1</msg>
+<var>${is_sent}</var>
+<arg>1 if '${email}' == 'SENT' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.711420" elapsed="0.006235"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.723997" level="INFO">${is_failed} = 0</msg>
+<var>${is_failed}</var>
+<arg>1 if '${email}' == 'FAILED' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.720222" elapsed="0.003843"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.728238" level="INFO">${email_sent_count} = 3</msg>
+<var>${email_sent_count}</var>
+<arg>${email_sent_count} + ${is_sent}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.725215" elapsed="0.003706"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.731386" level="INFO">${email_failed_count} = 0</msg>
+<var>${email_failed_count}</var>
+<arg>${email_failed_count} + ${is_failed}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.729644" elapsed="0.001896"/>
+</kw>
+<var name="${notif}">{'id': 'cmmal4gmr000bvrrazhesbyb0', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusType': 'ZERO_KM', 'driverLat':...</var>
+<status status="PASS" start="2026-03-03T23:56:10.679585" elapsed="0.052086"/>
+</iter>
+<iter>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.735494" level="INFO">${type} = MANUAL</msg>
+<var>${type}</var>
+<arg>${notif['radiusType']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.733164" elapsed="0.002389"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.737417" level="INFO">${app} = SENT</msg>
+<var>${app}</var>
+<arg>${notif['appStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.735762" elapsed="0.001682"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.738476" level="INFO">${email} = SENT</msg>
+<var>${email}</var>
+<arg>${notif['emailStatus']}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.737548" elapsed="0.001047"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${app}</arg>
+<arg>SENT</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.739010" elapsed="0.000399"/>
+</kw>
+<kw name="Should Not Be Empty" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.740602" level="INFO">Length is 4.</msg>
+<arg>${email}</arg>
+<doc>Verifies that the given item is not empty.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.739753" elapsed="0.000998"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.741629" level="INFO">${is_sent} = 1</msg>
+<var>${is_sent}</var>
+<arg>1 if '${email}' == 'SENT' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.741246" elapsed="0.000427"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.743047" level="INFO">${is_failed} = 0</msg>
+<var>${is_failed}</var>
+<arg>1 if '${email}' == 'FAILED' else 0</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.741956" elapsed="0.001140"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.743805" level="INFO">${email_sent_count} = 4</msg>
+<var>${email_sent_count}</var>
+<arg>${email_sent_count} + ${is_sent}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.743271" elapsed="0.000571"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-03T23:56:10.744626" level="INFO">${email_failed_count} = 0</msg>
+<var>${email_failed_count}</var>
+<arg>${email_failed_count} + ${is_failed}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.743982" elapsed="0.001110"/>
+</kw>
+<var name="${notif}">{'id': 'cmmaun5cv0003vr2649cmrf6w', 'bookingId': 'cmm673eqa0001vr9ax7xh0trd', 'driverId': 'cmmal2j1j0000vrr1yywr4vwu', 'passengerId': 'cmmal2j200005vrr1ncl1bfpw', 'radiusType': 'MANUAL', 'driverLat': ...</var>
+<status status="PASS" start="2026-03-03T23:56:10.732449" elapsed="0.012775"/>
+</iter>
+<var>${notif}</var>
+<value>@{data}</value>
+<status status="PASS" start="2026-03-03T23:56:10.537046" elapsed="0.208272"/>
+</for>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:56:11.633196" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="results/13_email_status_checked.png"&gt;&lt;img src="results/13_email_status_checked.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>results/13_email_status_checked.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2026-03-03T23:56:10.745960" elapsed="0.916940"/>
+</kw>
+<doc>Iterate history and ensure each notification item contains an email status</doc>
+<tag>Critical</tag>
+<tag>Email</tag>
+<status status="PASS" start="2026-03-03T23:56:10.451727" elapsed="1.228705"/>
+</test>
+<test id="s1-t9" name="Test 08: Switch To Passenger And Verify Alert Delivery" line="151">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:56:11.699054" level="INFO">Opening url 'http://localhost:3000/login'</msg>
+<arg>${WEB_URL}/login</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-03T23:56:11.695967" elapsed="1.709705"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-03T23:56:15.437017" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-03T23:56:13.407231" elapsed="2.031237"/>
+</kw>
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-03-03T23:56:15.444153" elapsed="0.060337"/>
+</kw>
+<kw name="Add Cookie" owner="SeleniumLibrary">
+<msg time="2026-03-03T23:56:15.527468" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=145.0.7632.117)
+Stacktrace:
+0   chromedriver                        0x0000000102c516b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000102c49a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x000000010272656c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x00000001026feeb4 chromedriver + 159412
+4   chromedriver                        0x0000000102798274 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 541616
+5   chromedriver                        0x00000001027ae148 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 631428
+6   chromedriver                        0x0000000102763b9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+7   chromedriver                        0x0000000102c10680 cxxbridge1$str$ptr + 2861308
+8   chromedriver                        0x0000000102c13dd4 cxxbridge1$str$ptr + 2875472
+9   chromedriver                        0x0000000102bf5a7c cxxbridge1$str$ptr + 2751736
+10  chromedriver                        0x0000000102c14658 cxxbridge1$str$ptr + 2877652
+11  chromedriver                        0x0000000102be5ffc cxxbridge1$str$ptr + 2687608
+12  chromedriver                        0x0000000102c38d78 cxxbridge1$str$ptr + 3026932
+13  chromedriver                        0x0000000102c38ef4 cxxbridge1$str$ptr + 3027312
+14  chromedriver                        0x0000000102c496a8 cxxbridge1$str$ptr + 3094820
+15  libsystem_pthread.dylib             0x00000001920cdc08 _pthread_start + 136
+16  libsystem_pthread.dylib             0x00000001920c8ba8 thread_start + 8
+</msg>
+<msg time="2026-03-03T23:56:15.535278" level="FAIL">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=145.0.7632.117)
+Stacktrace:
+0   chromedriver                        0x0000000102c516b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000102c49a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x000000010272656c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x00000001026feeb4 chromedriver + 159412
+4   chromedriver                        0x0000000102798274 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 541616
+5   chromedriver                        0x00000001027ae148 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 631428
+6   chromedriver                        0x0000000102763b9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+7   chromedriver                        0x0000000102c10680 cxxbridge1$str$ptr + 2861308
+8   chromedriver                        0x0000000102c13dd4 cxxbridge1$str$ptr + 2875472
+9   chromedriver                        0x0000000102bf5a7c cxxbridge1$str$ptr + 2751736
+10  chromedriver                        0x0000000102c14658 cxxbridge1$str$ptr + 2877652
+11  chromedriver                        0x0000000102be5ffc cxxbridge1$str$ptr + 2687608
+12  chromedriver                        0x0000000102c38d78 cxxbridge1$str$ptr + 3026932
+13  chromedriver                        0x0000000102c38ef4 cxxbridge1$str$ptr + 3027312
+14  chromedriver                        0x0000000102c496a8 cxxbridge1$str$ptr + 3094820
+15  libsystem_pthread.dylib             0x00000001920cdc08 _pthread_start + 136
+16  libsystem_pthread.dylib             0x00000001920c8ba8 thread_start + 8
+</msg>
+<arg>token</arg>
+<arg>${PASSENGER_RAW}</arg>
+<arg>path=/</arg>
+<doc>Adds a cookie to your current session.</doc>
+<status status="FAIL" start="2026-03-03T23:56:15.504888" elapsed="0.079671">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=145.0.7632.117)
+Stacktrace:
+0   chromedriver                        0x0000000102c516b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000102c49a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x000000010272656c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x00000001026feeb4 chromedriver + 159412
+4   chromedriver                        0x0000000102798274 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 541616
+5   chromedriver                        0x00000001027ae148 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 631428
+6   chromedriver                        0x0000000102763b9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+7   chromedriver                        0x0000000102c10680 cxxbridge1$str$ptr + 2861308
+8   chromedriver                        0x0000000102c13dd4 cxxbridge1$str$ptr + 2875472
+9   chromedriver                        0x0000000102bf5a7c cxxbridge1$str$ptr + 2751736
+10  chromedriver                        0x0000000102c14658 cxxbridge1$str$ptr + 2877652
+11  chromedriver                        0x0000000102be5ffc cxxbridge1$str$ptr + 2687608
+12  chromedriver                        0x0000000102c38d78 cxxbridge1$str$ptr + 3026932
+13  chromedriver                        0x0000000102c38ef4 cxxbridge1$str$ptr + 3027312
+14  chromedriver                        0x0000000102c496a8 cxxbridge1$str$ptr + 3094820
+15  libsystem_pthread.dylib             0x00000001920cdc08 _pthread_start + 136
+16  libsystem_pthread.dylib             0x00000001920c8ba8 thread_start + 8
+</status>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<arg>${WEB_URL}/myTrips</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.585255" elapsed="0.000039"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.585405" elapsed="0.000066"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/13_passenger_mytrips.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.585573" elapsed="0.000018"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.588594" elapsed="0.000036"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<arg>xpath=//button[@aria-label='notification-bell']</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589072" elapsed="0.000024"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589167" elapsed="0.000014"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//*[contains(text(),'การแจ้งเตือน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589237" elapsed="0.000013"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/14_passenger_bell.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589306" elapsed="0.000011"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>8s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589371" elapsed="0.000011"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/14b_passenger_bell_hold.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.589427" elapsed="0.000010"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<arg>API</arg>
+<arg>${BASE_URL}</arg>
+<arg>disable_warnings=True</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.592111" elapsed="0.000034"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<var>${headers}</var>
+<arg>Authorization=${PASSENGER_TOKEN}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.592381" elapsed="0.000049"/>
+</kw>
+<kw name="GET On Session" owner="RequestsLibrary">
+<var>${res}</var>
+<arg>API</arg>
+<arg>/api/notifications</arg>
+<arg>headers=${headers}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.594847" elapsed="0.000026"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${res.status_code} == 200</arg>
+<arg>Verify Passenger Got Arrival Notifications</arg>
+<arg>${res}</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.595623" elapsed="0.000017"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<arg>results/15_final.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="NOT RUN" start="2026-03-03T23:56:15.595856" elapsed="0.000013"/>
+</kw>
+<doc>Change session to passenger and view final trips</doc>
+<tag>UI</tag>
+<status status="FAIL" start="2026-03-03T23:56:11.683109" elapsed="3.913545">NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=145.0.7632.117)
+Stacktrace:
+0   chromedriver                        0x0000000102c516b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000102c49a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x000000010272656c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x00000001026feeb4 chromedriver + 159412
+4   chromedriver                        0x0000000102798274 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 541616
+5   chromedriver                        0x00000001027ae148 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 631428
+6   chromedriver                        0x0000000102763b9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+7   chromedriver                        0x0000000102c10680 cxxbridge1$str$ptr + 2861308
+8   chromedriver                        0x0000000102c13dd4 cxxbridge1$str$ptr + 2875472
+9   chromedriver                        0x0000000102bf5a7c cxxbridge1$str$ptr + 2751736
+10  chromedriver                        0x0000000102c14658 cxxbridge1$str$ptr + 2877652
+11  chromedriver                        0x0000000102be5ffc cxxbridge1$str$ptr + 2687608
+12  chromedriver                        0x0000000102c38d78 cxxbridge1$str$ptr + 3026932
+13  chromedriver                        0x0000000102c38ef4 cxxbridge1$str$ptr + 3027312
+14  chromedriver                        0x0000000102c496a8 cxxbridge1$str$ptr + 3094820
+15  libsystem_pthread.dylib             0x00000001920cdc08 _pthread_start + 136
+16  libsystem_pthread.dylib             0x00000001920c8ba8 thread_start + 8
+</status>
+</test>
+<kw name="Close All Browsers" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2026-03-03T23:56:15.613864" elapsed="0.547746"/>
+</kw>
+<doc>Epic 2 — Arrival Notification: Test Arrival GPS &amp; Manual Triggers</doc>
+<status status="FAIL" start="2026-03-03T23:54:09.221708" elapsed="126.941087"/>
+</suite>
+<statistics>
+<total>
+<stat pass="6" fail="3" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="5" fail="1" skip="0">Critical</stat>
+<stat pass="1" fail="0" skip="0">Email</stat>
+<stat pass="1" fail="0" skip="0">RealTime</stat>
+<stat pass="1" fail="0" skip="0">Setup</stat>
+<stat pass="0" fail="2" skip="0">UI</stat>
+</tag>
+<suite>
+<stat name="Epic2 Arrival Notification" id="s1" pass="6" fail="3" skip="0">Epic2 Arrival Notification</stat>
+</suite>
+</statistics>
+<errors>
+<msg time="2026-03-03T23:56:15.527468" level="WARN">Keyword 'Capture Page Screenshot' could not be run on failure: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=145.0.7632.117)
+Stacktrace:
+0   chromedriver                        0x0000000102c516b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000102c49a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x000000010272656c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x00000001026feeb4 chromedriver + 159412
+4   chromedriver                        0x0000000102798274 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 541616
+5   chromedriver                        0x00000001027ae148 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 631428
+6   chromedriver                        0x0000000102763b9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+7   chromedriver                        0x0000000102c10680 cxxbridge1$str$ptr + 2861308
+8   chromedriver                        0x0000000102c13dd4 cxxbridge1$str$ptr + 2875472
+9   chromedriver                        0x0000000102bf5a7c cxxbridge1$str$ptr + 2751736
+10  chromedriver                        0x0000000102c14658 cxxbridge1$str$ptr + 2877652
+11  chromedriver                        0x0000000102be5ffc cxxbridge1$str$ptr + 2687608
+12  chromedriver                        0x0000000102c38d78 cxxbridge1$str$ptr + 3026932
+13  chromedriver                        0x0000000102c38ef4 cxxbridge1$str$ptr + 3027312
+14  chromedriver                        0x0000000102c496a8 cxxbridge1$str$ptr + 3094820
+15  libsystem_pthread.dylib             0x00000001920cdc08 _pthread_start + 136
+16  libsystem_pthread.dylib             0x00000001920c8ba8 thread_start + 8
+</msg>
+</errors>
+</robot>

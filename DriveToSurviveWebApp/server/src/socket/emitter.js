@@ -2,8 +2,11 @@
  * Socket.IO Emitter Helper
  * Provides a global way for services to emit events through Socket.IO
  * without needing access to Express `app` or `req`.
+<<<<<<< HEAD
  *
  * Sprint 3: Also fires FCM push notification alongside WebSocket.
+=======
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
  */
 
 let _io = null;
@@ -32,6 +35,7 @@ function emitToUser(userId, event, data) {
 /**
  * Emit a notification to a specific user.
  * Used after creating a notification in the database.
+<<<<<<< HEAD
  *
  * Sprint 3: Also sends FCM push notification (fire-and-forget).
  * This means ALL services that call emitNotification() automatically
@@ -60,6 +64,11 @@ function emitNotification(userId, notification) {
         // FCM module not available — silently skip
         console.warn('⚠️  FCM module not loaded:', err.message);
     }
+=======
+ */
+function emitNotification(userId, notification) {
+    emitToUser(userId, 'new-notification', notification);
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
 }
 
 /**
@@ -72,4 +81,7 @@ function emitToRoute(routeId, event, data) {
 }
 
 module.exports = { setIO, getIO, emitToUser, emitNotification, emitToRoute };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d

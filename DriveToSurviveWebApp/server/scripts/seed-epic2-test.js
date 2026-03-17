@@ -10,6 +10,7 @@ function generateToken(id, role) {
     return jwt.sign({ sub: id, role }, process.env.JWT_SECRET || 'secret123', { expiresIn: '7d' });
 }
 
+<<<<<<< HEAD
 async function main() {
     console.log('🚀 Starting Epic 2 Test Data Seeding...');
 
@@ -25,6 +26,65 @@ async function main() {
         where: { email: { in: ['epic2_driver@test.com', 'epic2_passenger@test.com', 'conan17970@gmail.com', 'thanatcha.k@kkumail.com'] } }
     });
 
+=======
+const TEST_EMAILS = [
+    'epic2_driver@test.com',
+    'epic2_passenger@test.com',
+    'conan17970@gmail.com',
+    'thanatcha.k@kkumail.com'
+];
+
+async function cleanupTestData() {
+    console.log('🧹 Cleaning up old test data specifically for test users...');
+
+    // Find test users
+    const testUsers = await prisma.user.findMany({
+        where: { email: { in: TEST_EMAILS } },
+        select: { id: true }
+    });
+
+    const userIds = testUsers.map(u => u.id);
+
+    if (userIds.length > 0) {
+        // Targeted wipe specific to test accounts
+        await prisma.arrivalNotification.deleteMany({
+            where: { OR: [{ driverId: { in: userIds } }, { passengerId: { in: userIds } }] }
+        });
+
+        // Remove old chat records to avoid foreign key errors when wiping bookings
+        const chatSessions = await prisma.chatSession.findMany({
+            where: { driverId: { in: userIds } },
+            select: { id: true }
+        });
+        const sessionIds = chatSessions.map(cs => cs.id);
+
+        if (sessionIds.length > 0) {
+            await Promise.all([
+                prisma.chatMessage.deleteMany({ where: { sessionId: { in: sessionIds } } }),
+                prisma.chatSessionParticipant.deleteMany({ where: { sessionId: { in: sessionIds } } })
+            ]);
+            await prisma.chatSession.deleteMany({ where: { id: { in: sessionIds } } });
+        }
+
+        await prisma.booking.deleteMany({ where: { passengerId: { in: userIds } } });
+        await prisma.route.deleteMany({ where: { driverId: { in: userIds } } });
+        await prisma.vehicle.deleteMany({ where: { userId: { in: userIds } } });
+        await prisma.driverVerification.deleteMany({ where: { userId: { in: userIds } } });
+        await prisma.user.deleteMany({ where: { id: { in: userIds } } });
+    }
+    console.log('✅ Test data fully cleaned up!');
+}
+
+async function main() {
+    if (process.argv.includes('--cleanup')) {
+        await cleanupTestData();
+        return; // Stop here if just cleaning up
+    }
+
+    console.log('🚀 Starting Epic 2 Test Data Seeding...');
+    await cleanupTestData();
+
+>>>>>>> 1d3939c31757b40e998434982bcfc4279244e10d
     const hashedPassword = await bcrypt.hash('password123', 10);
 
     // 1. Create Driver
