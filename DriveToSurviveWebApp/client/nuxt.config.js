@@ -58,7 +58,7 @@ export default defineNuxtConfig({
 
   plugins: [
     "~/plugins/api.client.js",
-    "~/plugins/firebase.client.js",
+    "~/plugins/fcm.client.js",
   ],
   app: {
     head: {
