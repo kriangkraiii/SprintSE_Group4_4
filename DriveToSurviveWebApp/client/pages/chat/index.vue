@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-surface pb-12">
     <!-- Header -->
-    <div class="relative h-[220px] w-full bg-gradient-to-br from-primary to-blue-700">
+    <div class="relative h-[220px] w-full" style="background-image: url('/images/bgchat.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
       <div class="absolute inset-0 flex flex-col justify-center pt-20 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-white drop-shadow-md">💬 ข้อความ</h2>
         <p class="mt-2 text-white/90 drop-shadow-sm">สนทนากับคนขับอย่างปลอดภัย</p>
