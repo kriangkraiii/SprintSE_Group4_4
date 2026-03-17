@@ -854,11 +854,14 @@ function handleRevokeLocation(messageId) {
   saveRevokedToStorage(next)
   emitRevokeLocation(sessionId.value, messageId)
 
-  // Also stop the real-time watchPosition if still active
-  if (isTrackingLocation.value && locationWatchId !== null) {
+  // Always reset tracking state when location card is revoked
+  isTrackingLocation.value = false
+  currentSessionLocationIds.length = 0
+
+  // Also stop watchPosition if it was running
+  if (locationWatchId !== null) {
     navigator.geolocation?.clearWatch(locationWatchId)
     locationWatchId = null
-    isTrackingLocation.value = false
   }
 }
 

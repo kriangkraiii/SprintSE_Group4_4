@@ -69,7 +69,7 @@
             :href="`https://www.google.com/maps?q=${locationCoords.lat},${locationCoords.lng}`"
             target="_blank"
             rel="noopener"
-            class="block overflow-hidden no-underline"
+            class="block overflow-hidden no-underline rounded-t-2xl"
           >
             <!-- Map preview card -->
             <div class="w-[260px] h-[140px] relative overflow-hidden"
@@ -106,7 +106,7 @@
             </div>
           </a>
           <!-- Bottom bar: stop button (sender) + timestamp -->
-          <div class="px-3 py-2 flex items-center" :class="isOwn ? 'bg-blue-700 justify-between' : 'bg-slate-100 justify-end'">
+          <div class="px-3 py-2 flex items-center rounded-b-2xl" :class="isOwn ? 'bg-blue-700 justify-between' : 'bg-slate-100 justify-end'">
             <button
               v-if="isOwn"
               @click.prevent="$emit('revoke-location', message.id)"
