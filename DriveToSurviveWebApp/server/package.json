@@ -10,7 +10,9 @@
     "db:migrate": "npx prisma migrate dev",
     "db:studio": "npx prisma studio",
     "test": "jest --verbose",
-    "test:watch": "jest --watch --verbose"
+    "test:watch": "jest --watch --verbose",
+    "test:arrival": "node triggerArrivalTest.js",
+    "test:notif": "node triggerNotificationTest.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
