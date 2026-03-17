@@ -368,6 +368,14 @@ function toggleNotif() {
 
 async function onBellClick() {
     toggleNotif()
+    
+    // 🔔 ขอสิทธิ์ Notification เมื่อผู้ใช้กดรูปกระดิ่ง (เบราว์เซอร์บังคับว่าต้องเกิดจากการคลิกของผู้ใช้)
+    if (typeof Notification !== 'undefined') {
+        if (Notification.permission === 'default') {
+            await Notification.requestPermission()
+        }
+    }
+
     if (openNotif.value && notifications.value.length === 0) {
         await fetchUserNotifications()
     }
@@ -478,6 +486,14 @@ function handleNewNotification(notif) {
     })
     // 🔊 เล่นเสียงแจ้งเตือนทุกครั้งที่มีข้อความใหม่เข้ามา
     playNotificationSound()
+
+    // แสดงแจ้งเตือนบนหน้า Desktop (HTML5 Notification API)
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        new Notification(notif.title || 'การแจ้งเตือนจาก Ride', {
+            body: notif.body || '',
+            icon: '/Ride.png'
+        })
+    }
 }
 
 onMounted(() => {

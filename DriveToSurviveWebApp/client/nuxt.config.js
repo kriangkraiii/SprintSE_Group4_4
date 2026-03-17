@@ -21,7 +21,17 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || defaultApiBase,
-      googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
+      googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+
+      // Firebase Client SDK (for FCM push notifications)
+      firebaseApiKey: process.env.FIREBASE_API_KEY || "",
+      firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN || "",
+      firebaseProjectId: process.env.FIREBASE_PROJECT_ID || "",
+      firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
+      firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "",
+      firebaseAppId: process.env.FIREBASE_APP_ID || "",
+      firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID || "",
+      firebaseVapidKey: process.env.FIREBASE_VAPID_KEY || "",
     },
   },
   devServer: {
@@ -46,7 +56,10 @@ export default defineNuxtConfig({
     },
   },
 
-  plugins: ["~/plugins/api.client.js"],
+  plugins: [
+    "~/plugins/api.client.js",
+    "~/plugins/firebase.client.js",
+  ],
   app: {
     head: {
       title: "Ride — เดินทางร่วมกันอย่างปลอดภัย",
@@ -76,7 +89,47 @@ export default defineNuxtConfig({
   ],
   modules: [
     '@nuxtjs/i18n',
+    '@vite-pwa/nuxt',
   ],
+  pwa: {
+    registerType: 'autoUpdate',
+    manifest: {
+      name: 'Ride — เดินทางร่วมกันอย่างปลอดภัย',
+      short_name: 'Ride',
+      description: 'แพลตฟอร์มเดินทางร่วมกันอย่างปลอดภัย',
+      theme_color: '#0f172a',
+      background_color: '#f8fafc',
+      display: 'standalone',
+      start_url: '/',
+      icons: [
+        {
+          src: '/favicon.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: '/favicon.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+        {
+          src: '/favicon.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
+      ],
+    },
+    workbox: {
+      // Don't precache the FCM service worker
+      navigateFallback: null,
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
+  },
   i18n: {
     locales: [
       { code: 'th', iso: 'th-TH', file: 'th.json', name: 'Thai' },

@@ -3,7 +3,7 @@ const { Prisma } = require('@prisma/client');
 const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyDriverSuspension } = require('./penalty.service');
-const { emitNotification } = require('../socket/emitter');
+const { dispatchNotification } = require('../utils/notifyDispatcher');
 
 const baseInclude = {
   driver: {
@@ -388,7 +388,7 @@ const cancelRoute = async (routeId, driverId, opts = {}) => {
       // ทำ bulk insert ทีละก้อน
       for (const n of notiData) {
         const created = await tx.notification.create({ data: n });
-        emitNotification(n.userId, created);
+        dispatchNotification(n.userId, created);
       }
     }
   });
@@ -467,7 +467,7 @@ const startTrip = async (routeId, driverId) => {
           metadata: { kind: 'TRIP_STARTED', routeId, bookingId: b.id }
         }
       });
-      emitNotification(b.passengerId, notif);
+      dispatchNotification(b.passengerId, notif);
     }
 
     return updated;
@@ -535,7 +535,7 @@ const endTrip = async (routeId, driverId) => {
             metadata: { kind: 'TRIP_ENDED', routeId, bookingId: b.id }
           }
         });
-        emitNotification(b.passengerId, notif);
+        dispatchNotification(b.passengerId, notif);
       }
     }
 

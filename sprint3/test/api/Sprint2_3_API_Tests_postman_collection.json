@@ -1,0 +1,253 @@
+{
+  "info": {
+    "name": "Sprint 2 & 3 API Tests (Essential)",
+    "description": "Essential endpoint coverage for Sprint 2 and 3 features.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3001/api", "type": "string" },
+    { "key": "adminEmail", "value": "admin@example.com", "type": "string" },
+    { "key": "adminPassword", "value": "adminpassword", "type": "string" },
+    { "key": "userEmail", "value": "testpassenger@test.com", "type": "string" },
+    { "key": "userPassword", "value": "Test1234", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" },
+    { "key": "userToken", "value": "", "type": "string" },
+    { "key": "sampleBookingId", "value": "cm00000000000000000000000", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "0) Setup Tokens",
+      "item": [
+        {
+          "name": "0.1 Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status = 200', () => pm.response.to.have.status(200));",
+                  "const token = pm.response.json()?.data?.token;",
+                  "if (token) pm.collectionVariables.set('adminToken', token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "0.2 Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status = 200', () => pm.response.to.have.status(200));",
+                  "const token = pm.response.json()?.data?.token;",
+                  "if (token) pm.collectionVariables.set('userToken', token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{userPassword}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1) Sprint 2: Chat & Reviews",
+      "item": [
+        {
+          "name": "GET My Chat Sessions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/chat/sessions/me", "host": ["{{baseUrl}}"], "path": ["chat", "sessions", "me"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        },
+        {
+          "name": "GET My Reviews",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/reviews/me", "host": ["{{baseUrl}}"], "path": ["reviews", "me"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2) Sprint 2: Arrival & No-Show",
+      "item": [
+        {
+          "name": "GET Arrival Notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const code = pm.response.code;",
+                  "const expected = [200, 404];",
+                  "pm.test('status should be 200 or 404', () => pm.expect(expected).to.include(code));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/arrival-notifications/{{sampleBookingId}}", "host": ["{{baseUrl}}"], "path": ["arrival-notifications", "{{sampleBookingId}}"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        },
+        {
+          "name": "GET No-Show Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const code = pm.response.code;",
+                  "const expected = [200, 404];",
+                  "pm.test('status should be 200 or 404', () => pm.expect(expected).to.include(code));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/no-show/{{sampleBookingId}}/status", "host": ["{{baseUrl}}"], "path": ["no-show", "{{sampleBookingId}}", "status"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3) Sprint 2: Admin & Dashboard",
+      "item": [
+        {
+          "name": "GET Dashboard Stats (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/dashboard/stats", "host": ["{{baseUrl}}"], "path": ["dashboard", "stats"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] }
+          }
+        },
+        {
+          "name": "GET Suspended Users (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/admin/users/suspended", "host": ["{{baseUrl}}"], "path": ["admin", "users", "suspended"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4) Sprint 3: FCM Tokens",
+      "item": [
+        {
+          "name": "GET Registered FCM Devices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/fcm/devices", "host": ["{{baseUrl}}"], "path": ["fcm", "devices"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        },
+        {
+          "name": "POST Save Sample Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status code is 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"dummy_token_123\",\n  \"deviceName\": \"Test Device\"\n}" },
+            "url": { "raw": "{{baseUrl}}/fcm/save-token", "host": ["{{baseUrl}}"], "path": ["fcm", "save-token"] },
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] }
+          }
+        }
+      ]
+    }
+  ]
+}

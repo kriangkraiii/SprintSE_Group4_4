@@ -3,7 +3,8 @@ const ApiError = require('../utils/ApiError');
 const { haversineDistance, getCrossedRadii } = require('../utils/gpsUtils');
 const { sendArrivalEmail } = require('./email.service');
 const { startNoShowCountdown } = require('./noShow.service');
-const { emitToRoute, emitNotification } = require('../socket/emitter');
+const { emitToRoute } = require('../socket/emitter');
+const { dispatchNotification } = require('../utils/notifyDispatcher');
 
 const MANUAL_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -102,7 +103,7 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
                 metadata: { bookingId: booking.id, radiusType, driverLat, driverLon },
             },
         });
-        emitNotification(passenger.id, arrivalNotif);
+        dispatchNotification(passenger.id, arrivalNotif);
     } catch {
         appStatus = 'FAILED';
     }
@@ -163,7 +164,7 @@ const triggerNotification = async (booking, radiusType, driverLat, driverLon) =>
     }
 
     // Also push to passenger's personal notification feed
-    emitNotification(passenger.id, {
+    dispatchNotification(passenger.id, {
         type: 'ARRIVAL',
         title: msg.title,
         body: msg.body,
