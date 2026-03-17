@@ -69,7 +69,7 @@
           v-for="msg in messages"
           :key="msg.id"
           :message="msg"
-          :isOwn="msg.senderId === userId"
+          :isOwn="isOwnMessage(msg)"
           :isRevoked="revokedLocationIds.has(msg.id)"
           :showSenderName="isGroupChat"
           @edit="startEdit"
@@ -352,6 +352,17 @@ const { toast } = useToast()
 
 const sessionId = computed(() => route.params.sessionId)
 const userId = computed(() => user.value?.id)
+
+// Robust comparison: handles type mismatch (int vs string) and fallback to sender.id
+function isOwnMessage(msg) {
+  if (!userId.value) return false
+  const uid = String(userId.value)
+  // Primary: compare senderId
+  if (msg.senderId && String(msg.senderId) === uid) return true
+  // Fallback: compare sender.id (nested)
+  if (msg.sender?.id && String(msg.sender.id) === uid) return true
+  return false
+}
 
 const session = ref(null)
 const messages = ref([])

@@ -106,17 +106,12 @@ function initSocketIO(httpServer) {
                         ...session.participants.map(p => p.userId),
                     ]);
 
-                    // Get sockets currently in the chat room
-                    const roomSockets = await io.in(`chat:${sessionId}`).fetchSockets();
-                    const onlineInRoom = new Set(roomSockets.map(s => s.userId));
-
-                    // Send FCM push only to participants NOT in the room
+                    // Send FCM push to ALL participants except the sender
                     const senderName = message.sender?.firstName || 'ผู้ใช้';
                     const preview = message.content?.slice(0, 100) || '📎 ส่งไฟล์แนบ';
 
                     for (const participantId of allParticipants) {
-                        // Skip the sender and anyone already in the room
-                        if (participantId === userId || onlineInRoom.has(participantId)) continue;
+                        if (participantId === userId) continue; // skip sender only
 
                         sendPushNotification(participantId, `💬 ${senderName}`, preview, {
                             type: 'CHAT',
