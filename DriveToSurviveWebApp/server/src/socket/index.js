@@ -79,10 +79,54 @@ function initSocketIO(httpServer) {
         });
 
         // Broadcast new message to room (message already saved via REST API)
-        socket.on('send-message', (data) => {
+        // + Send FCM push to participants NOT currently in the room
+        socket.on('send-message', async (data) => {
             const { sessionId, message } = data;
             if (sessionId && message) {
                 socket.to(`chat:${sessionId}`).emit('new-message', message);
+
+                // FCM push for offline participants
+                try {
+                    const prisma = require('../utils/prisma');
+                    const { sendPushNotification } = require('../utils/fcm');
+
+                    // Get all participants in this session
+                    const session = await prisma.chatSession.findUnique({
+                        where: { id: sessionId },
+                        select: {
+                            driverId: true,
+                            participants: { select: { userId: true } },
+                        },
+                    });
+                    if (!session) return;
+
+                    // Collect all participant IDs (driver + passengers)
+                    const allParticipants = new Set([
+                        session.driverId,
+                        ...session.participants.map(p => p.userId),
+                    ]);
+
+                    // Get sockets currently in the chat room
+                    const roomSockets = await io.in(`chat:${sessionId}`).fetchSockets();
+                    const onlineInRoom = new Set(roomSockets.map(s => s.userId));
+
+                    // Send FCM push only to participants NOT in the room
+                    const senderName = message.sender?.firstName || 'ผู้ใช้';
+                    const preview = message.content?.slice(0, 100) || '📎 ส่งไฟล์แนบ';
+
+                    for (const participantId of allParticipants) {
+                        // Skip the sender and anyone already in the room
+                        if (participantId === userId || onlineInRoom.has(participantId)) continue;
+
+                        sendPushNotification(participantId, `💬 ${senderName}`, preview, {
+                            type: 'CHAT',
+                            sessionId,
+                            link: `/chat/${sessionId}`,
+                        }).catch(() => {}); // fire-and-forget
+                    }
+                } catch (err) {
+                    console.warn('⚠️ Chat FCM push failed:', err.message);
+                }
             }
         });
 
