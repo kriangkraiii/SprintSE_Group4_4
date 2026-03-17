@@ -85,7 +85,7 @@ function initSocketIO(httpServer) {
             if (sessionId && message) {
                 socket.to(`chat:${sessionId}`).emit('new-message', message);
 
-                // FCM push for offline participants
+                // FCM push for all participants except sender
                 try {
                     const prisma = require('../utils/prisma');
                     const { sendPushNotification } = require('../utils/fcm');
@@ -106,18 +106,21 @@ function initSocketIO(httpServer) {
                         ...session.participants.map(p => p.userId),
                     ]);
 
-                    // Send FCM push to ALL participants except the sender
                     const senderName = message.sender?.firstName || 'ผู้ใช้';
                     const preview = message.content?.slice(0, 100) || '📎 ส่งไฟล์แนบ';
 
-                    for (const participantId of allParticipants) {
-                        if (participantId === userId) continue; // skip sender only
+                    console.log(`[FCM Chat] Sending push for session ${sessionId}`);
+                    console.log(`[FCM Chat] Sender: ${userId}, Participants: ${[...allParticipants].join(', ')}`);
 
-                        sendPushNotification(participantId, `💬 ${senderName}`, preview, {
+                    for (const participantId of allParticipants) {
+                        if (participantId === userId) continue; // skip sender
+
+                        const result = await sendPushNotification(participantId, `💬 ${senderName}`, preview, {
                             type: 'CHAT',
                             sessionId,
                             link: `/chat/${sessionId}`,
-                        }).catch(() => {}); // fire-and-forget
+                        });
+                        console.log(`[FCM Chat] Push to ${participantId}:`, JSON.stringify(result));
                     }
                 } catch (err) {
                     console.warn('⚠️ Chat FCM push failed:', err.message);
