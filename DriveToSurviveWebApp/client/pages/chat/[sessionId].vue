@@ -351,12 +351,32 @@ const { user, token } = useAuth()
 const { toast } = useToast()
 
 const sessionId = computed(() => route.params.sessionId)
-const userId = computed(() => user.value?.id)
+
+// Get user ID from cookie or JWT token (fallback)
+const userId = computed(() => {
+  // Primary: from user cookie object
+  if (user.value?.id) return String(user.value.id)
+  // Fallback: decode from JWT token
+  if (token.value) {
+    try {
+      const payload = JSON.parse(atob(token.value.split('.')[1]))
+      return String(payload.sub || payload.id)
+    } catch {}
+  }
+  return null
+})
+
+// Debug: log once on mount
+onMounted(() => {
+  console.log('[Chat Debug] user.value:', JSON.stringify(user.value))
+  console.log('[Chat Debug] userId:', userId.value)
+  console.log('[Chat Debug] token present:', !!token.value)
+})
 
 // Robust comparison: handles type mismatch (int vs string) and fallback to sender.id
 function isOwnMessage(msg) {
   if (!userId.value) return false
-  const uid = String(userId.value)
+  const uid = userId.value // already String from computed
   // Primary: compare senderId
   if (msg.senderId && String(msg.senderId) === uid) return true
   // Fallback: compare sender.id (nested)
@@ -564,6 +584,13 @@ async function loadMessages() {
     const result = await fetchMessages(sessionId.value)
     messages.value = result?.data || result || []
     session.value = result?.session || { status: 'ACTIVE', driver: {}, passenger: {} }
+    // Debug: log first message to check senderId
+    if (messages.value.length > 0) {
+      const firstMsg = messages.value[0]
+      console.log('[Chat Debug] First message senderId:', firstMsg.senderId, 'type:', typeof firstMsg.senderId)
+      console.log('[Chat Debug] userId:', userId.value, 'type:', typeof userId.value)
+      console.log('[Chat Debug] isOwn?:', isOwnMessage(firstMsg))
+    }
   } catch (err) {
     console.error('Failed to load messages:', err)
   } finally {

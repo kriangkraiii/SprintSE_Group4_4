@@ -93,37 +93,46 @@ export default defineNuxtPlugin(() => {
    */
   async function registerFCMToken() {
     try {
-      // Check if user has auth token (logged in)
+      // Step 1: Check if user is logged in
       const token = useCookie('token')
       if (!token.value) {
-        console.log('⏳ FCM: No auth token — skipping registration (user not logged in)')
+        console.log('⏳ FCM: No auth token — skipping (user not logged in)')
         return
       }
 
+      // Step 2: Initialize Firebase
+      console.log('🔥 FCM Step 1: Initializing Firebase...')
       await initFCM()
-      if (!messaging) return
+      if (!messaging) {
+        console.warn('⚠️ FCM: Firebase messaging init failed — check Firebase config')
+        return
+      }
+      console.log('✅ FCM Step 1: Firebase initialized')
 
-      // Request permission
+      // Step 3: Request notification permission
+      console.log('🔔 FCM Step 2: Requesting notification permission...')
       const permission = await Notification.requestPermission()
       if (permission !== 'granted') {
-        console.warn('⚠️ Notification permission denied')
+        console.warn('⚠️ FCM: Notification permission denied by user')
         return
       }
+      console.log('✅ FCM Step 2: Permission granted')
 
-      // Get FCM token (unique per browser/device)
+      // Step 4: Get FCM token
+      console.log('🎫 FCM Step 3: Getting FCM token (VAPID key:', firebaseVapidKey ? 'present' : '❌ MISSING', ')...')
       const fcmToken = await getToken(messaging, {
         vapidKey: firebaseVapidKey,
         serviceWorkerRegistration: swRegistration,
       })
 
       if (!fcmToken) {
-        console.warn('⚠️ Failed to get FCM token')
+        console.warn('⚠️ FCM: getToken returned null — check VAPID key and SW registration')
         return
       }
+      console.log('✅ FCM Step 3: Token obtained:', fcmToken.substring(0, 20) + '...')
 
-      console.log('✅ FCM Token:', fcmToken)
-
-      // Send token to backend
+      // Step 5: Register token with backend
+      console.log('📤 FCM Step 4: Sending token to backend...')
       const { $api } = useNuxtApp()
       const deviceName = getDeviceName()
 
@@ -131,9 +140,15 @@ export default defineNuxtPlugin(() => {
         method: 'POST',
         body: { token: fcmToken, deviceName },
       })
-      console.log('✅ FCM token registered on server (device:', deviceName + ')')
+      console.log('✅ FCM Step 4: Token registered on server (device:', deviceName + ')')
     } catch (err) {
-      console.warn('⚠️ FCM registration failed:', err.message || err)
+      // Show detailed error
+      console.error('❌ FCM registration failed:', {
+        message: err.message || err,
+        statusCode: err.statusCode || err.status,
+        statusMessage: err.statusMessage,
+        data: err.data,
+      })
     }
   }
 
