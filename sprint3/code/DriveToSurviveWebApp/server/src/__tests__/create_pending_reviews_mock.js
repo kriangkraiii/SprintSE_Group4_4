@@ -1,0 +1,346 @@
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
+
+const prisma = new PrismaClient();
+
+async function createPendingReviewsMockData() {
+  try {
+    console.log('🔄 Creating Epic 3 mock data with PENDING reviews...');
+    
+    // Create Epic 3 test users
+    const TEST_PASSWORD = 'password123';
+    const hashed = await bcrypt.hash(TEST_PASSWORD, 10);
+
+    // Create driver (rf_driver)
+    let driver = await prisma.user.findFirst({ where: { username: 'rf_driver' } });
+    if (!driver) {
+      driver = await prisma.user.create({
+        data: {
+          email: 'rf_driver@test.com',
+          username: 'rf_driver',
+          password: hashed,
+          firstName: 'RobotDriver',
+          lastName: 'Test',
+          phoneNumber: '0899999901',
+          role: 'DRIVER',
+          isVerified: true,
+          isActive: true
+        }
+      });
+      console.log('✅ Created rf_driver');
+    }
+
+    // Create passenger (rf_passenger)
+    let passenger = await prisma.user.findFirst({ where: { username: 'rf_passenger' } });
+    if (!passenger) {
+      passenger = await prisma.user.create({
+        data: {
+          email: 'rf_passenger@test.com',
+          username: 'rf_passenger',
+          password: hashed,
+          firstName: 'RobotPassenger',
+          lastName: 'Test',
+          phoneNumber: '0899999902',
+          role: 'PASSENGER',
+          isVerified: true,
+          isActive: true
+        }
+      });
+      console.log('✅ Created rf_passenger');
+    }
+
+    // Create admin (rf_admin)
+    let admin = await prisma.user.findFirst({ where: { username: 'rf_admin' } });
+    if (!admin) {
+      admin = await prisma.user.create({
+        data: {
+          email: 'rf_admin@test.com',
+          username: 'rf_admin',
+          password: hashed,
+          firstName: 'RobotAdmin',
+          lastName: 'Test',
+          phoneNumber: '0899999903',
+          role: 'ADMIN',
+          isVerified: true,
+          isActive: true
+        }
+      });
+      console.log('✅ Created rf_admin');
+    }
+
+    // Create vehicle for driver
+    let vehicle = await prisma.vehicle.findFirst({ where: { userId: driver.id } });
+    if (!vehicle) {
+      vehicle = await prisma.vehicle.create({
+        data: {
+          userId: driver.id,
+          vehicleModel: 'Toyota Camry',
+          licensePlate: 'กข-1234',
+          vehicleType: 'Sedan',
+          color: 'ขาว',
+          seatCapacity: 4,
+          isDefault: true
+        }
+      });
+      console.log('✅ Created vehicle:', vehicle.licensePlate);
+    }
+
+    // Create multiple completed routes WITHOUT reviews for Robot Framework testing
+    const routesData = [
+      {
+        startLocation: { lat: 13.7563, lng: 100.5018, address: 'กรุงเทพมหานคร' },
+        endLocation: { lat: 13.8610, lng: 100.5115, address: 'นนทบุรี' },
+        departureTime: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+        price: 50,
+        seats: 3
+      },
+      {
+        startLocation: { lat: 13.7563, lng: 100.5018, address: 'กรุงเทพมหานคร' },
+        endLocation: { lat: 13.6534, lng: 100.4976, address: 'สมุทรปราการ' },
+        departureTime: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        price: 60,
+        seats: 2
+      },
+      {
+        startLocation: { lat: 13.7563, lng: 100.5018, address: 'กรุงเทพมหานคร' },
+        endLocation: { lat: 14.0205, lng: 99.8481, address: 'กาญจนบุรี' },
+        departureTime: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
+        price: 150,
+        seats: 4
+      }
+    ];
+
+    let bookings = [];
+    
+    for (const routeData of routesData) {
+      // Create completed route
+      let route = await prisma.route.findFirst({
+        where: {
+          driverId: driver.id,
+          departureTime: routeData.departureTime
+        }
+      });
+      
+      if (!route) {
+        route = await prisma.route.create({
+          data: {
+            driverId: driver.id,
+            vehicleId: vehicle.id,
+            startLocation: routeData.startLocation,
+            endLocation: routeData.endLocation,
+            departureTime: routeData.departureTime,
+            availableSeats: routeData.seats,
+            pricePerSeat: routeData.price,
+            status: 'COMPLETED'
+          }
+        });
+        console.log(`✅ Created route: ${routeData.startLocation.address} → ${routeData.endLocation.address}`);
+
+        // Create completed booking for passenger WITHOUT review
+        let booking = await prisma.booking.findFirst({
+          where: {
+            routeId: route.id,
+            passengerId: passenger.id
+          }
+        });
+        
+        if (!booking) {
+          booking = await prisma.booking.create({
+            data: {
+              routeId: route.id,
+              passengerId: passenger.id,
+              numberOfSeats: 1,
+              status: 'COMPLETED',
+              pickupLocation: routeData.startLocation,
+              dropoffLocation: routeData.endLocation
+            }
+          });
+          console.log(`✅ Created PENDING booking for route: ${routeData.startLocation.address}`);
+          bookings.push(booking);
+        }
+      }
+    }
+
+    // Create some existing reviews for testing "received reviews" feature
+    const existingReviewRoutes = [
+      {
+        startLocation: { lat: 13.8610, lng: 100.5115, address: 'นนทบุรี' },
+        endLocation: { lat: 13.7563, lng: 100.5018, address: 'กรุงเทพมหานคร' },
+        departureTime: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+        price: 50,
+        seats: 3
+      },
+      {
+        startLocation: { lat: 13.6534, lng: 100.4976, address: 'สมุทรปราการ' },
+        endLocation: { lat: 13.7563, lng: 100.5018, address: 'กรุงเทพมหานคร' },
+        departureTime: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+        price: 60,
+        seats: 2
+      }
+    ];
+
+    const existingReviewScenarios = [
+      {
+        rating: 5,
+        tags: ['polite', 'on_time', 'safe_driving'],
+        comment: 'คนขับสุภาพมาก ขับรถปลอดภัย มาตรงเวลา แนะนำเลยครับ',
+        privateFeedback: 'ไม่มีครับ บริการดีมาก',
+        isAnonymous: false
+      },
+      {
+        rating: 4,
+        tags: ['polite', 'safe_driving'],
+        comment: 'บริการดีครับ คนขับสุภาพ แต่รถสักหน่อย',
+        privateFeedback: 'รถนิดหน่อยก็ดีครับ',
+        isAnonymous: true
+      }
+    ];
+
+    for (let i = 0; i < existingReviewRoutes.length; i++) {
+      const routeData = existingReviewRoutes[i];
+      const reviewScenario = existingReviewScenarios[i];
+      
+      // Create completed route
+      let route = await prisma.route.findFirst({
+        where: {
+          driverId: driver.id,
+          departureTime: routeData.departureTime
+        }
+      });
+      
+      if (!route) {
+        route = await prisma.route.create({
+          data: {
+            driverId: driver.id,
+            vehicleId: vehicle.id,
+            startLocation: routeData.startLocation,
+            endLocation: routeData.endLocation,
+            departureTime: routeData.departureTime,
+            availableSeats: routeData.seats,
+            pricePerSeat: routeData.price,
+            status: 'COMPLETED'
+          }
+        });
+        console.log(`✅ Created route with existing review: ${routeData.startLocation.address} → ${routeData.endLocation.address}`);
+
+        // Create completed booking
+        let booking = await prisma.booking.create({
+          data: {
+            routeId: route.id,
+            passengerId: passenger.id,
+            numberOfSeats: 1,
+            status: 'COMPLETED',
+            pickupLocation: routeData.startLocation,
+            dropoffLocation: routeData.endLocation
+          }
+        });
+        console.log(`✅ Created booking with existing review`);
+
+        // Create existing review
+        await prisma.rideReview.create({
+          data: {
+            bookingId: booking.id,
+            passengerId: passenger.id,
+            driverId: driver.id,
+            rating: reviewScenario.rating,
+            tags: reviewScenario.tags,
+            comment: reviewScenario.comment,
+            privateFeedback: reviewScenario.privateFeedback,
+            isAnonymous: reviewScenario.isAnonymous,
+            displayName: reviewScenario.isAnonymous ? 'ผู้โดยสาร' : 'RobotPassenger'
+          }
+        });
+        console.log(`✅ Created existing review (${reviewScenario.rating}⭐)`);
+      }
+    }
+
+    // Create one dispute for testing admin functionality
+    if (existingReviewRoutes.length > 0) {
+      const firstRoute = existingReviewRoutes[0];
+      const route = await prisma.route.findFirst({
+        where: {
+          driverId: driver.id,
+          departureTime: firstRoute.departureTime
+        }
+      });
+
+      if (route) {
+        const booking = await prisma.booking.findFirst({
+          where: {
+            routeId: route.id,
+            passengerId: passenger.id
+          }
+        });
+
+        if (booking) {
+          const passengerReview = await prisma.rideReview.findFirst({
+            where: {
+              bookingId: booking.id,
+              passengerId: passenger.id
+            }
+          });
+
+          if (passengerReview) {
+            const existingDispute = await prisma.reviewDispute.findFirst({
+              where: { reviewId: passengerReview.id }
+            });
+
+            if (!existingDispute) {
+              await prisma.reviewDispute.create({
+                data: {
+                  reviewId: passengerReview.id,
+                  driverId: driver.id,
+                  reason: 'FAKE_REVIEW',
+                  detail: 'คนขับรู้สึกว่าการให้คะแนนไม่เป็นธรรม เพราะให้บริการดีเยี่ยม',
+                  status: 'PENDING'
+                }
+              });
+              console.log('✅ Created dispute for admin testing');
+            }
+          }
+        }
+      }
+    }
+
+    // Show summary
+    const totalRoutes = await prisma.route.count({ where: { status: 'COMPLETED' } });
+    const totalBookings = await prisma.booking.count({ where: { status: 'COMPLETED' } });
+    const totalReviews = await prisma.rideReview.count();
+    const totalDisputes = await prisma.reviewDispute.count();
+
+    // Count pending bookings (without reviews)
+    const pendingBookings = await prisma.booking.count({
+      where: {
+        status: 'COMPLETED',
+        reviews: {
+          none: {}
+        }
+      }
+    });
+
+    console.log('\n🎉 Epic 3 mock data with PENDING reviews created successfully!');
+    console.log(`📊 Summary:`);
+    console.log(`   Users: 3 (driver, passenger, admin)`);
+    console.log(`   Completed Routes: ${totalRoutes}`);
+    console.log(`   Completed Bookings: ${totalBookings}`);
+    console.log(`   Pending Bookings: ${pendingBookings} ⭐`);
+    console.log(`   Existing Reviews: ${totalReviews}`);
+    console.log(`   Disputes: ${totalDisputes}`);
+    console.log(`\n📝 Test Users:`);
+    console.log(`   Driver: rf_driver@test.com / password123`);
+    console.log(`   Passenger: rf_passenger@test.com / password123`);
+    console.log(`   Admin: rf_admin@test.com / password123`);
+    console.log(`\n🎯 Robot Framework Testing:`);
+    console.log(`   ✅ ${pendingBookings} pending bookings ready for review creation`);
+    console.log(`   ✅ ${totalReviews} existing reviews for "received reviews" testing`);
+    console.log(`   ✅ ${totalDisputes} disputes for admin testing`);
+    console.log(`\n🚀 Ready for Epic 3 Review & Rating testing!`);
+
+  } catch (error) {
+    console.error('❌ Error creating Epic 3 mock data:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+createPendingReviewsMockData();
